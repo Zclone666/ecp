@@ -1,0 +1,48 @@
+{
+  "name": "ecp2",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "history": "^4.10.1",
+    "less": "^3.11.1",
+    "less-loader": "^6.1.0",
+    "mobx": "^5.15.4",
+    "moment": "^2.26.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "save": "^2.4.0",
+    "semantic-ui-react": "^0.88.2"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^5.6.4",
+    "@semantic-ui-react/craco-less": "^1.2.1",
+    "semantic-ui-less": "^2.4.1"
+  }
+}
