@@ -1,17 +1,25 @@
-import React from 'react';
-import { Message, Icon } from 'semantic-ui-react'
+import React, { Component } from 'react';
+import { Provider, observer } from 'mobx-react';
+import stores from './stores';
+import Layout from './Layout'
+// import Spinner from './spinner';
+import { PROJECT_TITLE } from './lib/connect'
 import 'semantic-ui-less/semantic.less'
+import './index.less';
 
-function App() {
-  return (
-    <Message info icon>
-      <Icon name="circle notched" loading />
-      <Message.Content>
-        <Message.Header>Just one second</Message.Header>
-        We're fetching that content for you.
-      </Message.Content>
-    </Message>
-  );
+@observer
+class App extends Component {
+  componentDidMount(){
+    document.title = PROJECT_TITLE
+  }
+  render() {
+    return (
+      <Provider {...stores}>
+        {/*<Spinner>*/}
+            <Layout />
+        {/*</Spinner>*/}
+      </Provider>
+    );
+  }
 }
-
-export default App;
+export default App
