@@ -6,10 +6,10 @@ import axios from 'axios';
 
 import SERVER from '../constants'
 
-export const PROJECT_TITLE = "Статистика ЭКФ";
-export const PRE_PATH  = '/ecp-stats';
+export const PROJECT_TITLE = "ЭКФ";
+export const PRE_PATH  = '/ecp';
 export const PRODUCTION = false;
-export const API_SERVER = SERVER === 'prod' ? "https://prod.socmedica.com/version/api/stats" : "https://dev.socmedica.com/2/api/stats";
+export const API_SERVER = SERVER === 'prod' ? "https://prod.socmedica.com/version/api/stats" : "https://dev.socmedica.com/2/api/ecp";
 
 export const SERVICE = "43";//43
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";

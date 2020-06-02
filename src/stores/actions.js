@@ -4,6 +4,12 @@ import _ from 'lodash';
 
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 class Actions {
+
+  @observable view = false;
+  @observable device = null;
+  @observable mobilewarning = false;
+  @observable height = 0;
+
   @observable projectTitle = PROJECT_TITLE;
 
   @observable authorized = false;
@@ -48,57 +54,203 @@ class Actions {
     email: ""
   }
 
-  @observable filterForm = {
-    authkey: "",
-    //key: "",
-    //SecurityKey: "4vvqd9zcewdc2a",
-    page: 0,
-    limitonpage: 1000,
-    filters: observable({})
+  @observable drugStructure = {
+    auth_key: "auth_key",
+    key: "key",
+    device_id: "",
+    clinic: {
+      key: "",
+      val: ""
+    },
+    department: {
+      key: "",
+      val: ""
+    },
+    doctor: {
+      key: "",
+      val: ""
+    },
+    patient: {
+      key: "",
+      val: ""
+    },
+    user: {
+      age: null,
+      age_dwmy: null,
+      age_days: null,
+      sex: null,
+      growth: null,
+      weight: null,
+      disease: null,
+      disease2: null,
+      pregnancy: null,
+      gestation: null,
+      trimester: null,
+      lactation: null,
+      driving: null,
+      allergy: null
+    },
+    save_recipe: true,
+    active_language: "RU",
+    drugs: [
+      // {id: "zlnwsK4hRl/N0a1isusGmA==", tn: false, level: 241, name: "Азолимин"}
+      {
+        id:"zlnwsK4hRl/N0a1isusGmA==",
+        name: "Азолимин",
+        level: 241,
+        tn: false,
+        fp_id: "",
+        group: "",
+        dosage: {
+          unstructured: "",
+          form: {
+            id: "",
+            name: "",
+            parent: {
+              key: "",
+              val: ""
+            },
+            val: "",
+            unit: "",
+            valunit: ""
+          },
+          method: {
+            id: "",
+            name: ""
+          },
+          val: "",
+          unit: "",
+          unit_id: "",
+          unit_type: "",
+          count: "",
+          freq: {
+            id: "",
+            name: "",
+            val: ""
+          },
+          duration: {
+            id: "",
+            name: "",
+            val: "",
+            calendar: [{
+              data1: "",
+              data2: ""
+            }]
+          },
+          special: "",
+          spec: ""
+        },
+        data1: "",
+        data2: ""
+      },
+      {
+        id: "U/2VipSd60pvmucbGHFpgQ==",
+        level: 240,
+        name: "Феназепам",
+        tn: true,
+        fp_id: "",
+        group: "",
+        dosage: {
+          unstructured: "",
+          form: {
+            id: "",
+            name: "",
+            parent: {
+              key: "",
+              val: ""
+            },
+            val: "",
+            unit: "",
+            valunit: ""
+          },
+          method: {
+            id: "",
+            name: ""
+          },
+          val: "",
+          unit: "",
+          unit_id: "",
+          unit_type: "",
+          count: "",
+          freq: {
+            id: "",
+            name: "",
+            val: ""
+          },
+          duration: {
+            id: "",
+            name: "",
+            val: "",
+            calendar: [{
+              data1: "",
+              data2: ""
+            }]
+          },
+          special: "",
+          spec: ""
+        },
+        data1: "",
+        data2: ""
+      },
+      {
+        id: "whn/LtxKAuKyhEIAANPrCA==",
+        level: 240,
+        name: "Адреналин",
+        tn: true,
+        fp_id: "",
+        group: "",
+        dosage: {
+          unstructured: "",
+          form: {
+            id: "",
+            name: "",
+            parent: {
+              key: "",
+              val: ""
+            },
+            val: "",
+            unit: "",
+            valunit: ""
+          },
+          method: {
+            id: "",
+            name: ""
+          },
+          val: "",
+          unit: "",
+          unit_id: "",
+          unit_type: "",
+          count: "",
+          freq: {
+            id: "",
+            name: "",
+            val: ""
+          },
+          duration: {
+            id: "",
+            name: "",
+            val: "",
+            calendar: [{
+              data1: "",
+              data2: ""
+            }]
+          },
+          special: "",
+          spec: ""
+        },
+        data1: "",
+        data2: ""
+      }
+    ]
   }
-  @observable filterTpl = {
 
-  }
 
-  @observable user = {
-    oldPassword: '',
-    password: '',
-    newPassword: '',
-    confirm_password: '',
-    email: '',
-    firstname: '',
-    lastname: '',
-    patronymic: '',
-    reset_token: '',
-    company_id: '',
-    roles: [],
-    phones: [],
-    avatar: {},
-    gender: false
-  };
-
-  @observable view = false;
-  @observable device = false;
-  @observable mobilewarning = false;
 
   constructor({ stores }) {
     this.stores = stores;
 
     this.autologin()
 
-    autorun(() => {
-      let h = window.innerHeight;
-      let w = window.innerWidth;
-      let v = h > w ? 'portrait' : 'landscape';
-      let d = (w < 480 && v === 'portrait') || (w < 1024 && v === 'landscape') ?
-        'mobile' : (
-          (w < 1280 && v === 'portrait') || (w < 1280 && v === 'landscape') ?
-            'tablet' : 'pc'
-          );
-      this.mobilewarning = (d === 'mobile' || d === 'tablet');
-      this.view = v;
-      this.device = d;
-    });
     // autorun(() => {
     //   console.log(this.currentPage);
     //   if(this.currentPage && _.keys(this.pages).length > 0){
@@ -106,22 +258,24 @@ class Actions {
     //     this.stores.db.getFilters()
     //   }
     // });
-
+    // this.onResize()
+    // window.onresize = this.onResize
   }
-  clearFilters(){
-    // this.filterForm = observable({
-    //   authkey: "",
-    //   //key: "",
-    //   //SecurityKey: "4vvqd9zcewdc2a",
-    //   page: 0,
-    //   limitonpage: 1000,
-    //   filters: observable({})
-    // })
-    // console.log('HEREs');
-    this.filterForm.authkey = ''
-    this.filterForm.page = 0
-    this.filterForm.limitonpage = 1000
-    this.filterForm.filters = observable({})
+  onResize(){
+    // console.log('resize');
+    let h = window.innerHeight;
+    let w = window.innerWidth;
+    let v = h > w ? 'portrait' : 'landscape';
+    let d = (w < 480 && v === 'portrait') || (w < 1024 && v === 'landscape') ?
+      'mobile' : (
+        (w < 1280 && v === 'portrait') || (w < 1280 && v === 'landscape') ?
+          'tablet' : 'pc'
+        );
+    this.mobilewarning = (d === 'mobile' || d === 'tablet');
+    this.view = v;
+    this.device = d;
+    // console.log(d);
+    this.height = h;
   }
   setCurrentPage(page){
     if(page){
@@ -206,7 +360,7 @@ class Actions {
           this.stores.router.push('/')
           this.authorized = true
           this.loading = false
-          this.stores.db.getPages()
+          //this.stores.db.getPages()
           //this.stores.db.getFilters()
           if(remember){
             await localStorage.setItem('authkey', this.authkey);

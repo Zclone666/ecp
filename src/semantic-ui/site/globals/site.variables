@@ -6,7 +6,7 @@
        Fonts
 --------------------*/
 
-@fontName          : 'Arial';
+@fontName          : 'Helvetica Neue';
 @fontSmoothing     : antialiased;
 
 @headerFont        : @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;
@@ -192,7 +192,7 @@
 @olive            : #B5CC18;
 @green            : #21BA45;
 @teal             : #24c1bb;
-@blue             : #627EEA;
+@blue             : #097CAA;
 @violet           : #6435C9;
 @purple           : #A333C8;
 @pink             : #E03997;
