@@ -11,6 +11,7 @@ class DB {
 
   @observable selectedRows = [];
   @observable warnings = {};
+  @observable warnGroups = {};
 
   constructor({ stores }) {
     this.stores = stores;
@@ -62,10 +63,22 @@ class DB {
           //console.log('DATA', data);
           if( data && data.warnings && _.isArray(data.warnings) ){
             let warnings = {}
+            let warnGroups = {}
             data.warnings.forEach(( item, i ) => {
               // console.log('here 1');
               if( item.drugsids && _.isArray(item.drugsids) ){
                 // console.log('here 2');
+
+                if( !warnGroups[item.group] ){
+                  warnGroups[item.group]={
+                    type: item.type,
+                    value: item.value,
+                    valuecolor: item.valuecolor,
+                    ids: []
+                  }
+                }
+                warnGroups[item.group].ids =  _.unionWith(warnGroups[item.group].ids, item.drugsids, (a, b) => a.id === b.id);
+
                 item.drugsids.forEach(( drug, x ) => {
                   // console.log('here 3');
                   if( !warnings[drug] ){
@@ -77,6 +90,7 @@ class DB {
                       // console.log('here 5');
                       warnings[drug][drugParent] = {
                         id: item.id,
+                        group: item.group,
                         trust: item.trust,
                         type: item.type,
                         value: item.value,
@@ -88,6 +102,7 @@ class DB {
               }
             })
             this.warnings = _.assignIn(this.warnings, warnings);
+            this.warnGroups = _.assignIn(this.warnGroups, warnGroups);
           }
 
           //

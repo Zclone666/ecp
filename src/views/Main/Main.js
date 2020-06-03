@@ -70,7 +70,7 @@ class Main extends Component {
   render() {
     const { open, searchQuery, selectedDrug } = this.state
     let { currentPage, height } = this.props.actions
-    let { searchReady, searchRows, selectedRows, warnings } = this.props.db
+    let { searchReady, searchRows, selectedRows, warnings, warnGroups } = this.props.db
     let selectedWarnings = warnings[selectedDrug]
     return (
       <>
@@ -197,6 +197,16 @@ class Main extends Component {
                   </Segment>
                 }
               </Grid.Column>
+              {_.keys(warnGroups).map((key, i) => {
+                let group = warnGroups[key]
+                return(
+                  <Grid.Column mobile={4} tablet={8} computer={4}>
+
+                  </Grid.Column>
+                )
+
+              })}
+
             </Grid>
             <Segment basic>
               <Button onClick={this.getInfoPrep}>Получить</Button>
