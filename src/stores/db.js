@@ -28,15 +28,49 @@ class DB {
 
   }
   clearData(){
-    this.filters = observable({})
-    this.tables = observable({})
-    this.charts = observable({})
-    this.tabs = observable({})
-    this.tabsCount = 0
-    this.maintab = null
-    this.stores.actions.clearFilters()
+    this.stores.actions.selectedDrug = null
+    this.stores.actions.selectedConflict = null
+    this.stores.actions.activeConflicts = []
+    this.stores.actions.activeDrugs = []
+    this.searchRows = observable([])
+    this.warnings = observable({});
+    this.warnGroups = observable({});
   }
+GetLF
+  async getLF(drug){
+    //this.searchReady = false
+    //let data = _.clone(this.stores.actions.filterTpl[filterName])
+    let data = {
+      // text,
+      lib: '52, 62',
+      service: "43",
+      drugs: [ drug ]
+    }
+    // data.text = text
+    // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
+    // chain: 0
+    // key: "4vvqd9zcewdc2a"
+    // lib: "66"
+    // service: "43"
+    // text: "ан"
+    // data.key = '1f9b2da3f046b34b'
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `GetLF`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
 
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
   async getInfoPrep(){
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
@@ -155,7 +189,7 @@ class DB {
           // let newArr = []
           if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
 
-
+            this.searchRows = observable([])
             this.searchRows = await _.unionWith(data.concepts, this.searchRows, (a, b) => a.id === b.id);
             this.searchReady = true
           }
@@ -169,20 +203,17 @@ class DB {
         }
     });
   }
-  // @action updateModel(name, item, key, arr){
-  //   //console.log('Update '+name);
-  //   //Meteor.setTimeout(() => {
-  //     let { _id } = item
-  //     if(item.deleted){
-  //       this[name].data.delete(_id);
-  //     }else{
-  //       let current = this[name].data.get(_id) || {};
-  //       this[name].data.set(_id, _.extend(current, item));
-  //     }
-  //     if(arr.count() == (key+1) && arr.count() > 0) {this[name].ready.set(true)}
-  //   //}, 0)
-  //
-  // }
+
+  async selectFromSearch(row){
+    this.selectedRows = await _.unionWith(this.selectedRows, [row], (a, b) => a.id === b.id);
+    this.clearData()
+    return true
+  }
+  async unselectDrug(row){
+    this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
+    this.clearData()
+    return true
+  }
 
 }
 export default DB;

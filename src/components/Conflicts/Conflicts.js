@@ -35,10 +35,18 @@ class Conflicts extends Component {
       },
       db: { selectedRows, warnings, warnGroups }
     } = this.props
-    this.props.actions.selectedDrug = null
-    this.props.actions.selectedConflict = groupId
-    this.props.actions.activeDrugs = warnGroups[groupId].ids
-    this.props.actions.activeConflicts = [parseInt(groupId)]
+    if( this.props.actions.selectedConflict === groupId ){
+      this.props.actions.selectedDrug = null
+      this.props.actions.selectedConflict = null
+      this.props.actions.activeDrugs = []
+      this.props.actions.activeConflicts = []
+    }else{
+      this.props.actions.selectedDrug = null
+      this.props.actions.selectedConflict = groupId
+      this.props.actions.activeDrugs = warnGroups[groupId].ids
+      this.props.actions.activeConflicts = [parseInt(groupId)]
+    }
+
   }
 
   render(){
@@ -52,7 +60,7 @@ class Conflicts extends Component {
       db: { selectedRows, warnings, warnGroups }
     } = this.props
     let selectedWarnings = warnings[selectedDrug]
-    console.log('activeConflicts', activeConflicts);
+    // console.log('activeConflicts', activeConflicts);
     return (
       <>
         <Grid as={Segment} basic>

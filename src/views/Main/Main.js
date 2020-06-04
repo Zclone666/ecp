@@ -46,8 +46,8 @@ class Main extends Component {
     this.setState({ open: !this.state.open })
   };
 
-  handleResultSelect = (e, { result }) => {
-    this.props.db.selectedRows = _.unionWith(this.props.db.selectedRows, [{ ...result }], (a, b) => a.id === b.id);
+  handleResultSelect = async (e, { result }) => {
+    await this.props.db.selectFromSearch(result)
     this.setState({ searchQuery: '' })
   }
 
@@ -80,7 +80,7 @@ class Main extends Component {
     let { currentPage, height } = this.props.actions
     let { searchReady, searchRows, selectedRows, warnings, warnGroups } = this.props.db
     let selectedWarnings = warnings[selectedDrug]
-    console.log('warnGroups', warnGroups);
+    // console.log('warnGroups', warnGroups);
     return (
       <>
         <Menu className="ui top huge borderless tabular nomargin main menu fixed grey">
@@ -104,7 +104,7 @@ class Main extends Component {
 
         <Sidebar.Pushable>
           <Menu className="ui fluid one item ui top huge text menu fixed menu searchwrapper">
-            <Menu.Item fluid>
+            <Menu.Item>
               <Segment basic className='fluid'>
                 <Search
                   fluid
