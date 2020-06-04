@@ -826,6 +826,15 @@ i.violet.icon, i.big.violet.icon, i.small.violet.icon, i.large.violet.icon, i.hu
   width: 100%;
   min-height: 100% !important;
   display: flex;
+	z-index: 101;
+}
+.pusherwrapper.pusher{
+	padding-bottom: 4*@relativeSmall;
+	padding-top: 7*@relativeSmall;
+	height: 100%;
+}
+.pusherwrapper.pusher.dimmed{
+	z-index: 101;
 }
 .pusher.opened .flex-row, .modal .flex-row{
   flex: 1;
@@ -1155,7 +1164,7 @@ i.violet.icon, i.big.violet.icon, i.small.violet.icon, i.large.violet.icon, i.hu
 .ui.search .prompt{
 	border-radius: 0 !important;
 }
-.ui.search.fluid .prompt, .ui.search.fluid .ui.input{
+.fluid, .ui.search.fluid, .ui.search.fluid .prompt, .ui.search.fluid .ui.input{
 	width: 100%;
 }
 .result-wrapper{
@@ -1313,6 +1322,31 @@ td > .collapsable ul li{
   max-height: 70%;
 }
 
+.ui.menu.searchwrapper{
+	//top: 3.6em !important;
+}
+.scrollwrapper{
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.ui.list.drugslist > .item {
+	transition: margin-left .3s ease-in-out, opacity .3s ease-in-out, filter .3s ease-in-out;
+	padding-left: 50px;
+}
+.ui.list.drugslist > .item.selected {
+	margin-left: 0px;
+}
+.ui.list.drugslist > .item.unused {
+	opacity: 0.3;
+	filter: grayscale(0.4);
+}
+.ui.list.drugslist > .item .right.content{
+	position: absolute;
+	right: 22px;
+}
+
 .ui.list > .item .icon.arrow.circle.right{
 	text-shadow: 0.5px 0.5px 1px #bbb;
 	line-height: 26px;
@@ -1320,19 +1354,44 @@ td > .collapsable ul li{
 .ui.list > .item .icon.warning.circle{
 	text-shadow: 0.5px 0.5px 1px #bbb;
 }
+.ui.grid .column .icon.outline.circle{
+	text-shadow: 0.5px 0.5px 2px #bbb;
+}
 
 .ui.list > .item .arrowBg{
-	margin-left: -10px;
+	transition: margin-left .3s ease-in-out, background-color .3s ease-in-out;
+	position: absolute;
+	margin-left: -50px;
 	text-align: right;
 	padding-left: 11px;
 	width: 40px;
-	/* line-height: 22px; */
 	height: 26px;
 	border-radius: 0 20px 20px 0;
 	background-color: #ccc;
 	box-shadow: 0.5px 0.5px 1px #bbb;
 }
 .ui.list > .item .arrowBg.none{
-	box-shadow: none;
-	background-color: transparent;
+	margin-left: -100px;
+}
+.ui.feed{
+	overflow: auto;
+}
+.ui.feed .summary, .ui.feed .meta{
+	white-space: nowrap !important;
+}
+
+.conflict.column{
+	width: 74px !important;
+}
+.conflict .big.icons{
+	width: 50px !important;
+}
+.conflict .big.icons.gray{
+	transition: opacity .3s ease-in-out, filter .3s ease-in-out;
+	opacity: 0.3;
+	filter: grayscale(0.4);
+}
+.conflict .big.icons.selected{
+	opacity: 1;
+	filter: none;
 }

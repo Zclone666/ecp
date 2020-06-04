@@ -54,6 +54,11 @@ class Actions {
     email: ""
   }
 
+  @observable selectedDrug = null
+  @observable selectedConflict = null
+  @observable activeDrugs = []
+  @observable activeConflicts = []
+
   @observable drugStructure = {
     auth_key: "auth_key",
     key: "key",

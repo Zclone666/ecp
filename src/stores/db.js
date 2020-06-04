@@ -77,7 +77,8 @@ class DB {
                     ids: []
                   }
                 }
-                warnGroups[item.group].ids =  _.unionWith(warnGroups[item.group].ids, item.drugsids, (a, b) => a.id === b.id);
+                // warnGroups[item.group].valuecolor = _.maxBy(_.toArray(warnings[drug.id]), function(o){ return o.value; });
+                warnGroups[item.group].ids =  _.unionWith(warnGroups[item.group].ids, item.drugsids, (a, b) => a.id === b);
 
                 item.drugsids.forEach(( drug, x ) => {
                   // console.log('here 3');
@@ -101,6 +102,7 @@ class DB {
                 })
               }
             })
+            // console.log('warnGroups', warnGroups);
             this.warnings = _.assignIn(this.warnings, warnings);
             this.warnGroups = _.assignIn(this.warnGroups, warnGroups);
           }
