@@ -54,8 +54,7 @@ class Login extends Component {
     this.props.actions.loginForm[name] = value;
     this.checkFilled()
   }
-  handleChecked = (e) => {
-    let { name, checked } = e.target;
+  handleChecked = (e, { name, checked }) => {
     this.props.actions.loginForm[name] = checked;
     this.checkFilled()
   }

@@ -37,11 +37,18 @@ export default class Router {
   }
 
   @action onLocation(location) {
-    //console.log("YES");
+     // console.log("YES");
     // let oldRoute = this.match;
     // let oldVals = this.values;
-    let route = this.mapper.map(location.pathname, this.options.routes);
-    Object.assign(this, {...route, location});
+    let matchedRoute = this.mapper.map(location.pathname, this.options.routes);
+     // console.log(matchedRoute);
+    let { match, values, route } = matchedRoute
+    if( this.match && match.section == this.match.section ){
+      Object.assign(this, { values, route, location });
+    }else{
+      Object.assign(this, { match, values, route, location });
+    }
+
     // if (this.match.onEnter) this.match.onEnter();
     // if (oldRoute.onExit) oldRoute.onExit();
     // if(oldRoute.name === 'project' && this.match.name === 'project'){
@@ -56,7 +63,7 @@ export default class Router {
 
   push(location) {
     if (this.location && this.location.pathname === location) return;
-    this.history.push(PRE_PATH+location);
+    this.history.push(PRE_PATH + location);
   }
   replace(location) { this.history.replace(location) }
   go(n) { this.history.go(n) }
