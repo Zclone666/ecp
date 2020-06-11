@@ -8,6 +8,8 @@ import Search from '../../components/Search'
 import Drugs from '../../components/Drugs'
 import Conflicts from '../../components/Conflicts'
 
+import Page from '../Page'
+
 import {
   Sidebar,
   Menu,
@@ -31,6 +33,7 @@ class Main extends Component {
     super(props)
     this.state = {
       open: false,
+      showPage: false,
 
       isLoading: false,
       searchQuery: ''
@@ -61,10 +64,7 @@ class Main extends Component {
   }
 
   handleResetAll = () => {
-    this.props.actions.selectedDrug = null
-    this.props.actions.selectedConflict = null
-    this.props.actions.activeConflicts = []
-    this.props.actions.activeDrugs = []
+    this.props.db.clearData(true)
   }
 
   getInfoPrep = () => {
@@ -75,12 +75,21 @@ class Main extends Component {
     return <div>{name}{tn && <sup>TM</sup>}</div>
   }
 
+  componentDidMount(){
+    setTimeout(() => {
+      this.setState({ showPage: !!(this.props.router.values && this.props.router.values.page) })
+    }, 100)
+
+    //console.log('HERE');
+  }
+
   render() {
     const { open, searchQuery, selectedDrug, selectedConflict } = this.state
     let { currentPage, height } = this.props.actions
     let { searchReady, searchRows, selectedRows, warnings, warnGroups } = this.props.db
     let selectedWarnings = warnings[selectedDrug]
-    // console.log('warnGroups', warnGroups);
+    let showPage = !!(this.props.router.values && this.props.router.values.page)
+    //console.log('router', this.props.router.values);
     return (
       <>
         <Menu className="ui top huge borderless tabular nomargin main menu fixed grey">
@@ -131,10 +140,20 @@ class Main extends Component {
             }
             {selectedRows.length > 0 &&
               <Menu.Item onClick={this.getInfoPrep}>
-                Получить
+                Проверить
               </Menu.Item>
             }
           </Menu>
+          <Sidebar
+            width='very wide'
+            direction='right'
+            animation='overlay'
+            visible={showPage}
+            vertical
+            style={{ backgroundColor: '#FFFFFF' }}
+          >
+            <Page />
+          </Sidebar>
           <Sidebar animation='overlay' visible={open} as={Menu} vertical size='huge'>
             <Menu.Item>
               <Icon name='user' />
@@ -154,7 +173,7 @@ class Main extends Component {
             </Menu.Item>
           </Sidebar>
 
-          <Sidebar.Pusher dimmed={open} className='pusherwrapper'>
+          <Sidebar.Pusher dimmed={open || showPage} className='pusherwrapper'>
 
             <div className='scrollwrapper'>
               <Grid>

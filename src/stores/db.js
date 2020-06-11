@@ -13,6 +13,14 @@ class DB {
   @observable warnings = {};
   @observable warnGroups = {};
 
+  @observable currDrug = {};
+  @observable drugDosage = {
+    lf: {},
+    druglf: {},
+    methodstolf: {},
+    names: {}
+  };
+
   constructor({ stores }) {
     this.stores = stores;
     this.router = stores.router;
@@ -27,7 +35,7 @@ class DB {
     });
 
   }
-  clearData(){
+  clearData(withSelects){
     this.stores.actions.selectedDrug = null
     this.stores.actions.selectedConflict = null
     this.stores.actions.activeConflicts = []
@@ -35,8 +43,11 @@ class DB {
     this.searchRows = observable([])
     this.warnings = observable({});
     this.warnGroups = observable({});
+    if(withSelects){
+      this.selectedRows = observable([]);
+    }
   }
-GetLF
+//GetLF
   async getLF(drug){
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
@@ -58,6 +69,41 @@ GetLF
     data.key = this.stores.actions.privateKey
     return POST({
         path: `GetLF`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
+          let { alert, ...drug } = data
+          _.assign(this.drugDosage, {...drug})
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+  async GetDuration(drug){
+    //this.searchReady = false
+    //let data = _.clone(this.stores.actions.filterTpl[filterName])
+    let data = {
+      // text,
+      lib: '52, 62',
+      service: "43",
+      drugs: [ drug ]
+    }
+    // data.text = text
+    // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
+    // chain: 0
+    // key: "4vvqd9zcewdc2a"
+    // lib: "66"
+    // service: "43"
+    // text: "ан"
+    // data.key = '1f9b2da3f046b34b'
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `GetDuration`,
         data,
         success: async data => {
           console.log('DATA', data);

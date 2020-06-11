@@ -6,6 +6,8 @@ import Alerts from './components/Alerts'
 import UserOnly from './components/UserOnly';
 import Loader from './components/Loader';
 
+import routes from './router/routes'
+
 @inject('router', 'db', 'actions')
 @observer
 class Layout extends Component {
@@ -15,7 +17,7 @@ class Layout extends Component {
     return (
       <div className="ui body">
         <UserOnly>
-          {this.props.router && this.props.router.match.render}
+          {this.props.router.match.render}
         </UserOnly>
         <Alerts />
         <Loader open={loading} />

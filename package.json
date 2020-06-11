@@ -22,8 +22,10 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "react-slick": "^0.26.1",
     "save": "^2.4.0",
     "semantic-ui-react": "^0.88.2",
+    "slick-carousel": "^1.8.1",
     "url-mapper": "^2.0.0"
   },
   "scripts": {

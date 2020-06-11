@@ -1,6 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
+import RouterLink from '../../router/a';
+
 import {
   Menu,
   List,
@@ -13,7 +15,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions')
+@inject('db', 'actions', 'router')
 @observer
 class Drug extends React.Component {
   constructor(props){
@@ -25,6 +27,9 @@ class Drug extends React.Component {
   getLF = () => {
     let { drug } = this.props
     this.props.db.getLF(drug)
+    //this.props.db.GetDuration(drug)
+    this.props.db.currDrug = { ...drug }
+    // this.props.router.push('/concepts/dozes')
   }
   unselectDrug = () => {
     let { drug } = this.props
@@ -91,8 +96,8 @@ class Drug extends React.Component {
           </Responsive>
           */}
           <Responsive fireOnMount as={Button.Group} basic color='blue' minWidth='481'>
-            <Button icon>
-              <Icon name='tint' onClick={this.getLF} />
+            <Button as={RouterLink} to='/concept/dozes' onClick={this.getLF} icon>
+              <Icon name='tint' />
             </Button>
             <Button icon>
               <Icon name='font' />
@@ -162,7 +167,7 @@ class Drug extends React.Component {
         >
           <Popup.Content>
             <Menu secondary vertical>
-              <Menu.Item onClick={this.getLF}>
+              <Menu.Item  as={RouterLink} to='/concept/dozes' onClick={this.getLF}>
                 <Icon name='tint' />
                 Дозировки
               </Menu.Item>

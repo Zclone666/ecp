@@ -1,0 +1,70 @@
+import React, { Component } from 'react';
+import { inject, observer } from 'mobx-react';
+
+import RouterLink from '../../router/a'
+import {
+  List,
+  Icon,
+} from 'semantic-ui-react'
+
+import _ from 'lodash';
+
+@inject('db', 'actions')
+@observer
+class MethodsLF extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+
+    }
+  }
+  setMethod = ( lf ) => {
+    this.props.actions.stepsData.method = lf
+  }
+  render(){
+    let {
+      actions: {
+        selectedDrug,
+        selectedConflict,
+        activeDrugs,
+        activeConflicts
+      },
+      db: { drugDosage: { lf, druglf, methodstolf, names } }
+    } = this.props
+
+
+    return (
+      <List animated divided selection verticalAlign='middle' size='large' >
+        {_.keys(methodstolf).map(( mid, i ) => {
+          //let lfItem = lf[lfid]
+          return(
+            <List.Item
+              as={RouterLink}
+              to={'/concept/dozes/lf/2'}
+              onClick={() => this.setMethod(mid)}
+            >
+              <List.Content floated='right'>
+                <Icon
+
+                  name='right chevron'
+                  size='big'
+                />
+              </List.Content>
+
+              <List.Content className='large'>
+                <List.Header>{names[mid]}</List.Header>
+                {/*<List.Description>
+
+                </List.Description>*/}
+              </List.Content>
+
+            </List.Item>
+          )
+
+        })}
+      </List>
+    )
+  }
+
+};
+export default MethodsLF

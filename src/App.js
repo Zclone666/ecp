@@ -6,6 +6,8 @@ import Layout from './Layout'
 import { PROJECT_TITLE } from './lib/connect'
 import 'semantic-ui-less/semantic.less'
 import './index.less';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 @observer
 class App extends Component {

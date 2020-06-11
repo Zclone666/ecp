@@ -54,6 +54,15 @@ class Actions {
     email: ""
   }
 
+  @observable stepsData = {
+    way: null,
+    step: null,
+    lf: null,
+    dosage: null,
+    method: null,
+
+  }
+
   @observable selectedDrug = null
   @observable selectedConflict = null
   @observable activeDrugs = []
@@ -294,6 +303,23 @@ class Actions {
 
   }
 
+  clearSteps(step){
+    if( step === 1 ){
+
+    }
+    if( step == 2 ){
+
+    }
+    // stepsData = {
+    //   way: null,
+    //   step: null,
+    //   lf: null,
+    //   dosage: null,
+    //   method: null,
+    //
+    // }
+  }
+
   makeAlerts(data){
     if(data.alerts && data.alerts.length > 0){
       data.alerts.forEach((item, i) => {
@@ -318,7 +344,7 @@ class Actions {
     }
 
     return GET({
-      path: `https://cs.socmedica.com/api/user/authCheck`,
+      path: `https://cs.socmedica.com/api/user/authCheck`, //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
       data: {
         authkey: this.authkey,
         key: AUTH_SERVICE_KEY
