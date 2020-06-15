@@ -7,7 +7,7 @@ import axios from 'axios';
 import SERVER from '../constants'
 
 export const PROJECT_TITLE = "ЭКФ";
-export const PRE_PATH  = '/ecp';
+export const PRE_PATH  = '';
 export const PRODUCTION = false;
 export const API_SERVER = SERVER === 'prod' ? "https://prod.socmedica.com/version/api/stats" : "https://dev.socmedica.com/2/api/ecp";
 

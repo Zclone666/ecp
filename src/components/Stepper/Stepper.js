@@ -31,6 +31,21 @@ class Stepper extends Component {
     this.sliderRef = createRef()
   }
 
+  steps = {
+    lf: [
+      { name: 'type', text: 'Форма ввода' },
+      { name: 'lf', text: 'Лекарственная форма' },
+      { name: 'dosage', text: 'Дозировка' },
+      { name: 'method', text: 'Способ применения' }
+    ],
+    methods: [
+      { name: 'type', text: 'Форма ввода' },
+      { name: 'method', text: 'Способ применения' },
+      { name: 'lf', text: 'Лекарственная форма' },
+      { name: 'dosage', text: 'Дозировка' }
+    ]
+  }
+
   handleClick = (e, titleProps) => {
     e.preventDefault()
     const { index } = titleProps
@@ -85,8 +100,8 @@ class Stepper extends Component {
       router: { values }
     } = this.props
 
-    let step = parseInt(values.step || 0)
-
+    let currStep = parseInt(values.step || 0)
+    let way = values.way || 'lf'
     // let selectedWarnings = warnings[selectedDrug]
     const settings = {
 
@@ -97,49 +112,25 @@ class Stepper extends Component {
       slidesToScroll: 1,
       swipeToSlide: false,
       swipe: false,
-      initialSlide: step
+      initialSlide: currStep
     };
 
     return (
       <Responsive className='h100 with-steps' fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
-        {(values.step && values.step > 0) &&
-          <Step.Group attached='top' fluid unstackable ordered size='mini'>
-            <Step completed={step > 0} active={step == 0} as={RouterLink} to='/concept/dozes'>
-              { ( step == 0 || viewType == 'pc' ) &&
-                <Step.Content>
-                  <Step.Title>Форма ввода</Step.Title>
-                  <Step.Description>Сначала лекарственная форма</Step.Description>
-                </Step.Content>
-              }
-            </Step>
-            <Step completed={step > 1} active={step == 1} as={RouterLink} to='/concept/dozes/lf/1'>
-              { ( step == 1 || viewType == 'pc' ) &&
-                <Step.Content>
-                  <Step.Title>Лекарственная форма</Step.Title>
-                  <Step.Description>{names[stepsData.lf] || ''}</Step.Description>
-                </Step.Content>
-              }
-            </Step>
-
-            <Step completed={ step > 2} active={ step == 2} as={RouterLink} to='/concept/dozes/lf/2'>
-              { ( step == 2 || viewType == 'pc' ) &&
-                <Step.Content>
-                  <Step.Title>Дозировка</Step.Title>
-                  <Step.Description>{names[stepsData.dosage] || ''}</Step.Description>
-                </Step.Content>
-              }
-            </Step>
-
-            <Step completed={ step > 3} active={ step == 3} as={RouterLink} to='/concept/dozes/lf/3'>
-              { ( step == 3 || viewType == 'pc' ) &&
-                <Step.Content>
-                  <Step.Title>Способ применения</Step.Title>
-                  <Step.Description>{names[stepsData.method] || ''}</Step.Description>
-                </Step.Content>
-              }
-            </Step>
-          </Step.Group>
-        }
+        <Step.Group attached='top' fluid unstackable ordered size='tiny'>
+          {this.steps[way].map(( step, i ) => {
+            return(
+              <Step completed={currStep > i} active={currStep == i} as={RouterLink} to='/concept/dozes'>
+                { ( currStep == i || viewType == 'pc' ) &&
+                  <Step.Content>
+                    <Step.Title>{step.text}</Step.Title>
+                    <Step.Description>{names[stepsData[step.name]] || ''}</Step.Description>
+                  </Step.Content>
+                }
+              </Step>
+            )
+          })}
+        </Step.Group>
         <Slider ref={this.sliderRef} {...settings}>
           <WayChoice />
           <div className='scrollwrapper'>
@@ -147,21 +138,21 @@ class Stepper extends Component {
               'lf': <LF />,
               'methods': <Methods />,
               undefined: <LF />
-            }[values.way]}
+            }[way]}
           </div>
           <div className='scrollwrapper'>
             {{
               'lf': <DozeTypes />,
               'methods': <LF />,
               undefined: <DozeTypes />
-            }[values.way]}
+            }[way]}
           </div>
           <div className='scrollwrapper'>
             {{
               'lf': <Methods />,
               'methods': <DozeTypes />,
-              undefined: <DozeTypes />
-            }[values.way]}
+              undefined: <Methods />
+            }[way]}
           </div>
 
 

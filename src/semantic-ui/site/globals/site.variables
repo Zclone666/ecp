@@ -98,8 +98,8 @@
   This ensures these "ratios" remain constant despite changes in EM
 */
 
-@miniSize        : (10 / 14);
-@tinySize        : (12 / 14);
+@miniSize        : (6 / 14);
+@tinySize        : (8 / 14);
 @smallSize       : (13 / 14);
 @mediumSize      : (14 / 14);
 @largeSize       : (16 / 14);

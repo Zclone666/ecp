@@ -211,7 +211,7 @@ class DB {
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
     let data = {
       text,
-      lib: '52, 62',
+      lib: '62, 52',
       service: "43",
       chain: 0
     }
