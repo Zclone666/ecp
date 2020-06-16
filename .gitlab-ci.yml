@@ -10,4 +10,5 @@ build dev:
         - dev
     script:
         - 'npm i'
-        - 'CI=false npm run build'
+        - '$env:CI="false"'
+        - 'npm run build'
