@@ -1,6 +1,6 @@
 variables:
     GIT_STRATEGY: fetch
-    NPM_EXE: 'C:\Program Files\nodejs\npm.cmd'
+    NPM_EXE: 'C:\Program Files\nodejs\node.exe'
     
 build dev:
     stage: build
