@@ -9,6 +9,6 @@ build dev:
     only:
         - dev
     script:
-        - '& npm cache clean --force'
-        - '& "$env:NPM_EXE" i'
-        - '& "$env:NPM_EXE" run build'
+        - 'npm cache clean --force'
+        - 'npm i'
+        - 'npm run build'
