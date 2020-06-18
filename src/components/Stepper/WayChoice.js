@@ -22,7 +22,7 @@ class WayChoice extends Component {
     }
   }
   handleOnUpdate = (event, data) => {
-    console.log({event, data});
+    // console.log({event, data});
     if( data.width > 479 ){
       this.setState({ viewType: 'columns' })
     }else{

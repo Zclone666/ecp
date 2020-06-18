@@ -43,7 +43,13 @@ class Stepper extends Component {
       { name: 'method', text: 'Способ применения' },
       { name: 'lf', text: 'Лекарственная форма' },
       { name: 'dosage', text: 'Дозировка' }
-    ]
+    ],
+    '': [
+      { name: 'type', text: 'Форма ввода' },
+      { name: 'lf', text: 'Лекарственная форма' },
+      { name: 'dosage', text: 'Дозировка' },
+      { name: 'method', text: 'Способ применения' }
+    ],
   }
 
   handleClick = (e, titleProps) => {
@@ -71,6 +77,8 @@ class Stepper extends Component {
       router: { values }
     } = this.props
     // console.log({ next: values.step, prev: this.state.activeIndex });
+
+    this.props.actions.stepsData.way = values.way
     if( values.step !== prevState.activeIndex ){
       this.setState({ activeIndex: values.step }, () => {
         this.goTo(parseInt(this.state.activeIndex || 0))
@@ -101,7 +109,7 @@ class Stepper extends Component {
     } = this.props
 
     let currStep = parseInt(values.step || 0)
-    let way = values.way || 'lf'
+    let way = values.way || ''
     // let selectedWarnings = warnings[selectedDrug]
     const settings = {
 
@@ -118,17 +126,27 @@ class Stepper extends Component {
     return (
       <Responsive className='h100 with-steps' fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
         <Step.Group attached='top' fluid unstackable ordered size='tiny'>
-          {this.steps[way].map(( step, i ) => {
+          {this.steps[way] && this.steps[way].map(( step, i ) => {
             let url = '/concept/dozes'
+            let chosedName = ''
             if( i > 0 && i <= currStep ) {
               url += `/${way}/${i}`
-            } else if( i !== 0 ) { url = '' }
+              chosedName = names[stepsData[step.name]]
+            } else if( i !== 0 ) {
+              url = ''
+            } else {
+              chosedName = {
+                lf: 'Лекарственная форма',
+                methods: 'Способ применения',
+                '': ''
+              }[way]
+            }
             return(
               <Step completed={currStep > i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
                 { ( currStep == i || viewType == 'pc' ) &&
                   <Step.Content>
                     <Step.Title>{step.text}</Step.Title>
-                    <Step.Description>{names[stepsData[step.name]] || ''}</Step.Description>
+                    <Step.Description>{chosedName}</Step.Description>
                   </Step.Content>
                 }
               </Step>

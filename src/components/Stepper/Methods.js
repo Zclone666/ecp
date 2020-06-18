@@ -27,7 +27,8 @@ class MethodsLF extends Component {
         selectedDrug,
         selectedConflict,
         activeDrugs,
-        activeConflicts
+        activeConflicts,
+        stepsData,
       },
       db: { drugDosage: { lf, druglf, methodstolf, names } },
       router: { values }
@@ -35,9 +36,12 @@ class MethodsLF extends Component {
     let way = values.way || 'lf'
     let currStep = parseInt(values.step || 0)
 
+    let iterator = (stepsData.way === 'lf' && stepsData.lf) ? lf[stepsData.lf].methods : _.keys(methodstolf)
+    // console.log('iterator', iterator);
+    // console.log('stepsData', stepsData);
     return (
       <List animated divided selection verticalAlign='middle' size='large' >
-        {_.keys(methodstolf).map(( mid, i ) => {
+        {iterator.map(( mid, i ) => {
           //let lfItem = lf[lfid]
           return(
             <List.Item
