@@ -114,13 +114,17 @@ class Stepper extends Component {
       swipe: false,
       initialSlide: currStep
     };
-
+    //console.log({ way, currStep });
     return (
       <Responsive className='h100 with-steps' fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
         <Step.Group attached='top' fluid unstackable ordered size='tiny'>
           {this.steps[way].map(( step, i ) => {
+            let url = '/concept/dozes'
+            if( i > 0 && i <= currStep ) {
+              url += `/${way}/${i}`
+            } else if( i !== 0 ) { url = '' }
             return(
-              <Step completed={currStep > i} active={currStep == i} as={RouterLink} to='/concept/dozes'>
+              <Step completed={currStep > i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
                 { ( currStep == i || viewType == 'pc' ) &&
                   <Step.Content>
                     <Step.Title>{step.text}</Step.Title>

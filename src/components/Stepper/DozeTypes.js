@@ -9,7 +9,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions')
+@inject('db', 'actions', 'router')
 @observer
 class DozeTypes extends Component {
   constructor(props){
@@ -30,9 +30,11 @@ class DozeTypes extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { lf, druglf, methodstolf, names } }
+      db: { drugDosage: { lf, druglf, methodstolf, names } },
+      router: { values }
     } = this.props
-
+    let way = values.way || 'lf'
+    let currStep = parseInt(values.step || 0)
 
     return (
       <List animated divided selection verticalAlign='middle' size='large' >
@@ -41,7 +43,7 @@ class DozeTypes extends Component {
           return(
             <List.Item
               as={RouterLink}
-              to={'/concept/dozes/lf/3'}
+              to={`/concept/dozes/${way}/${currStep+1}`}
               onClick={() => this.setDosage(dosage.bigid)}
             >
               <List.Content floated='right'>
