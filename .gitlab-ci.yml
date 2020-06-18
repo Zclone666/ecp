@@ -1,0 +1,14 @@
+variables:
+    GIT_STRATEGY: fetch
+    NPM_EXE: 'C:\Program Files\nodejs\npm.cmd'
+    
+build dev:
+    stage: build
+    tags:
+        - msbuild
+    only:
+        - dev
+    script:
+        - 'npm i'
+        - '$env:CI="false"'
+        - 'npm run build'
