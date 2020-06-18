@@ -39,6 +39,7 @@ class LF extends Component {
           let lfItem = lf[lfid]
           return(
             <List.Item
+              key={'doze'+i}
               as={RouterLink}
               to={'/concept/dozes/lf/2'}
               onClick={() => this.setLF(lfid)}

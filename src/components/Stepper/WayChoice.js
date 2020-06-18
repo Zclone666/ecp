@@ -55,7 +55,7 @@ class WayChoice extends Component {
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to='/concept/dozes/lf/1'>
+                    <Card fluid as={RouterLink} to='/concept/dozes/lf/1'>
                       <Card.Content>
                         <Card.Header>Лекарственная форма</Card.Header>
                         <Card.Description>
