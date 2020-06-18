@@ -10,7 +10,7 @@ export default class Loader extends React.Component {
     const open = this.props.open === false ? false : true
     return (
       <Dimmer active={open} inverted>
-        <img src='/loader.png' className='loader' />
+        <img src='/loader.png' className='loader' /> 
       </Dimmer>
     )
   }
