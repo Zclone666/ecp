@@ -89,7 +89,7 @@ class Main extends Component {
     let { searchReady, searchRows, selectedRows, warnings, warnGroups } = this.props.db
     let selectedWarnings = warnings[selectedDrug]
     let showPage = !!(this.props.router.values && this.props.router.values.page)
-    //console.log('router', this.props.router.values);
+    // console.log('router', this.props.router);
     return (
       <>
         <Menu className="ui top huge borderless tabular nomargin main menu fixed grey">
@@ -101,7 +101,7 @@ class Main extends Component {
 
           <Menu.Menu position='right'>
             <Menu.Item>
-              <Button basic color='blue'>
+              <Button basic color='blue' as={RouterLink} to='/patient/new'>
                 <Icon name='user' />
                 Данные пациента
               </Button>

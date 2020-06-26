@@ -6,6 +6,7 @@ import RouterLink from '../../router/a'
 import Spinner from '../../components/Spinner'
 
 import Dozes from '../Dozes'
+import Patient from '../Patient'
 
 import {
   Sidebar,
@@ -47,11 +48,13 @@ class Page extends Component {
 
   render() {
     let shownPage = this.props.router.values && this.props.router.values.page || 'none'
+    let section = (this.props.router && this.props.router.match && this.props.router.match.name) || 'none'
     return (
       {
-        'dozes': <Dozes />,
+        'concept': <Dozes />,
+        'patient': <Patient />,
         'none': <div />
-      }[shownPage]
+      }[section] || null
     );
   }
 };

@@ -45,6 +45,7 @@ export default class Router {
     let { match, values, route } = matchedRoute
     if( this.match && match.section == this.match.section ){
       Object.assign(this, { values, route, location });
+      this.match.name = match.name
     }else{
       Object.assign(this, { match, values, route, location });
     }

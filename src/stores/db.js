@@ -55,7 +55,7 @@ class DB {
       // text,
       lib: '52, 62',
       service: "43",
-      drugs: [ drug ]
+      drug: drug 
     }
     // data.text = text
     // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
@@ -211,7 +211,7 @@ class DB {
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
     let data = {
       text,
-      lib: '62, 52',
+      lib: '62, 52', //'61, 25' - заболевания
       service: "43",
       chain: 0
     }

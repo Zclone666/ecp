@@ -13,6 +13,9 @@ export default {
   '/concept/:page/:way/:step/:id1':           { section: 'main', name: 'concept',    render: <Main />       },
   '/concept/:page/:way/:step/:id1/:id2':      { section: 'main', name: 'concept',    render: <Main />       },
   '/concept/:page/:way/:step/:id1/:id2/id3':  { section: 'main', name: 'concept',    render: <Main />       },
+
+  '/patient/:page':                           { section: 'main', name: 'patient',    render: <Main />       },
+
   '/login':                                   { section: 'auth', name: 'auth',       render: <Login />      },
   '/signup':                                  { section: 'auth', name: 'auth',       render: <Signup/>      },
   '/confirm':                                 { section: 'auth', name: 'auth',       render: <Confirm/>     },

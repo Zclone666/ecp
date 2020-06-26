@@ -57,7 +57,7 @@ class Page extends Component {
             Сохранить
           </Menu.Item>
         </Menu>
-        
+
         <div className='scrollwrapper'>
           <Stepper />
         </div>
