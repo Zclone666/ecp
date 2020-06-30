@@ -7,6 +7,11 @@ import _ from 'lodash';
 class DB {
   @observable ready = false;
   @observable searchRows = [];
+
+  @observable diseaseRows = [];
+  @observable disease2Rows = [];
+  @observable allergyRows = [];
+
   @observable searchReady = true;
 
   @observable selectedRows = [];
@@ -15,9 +20,9 @@ class DB {
 
   @observable currDrug = {};
   @observable drugDosage = {
-    lf: {},
-    druglf: {},
-    methodstolf: {},
+    drug: {},
+    form: {},
+    methodform: {},
     names: {}
   };
 
@@ -45,6 +50,9 @@ class DB {
     this.warnGroups = observable({});
     if(withSelects){
       this.selectedRows = observable([]);
+      this.diseaseRows = observable([]);
+      this.disease2Rows = observable([]);
+      this.allergyRows = observable([]);
     }
   }
 //GetLF
@@ -55,7 +63,7 @@ class DB {
       // text,
       lib: '52, 62',
       service: "43",
-      drug: drug 
+      drug: drug
     }
     // data.text = text
     // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
@@ -206,37 +214,53 @@ class DB {
         }
     });
   }
-  async getSearch(text){
+  async getSearch(text, saveTo='search'){
     this.searchReady = false
-    //let data = _.clone(this.stores.actions.filterTpl[filterName])
     let data = {
       text,
       lib: '62, 52', //'61, 25' - заболевания
       service: "43",
       chain: 0
     }
-    // data.text = text
-    // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
-    // chain: 0
-    // key: "4vvqd9zcewdc2a"
-    // lib: "66"
-    // service: "43"
-    // text: "ан"
-    // data.key = '1f9b2da3f046b34b'
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
         path: `SearchConcept`,
         data,
         success: async data => {
-          // console.log('DATA', data);
-          //
-          // let oldArr = await _.clone(this.filters[filterName].rows)
-          // let newArr = []
           if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
+            this[`${saveTo}Rows`] = observable([])
+            this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
+            this.searchReady = true
+          }
+        },
+        fail: (alerts) => {
+            this.searchReady = true
+          // console.log('fail', alerts);
+        },
+        always: (data) => {
+          // this.stores.actions.makeAlerts(data)
+        }
+    });
+  }
 
-            this.searchRows = observable([])
-            this.searchRows = await _.unionWith(data.concepts, this.searchRows, (a, b) => a.id === b.id);
+  async getSearchDisease(text, saveTo){
+    this.searchReady = false
+    let data = {
+      text,
+      lib: '61, 25',
+      service: "43",
+      chain: 0
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `SearchConcept`,
+        data,
+        success: async data => {
+          if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
+            this[`${saveTo}Rows`] = observable([])
+            this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
             this.searchReady = true
           }
         },
@@ -260,6 +284,7 @@ class DB {
     this.clearData()
     return true
   }
+
 
 }
 export default DB;

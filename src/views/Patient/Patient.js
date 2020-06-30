@@ -37,7 +37,46 @@ class Patient extends Component {
     this.contextRef = createRef()
   }
 
-  saveDoze = () => {
+  saveForm = () => {
+    let shownPage = this.props.router.values && this.props.router.values.page || 'none'
+    const {
+      birthDate,
+      age,
+      age_dwmy,
+      age_days,
+      sex,
+      growth,
+      weight,
+      disease,
+      disease2,
+      pregnancy,
+      gestation,
+      trimester,
+      lactation,
+      driving,
+      allergy
+    } = this.props.actions.patientForm
+    if(shownPage === 'new'){
+      Object.assign(this.props.actions.drugStructure.user, {
+        birthDate,
+        age,
+        age_dwmy,
+        age_days,
+        sex,
+        growth,
+        weight,
+        disease,
+        disease2,
+        pregnancy,
+        gestation,
+        trimester,
+        lactation,
+        driving,
+        allergy
+      });
+
+    }
+
     // this.props.db.GetDuration()
   }
 
@@ -53,12 +92,12 @@ class Patient extends Component {
           <Menu.Item color='red' onClick={this.back}>
             Назад
           </Menu.Item>
-          <Menu.Item onClick={this.saveDoze}>
+          <Menu.Item onClick={this.saveForm}>
             Сохранить
           </Menu.Item>
         </Menu>
 
-        <div className='scrollwrapper'>
+        <div className='scrollwrapper bottomMenu'>
           <PatientForm />
         </div>
 

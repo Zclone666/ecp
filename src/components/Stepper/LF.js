@@ -30,18 +30,18 @@ class LF extends Component {
         activeConflicts,
         stepsData,
       },
-      db: { drugDosage: { lf, druglf, methodstolf, names } },
+      db: { drugDosage: { drug, form, methodform, names } },
       router: { values }
     } = this.props
     let way = values.way || 'lf'
     let currStep = parseInt(values.step || 0)
 
-    let iterator = (stepsData.way === 'methods' && stepsData.method) ? methodstolf[stepsData.method] : _.keys(lf)
+    let iterator = (stepsData.way === 'methods' && stepsData.method) ? methodform[stepsData.method] : _.keys(form)
 
     return (
       <List animated divided selection verticalAlign='middle' size='large' >
         {iterator.map(( lfid, i ) => {
-          let lfItem = lf[lfid]
+          let lfItem = form[lfid]
           return(
             <List.Item
               key={'doze'+i}

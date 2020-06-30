@@ -25,6 +25,7 @@ class BirthDate extends Component {
     }
   }
   handleChangeBirth = (e, { value }) => {
+    let { onChange } = this.props
     let year = 0, month = 0, week = 0, day = 0, birthyear = 0
 
     let str = value && value.name || value
@@ -44,9 +45,11 @@ class BirthDate extends Component {
     if( birthyear > 0 ) date = moment().set('year', birthyear).format('x');
     //let date = moment().year(-year).month(-month).week(-week).day(-day).format('X')
     // console.log('birth', date, birthyear);
+    onChange && onChange(null, { name: 'birthDate', value: date })
     this.setState({ date, birth: value })
   }
   handleChangeDate = (e, { value }) => {
+    let { onChange } = this.props
     let years = moment().diff(moment(moment(value).toDate()), 'years')
     let months = moment().add({ years: -years }).diff(moment(moment(value).toDate()), 'months')
     let weeks = moment().add({ years: -years, months: -months }).diff(moment(moment(value).toDate()), 'weeks')
@@ -58,10 +61,9 @@ class BirthDate extends Component {
     if(weeks > 0) arr.push(weeks, declension(ref_weeks, weeks))
     if(days > 0) arr.push(days, declension(ref_days, days))
 
+    onChange && onChange(null, { name: 'birthDate', value: moment(value).format('x') })
     this.setState({ birth: arr.join(' '), date: moment(value).format('x') })
 
-    //console.log({ years, months, weeks, days });
-    //console.log('date', value);
   }
   render(){
     let { birth, date } = this.state

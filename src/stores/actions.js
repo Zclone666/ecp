@@ -63,6 +63,24 @@ class Actions {
 
   }
 
+  @observable patientForm = {
+    birthDate: null,
+    age: null,
+    age_dwmy: null,
+    age_days: null,
+    sex: null,
+    growth: null,
+    weight: null,
+    disease: [],
+    disease2: [],
+    pregnancy: null,
+    gestation: null,
+    trimester: null,
+    lactation: null,
+    driving: null,
+    allergy: []
+  }
+
   @observable selectedDrug = null
   @observable selectedConflict = null
   @observable activeDrugs = []
@@ -71,10 +89,10 @@ class Actions {
   @observable drugStructure = {
     auth_key: "auth_key",
     key: "key",
-    device_id: "",
+    device_id: '',
     clinic: {
-      key: "",
-      val: ""
+      key: '',
+      val: '',
     },
     department: {
       key: "",
@@ -89,20 +107,21 @@ class Actions {
       val: ""
     },
     user: {
+      birthDate: null,
       age: null,
       age_dwmy: null,
       age_days: null,
       sex: null,
       growth: null,
       weight: null,
-      disease: null,
-      disease2: null,
+      disease: [],
+      disease2: [],
       pregnancy: null,
       gestation: null,
       trimester: null,
       lactation: null,
       driving: null,
-      allergy: null
+      allergy: [],
     },
     save_recipe: true,
     active_language: "RU",
@@ -254,7 +273,7 @@ class Actions {
         },
         data1: "",
         data2: ""
-      }
+      },
     ]
   }
 
@@ -329,6 +348,18 @@ class Actions {
     }
 
   }
+
+  @action async selectPatient(row, from){
+    this.patientForm[from] = await _.unionWith(this.patientForm[from], [row], (a, b) => a.id === b.id);
+    this.stores.db.clearData()
+    return true
+  }
+  @action async unselectPatient(row, from){
+    this.patientForm[from] = await _.xorWith(this.patientForm[from], [row], (a, b) => a.id === b.id);
+    this.stores.db.clearData()
+    return true
+  }
+
   async autologin(){
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';

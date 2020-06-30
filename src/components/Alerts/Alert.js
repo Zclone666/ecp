@@ -43,7 +43,7 @@ class AlertItem extends React.Component {
     return (
       <Transition visible={open} animation='scale' duration={1000}>
         <Message
-          className='tiny squared'
+          className='small squared'
           onDismiss={this.close}
           success = {level === 'success'}
           error = {level === 'error'}

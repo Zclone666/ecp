@@ -21,6 +21,45 @@ class DozeTypes extends Component {
   setDosage = ( lf ) => {
     this.props.actions.stepsData.dosage = lf
   }
+  get dosages(){
+    let {
+      actions: {
+        selectedDrug,
+        selectedConflict,
+        activeDrugs,
+        activeConflicts,
+        stepsData
+      },
+      db: { drugDosage: { drug, form, methodform, names } }
+    } = this.props
+
+    let arr = []
+
+    form[stepsData.lf] && form[stepsData.lf].dosage.forEach((item, i) => {
+      let currPack = {
+        dosage: '',
+        pack: ''
+      }
+      if(_.isArray(item.pack) && item.pack.length > 0 ){
+        item.pack.forEach((pack, x) => {
+
+          if(_.isArray(item.dosage) && item.dosage.length > 0 ){
+            currPack.dosage += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
+          }
+          currPack.pack += names[pack.id] + ', ' + pack.dosage.value_1 + ' ' + names[pack.dosage.id_1]
+          arr.push({ ...currPack })
+        })
+      }else{
+        if(_.isArray(item.dosage) && item.dosage.length > 0 ){
+          currPack.dosage += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
+        }
+        arr.push({ ...currPack })
+      }
+
+    })
+    return arr
+
+  }
   render(){
     let {
       actions: {
@@ -30,7 +69,7 @@ class DozeTypes extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { lf, druglf, methodstolf, names } },
+      db: { drugDosage: { drug, form, methodform, names } },
       router: { values }
     } = this.props
     let way = values.way || 'lf'
@@ -38,7 +77,7 @@ class DozeTypes extends Component {
 
     return (
       <List animated divided selection verticalAlign='middle' size='large' >
-        {lf[stepsData.lf] && lf[stepsData.lf].dosage.map(( dosage, i ) => {
+        {this.dosages.map(( dosage, i ) => {
 
           return(
             <List.Item
@@ -55,10 +94,10 @@ class DozeTypes extends Component {
               </List.Content>
 
               <List.Content className='large'>
-                <List.Header>{dosage.value} {names[dosage.bigid]}</List.Header>
-                {/*<List.Description>
-                  {names[dosage.bigid]}
-                </List.Description>*/}
+                <List.Header>{dosage.dosage}</List.Header>
+                {dosage.pack.length > 0 && <List.Description>
+                  {dosage.pack}
+                </List.Description>}
               </List.Content>
 
             </List.Item>
