@@ -42,9 +42,14 @@ class DozeTypes extends Component {
       }
       if(_.isArray(item.pack) && item.pack.length > 0 ){
         item.pack.forEach((pack, x) => {
-
-          if(_.isArray(item.dosage) && item.dosage.length > 0 ){
+          currPack = {
+            dosage: '',
+            pack: ''
+          }
+          if(_.isArray(item.dosage) && item.dosage.length > 1 ){
             currPack.dosage += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
+          }else if(_.isArray(item.dosage) && item.dosage.length === 1 ){
+            currPack.dosage += item.dosage[0].value_1 + (item.dosage[0].value_2 && '/' + item.dosage[0].value_2) + ' ' + names[item.dosage[0].id_1]
           }
           currPack.pack += names[pack.id] + ', ' + pack.dosage.value_1 + ' ' + names[pack.dosage.id_1]
           arr.push({ ...currPack })
