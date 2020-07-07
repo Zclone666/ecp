@@ -76,12 +76,48 @@ class DB {
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
-        path: `GetLF`,
+        path: `GetDosage`,
         data,
         success: async data => {
-          console.log('DATA', data);
+          //console.log('DATA', data);
           let { alert, ...drug } = data
           _.assign(this.drugDosage, {...drug})
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+  async preGetLF(drug){
+    //this.searchReady = false
+    //let data = _.clone(this.stores.actions.filterTpl[filterName])
+    let data = {
+      // text,
+      lib: '52, 62',
+      service: "43",
+      drug: drug
+    }
+    // data.text = text
+    // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
+    // chain: 0
+    // key: "4vvqd9zcewdc2a"
+    // lib: "66"
+    // service: "43"
+    // text: "ан"
+    // data.key = '1f9b2da3f046b34b'
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `PreDosage`,
+        data,
+        success: async data => {
+          console.log('OK');
+          // console.log('DATA', data);
+          // let { alert, ...drug } = data
+          // _.assign(this.drugDosage, {...drug})
         },
         fail: (alerts) => {
 
@@ -114,7 +150,7 @@ class DB {
         path: `GetDuration`,
         data,
         success: async data => {
-          console.log('DATA', data);
+          //i`1console.log('DATA', data);
 
         },
         fail: (alerts) => {
@@ -275,6 +311,7 @@ class DB {
   }
 
   async selectFromSearch(row){
+    this.preGetLF(row)
     this.selectedRows = await _.unionWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.clearData()
     return true

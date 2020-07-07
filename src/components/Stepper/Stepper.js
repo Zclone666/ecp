@@ -8,6 +8,7 @@ import WayChoice from './WayChoice'
 import LF from './LF'
 import DozeTypes from './DozeTypes'
 import Methods from './Methods'
+import Calculator from './Calculator'
 
 import {
   Transition,
@@ -87,7 +88,7 @@ class Stepper extends Component {
     }
   }
   handleOnUpdate = (event, data) => {
-    console.log({event, data});
+    // console.log({event, data});
     if( data.width > 479 ){
       this.setState({ viewType: 'pc' })
     }else{
@@ -141,6 +142,9 @@ class Stepper extends Component {
                 '': ''
               }[way]
             }
+            if(step.name === 'dosage' && currStep > i){
+              chosedName = stepsData.dosageFull.dosage + ', ' + stepsData.dosageFull.pack
+            }
             return(
               <Step completed={currStep > i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
                 { ( currStep == i || viewType == 'pc' ) &&
@@ -176,8 +180,9 @@ class Stepper extends Component {
               undefined: <Methods />
             }[way]}
           </div>
-
-
+          <div className='scrollwrapper'>
+            <Calculator />
+          </div>
           <WayChoice />
         </Slider>
       </Responsive>

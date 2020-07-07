@@ -60,7 +60,7 @@ class Actions {
     lf: null,
     dosage: null,
     method: null,
-
+    dosageFull: {}
   }
 
   @observable patientForm = {
@@ -413,7 +413,7 @@ class Actions {
       authkey: this.authkey
     }
     return POST({
-      path: `CheckAuth`,
+      path: `https://ecp2.socmedica.dev/api/auth/CheckAuth`,
       data,
       success: async (data) => {
         // console.log('SUCCESS', data);

@@ -19,7 +19,8 @@ class DozeTypes extends Component {
     }
   }
   setDosage = ( lf ) => {
-    this.props.actions.stepsData.dosage = lf
+    this.props.actions.stepsData.dosage = lf.bigid
+    this.props.actions.stepsData.dosageFull= lf
   }
   get dosages(){
     let {
@@ -38,25 +39,36 @@ class DozeTypes extends Component {
     form[stepsData.lf] && form[stepsData.lf].dosage.forEach((item, i) => {
       let currPack = {
         dosage: '',
-        pack: ''
+        pack: '',
+        flag: false
       }
       if(_.isArray(item.pack) && item.pack.length > 0 ){
         item.pack.forEach((pack, x) => {
           currPack = {
             dosage: '',
-            pack: ''
+            pack: '',
+            flag: !!item.dosage[0].id_2,
+            obj: {
+              dosages: item.dosage,
+              pack: pack,
+            }
           }
           if(_.isArray(item.dosage) && item.dosage.length > 1 ){
             currPack.dosage += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
           }else if(_.isArray(item.dosage) && item.dosage.length === 1 ){
             currPack.dosage += item.dosage[0].value_1 + (item.dosage[0].value_2 && '/' + item.dosage[0].value_2) + ' ' + names[item.dosage[0].id_1]
           }
-          currPack.pack += names[pack.id] + ', ' + pack.dosage.value_1 + ' ' + names[pack.dosage.id_1]
+          currPack.pack += names[pack.id] + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + names[pack.dosage.id_1]) || '')
           arr.push({ ...currPack })
         })
       }else{
         if(_.isArray(item.dosage) && item.dosage.length > 0 ){
           currPack.dosage += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
+          currPack.flag = !!item.dosage[0].id_2
+        }
+
+        currPack.obj = {
+          dosages: item.dosage
         }
         arr.push({ ...currPack })
       }
@@ -88,8 +100,9 @@ class DozeTypes extends Component {
             <List.Item
               as={RouterLink}
               to={`/concept/dozes/${way}/${currStep+1}`}
-              onClick={() => this.setDosage(dosage.bigid)}
+              onClick={() => this.setDosage(dosage)}
             >
+
               <List.Content floated='right'>
                 <Icon
 
@@ -99,6 +112,7 @@ class DozeTypes extends Component {
               </List.Content>
 
               <List.Content className='large'>
+                {dosage.flag && <Icon name='warning sign' color='red' style={{ float: 'left' }} />}
                 <List.Header>{dosage.dosage}</List.Header>
                 {dosage.pack.length > 0 && <List.Description>
                   {dosage.pack}
