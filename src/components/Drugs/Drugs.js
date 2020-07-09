@@ -34,13 +34,15 @@ class Drugs extends Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups }
+      db: { warnings, warnGroups, drugs }
     } = this.props
     let selectedWarnings = warnings[selectedDrug]
     // console.log('activeDrugs', activeDrugs);
+    let iterator = Array.from(drugs.data.values())
+    // console.log('iterator', iterator);
     return (
       <List divided selection verticalAlign='middle' size='big' className='drugslist'>
-        {selectedRows.map(( drug, i ) => {
+        {iterator.map(( drug, i ) => {
           return(
             <Drug drug={drug} key={`drug_${i}`} />
           )

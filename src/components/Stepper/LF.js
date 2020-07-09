@@ -19,7 +19,7 @@ class LF extends Component {
     }
   }
   setLF = ( lf ) => {
-    this.props.actions.stepsData.lf = lf
+    this.props.actions.stepsData.form = lf
   }
   render(){
     let {
@@ -30,11 +30,16 @@ class LF extends Component {
         activeConflicts,
         stepsData,
       },
-      db: { drugDosage: { drug, form, methodform, names } },
+      db: { drugsDosages, currDrug },
       router: { values }
     } = this.props
     let way = values.way || 'lf'
     let currStep = parseInt(values.step || 0)
+    console.log('currDrug', currDrug);
+
+    let drugDosage = drugsDosages.data.get(currDrug.key) || {}
+    console.log('drugDosage', drugDosage);
+    let { drug, form, methodform, names } = drugDosage
 
     let iterator = (stepsData.way === 'methods' && stepsData.method) ? methodform[stepsData.method] : _.keys(form)
 
@@ -47,7 +52,7 @@ class LF extends Component {
               key={'doze'+i}
               as={RouterLink}
               to={`/concept/dozes/${way}/${currStep+1}`}
-              onClick={() => this.setLF(lfid)}
+              onClick={() => this.setLF(lfid, lfItem)}
             >
               <List.Content floated='right'>
                 <Icon

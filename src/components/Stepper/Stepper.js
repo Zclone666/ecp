@@ -105,7 +105,7 @@ class Stepper extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { lf, druglf, methodstolf, names } },
+      db: { drugDosage: { names } },
       router: { values }
     } = this.props
 
@@ -143,7 +143,7 @@ class Stepper extends Component {
               }[way]
             }
             if(step.name === 'dosage' && currStep > i){
-              chosedName = stepsData.dosageFull.dosage + ', ' + stepsData.dosageFull.pack
+              chosedName = stepsData.pack.dosage + ', ' + stepsData.pack.pack
             }
             return(
               <Step completed={currStep > i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>

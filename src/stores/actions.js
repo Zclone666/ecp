@@ -55,12 +55,13 @@ class Actions {
   }
 
   @observable stepsData = {
+    key: null,
     way: null,
     step: null,
-    lf: null,
-    dosage: null,
+    form: null,
     method: null,
-    dosageFull: {}
+    pack: {},
+    dosage: {},
   }
 
   @observable patientForm = {
@@ -281,6 +282,8 @@ class Actions {
 
   constructor({ stores }) {
     this.stores = stores;
+
+
 
     this.autologin()
 

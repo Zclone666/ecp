@@ -30,13 +30,16 @@ class MethodsLF extends Component {
         activeConflicts,
         stepsData,
       },
-      db: { drugDosage: { drug, form, methodform, names } },
+      db: { drugsDosages, currDrug },
       router: { values }
     } = this.props
     let way = values.way || 'lf'
     let currStep = parseInt(values.step || 0)
 
-    let iterator = (stepsData.way === 'lf' && stepsData.lf) ? form[stepsData.lf].method : _.keys(methodform)
+    let drugDosage = drugsDosages.data.get(currDrug.key)
+    let { drug, form, methodform, names } = drugDosage
+
+    let iterator = (stepsData.way === 'lf' && stepsData.form) ? form[stepsData.form].method : _.keys(methodform)
     // console.log('iterator', iterator);
     // console.log('stepsData', stepsData);
     return (

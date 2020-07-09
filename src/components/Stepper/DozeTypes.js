@@ -19,8 +19,8 @@ class DozeTypes extends Component {
     }
   }
   setDosage = ( lf ) => {
-    this.props.actions.stepsData.dosage = lf.bigid
-    this.props.actions.stepsData.dosageFull= lf
+    //this.props.actions.stepsData.dosage = lf.bigid
+    this.props.actions.stepsData.pack = lf
   }
   get dosages(){
     let {
@@ -31,12 +31,15 @@ class DozeTypes extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { drug, form, methodform, names } }
+      db: { drugsDosages, currDrug },
     } = this.props
+
+    let drugDosage = drugsDosages.data.get(currDrug.key)
+    let { drug, form, methodform, names } = drugDosage
 
     let arr = []
 
-    form[stepsData.lf] && form[stepsData.lf].dosage.forEach((item, i) => {
+    form[stepsData.form] && form[stepsData.form].dosage.forEach((item, i) => {
       let currPack = {
         dosage: '',
         pack: '',
@@ -47,7 +50,7 @@ class DozeTypes extends Component {
           currPack = {
             dosage: '',
             pack: '',
-            flag: !!item.dosage[0].id_2,
+            flag: !!(item.dosage[0] && item.dosage[0].id_2),
             obj: {
               dosages: item.dosage,
               pack: pack,
@@ -64,7 +67,7 @@ class DozeTypes extends Component {
       }else{
         if(_.isArray(item.dosage) && item.dosage.length > 0 ){
           currPack.dosage += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
-          currPack.flag = !!item.dosage[0].id_2
+          currPack.flag = !!(item.dosage[0] && item.dosage[0].id_2)
         }
 
         currPack.obj = {
@@ -86,11 +89,15 @@ class DozeTypes extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { drug, form, methodform, names } },
+      db: { drugsDosages, currDrug },
       router: { values }
     } = this.props
     let way = values.way || 'lf'
     let currStep = parseInt(values.step || 0)
+
+
+    let drugDosage = drugsDosages.data.get(currDrug.key)
+    let { drug, form, methodform, names } = drugDosage
 
     return (
       <List animated divided selection verticalAlign='middle' size='large' >

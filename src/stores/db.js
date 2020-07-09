@@ -1,5 +1,6 @@
 import { observable, action, autorun, computed } from 'mobx';
 import { GET, POST, PUT } from '../lib/connect'
+import moment from 'moment'
 
 import _ from 'lodash';
 // import { colors } from '../components/Charts/colorPallette'
@@ -30,6 +31,16 @@ class DB {
     this.stores = stores;
     this.router = stores.router;
 
+    this.drugs = {
+      data: observable.map({}, 'drugs'),
+      ready: observable.box(true)
+    }
+
+    this.drugsDosages = {
+      data: observable.map({}, 'drugsDosages'),
+      ready: observable.box(true)
+    }
+
     // this.warnings = {
     //   data: observable.map({}, 'warnings'),
     //   ready: observable.box(false)
@@ -48,22 +59,25 @@ class DB {
     this.searchRows = observable([])
     this.warnings = observable({});
     this.warnGroups = observable({});
+
     if(withSelects){
       this.selectedRows = observable([]);
       this.diseaseRows = observable([]);
       this.disease2Rows = observable([]);
       this.allergyRows = observable([]);
+      this.drugsDosages.data.clear()
+      this.drugs.data.clear()
     }
   }
 //GetLF
-  async getLF(drug){
+  async getLF(drug_obj){
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
     let data = {
       // text,
       lib: '52, 62',
       service: "43",
-      drug: drug
+      drug: drug_obj
     }
     // data.text = text
     // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
@@ -80,42 +94,10 @@ class DB {
         data,
         success: async data => {
           //console.log('DATA', data);
-          let { alert, ...drug } = data
-          _.assign(this.drugDosage, {...drug})
-        },
-        fail: (alerts) => {
+          let { drug, form, methodform, names } = data
+          let current = this.drugsDosages.data.get(drug.key) || {};
+          this.drugsDosages.data.set( drug.key, _.extend(current, { drug, form, methodform, names, url: '/concept/dozes/' }) );
 
-        },
-        always: (data) => {
-
-        }
-    });
-  }
-  async preGetLF(drug){
-    //this.searchReady = false
-    //let data = _.clone(this.stores.actions.filterTpl[filterName])
-    let data = {
-      // text,
-      lib: '52, 62',
-      service: "43",
-      drug: drug
-    }
-    // data.text = text
-    // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
-    // chain: 0
-    // key: "4vvqd9zcewdc2a"
-    // lib: "66"
-    // service: "43"
-    // text: "ан"
-    // data.key = '1f9b2da3f046b34b'
-    data.authkey = this.stores.actions.authkey
-    data.key = this.stores.actions.privateKey
-    return POST({
-        path: `PreDosage`,
-        data,
-        success: async data => {
-          console.log('OK');
-          // console.log('DATA', data);
           // let { alert, ...drug } = data
           // _.assign(this.drugDosage, {...drug})
         },
@@ -127,6 +109,7 @@ class DB {
         }
     });
   }
+
   async GetDuration(drug){
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
@@ -310,13 +293,103 @@ class DB {
     });
   }
 
-  async selectFromSearch(row){
-    this.preGetLF(row)
-    this.selectedRows = await _.unionWith(this.selectedRows, [row], (a, b) => a.id === b.id);
+  setDosageParams = async (url) => {
+    let drugData = this.stores.actions.stepsData
+
+    let drug = this.currDrug
+    let currentDrug = await this.drugs.data.get(drug.key) || {};
+    let currentDosages = await this.drugsDosages.data.get(drug.key) || {};
+
+    let { form, method, pack, dosage } = drugData
+
+    currentDrug.dosage = { form, method, pack, dosage }
+
+    await this.drugs.data.set( drug.key, currentDrug );
+
+    await this.drugsDosages.data.set( drug.key, _.extend(currentDosages, { url }) );
+    this.clearData()
+  }
+
+  selectFromSearch = async (row) => {
+    let drug = {
+      key: moment().format('x').toString(), // уникальный ключ
+      id:"", // айди ДВ или ТН
+      name: "", // Название ДВ или ТН
+      level: 0, //
+      tn: false, // ДВ или ТН
+      fp_id: "", //
+      group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
+      dosage: { // дозировка
+        // way: null,
+        // step: null,
+        form: null,
+        method: null,
+        pack: {},
+        dosage: {},
+
+        //unstructured: "",
+        // form: {
+        //   id: "",
+        //   name: "",
+        //   parent: {
+        //     key: "",
+        //     val: ""
+        //   },
+        //   val: "",
+        //   unit: "",
+        //   valunit: ""
+        // },
+        // method: {
+        //   id: "",
+        //   name: ""
+        // },
+        // val: "",
+        // unit: "",
+        // unit_id: "",
+        // unit_type: "",
+        // count: "",
+        // freq: {
+        //   id: "",
+        //   name: "",
+        //   val: ""
+        // },
+        // duration: {
+        //   id: "",
+        //   name: "",
+        //   val: "",
+        //   calendar: [{
+        //     data1: "",
+        //     data2: ""
+        //   }]
+        // },
+        // special: "",
+        // spec: ""
+      },
+      // data1: "",
+      // data2: ""
+    }
+    drug = _.assignIn(drug, row);
+    // let drugFull = {
+    //   drug,
+    //   stepsData:{
+    //     way: null,
+    //     step: null,
+    //   },
+    //   url: '/concept/dozes/'
+    // }
+
+    let current = this.drugs.data.get(drug.key) || {};
+    this.drugs.data.set( drug.key, _.extend(current, drug) );
+    // console.log('dasf', this.drugs.data.get(drug.key));
+
+    this.getLF(drug)
+
+    // this.selectedRows = await _.unionWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.clearData()
     return true
   }
   async unselectDrug(row){
+    this.drugs.data.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.clearData()
     return true

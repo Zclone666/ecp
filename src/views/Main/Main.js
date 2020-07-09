@@ -86,7 +86,7 @@ class Main extends Component {
   render() {
     const { open, searchQuery, selectedDrug, selectedConflict } = this.state
     let { currentPage, height } = this.props.actions
-    let { searchReady, searchRows, selectedRows, warnings, warnGroups } = this.props.db
+    let { searchReady, searchRows, selectedRows, warnings, warnGroups, drugs } = this.props.db
     let selectedWarnings = warnings[selectedDrug]
     let showPage = !!(this.props.router.values && this.props.router.values.page)
     // console.log('router', this.props.router);
@@ -133,12 +133,12 @@ class Main extends Component {
             </Menu.Item>
           </Menu>
           <Menu className="bottom fixed menu two item huge main">
-            {selectedRows.length > 0 &&
+            {drugs.data.size > 0 &&
               <Menu.Item color='red' onClick={this.handleResetAll}>
                 Сбросить
               </Menu.Item>
             }
-            {selectedRows.length > 0 &&
+            {drugs.data.size > 0 &&
               <Menu.Item onClick={this.getInfoPrep}>
                 Проверить
               </Menu.Item>
@@ -178,7 +178,7 @@ class Main extends Component {
             <div className='scrollwrapper'>
               <Grid>
                 <Grid.Column width={16}>
-                  {selectedRows.length > 0 ?
+                  {drugs.data.size > 0 ?
                     <Drugs />
                     :
                     <Segment basic>
@@ -189,7 +189,7 @@ class Main extends Component {
                     </Segment>
                   }
                 </Grid.Column>
-                {selectedRows.length > 0 &&
+                {drugs.data.size > 0 &&
                   <Grid.Column width={16}>
                     <Conflicts />
                   </Grid.Column>

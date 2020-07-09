@@ -38,11 +38,27 @@ class Page extends Component {
   }
 
   saveDoze = () => {
-    this.props.db.GetDuration()
+    let {
+      db: { drugs, drugsDosages, currDrug, setDosageParams },
+      router: { location }
+    } = this.props
+    setDosageParams(location.pathname)
+    // let current = drugsDosages.data.get(currDrug.key) || {};
+    // drugsDosages.data.set( currDrug.key, _.extend(current, { ...current, url: location.pathname }) );
+
   }
 
   back = () => {
     this.props.router.push('/')
+    this.props.actions.stepsData = {
+      key: null,
+      way: null,
+      step: null,
+      form: null,
+      method: null,
+      pack: {},
+      dosage: {},
+    }
   };
 
   render() {

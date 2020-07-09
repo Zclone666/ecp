@@ -75,16 +75,20 @@ class Drug extends React.Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups },
+      db: { selectedRows, warnings, warnGroups, drugsDosages },
       drug
     } = this.props
+    console.log('drug', drug);
     let selectedWarnings = warnings[selectedDrug]
-    let { name, level, tn } = drug
-    let currWarning = activeDrugs.includes(drug.id) && (selectedWarnings && warnGroups[selectedWarnings[drug.id].group] || warnGroups[selectedConflict])
-    let hasWarning = warnings[drug.id] && !_.isEmpty(warnings[drug.id])
-    let maxItem = _.maxBy(_.toArray(warnings[drug.id]), function(o){ return o.value; });
-    let className = selectedDrug === drug.id ? 'selected' : ''
-    className += (activeDrugs.length < 1 || activeDrugs.includes(drug.id) || selectedDrug === drug.id)  ? '' : ' unused'
+    let { key, name, level, tn, dosage } = drug
+    let drugDosages = drugsDosages.data.get(key) || {}
+    console.log('drugDosages', drugDosages);
+    let names = drugDosages.names || {}
+    let currWarning = activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
+    let hasWarning = warnings[drug.key] && !_.isEmpty(warnings[drug.key])
+    let maxItem = _.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
+    let className = selectedDrug === drug.key ? 'selected' : ''
+    className += (activeDrugs.length < 1 || activeDrugs.includes(drug.key) || selectedDrug === drug.key)  ? '' : ' unused'
 
     return(
       <List.Item className={className}>
@@ -113,7 +117,7 @@ class Drug extends React.Component {
               name='arrow alternate circle right'
               style={{ color: '#FFF' }}
               size='large'
-              onClick={() => this.setState({ selectedDrug: drug.id })}
+              onClick={() => this.setState({ selectedDrug: drug.key })}
             />
           </div>
           :
@@ -126,7 +130,7 @@ class Drug extends React.Component {
           </div>
         }
         {hasWarning ?
-          <List.Icon name='warning circle' style={{ color: maxItem.valuecolor }} size='large' onClick={(e) => this.selectDrug(e, drug.id)} />
+          <List.Icon name='warning circle' style={{ color: maxItem.valuecolor }} size='large' onClick={(e) => this.selectDrug(e, drug.key)} />
           :
           <List.Icon name='warning circle' size='large' style={{ color: 'transparent', textShadow: 'unset' }} />
         }
@@ -136,10 +140,17 @@ class Drug extends React.Component {
               <Feed.Content>
                 <Feed.Summary>
                   <span className='underlined'>{name}</span>{tn && <span><sup>TM</sup></span>}
-                  <Feed.Date>внутривенное введение, 1 мл</Feed.Date>
+                  <Feed.Date>
+                    {dosage.form && names[dosage.form]}
+                    {(dosage.method && dosage.form) && ', '}
+                    {names[dosage.method] || ''}
+                  </Feed.Date>
                 </Feed.Summary>
                 <Feed.Meta>
-                  р-р для в/в и в/м введ 0.1 % (1 мг/мл) (ампула 1 мл)
+
+                  {dosage.pack.dosage || ''}
+                  {(dosage.pack.dosage && dosage.pack.pack) && ', '}
+                  {dosage.pack.pack || ''}
                 </Feed.Meta>
               </Feed.Content>
             </Feed.Event>
@@ -153,10 +164,12 @@ class Drug extends React.Component {
                 <Feed.Content>
                   <Feed.Summary>
                     <span className='underlined'>{name}</span>{tn && <span><sup>TM</sup></span>}
-                    <Feed.Date>внутривенное введение, 1 мл</Feed.Date>
+                    <Feed.Date>{names[dosage.method] || ''}</Feed.Date>
                   </Feed.Summary>
                   <Feed.Meta>
-                    р-р для в/в и в/м введ 0.1 % (1 мг/мл) (ампула 1 мл)
+                    {dosage.pack.dosage || ''}
+                    {(dosage.pack.dosage && dosage.pack.pack) && ', '}
+                    {dosage.pack.pack || ''}
                   </Feed.Meta>
                 </Feed.Content>
               </Feed.Event>
