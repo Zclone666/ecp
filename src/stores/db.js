@@ -51,14 +51,26 @@ class DB {
     });
 
   }
-  clearData(withSelects){
+  clearData(withSelects, withWarnings){
     this.stores.actions.selectedDrug = null
     this.stores.actions.selectedConflict = null
     this.stores.actions.activeConflicts = []
     this.stores.actions.activeDrugs = []
+    this.stores.actions.stepsData = {
+      key: null,
+      way: null,
+      step: null,
+      form: null,
+      method: null,
+      pack: {},
+      dosage: {},
+    }
     this.searchRows = observable([])
-    this.warnings = observable({});
-    this.warnGroups = observable({});
+
+    if(withWarnings){
+      this.warnings = observable({});
+      this.warnGroups = observable({});
+    }
 
     if(withSelects){
       this.selectedRows = observable([]);
@@ -401,13 +413,13 @@ class DB {
     this.getLF(drug)
 
     // this.selectedRows = await _.unionWith(this.selectedRows, [row], (a, b) => a.id === b.id);
-    this.clearData()
+    this.clearData(false, true)
     return true
   }
   async unselectDrug(row){
     this.drugs.data.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
-    this.clearData()
+    this.clearData(false, true)
     return true
   }
 
