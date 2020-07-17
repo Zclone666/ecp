@@ -105,9 +105,12 @@ class Stepper extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { names } },
+      db: { drugsDosages, currDrug },
       router: { values }
     } = this.props
+
+    let drugsDosage = drugsDosages.data.get(currDrug.key)
+    let { names } = drugsDosage
 
     let currStep = parseInt(values.step || 0)
     let way = values.way || ''
@@ -133,6 +136,7 @@ class Stepper extends Component {
             if( i > 0 && i <= currStep ) {
               url += `/${way}/${i}`
               chosedName = names[stepsData[step.name]]
+              if(step.name === 'lf') chosedName = names[stepsData.form]
             } else if( i !== 0 ) {
               url = ''
             } else {
@@ -145,6 +149,7 @@ class Stepper extends Component {
             if(step.name === 'dosage' && currStep > i){
               chosedName = stepsData.pack.dosage + ', ' + stepsData.pack.pack
             }
+            console.log({ step, chosedName, stepsData, names });
             return(
               <Step completed={currStep > i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
                 { ( currStep == i || viewType == 'pc' ) &&
