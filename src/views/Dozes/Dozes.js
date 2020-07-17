@@ -43,6 +43,7 @@ class Page extends Component {
       router: { location }
     } = this.props
     setDosageParams(location.pathname)
+    this.props.router.push('/')
     // let current = drugsDosages.data.get(currDrug.key) || {};
     // drugsDosages.data.set( currDrug.key, _.extend(current, { ...current, url: location.pathname }) );
 
