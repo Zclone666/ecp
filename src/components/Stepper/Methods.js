@@ -39,7 +39,7 @@ class MethodsLF extends Component {
     let drugDosage = drugsDosages.data.get(currDrug.key)
     let { drug, form, methodform, names } = drugDosage
 
-    let iterator = (stepsData.way === 'lf' && stepsData.form) ? form[stepsData.form].method : _.keys(methodform)
+    let iterator = (stepsData.way === 'lf' && stepsData.form) ? (form[stepsData.form] && form[stepsData.form].method || []) : _.keys(methodform)
     // console.log('iterator', iterator);
     // console.log('stepsData', stepsData);
     return (
