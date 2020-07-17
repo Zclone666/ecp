@@ -151,7 +151,7 @@ class DB {
       // text,
       lib: '52, 62',
       service: "43",
-      drugs: _.clone(this.selectedRows)
+      drugs: Array.from(this.drugs.data.values())//_.clone(this.selectedRows)
     }
     // data.text = text
     // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
@@ -164,7 +164,7 @@ class DB {
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
-        path: `GetInfoPrep`,
+        path: `https://dev.socmedica.com/2/api/ecp/GetInfoPrep`,
         data,
         success: async data => {
           //console.log('DATA', data);
@@ -294,6 +294,22 @@ class DB {
   }
 
   setDosageParams = async (url) => {
+    let drugData = this.stores.actions.stepsData
+
+    let drug = this.currDrug
+    let currentDrug = await this.drugs.data.get(drug.key) || {};
+    let currentDosages = await this.drugsDosages.data.get(drug.key) || {};
+
+    let { form, method, pack, dosage } = drugData
+
+    currentDrug.dosage = { form, method, pack, dosage }
+
+    await this.drugs.data.set( drug.key, currentDrug );
+
+    await this.drugsDosages.data.set( drug.key, _.extend(currentDosages, { url }) );
+    this.clearData()
+  }
+  getDosageParams = async (url) => {
     let drugData = this.stores.actions.stepsData
 
     let drug = this.currDrug

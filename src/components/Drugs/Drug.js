@@ -78,12 +78,13 @@ class Drug extends React.Component {
       db: { selectedRows, warnings, warnGroups, drugsDosages },
       drug
     } = this.props
-    console.log('drug', drug);
+    //console.log('drug', drug);
     let selectedWarnings = warnings[selectedDrug]
     let { key, name, level, tn, dosage } = drug
     let drugDosages = drugsDosages.data.get(key) || {}
-    console.log('drugDosages', drugDosages);
+    //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
+    let url = drugDosages.url || {}
     let currWarning = activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
     let hasWarning = warnings[drug.key] && !_.isEmpty(warnings[drug.key])
     let maxItem = _.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
@@ -100,7 +101,7 @@ class Drug extends React.Component {
           </Responsive>
           */}
           <Responsive fireOnMount as={Button.Group} basic color='blue' minWidth='481'>
-            <Button as={RouterLink} to='/concept/dozes' onClick={this.getLF} icon>
+            <Button as={RouterLink} to={url} onClick={this.getLF} icon>
               <Icon name='tint' />
             </Button>
             <Button icon>

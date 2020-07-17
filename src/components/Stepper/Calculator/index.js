@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
-import RouterLink from '../../router/a'
+import RouterLink from '../../../router/a'
 import {
   List,
   Icon,
@@ -11,6 +11,8 @@ import {
   Button,
   Dropdown
 } from 'semantic-ui-react'
+
+import Schedule from './Schedule'
 
 import _ from 'lodash';
 
@@ -114,6 +116,7 @@ class Calculator extends Component {
           </Form.Group>
 
         </Form>
+        <Schedule />
       </Segment>
     )
   }
