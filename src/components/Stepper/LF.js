@@ -35,10 +35,10 @@ class LF extends Component {
     } = this.props
     let way = values.way || 'lf'
     let currStep = parseInt(values.step || 0)
-    console.log('currDrug', currDrug);
+    //console.log('currDrug', currDrug);
 
     let drugDosage = drugsDosages.data.get(currDrug.key) || {}
-    console.log('drugDosage', drugDosage);
+    //console.log('drugDosage', drugDosage);
     let { drug, form, methodform, names } = drugDosage
 
     let iterator = (stepsData.way === 'methods' && stepsData.method) ? methodform[stepsData.method] : _.keys(form)

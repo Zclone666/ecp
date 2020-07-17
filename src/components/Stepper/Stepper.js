@@ -149,7 +149,7 @@ class Stepper extends Component {
             if(step.name === 'dosage' && currStep > i){
               chosedName = stepsData.pack.dosage + ', ' + stepsData.pack.pack
             }
-            console.log({ step, chosedName, stepsData, names });
+            //console.log({ step, chosedName, stepsData, names });
             return(
               <Step completed={currStep > i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
                 { ( currStep == i || viewType == 'pc' ) &&
