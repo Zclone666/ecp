@@ -416,7 +416,7 @@ class Actions {
       authkey: this.authkey
     }
     return POST({
-      path: `https://ecp2.socmedica.dev/api/auth/CheckAuth`,
+      path: `auth/Check`,
       data,
       success: async (data) => {
         // console.log('SUCCESS', data);

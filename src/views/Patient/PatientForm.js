@@ -54,6 +54,12 @@ class PatientForm extends Component {
       this.props.actions.patientForm.trimester = null
       this.props.actions.patientForm.lactation = null
     }
+    if( name === 'trimester' ){
+      this.props.actions.patientForm.gestation = null
+    }
+    if( name === 'gestation' ){
+      this.props.actions.patientForm.trimester = value > 14 ? ( value > 26 ? 3 : 2) : 1
+    }
     //console.log({ name, value });
   }
   handleChangeToggle = (e, { name, value }) => {
@@ -85,7 +91,7 @@ class PatientForm extends Component {
     if(value.length > 1){
       this.props.db.searchReady = false
       if( name === 'allergy' ){
-        this.props.db.getSearch(value, name)
+        this.props.db.getSearchAllergy(value, name)
       }else{
         this.props.db.getSearchDisease(value, name)
       }
@@ -317,6 +323,7 @@ class PatientForm extends Component {
                   onChange={this.handleChange}
                   button
                   fluid
+                  search
                   floating
                   options={_.map(Array(44), (item, i) => {
                     return {
@@ -425,6 +432,7 @@ class PatientForm extends Component {
                   onChange={this.handleChange}
                   button
                   floating
+                  search
                   options={_.map(Array(44), (item, i) => {
                     return {
                       key: i+1,

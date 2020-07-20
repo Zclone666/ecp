@@ -102,7 +102,7 @@ class DB {
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
-        path: `GetDosage`,
+        path: `drugs/Dosages`,
         data,
         success: async data => {
           //console.log('DATA', data);
@@ -176,7 +176,7 @@ class DB {
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
-        path: `https://dev.socmedica.com/2/api/ecp/GetInfoPrep`,
+        path: `https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //'check/Warnings'
         data,
         success: async data => {
           //console.log('DATA', data);
@@ -256,7 +256,7 @@ class DB {
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
-        path: `SearchConcept`,
+        path: `search/Drugs`,
         data,
         success: async data => {
           if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
@@ -286,7 +286,7 @@ class DB {
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
-        path: `SearchConcept`,
+        path: `search/Diseases`,
         data,
         success: async data => {
           if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
@@ -304,7 +304,35 @@ class DB {
         }
     });
   }
-
+  async getSearchAllergy(text, saveTo){
+    this.searchReady = false
+    let data = {
+      text,
+      lib: '61, 25',
+      service: "43",
+      chain: 0
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `search/Allergy`,
+        data,
+        success: async data => {
+          if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
+            this[`${saveTo}Rows`] = observable([])
+            this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
+            this.searchReady = true
+          }
+        },
+        fail: (alerts) => {
+            this.searchReady = true
+          // console.log('fail', alerts);
+        },
+        always: (data) => {
+          // this.stores.actions.makeAlerts(data)
+        }
+    });
+  }
   setDosageParams = async (url) => {
     let drugData = this.stores.actions.stepsData
 
@@ -340,7 +368,7 @@ class DB {
 
   selectFromSearch = async (row) => {
     let drug = {
-      key: moment().format('x').toString(), // уникальный ключ
+      //key: moment().format('x').toString(), // уникальный ключ
       id:"", // айди ДВ или ТН
       name: "", // Название ДВ или ТН
       level: 0, //
@@ -405,7 +433,7 @@ class DB {
     //   },
     //   url: '/concept/dozes/'
     // }
-
+    drug.key = moment().format('x').toString()
     let current = this.drugs.data.get(drug.key) || {};
     this.drugs.data.set( drug.key, _.extend(current, drug) );
     // console.log('dasf', this.drugs.data.get(drug.key));
