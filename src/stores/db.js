@@ -163,8 +163,8 @@ class DB {
     data.drugs = Array.from(this.drugs.data.values())
     //let data = {
       // text,
-    data.lib = '52, 62',
-    data.service = "43",
+    data.lib = '52, 62'
+    data.service = "43"
     //data.drugs = drugs//_.clone(this.selectedRows)
     //}
     // data.text = text
