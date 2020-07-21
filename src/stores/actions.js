@@ -104,10 +104,6 @@ class Actions {
       val: ""
     },
     patient: {
-      key: "",
-      val: ""
-    },
-    user: {
       birthDate: null,
       age: null,
       age_dwmy: null,
@@ -123,6 +119,9 @@ class Actions {
       lactation: null,
       driving: null,
       allergy: [],
+    },
+    user: {
+      
     },
     save_recipe: true,
     active_language: "RU",

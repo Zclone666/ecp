@@ -57,7 +57,7 @@ class Patient extends Component {
       allergy
     } = this.props.actions.patientForm
     if(shownPage === 'new'){
-      Object.assign(this.props.actions.drugStructure.user, {
+      Object.assign(this.props.actions.drugStructure.patient, {
         birthDate,
         age,
         age_dwmy,
@@ -76,7 +76,7 @@ class Patient extends Component {
       });
 
     }
-
+    this.props.router.push('/')
     // this.props.db.GetDuration()
   }
 

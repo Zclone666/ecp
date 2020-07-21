@@ -18,6 +18,8 @@ import { DatePickerInput } from 'rc-datepicker';
 
 import _ from 'lodash';
 
+import Week from './Week';
+
 @inject('db', 'actions', 'router')
 @observer
 class Schedule extends Component {
@@ -131,6 +133,7 @@ class Schedule extends Component {
               </Responsive>
             </Form.Field>
           </Form.Group>
+          <Week/>
         </Form>
       </Segment>
     )

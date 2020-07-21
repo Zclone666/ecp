@@ -159,11 +159,13 @@ class DB {
   async getInfoPrep(){
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
+    let drugs = _.clone(this.stores.actions.drugStructure)
+    drugs.drugs = Array.from(this.drugs.data.values())
     let data = {
       // text,
       lib: '52, 62',
       service: "43",
-      drugs: Array.from(this.drugs.data.values())//_.clone(this.selectedRows)
+      drugs: drugs//_.clone(this.selectedRows)
     }
     // data.text = text
     // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
@@ -176,7 +178,7 @@ class DB {
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
-        path: `https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //'check/Warnings'
+        path: 'check/Warnings', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
         data,
         success: async data => {
           //console.log('DATA', data);
