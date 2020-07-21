@@ -165,7 +165,7 @@ class DB {
       // text,
     data.lib = '52, 62',
     data.service = "43",
-    data.drugs = drugs//_.clone(this.selectedRows)
+    //data.drugs = drugs//_.clone(this.selectedRows)
     //}
     // data.text = text
     // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
