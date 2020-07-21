@@ -159,14 +159,14 @@ class DB {
   async getInfoPrep(){
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
-    let drugs = _.clone(this.stores.actions.drugStructure)
-    drugs.drugs = Array.from(this.drugs.data.values())
-    let data = {
+    let data = _.clone(this.stores.actions.drugStructure)
+    data.drugs = Array.from(this.drugs.data.values())
+    //let data = {
       // text,
-      lib: '52, 62',
-      service: "43",
-      drugs: drugs//_.clone(this.selectedRows)
-    }
+    data.lib = '52, 62',
+    data.service = "43",
+    data.drugs = drugs//_.clone(this.selectedRows)
+    //}
     // data.text = text
     // authkey: "TGQLnQWwsdH79Ujybvn6uwZD"
     // chain: 0
