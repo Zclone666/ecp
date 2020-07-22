@@ -116,7 +116,7 @@ class Schedule extends Component {
           </Form.Group>
           <Form.Group>
             <Form.Field className='fluid'>
-              <label>Или</label>
+              <label>Условия приема</label>
               <Responsive as={Button.Group} fluid size='big' widths={4} minWidth={480}>
                 <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>1 раз</Button>
                 <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>По дням недели</Button>

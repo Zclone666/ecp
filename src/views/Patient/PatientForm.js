@@ -47,7 +47,12 @@ class PatientForm extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
-    this.props.actions.patientForm[name] = value
+
+    if( name === 'weight' || name === 'growth' ){
+      this.props.actions.patientForm[name]=parseFloat(value)
+    }else{
+      this.props.actions.patientForm[name] = value
+    }
     if( name === 'sex' && value !== 'woman' ){
       this.props.actions.patientForm.pregnancy = null
       this.props.actions.patientForm.gestation = null
@@ -105,10 +110,8 @@ class PatientForm extends Component {
   }
   render() {
     const {
-      birthDate,
+      birthdate,
       age,
-      age_dwmy,
-      age_days,
       sex,
       growth,
       weight,
@@ -132,7 +135,7 @@ class PatientForm extends Component {
       <Segment basic>
         <Form>
           <Form.Group>
-            <BirthDate value={birthDate} onChange={this.handleChange} />
+            <BirthDate name='birthdate' value={birthdate} onChange={this.handleChange} />
             <Form.Field>
               <label>Пол</label>
               <Button.Group size='big'>

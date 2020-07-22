@@ -65,10 +65,7 @@ class Actions {
   }
 
   @observable patientForm = {
-    birthDate: null,
-    age: null,
-    age_dwmy: null,
-    age_days: null,
+    birthdate: null,
     sex: null,
     growth: null,
     weight: null,
@@ -88,26 +85,22 @@ class Actions {
   @observable activeConflicts = []
 
   @observable drugStructure = {
-    auth_key: "auth_key",
     key: "key",
-    device_id: '',
+    device_id: null,
     clinic: {
-      key: '',
-      val: '',
+      key: null,
+      val: null,
     },
     department: {
-      key: "",
-      val: ""
+      key: null,
+      val: null
     },
     doctor: {
-      key: "",
-      val: ""
+      key: null,
+      val: null
     },
     patient: {
-      birthDate: null,
-      age: null,
-      age_dwmy: null,
-      age_days: null,
+      birthdate: null,
       sex: null,
       growth: null,
       weight: null,
@@ -120,160 +113,160 @@ class Actions {
       driving: null,
       allergy: [],
     },
-    user: {
-      
-    },
-    save_recipe: true,
+    // user: {
+    //
+    // },
+    save_recipe: false,
     active_language: "RU",
     drugs: [
       // {id: "zlnwsK4hRl/N0a1isusGmA==", tn: false, level: 241, name: "Азолимин"}
-      {
-        id:"zlnwsK4hRl/N0a1isusGmA==",
-        name: "Азолимин",
-        level: 241,
-        tn: false,
-        fp_id: "",
-        group: "",
-        dosage: {
-          unstructured: "",
-          form: {
-            id: "",
-            name: "",
-            parent: {
-              key: "",
-              val: ""
-            },
-            val: "",
-            unit: "",
-            valunit: ""
-          },
-          method: {
-            id: "",
-            name: ""
-          },
-          val: "",
-          unit: "",
-          unit_id: "",
-          unit_type: "",
-          count: "",
-          freq: {
-            id: "",
-            name: "",
-            val: ""
-          },
-          duration: {
-            id: "",
-            name: "",
-            val: "",
-            calendar: [{
-              data1: "",
-              data2: ""
-            }]
-          },
-          special: "",
-          spec: ""
-        },
-        data1: "",
-        data2: ""
-      },
-      {
-        id: "U/2VipSd60pvmucbGHFpgQ==",
-        level: 240,
-        name: "Феназепам",
-        tn: true,
-        fp_id: "",
-        group: "",
-        dosage: {
-          unstructured: "",
-          form: {
-            id: "",
-            name: "",
-            parent: {
-              key: "",
-              val: ""
-            },
-            val: "",
-            unit: "",
-            valunit: ""
-          },
-          method: {
-            id: "",
-            name: ""
-          },
-          val: "",
-          unit: "",
-          unit_id: "",
-          unit_type: "",
-          count: "",
-          freq: {
-            id: "",
-            name: "",
-            val: ""
-          },
-          duration: {
-            id: "",
-            name: "",
-            val: "",
-            calendar: [{
-              data1: "",
-              data2: ""
-            }]
-          },
-          special: "",
-          spec: ""
-        },
-        data1: "",
-        data2: ""
-      },
-      {
-        id: "whn/LtxKAuKyhEIAANPrCA==",
-        level: 240,
-        name: "Адреналин",
-        tn: true,
-        fp_id: "",
-        group: "",
-        dosage: {
-          unstructured: "",
-          form: {
-            id: "",
-            name: "",
-            parent: {
-              key: "",
-              val: ""
-            },
-            val: "",
-            unit: "",
-            valunit: ""
-          },
-          method: {
-            id: "",
-            name: ""
-          },
-          val: "",
-          unit: "",
-          unit_id: "",
-          unit_type: "",
-          count: "",
-          freq: {
-            id: "",
-            name: "",
-            val: ""
-          },
-          duration: {
-            id: "",
-            name: "",
-            val: "",
-            calendar: [{
-              data1: "",
-              data2: ""
-            }]
-          },
-          special: "",
-          spec: ""
-        },
-        data1: "",
-        data2: ""
-      },
+      // {
+      //   id:"zlnwsK4hRl/N0a1isusGmA==",
+      //   name: "Азолимин",
+      //   level: 241,
+      //   tn: false,
+      //   fp_id: "",
+      //   group: "",
+      //   dosage: {
+      //     unstructured: "",
+      //     form: {
+      //       id: "",
+      //       name: "",
+      //       parent: {
+      //         key: "",
+      //         val: ""
+      //       },
+      //       val: "",
+      //       unit: "",
+      //       valunit: ""
+      //     },
+      //     method: {
+      //       id: "",
+      //       name: ""
+      //     },
+      //     val: "",
+      //     unit: "",
+      //     unit_id: "",
+      //     unit_type: "",
+      //     count: "",
+      //     freq: {
+      //       id: "",
+      //       name: "",
+      //       val: ""
+      //     },
+      //     duration: {
+      //       id: "",
+      //       name: "",
+      //       val: "",
+      //       calendar: [{
+      //         data1: "",
+      //         data2: ""
+      //       }]
+      //     },
+      //     special: "",
+      //     spec: ""
+      //   },
+      //   data1: "",
+      //   data2: ""
+      // },
+      // {
+      //   id: "U/2VipSd60pvmucbGHFpgQ==",
+      //   level: 240,
+      //   name: "Феназепам",
+      //   tn: true,
+      //   fp_id: "",
+      //   group: "",
+      //   dosage: {
+      //     unstructured: "",
+      //     form: {
+      //       id: "",
+      //       name: "",
+      //       parent: {
+      //         key: "",
+      //         val: ""
+      //       },
+      //       val: "",
+      //       unit: "",
+      //       valunit: ""
+      //     },
+      //     method: {
+      //       id: "",
+      //       name: ""
+      //     },
+      //     val: "",
+      //     unit: "",
+      //     unit_id: "",
+      //     unit_type: "",
+      //     count: "",
+      //     freq: {
+      //       id: "",
+      //       name: "",
+      //       val: ""
+      //     },
+      //     duration: {
+      //       id: "",
+      //       name: "",
+      //       val: "",
+      //       calendar: [{
+      //         data1: "",
+      //         data2: ""
+      //       }]
+      //     },
+      //     special: "",
+      //     spec: ""
+      //   },
+      //   data1: "",
+      //   data2: ""
+      // },
+      // {
+      //   id: "whn/LtxKAuKyhEIAANPrCA==",
+      //   level: 240,
+      //   name: "Адреналин",
+      //   tn: true,
+      //   fp_id: "",
+      //   group: "",
+      //   dosage: {
+      //     unstructured: "",
+      //     form: {
+      //       id: "",
+      //       name: "",
+      //       parent: {
+      //         key: "",
+      //         val: ""
+      //       },
+      //       val: "",
+      //       unit: "",
+      //       valunit: ""
+      //     },
+      //     method: {
+      //       id: "",
+      //       name: ""
+      //     },
+      //     val: "",
+      //     unit: "",
+      //     unit_id: "",
+      //     unit_type: "",
+      //     count: "",
+      //     freq: {
+      //       id: "",
+      //       name: "",
+      //       val: ""
+      //     },
+      //     duration: {
+      //       id: "",
+      //       name: "",
+      //       val: "",
+      //       calendar: [{
+      //         data1: "",
+      //         data2: ""
+      //       }]
+      //     },
+      //     special: "",
+      //     spec: ""
+      //   },
+      //   data1: "",
+      //   data2: ""
+      // },
     ]
   }
 
