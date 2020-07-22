@@ -71,11 +71,11 @@ class Actions {
     weight: null,
     disease: [],
     disease2: [],
-    pregnancy: null,
+    pregnancy: false,
     gestation: null,
     trimester: null,
-    lactation: null,
-    driving: null,
+    lactation: false,
+    driving: false,
     allergy: []
   }
 
@@ -106,12 +106,12 @@ class Actions {
       weight: null,
       disease: [],
       disease2: [],
-      pregnancy: null,
+      pregnancy: false,
       gestation: null,
       trimester: null,
-      lactation: null,
-      driving: null,
-      allergy: [],
+      lactation: false,
+      driving: false,
+      allergy: []
     },
     // user: {
     //

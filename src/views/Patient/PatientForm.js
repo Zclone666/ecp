@@ -54,10 +54,10 @@ class PatientForm extends Component {
       this.props.actions.patientForm[name] = value
     }
     if( name === 'sex' && value !== 'woman' ){
-      this.props.actions.patientForm.pregnancy = null
+      this.props.actions.patientForm.pregnancy = false
       this.props.actions.patientForm.gestation = null
       this.props.actions.patientForm.trimester = null
-      this.props.actions.patientForm.lactation = null
+      this.props.actions.patientForm.lactation = false
     }
     if( name === 'trimester' ){
       this.props.actions.patientForm.gestation = null
