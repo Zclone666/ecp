@@ -214,6 +214,7 @@ class DB {
     });
   }
   async getInfoPrep(){
+    this.stores.actions.loading = true
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
     let data = _.clone(this.stores.actions.drugStructure)
@@ -254,7 +255,7 @@ class DB {
             let warnIcons = {}
             let warnForDrug = {}
             let warnForGroup = {}
-            data.warnings.forEach(( item, i ) => {
+            await data.warnings.forEach(( item, i ) => {
 
               // console.log('here 1');
               //if( item.drugsids && _.isArray(item.drugsids) ){
@@ -354,6 +355,7 @@ class DB {
           //   this.searchRows = await _.unionWith(data.concepts, this.searchRows, (a, b) => a.id === b.id);
           //   this.searchReady = true
           // }
+          this.stores.actions.loading = false
         },
         fail: (alerts) => {
             //this.searchReady = true
