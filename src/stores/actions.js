@@ -1,6 +1,7 @@
 import { observable, action, autorun } from 'mobx';
 import { GET, POST, PUT, PROJECT_TITLE } from '../lib/connect'
 import _ from 'lodash';
+import moment from 'moment'
 
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 class Actions {
@@ -345,6 +346,7 @@ class Actions {
   }
 
   @action async selectPatient(row, from){
+    row.key = moment().format('x').toString()
     this.patientForm[from] = await _.unionWith(this.patientForm[from], [row], (a, b) => a.id === b.id);
     this.stores.db.clearData()
     return true

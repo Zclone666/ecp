@@ -67,6 +67,9 @@ class Drug extends React.Component {
     }
     //return false
   }
+
+
+
   render(){
     let {
       actions: {
@@ -75,21 +78,24 @@ class Drug extends React.Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups, drugsDosages },
-      drug
+      db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
+      drug,
+      active
     } = this.props
     //console.log('drug', drug);
-    let selectedWarnings = warnings[selectedDrug]
-    let { key, name, level, tn, dosage } = drug
+    let selectedWarnings = warnIcons[selectedDrug]
+    let { key, name, level, tn, type, dosage } = drug
     let drugDosages = drugsDosages.data.get(key) || {}
     //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
     let url = drugDosages.url || {}
-    let currWarning = activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
-    let hasWarning = warnings[drug.key] && !_.isEmpty(warnings[drug.key])
-    let maxItem = _.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
+    let currWarning = active//activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
+    let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
+    let maxItem = warnIcons[drug.key] //_.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
     let className = selectedDrug === drug.key ? 'selected' : ''
-    className += (activeDrugs.length < 1 || activeDrugs.includes(drug.key) || selectedDrug === drug.key)  ? '' : ' unused'
+    className += ((selectedDrug === drug.key || active) || !selectedDrug )  ? '' : ' unused'
+
+
 
     return(
       <List.Item className={className}>
@@ -112,8 +118,8 @@ class Drug extends React.Component {
             </Button>
           </Responsive>
         </List.Content>
-        {(currWarning && currWarning.valuecolor) ?
-          <div className='left floated content arrowBg' style={{ backgroundColor: currWarning.valuecolor }} >
+        {(currWarning && currWarning.color) ?
+          <div className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
             <List.Icon
               name='arrow alternate circle right'
               style={{ color: '#FFF' }}
@@ -131,30 +137,30 @@ class Drug extends React.Component {
           </div>
         }
         {hasWarning ?
-          <List.Icon name='warning circle' style={{ color: maxItem.valuecolor }} size='large' onClick={(e) => this.selectDrug(e, drug.key)} />
+          <List.Icon name='warning circle' style={{ color: maxItem.color }} size='large' onClick={(e) => this.selectDrug(e, drug.key)} />
           :
           <List.Icon name='warning circle' size='large' style={{ color: 'transparent', textShadow: 'unset' }} />
         }
         <Responsive as={List.Content} className='ui feed large' fireOnMount minWidth='481'>
 
-            <Feed.Event>
-              <Feed.Content>
-                <Feed.Summary>
-                  <span className='underlined'>{name}</span>{tn && <span><sup>TM</sup></span>}
-                  <Feed.Date>
-                    {dosage.form && names[dosage.form]}
-                    {(dosage.method && dosage.form) && ', '}
-                    {names[dosage.method] || ''}
-                  </Feed.Date>
-                </Feed.Summary>
-                <Feed.Meta>
+          <Feed.Event>
+            <Feed.Content>
+              <Feed.Summary>
+                <span className='underlined'>{name}</span>{tn && <span><sup>TM</sup></span>}
+                <Feed.Date>
+                  {dosage.form && names[dosage.form]}
+                  {(dosage.method && dosage.form) && ', '}
+                  {names[dosage.method] || ''}
+                </Feed.Date>
+              </Feed.Summary>
+              <Feed.Meta>
 
-                  {dosage.pack.dosage || ''}
-                  {(dosage.pack.dosage && dosage.pack.pack) && ', '}
-                  {dosage.pack.pack || ''}
-                </Feed.Meta>
-              </Feed.Content>
-            </Feed.Event>
+                {dosage.pack.dosage || ''}
+                {(dosage.pack.dosage && dosage.pack.pack) && ', '}
+                {dosage.pack.pack || ''}
+              </Feed.Meta>
+            </Feed.Content>
+          </Feed.Event>
         </Responsive>
         <Responsive
           as={Popup}

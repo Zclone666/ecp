@@ -5,6 +5,18 @@ import moment from 'moment'
 import _ from 'lodash';
 // import { colors } from '../components/Charts/colorPallette'
 
+const colorPallette = [
+  '#03529b',
+  '#007b2b',
+  '#b0d512',
+  '#fff42b',
+  '#ffca2f',
+  '#fc7301',
+  '#f42a03',
+]
+
+
+
 class DB {
   @observable ready = false;
   @observable searchRows = [];
@@ -16,8 +28,15 @@ class DB {
   @observable searchReady = true;
 
   @observable selectedRows = [];
-  @observable warnings = {};
+  //@observable warnings = {};
   @observable warnGroups = {};
+  @observable warnIcons = {};
+  warnInfo = {
+    names: observable({}),
+    description: observable({}),
+    literature: observable({}),
+    outcome: observable({})
+  };
 
   @observable currDrug = {};
   @observable drugDosage = {
@@ -41,10 +60,10 @@ class DB {
       ready: observable.box(true)
     }
 
-    // this.warnings = {
-    //   data: observable.map({}, 'warnings'),
-    //   ready: observable.box(false)
-    // }
+    this.warnings = {
+      data: observable.map({}, 'warnings'),
+      ready: observable.box(false)
+    }
 
     autorun(() => {
 
@@ -68,7 +87,7 @@ class DB {
     this.searchRows = observable([])
 
     if(withWarnings){
-      this.warnings = observable({});
+      this.warnIcons = observable({});
       this.warnGroups = observable({});
     }
 
@@ -80,6 +99,44 @@ class DB {
       this.drugsDosages.data.clear()
       this.drugs.data.clear()
     }
+  }
+  getGroup(val){
+    let color = '#cccccc'
+    let group = 0
+    switch (true) {
+      case val === -1:
+        color = colorPallette[0]
+        group = 1
+        break;
+      case val === 0:
+        color = colorPallette[1]
+        group = 2
+        break;
+      case val > 0 && val <= 0.2:
+        color = colorPallette[2]
+        group = 3
+        break;
+      case val > 0.2 && val <= 0.4:
+        color = colorPallette[3]
+        group = 4
+        break;
+      case val > 0.4 && val <= 0.6:
+        color = colorPallette[4]
+        group = 5
+        break;
+      case val > 0.6 && val <= 0.8:
+        color = colorPallette[5]
+        group = 6
+        break;
+      case val > 0.8 && val <= 1:
+        color = colorPallette[6]
+        group = 7
+        break;
+      default:
+        color = '#cccccc'
+        group = 0
+    }
+    return { color, group }
   }
 //GetLF
   async getLF(drug_obj){
@@ -175,6 +232,7 @@ class DB {
     // service: "43"
     // text: "ан"
     // data.key = '1f9b2da3f046b34b'
+    data.return_subjects = false
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
@@ -183,48 +241,107 @@ class DB {
         success: async data => {
           //console.log('DATA', data);
           if( data && data.warnings && _.isArray(data.warnings) ){
-            let warnings = {}
+
+            this.warnInfo.names = _.clone(data.Names)
+            this.warnInfo.description = _.clone(data.description)
+            this.warnInfo.literature = _.clone(data.literature)
+            this.warnInfo.outcome = _.clone(data.outcome)
+
+
+
+            //let warnings = {}
             let warnGroups = {}
+            let warnIcons = {}
+            let warnForDrug = {}
+            let warnForGroup = {}
             data.warnings.forEach(( item, i ) => {
+
               // console.log('here 1');
-              if( item.drugsids && _.isArray(item.drugsids) ){
+              //if( item.drugsids && _.isArray(item.drugsids) ){
                 // console.log('here 2');
+                let { group, color } = this.getGroup(item.value)
+                let wKey = `${item.type}_${group}`
 
-                if( !warnGroups[item.group] ){
-                  warnGroups[item.group]={
-                    type: item.type,
-                    value: item.value,
-                    valuecolor: item.valuecolor,
-                    ids: []
-                  }
-                }
-                // warnGroups[item.group].valuecolor = _.maxBy(_.toArray(warnings[drug.id]), function(o){ return o.value; });
-                warnGroups[item.group].ids =  _.unionWith(warnGroups[item.group].ids, item.drugsids, (a, b) => a.id === b);
+                let current = this.warnings.data.get(item.id) || {};
+                this.warnings.data.set( item.id, _.extend(current, { group, color, ...item }) );
 
-                item.drugsids.forEach(( drug, x ) => {
-                  // console.log('here 3');
-                  if( !warnings[drug] ){
-                    warnings[drug]={}
-                  }
-                  item.drugsids.forEach(( drugParent, y ) => {
-                    // console.log('here 4');
-                    if( drugParent !== drug ){
-                      // console.log('here 5');
-                      warnings[drug][drugParent] = {
-                        id: item.id,
-                        group: item.group,
-                        trust: item.trust,
+                //разбивка по Драгам
+                if(item.subjects && _.isArray(item.subjects)){
+                  item.subjects.forEach(( subject, s ) => {
+
+                    //создание варнингов по Драгам
+                    if( !warnGroups[item.type] ){
+                      warnGroups[item.type]={
                         type: item.type,
                         value: item.value,
-                        valuecolor: item.valuecolor
+                        valuecolor: color,
+                        group
+                      }
+                    }else{
+                      if(item.value > warnGroups[item.type].value){
+                        warnGroups[item.type].value = item.value
+                        warnGroups[item.type].valuecolor = color
+                        warnGroups[item.type].group = group
                       }
                     }
+                    if( subject.type === 'drug' ){
+
+
+                      //иконки к Драгам
+                      if( !warnIcons[subject.drugkey] || item.value > warnIcons[subject.drugkey].value ){
+                        warnIcons[subject.drugkey] = {
+                          value: item.value,
+                          color,
+                          group
+                        }
+                      }
+
+                      //стрелки к Драгам
+                      // if( !warnings[subject.drugkey] || item.value > warnings[subject.drugkey].value ){
+                      //   warnings[subject.drugkey] = {
+                      //     value: item.value,
+                      //     color,
+                      //     group
+                      //   }
+                      // }
+
+                    }
+
+
+
+
                   })
-                })
-              }
+                }
+
+                //
+
+                // warnGroups[item.group].valuecolor = _.maxBy(_.toArray(warnings[drug.id]), function(o){ return o.value; });
+                // warnGroups[item.group].ids =  _.unionWith(warnGroups[item.group].ids, item.drugsids, (a, b) => a.id === b);
+                //
+                // item.drugsids.forEach(( drug, x ) => {
+                //   // console.log('here 3');
+                //   if( !warnings[drug] ){
+                //     warnings[drug]={}
+                //   }
+                //   item.drugsids.forEach(( drugParent, y ) => {
+                //     // console.log('here 4');
+                //     if( drugParent !== drug ){
+                //       // console.log('here 5');
+                //       warnings[drug][drugParent] = {
+                //         id: item.id,
+                //         group: item.group,
+                //         trust: item.trust,
+                //         type: item.type,
+                //         value: item.value,
+                //         valuecolor: item.valuecolor
+                //       }
+                //     }
+                //   })
+                // })
+              //}
             })
             // console.log('warnGroups', warnGroups);
-            this.warnings = _.assignIn(this.warnings, warnings);
+            this.warnIcons = _.assignIn(this.warnIcons, warnIcons);
             this.warnGroups = _.assignIn(this.warnGroups, warnGroups);
           }
 
@@ -262,6 +379,10 @@ class DB {
         data,
         success: async data => {
           if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
+            await data.concepts.forEach(( concept, i ) => {
+              data.concepts[i].key = 'concept'+i
+              data.concepts[i].title = data.concepts[i].name
+            })
             this[`${saveTo}Rows`] = observable([])
             this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
             this.searchReady = true

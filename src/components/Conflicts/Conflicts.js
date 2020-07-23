@@ -67,7 +67,7 @@ class Conflicts extends Component {
           {_.keys(warnGroups).map((key, i) => {
             let group = warnGroups[key]
             return(
-              <Grid.Column className='conflict' onClick={() => this.selectConflict(key)}>
+              <Grid.Column key={'warn'+i} className='conflict' onClick={() => this.selectConflict(key)}>
                 <Icon.Group key={'ico'+i} size='big' className={activeConflicts.includes(parseInt(key)) ? 'selected' : 'gray'}>
                   <Icon as='img' src={`/warningicons/${group.type}.svg`} style={{ width: 45, marginLeft: 3, marginTop: 0 }} />
                   <Icon size='big' name='circle outline' style={{ color: group.valuecolor }} />
