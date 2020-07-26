@@ -146,7 +146,7 @@ class Drug extends React.Component {
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <span className='underlined'>{name}</span>{tn && <span><sup>TM</sup></span>}
+                <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
                   {dosage.form && names[dosage.form]}
                   {(dosage.method && dosage.form) && ', '}
@@ -170,7 +170,7 @@ class Drug extends React.Component {
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Summary>
-                    <span className='underlined'>{name}</span>{tn && <span><sup>TM</sup></span>}
+                    <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                     <Feed.Date>{names[dosage.method] || ''}</Feed.Date>
                   </Feed.Summary>
                   <Feed.Meta>

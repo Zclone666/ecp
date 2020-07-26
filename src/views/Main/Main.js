@@ -71,8 +71,8 @@ class Main extends Component {
     this.props.db.getInfoPrep()
   }
 
-  resultRenderer = ({ name, level, tn }) => {
-    return <div>{name}{tn && <sup>TM</sup>}</div>
+  resultRenderer = ({ name, level, tn, type }) => {
+    return <div>{name}{type === 'TN' && <sup>TM</sup>}</div>
   }
 
   componentDidMount(){

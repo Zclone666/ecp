@@ -417,6 +417,10 @@ class DB {
         data,
         success: async data => {
           if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
+            await data.concepts.forEach(( concept, i ) => {
+              data.concepts[i].key = 'concept'+i
+              data.concepts[i].title = data.concepts[i].name
+            })
             this[`${saveTo}Rows`] = observable([])
             this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
             this.searchReady = true
@@ -446,6 +450,10 @@ class DB {
         data,
         success: async data => {
           if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
+            await data.concepts.forEach(( concept, i ) => {
+              data.concepts[i].key = 'concept'+i
+              data.concepts[i].title = data.concepts[i].name
+            })
             this[`${saveTo}Rows`] = observable([])
             this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
             this.searchReady = true
