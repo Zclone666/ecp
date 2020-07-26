@@ -93,7 +93,7 @@ class Drug extends React.Component {
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
     let maxItem = warnIcons[drug.key] //_.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
     let className = selectedDrug === drug.key ? 'selected' : ''
-    className += ((selectedDrug === drug.key || active) || !selectedDrug )  ? '' : ' unused'
+    className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
 
 
 
