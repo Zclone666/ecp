@@ -38,15 +38,56 @@ class Conflicts extends Component {
     if( this.props.actions.selectedConflict === groupId ){
       this.props.actions.selectedDrug = null
       this.props.actions.selectedConflict = null
-      this.props.actions.activeDrugs = []
+      //this.props.actions.activeDrugs = []
       this.props.actions.activeConflicts = []
     }else{
       this.props.actions.selectedDrug = null
       this.props.actions.selectedConflict = groupId
-      this.props.actions.activeDrugs = warnGroups[groupId].ids
+      //this.props.actions.activeDrugs = warnGroups[groupId].ids
       this.props.actions.activeConflicts = [parseInt(groupId)]
     }
 
+  }
+
+  get conflicts(){
+    let {
+      actions: {
+        selectedDrug,
+        selectedConflict,
+        activeDrugs,
+        activeConflicts
+      },
+      db: { selectedRows, warnings, warnGroups, warnIcons }
+    } = this.props
+    let conflictObj = {}
+    if(selectedConflict){
+      let warn = warnGroups[selectedConflict]
+      conflictObj[selectedConflict] = {
+        value: warn.value,
+        trust: warn.trust,
+        color: warn.valuecolor
+      }
+    }else{
+      Array.from(warnings.data.values()).forEach(( warn, i ) => {
+        //console.log({ ...warn });
+        let found = _.find(warn.subjects, { 'drugkey': selectedDrug })
+        //console.log({ type: warn.type, value: warn.value, found });
+        if( _.find(warn.subjects, { 'drugkey': selectedDrug }) ){
+
+          if(!conflictObj[warn.type] || conflictObj[warn.type].value < warn.value ){
+            //console.log({ type: warn.type, value: warn.value });
+            conflictObj[warn.type] = {
+              value: warn.value,
+              trust: warn.trust,
+              color: warn.color
+            }
+          }
+        }
+      })
+    }
+
+    // console.log({drugsObj});
+    return conflictObj
   }
 
   render(){
@@ -59,18 +100,20 @@ class Conflicts extends Component {
       },
       db: { selectedRows, warnings, warnGroups }
     } = this.props
-    let selectedWarnings = warnings[selectedDrug]
+    let selectedWarnings = this.conflicts
+    let noSelections = _.isEmpty(selectedWarnings)
     // console.log('activeConflicts', activeConflicts);
     return (
       <>
         <Grid as={Segment} basic>
           {_.keys(warnGroups).map((key, i) => {
             let group = warnGroups[key]
+            let color = (selectedWarnings[group.type] && selectedWarnings[group.type].color) || group.valuecolor
             return(
               <Grid.Column key={'warn'+i} className='conflict' onClick={() => this.selectConflict(key)}>
-                <Icon.Group key={'ico'+i} size='big' className={activeConflicts.includes(parseInt(key)) ? 'selected' : 'gray'}>
+                <Icon.Group size='big' className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}>
                   <Icon as='img' src={`/warningicons/${group.type}.svg`} style={{ width: 45, marginLeft: 3, marginTop: 0 }} />
-                  <Icon size='big' name='circle outline' style={{ color: group.valuecolor }} />
+                  <Icon size='big' name='circle outline' style={{ color }} />
                 </Icon.Group>
               </Grid.Column>
             )

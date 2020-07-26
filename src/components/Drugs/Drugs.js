@@ -35,24 +35,43 @@ class Drugs extends Component {
       db: { selectedRows, warnings, warnGroups, warnIcons }
     } = this.props
     let drugsObj = {}
+
     Array.from(warnings.data.values()).forEach(( warn, i ) => {
-      console.log({ warn });
-      if(_.find(warn.subjects, { 'drugkey': selectedDrug }) && warn.type === 'interdrug' ){
-        let arr = _.filter(warn.subjects, (o) => { return o.drugkey !== selectedDrug; }) || []
-        console.log({ arr });
-        arr.forEach(( item, x ) => {
-          console.log({ item });
-          if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].value < warn.value ){
-            drugsObj[item.drugkey] = {
-              value: warn.value,
-              group: warn.group,
-              color: warn.color,
+      // console.log({ warn });
+      if(selectedConflict){
+        if(warn.type === selectedConflict){
+          let arr = _.filter(warn.subjects, (o) => { return o.drugkey !== selectedConflict; }) || []
+          // console.log({ arr });
+          arr.forEach(( item, x ) => {
+            // console.log({ item });
+            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].value < warn.value ){
+              drugsObj[item.drugkey] = {
+                value: warn.value,
+                group: warn.group,
+                color: warn.color,
+              }
             }
-          }
-        })
+          })
+        }
+      }else{
+        if(_.find(warn.subjects, { 'drugkey': selectedDrug }) && warn.type === 'interdrug' ){
+          let arr = _.filter(warn.subjects, (o) => { return o.drugkey !== selectedDrug; }) || []
+          // console.log({ arr });
+          arr.forEach(( item, x ) => {
+            // console.log({ item });
+            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].value < warn.value ){
+              drugsObj[item.drugkey] = {
+                value: warn.value,
+                group: warn.group,
+                color: warn.color,
+              }
+            }
+          })
+        }
       }
+
     })
-    console.log({drugsObj});
+    // console.log({drugsObj});
     return drugsObj
   }
 

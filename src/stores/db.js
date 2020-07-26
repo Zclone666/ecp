@@ -260,6 +260,8 @@ class DB {
               // console.log('here 1');
               //if( item.drugsids && _.isArray(item.drugsids) ){
                 // console.log('here 2');
+                if(!item.id || item.id.length < 1) item.id = moment().format('x').toString()
+
                 let { group, color } = this.getGroup(item.value)
                 let wKey = `${item.type}_${group}`
 
