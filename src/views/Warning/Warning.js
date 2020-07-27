@@ -5,7 +5,7 @@ import RouterLink from '../../router/a'
 
 import Spinner from '../../components/Spinner'
 
-import Stepper from '../../components/Stepper'
+import WarningTab from '../../components/WarningTab'
 
 import {
   // Sidebar,
@@ -77,7 +77,7 @@ class Warning extends Component {
         subjFrom = _.find(warn.subjects, (o) => { return o.drugkey === selectedDrug; })
       }
       subjTo = _.find(warn.subjects, (o) => { return o.drugkey === values.page; })
-      console.log({ subjFrom, subjTo });
+      //console.log({ subjFrom, subjTo });
       if( subjFrom && subjTo ) tabs.push(warn)
     })
     return tabs
@@ -134,7 +134,7 @@ class Warning extends Component {
             activeIndex={activeIndex}
             onTabChange={this.handleTabChange}
           />
-          
+          <WarningTab tab={this.tabs[activeIndex]} />
         </div>
 
       </>

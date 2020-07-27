@@ -243,7 +243,7 @@ class DB {
           //console.log('DATA', data);
           if( data && data.warnings && _.isArray(data.warnings) ){
 
-            this.warnInfo.names = _.clone(data.Names)
+            this.warnInfo.names = _.clone(data.names)
             this.warnInfo.description = _.clone(data.description)
             this.warnInfo.literature = _.clone(data.literature)
             this.warnInfo.outcome = _.clone(data.outcome)
