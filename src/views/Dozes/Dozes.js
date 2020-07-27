@@ -25,7 +25,7 @@ import _ from 'lodash';
 
 @inject('router', 'db', 'actions')
 @observer
-class Page extends Component {
+class Dozes extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -86,4 +86,4 @@ class Page extends Component {
     );
   }
 };
-export default Page
+export default Dozes

@@ -9,10 +9,13 @@ export default {
   '/':                                        { section: 'main', name: 'main',       render: <Main />       },
   '/concept':                                 { section: 'main', name: 'main',       render: <Main />       },
   '/concept/:page':                           { section: 'main', name: 'concept',    render: <Main />       },
+  '/concept/:page/:way':                      { section: 'main', name: 'concept',    render: <Main />       },
   '/concept/:page/:way/:step':                { section: 'main', name: 'concept',    render: <Main />       },
   '/concept/:page/:way/:step/:id1':           { section: 'main', name: 'concept',    render: <Main />       },
   '/concept/:page/:way/:step/:id1/:id2':      { section: 'main', name: 'concept',    render: <Main />       },
   '/concept/:page/:way/:step/:id1/:id2/id3':  { section: 'main', name: 'concept',    render: <Main />       },
+
+  '/warning/:page':                           { section: 'main', name: 'warning',    render: <Main />       },
 
   '/patient/:page':                           { section: 'main', name: 'patient',    render: <Main />       },
 

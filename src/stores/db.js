@@ -260,13 +260,14 @@ class DB {
               // console.log('here 1');
               //if( item.drugsids && _.isArray(item.drugsids) ){
                 // console.log('here 2');
-                if(!item.id || item.id.length < 1) item.id = moment().format('x').toString()
+                if(!item.id || item.id.length < 1) item.id = null //moment().format('x').toString()
+                item.key = 'warnkey_' + i
 
                 let { group, color } = this.getGroup(item.value)
                 let wKey = `${item.type}_${group}`
 
                 let current = this.warnings.data.get(item.id) || {};
-                this.warnings.data.set( item.id, _.extend(current, { group, color, ...item }) );
+                this.warnings.data.set( item.key, _.extend(current, { group, color, ...item }) );
 
                 //разбивка по Драгам
                 if(item.subjects && _.isArray(item.subjects)){

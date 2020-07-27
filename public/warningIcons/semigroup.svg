@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1"
-	 id="svg3023" inkscape:version="1.0 (4035a4fb49, 2020-05-01)" sodipodi:docname="130R.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64"
-	 style="enable-background:new 0 0 64 64;" xml:space="preserve">
+<svg version="1.1" id="Слой_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#FFFFFF;}
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#48443E;}
 </style>
-<sodipodi:namedview  bordercolor="#666666" borderopacity="1" gridtolerance="10" guidetolerance="10" id="namedview3033" inkscape:current-layer="svg3023" inkscape:cx="12.40183" inkscape:cy="24.094267" inkscape:document-rotation="0" inkscape:guide-bbox="true" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:window-height="705" inkscape:window-maximized="1" inkscape:window-width="1360" inkscape:window-x="-8" inkscape:window-y="-8" inkscape:zoom="8" objecttolerance="10" pagecolor="#ffffff" showgrid="false" showguides="true">
-	</sodipodi:namedview>
-<path id="path3821" sodipodi:cx="4.985702" sodipodi:cy="15.101768" sodipodi:rx="28.955423" sodipodi:ry="28.955423" sodipodi:type="arc" class="st0" d="
-	M60.8,32.4c0,16-13,29-29,29s-29-13-29-29c0,0,0,0,0,0c0-16,13-29,29-29C47.8,3.4,60.8,16.4,60.8,32.4
-	C60.8,32.4,60.8,32.4,60.8,32.4z"/>
-<path id="path3061-1-7-4" inkscape:connector-curvature="0" sodipodi:nodetypes="cccccccc" d="M18.1,25.2l4,0l0,23.6l4.1,0l0-23.6
-	l4.1,0l-6-9.5L18.1,25.2z"/>
-<path id="path3061-1-7-4-1" inkscape:connector-curvature="0" sodipodi:nodetypes="cccccccc" d="M33.9,25.2l4,0l0,23.6l4.1,0l0-23.6
-	l4.1,0l-6-9.5L33.9,25.2z"/>
+<g>
+	<g>
+		<polygon class="st0" points="38.2,24.1 44.3,24.1 29.6,0 15,24.1 21,24.1 21,100 38.2,100 		"/>
+		<polygon class="st0" points="79,24.1 85,24.1 70.4,0 55.7,24.1 61.8,24.1 61.8,100 79,100 		"/>
+	</g>
+</g>
 </svg>

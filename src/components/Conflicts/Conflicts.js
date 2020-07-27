@@ -112,7 +112,7 @@ class Conflicts extends Component {
             return(
               <Grid.Column key={'warn'+i} className='conflict' onClick={() => this.selectConflict(key)}>
                 <Icon.Group size='big' className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}>
-                  <Icon as='img' src={`/warningicons/${group.type}.svg`} style={{ width: 45, marginLeft: 3, marginTop: 0 }} />
+                  <Icon as='img' src={`/warningicons/${group.type}.svg`} />
                   <Icon size='big' name='circle outline' style={{ color }} />
                 </Icon.Group>
               </Grid.Column>

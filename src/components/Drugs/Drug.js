@@ -119,22 +119,22 @@ class Drug extends React.Component {
           </Responsive>
         </List.Content>
         {(currWarning && currWarning.color) ?
-          <div className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
+          <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
             <List.Icon
               name='arrow alternate circle right'
               style={{ color: '#FFF' }}
               size='large'
-              onClick={() => this.setState({ selectedDrug: drug.key })}
+              onClick={() => { console.log('hey'); }}
             />
-          </div>
+          </RouterLink>
           :
-          <div className='left floated content arrowBg none'>
+          <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg none'>
             <List.Icon
               name='arrow alternate circle right'
               style={{ color: '#FFF' }}
               size='large'
             />
-          </div>
+          </RouterLink>
         }
         {hasWarning ?
           <List.Icon name='warning circle' style={{ color: maxItem.color }} size='large' onClick={(e) => this.selectDrug(e, drug.key)} />

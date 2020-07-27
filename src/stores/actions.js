@@ -114,161 +114,9 @@ class Actions {
       driving: false,
       allergy: []
     },
-    // user: {
-    //
-    // },
     save_recipe: false,
     active_language: "RU",
-    drugs: [
-      // {id: "zlnwsK4hRl/N0a1isusGmA==", tn: false, level: 241, name: "Азолимин"}
-      // {
-      //   id:"zlnwsK4hRl/N0a1isusGmA==",
-      //   name: "Азолимин",
-      //   level: 241,
-      //   tn: false,
-      //   fp_id: "",
-      //   group: "",
-      //   dosage: {
-      //     unstructured: "",
-      //     form: {
-      //       id: "",
-      //       name: "",
-      //       parent: {
-      //         key: "",
-      //         val: ""
-      //       },
-      //       val: "",
-      //       unit: "",
-      //       valunit: ""
-      //     },
-      //     method: {
-      //       id: "",
-      //       name: ""
-      //     },
-      //     val: "",
-      //     unit: "",
-      //     unit_id: "",
-      //     unit_type: "",
-      //     count: "",
-      //     freq: {
-      //       id: "",
-      //       name: "",
-      //       val: ""
-      //     },
-      //     duration: {
-      //       id: "",
-      //       name: "",
-      //       val: "",
-      //       calendar: [{
-      //         data1: "",
-      //         data2: ""
-      //       }]
-      //     },
-      //     special: "",
-      //     spec: ""
-      //   },
-      //   data1: "",
-      //   data2: ""
-      // },
-      // {
-      //   id: "U/2VipSd60pvmucbGHFpgQ==",
-      //   level: 240,
-      //   name: "Феназепам",
-      //   tn: true,
-      //   fp_id: "",
-      //   group: "",
-      //   dosage: {
-      //     unstructured: "",
-      //     form: {
-      //       id: "",
-      //       name: "",
-      //       parent: {
-      //         key: "",
-      //         val: ""
-      //       },
-      //       val: "",
-      //       unit: "",
-      //       valunit: ""
-      //     },
-      //     method: {
-      //       id: "",
-      //       name: ""
-      //     },
-      //     val: "",
-      //     unit: "",
-      //     unit_id: "",
-      //     unit_type: "",
-      //     count: "",
-      //     freq: {
-      //       id: "",
-      //       name: "",
-      //       val: ""
-      //     },
-      //     duration: {
-      //       id: "",
-      //       name: "",
-      //       val: "",
-      //       calendar: [{
-      //         data1: "",
-      //         data2: ""
-      //       }]
-      //     },
-      //     special: "",
-      //     spec: ""
-      //   },
-      //   data1: "",
-      //   data2: ""
-      // },
-      // {
-      //   id: "whn/LtxKAuKyhEIAANPrCA==",
-      //   level: 240,
-      //   name: "Адреналин",
-      //   tn: true,
-      //   fp_id: "",
-      //   group: "",
-      //   dosage: {
-      //     unstructured: "",
-      //     form: {
-      //       id: "",
-      //       name: "",
-      //       parent: {
-      //         key: "",
-      //         val: ""
-      //       },
-      //       val: "",
-      //       unit: "",
-      //       valunit: ""
-      //     },
-      //     method: {
-      //       id: "",
-      //       name: ""
-      //     },
-      //     val: "",
-      //     unit: "",
-      //     unit_id: "",
-      //     unit_type: "",
-      //     count: "",
-      //     freq: {
-      //       id: "",
-      //       name: "",
-      //       val: ""
-      //     },
-      //     duration: {
-      //       id: "",
-      //       name: "",
-      //       val: "",
-      //       calendar: [{
-      //         data1: "",
-      //         data2: ""
-      //       }]
-      //     },
-      //     special: "",
-      //     spec: ""
-      //   },
-      //   data1: "",
-      //   data2: ""
-      // },
-    ]
+    drugs: []
   }
 
 
@@ -357,7 +205,28 @@ class Actions {
     return true
   }
 
+  async texts() {
+
+    return POST({
+      path: `info/ButtonTexts`,
+      data: {},
+      success: async (data) => {
+        console.log(data);
+      },
+      fail: alerts => {
+        // console.log('FAIL', alerts);
+      },
+      always: (data) => {
+        this.makeAlerts(data)
+        // console.log('ALWAYS', data);
+      }
+    });
+  }
+
   async autologin(){
+
+    this.texts()
+
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
 
