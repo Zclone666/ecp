@@ -8,6 +8,7 @@ import Spinner from '../../components/Spinner'
 import Dozes from '../Dozes'
 import Patient from '../Patient'
 import Warning from '../Warning'
+import Recipe from '../Recipe'
 
 import {
   Sidebar,
@@ -55,7 +56,8 @@ class Page extends Component {
         'concept': <Dozes />,
         'patient': <Patient />,
         'warning': <Warning />,
-        'none': <div />
+        'recipe' : <Recipe />,
+        'none'   : <div />
       }[section] || null
     );
   }

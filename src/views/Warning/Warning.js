@@ -89,23 +89,30 @@ class Warning extends Component {
         selectedDrug,
         selectedConflict,
         activeDrugs,
-        activeConflicts
+        activeConflicts,
+        getElement
       },
       db: { selectedRows, warnings, warnGroups, warnIcons }
     } = this.props
 
     return this.tabs.map(( warn, i ) => {
+      let interaction = getElement('interaction', warn.value)
+      let trust = getElement('trust', warn.trust)
       return {
         menuItem: (
-          <Menu.Item key='messages' style={{ backgroundColor: warn.color }} >
-            <Statistic inverted>
-              <Statistic.Value text>
-                {warn.value}
-              </Statistic.Value>
-              <Statistic.Label>{warn.trust}</Statistic.Label>
-            </Statistic>
+          <Menu.Item key={'messages'+i} style={{ backgroundColor: warn.color }} >
+            {trust.substring(0, 1).toUpperCase()}
           </Menu.Item>
-        ), render: () => <Tab.Pane style={{ backgroundColor: warn.color }}>{warn.value} {warn.trust} rtwete</Tab.Pane>
+        ), render: () => (
+          <Tab.Pane style={{ backgroundColor: warn.color, textAlign: 'center' }}>
+            <Statistic inverted size='small'>
+              <Statistic.Label>{interaction}</Statistic.Label>
+              <Statistic.Value text>
+                {trust}
+              </Statistic.Value>
+            </Statistic>
+          </Tab.Pane>
+        )
       }
     })
 

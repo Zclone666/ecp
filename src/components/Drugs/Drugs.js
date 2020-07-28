@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
 import Drug from './Drug';
+import RecipeDrug from './RecipeDrug';
 
 import {
   // Menu,
@@ -84,7 +85,8 @@ class Drugs extends Component {
         activeDrugs,
         activeConflicts
       },
-      db: { warnings, warnGroups, drugs }
+      db: { warnings, warnGroups, drugs },
+      isRecipe
     } = this.props
     let selectedWarnings = warnings[selectedDrug]
     // console.log('activeDrugs', activeDrugs);
@@ -93,11 +95,18 @@ class Drugs extends Component {
     let warnDrugs = this.warnDrugs
     // console.log('iterator', iterator);
     return (
-      <List divided selection verticalAlign='middle' size='big' className='drugslist'>
+      <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
         {iterator.map(( drug, i ) => {
-          return(
-            <Drug active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />
-          )
+          if(isRecipe){
+            return(
+              <RecipeDrug drug={drug} key={`drug_${i}`} />
+            )
+          }else{
+            return(
+              <Drug active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />
+            )
+          }
+
 
         })}
       </List>

@@ -26,6 +26,9 @@ class Actions {
 
   @observable alerts = {};
 
+  @observable elements = {}
+  @observable buttonTexts = {}
+
   @observable loginForm = {
     email: '',
     password: '',
@@ -205,13 +208,16 @@ class Actions {
     return true
   }
 
-  async texts() {
+  async getObject(name) {
 
     return POST({
-      path: `info/ButtonTexts`,
+      path: `info/${name}`,
       data: {},
       success: async (data) => {
-        console.log(data);
+        let { alert, ...values } = data
+        //this[name]
+        Object.assign(this[name], { ...values });
+        console.log(this[name]);
       },
       fail: alerts => {
         // console.log('FAIL', alerts);
@@ -223,9 +229,21 @@ class Actions {
     });
   }
 
+  getElement = (name, value) => {
+    // console.log({ el: this.elements, name, value});
+    let text = ''
+    this.elements[name].forEach(( item, i ) => {
+      if( item.from <= value && value < item.to ){
+        text = item.name
+      }
+    })
+    return text
+  }
+
   async autologin(){
 
-    this.texts()
+    this.getObject('buttonTexts')
+    this.getObject('elements')
 
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';

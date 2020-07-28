@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { Component, Fragment, createRef } from 'react';
 import { observer, inject } from 'mobx-react';
 
 import {
@@ -40,18 +40,18 @@ class WarningTab extends Component {
               let drug = item.type === 'drug' ? drugs.data.get(item.drugkey) : { name: warnInfo.names[item.drugkey] }
               if( i === 0 ){
                 return(
-                  <>
-                    <List.Item>
+                  <Fragment key='i'>
+                    <List.Item key='1'>
                       <List.Content>
                       <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
                       {drug.name}
                       </List.Content>
                     </List.Item>
-                    <List.Item>
+                    <List.Item key='2'>
                       {(tab.id && tab.id.length > 0) &&
                         warnInfo.outcome[tab.id] && warnInfo.outcome[tab.id].map(( outcome, d ) => {
                           return(
-                            <Message fluid size='tiny'>
+                            <Message size='tiny'>
                               <Message.Content>
                                 {warnInfo.names[outcome]}
                               </Message.Content>
@@ -60,11 +60,11 @@ class WarningTab extends Component {
                         })
                       }
                     </List.Item>
-                  </>
+                  </Fragment>
                 )
               }else{
                 return(
-                  <List.Item>
+                  <List.Item key='3'>
                     <List.Content>
                       <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
                       {drug.name}
@@ -82,7 +82,7 @@ class WarningTab extends Component {
             {(tab.id && tab.id.length > 0) &&
               warnInfo.description[tab.id] && warnInfo.description[tab.id].map(( desc, d ) => {
                 return(
-                  <Segment vertical>
+                  <Segment vertical key={`desc_${d}`}>
                     {warnInfo.names[desc]}
                   </Segment>
                 )
@@ -91,9 +91,9 @@ class WarningTab extends Component {
             {(tab.id && tab.id.length > 0) &&
               <>
                 {warnInfo.literature[tab.id] && <Header as='h3'>Источники</Header>}
-                {warnInfo.literature[tab.id] && warnInfo.literature[tab.id].map(( lit, d ) => {
+                {warnInfo.literature[tab.id] && warnInfo.literature[tab.id].map(( lit, l ) => {
                   return(
-                    <Segment vertical>
+                    <Segment vertical key={`lit_${l}`}>
                       {warnInfo.names[lit]}
                     </Segment>
                   )

@@ -15,6 +15,7 @@ import {
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
+import moment from 'moment';
 
 @inject('db', 'actions')
 @observer
@@ -96,7 +97,8 @@ class Conflicts extends Component {
         selectedDrug,
         selectedConflict,
         activeDrugs,
-        activeConflicts
+        activeConflicts,
+        patientForm
       },
       db: { selectedRows, warnings, warnGroups }
     } = this.props
@@ -114,6 +116,9 @@ class Conflicts extends Component {
                 <Icon.Group size='big' className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}>
                   <Icon as='img' src={`/warningicons/${group.type}.svg`} />
                   <Icon size='big' name='circle outline' style={{ color }} />
+                  {group.type === 'age' && <div className='agecontainer'>
+                    {patientForm.birthdate && moment(patientForm.birthdate).year() || '!'}
+                  </div>}
                 </Icon.Group>
               </Grid.Column>
             )

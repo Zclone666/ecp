@@ -64,7 +64,7 @@ class Main extends Component {
   }
 
   handleResetAll = () => {
-    this.props.db.clearData(true)
+    if(window.confirm('Сбросить все?')) this.props.db.clearData(true)
   }
 
   getInfoPrep = () => {
@@ -132,18 +132,19 @@ class Main extends Component {
               </Segment>
             </Menu.Item>
           </Menu>
-          <Menu className="bottom fixed menu two item huge main">
-            {drugs.data.size > 0 &&
+          {drugs.data.size > 0 &&
+            <Menu className="bottom fixed menu three item huge main">
               <Menu.Item color='red' onClick={this.handleResetAll}>
                 Сбросить
               </Menu.Item>
-            }
-            {drugs.data.size > 0 &&
               <Menu.Item onClick={this.getInfoPrep}>
                 Проверить
               </Menu.Item>
-            }
-          </Menu>
+              <RouterLink className='item primary' to='/recipe/new'>
+                Выписать
+              </RouterLink>
+            </Menu>
+          }
           <Sidebar
             width='very wide'
             direction='right'

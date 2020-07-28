@@ -17,6 +17,8 @@ export default {
 
   '/warning/:page':                           { section: 'main', name: 'warning',    render: <Main />       },
 
+  '/recipe/:page':                            { section: 'main', name: 'recipe',     render: <Main />       },
+
   '/patient/:page':                           { section: 'main', name: 'patient',    render: <Main />       },
 
   '/login':                                   { section: 'auth', name: 'auth',       render: <Login />      },

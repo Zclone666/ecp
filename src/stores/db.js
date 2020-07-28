@@ -267,7 +267,7 @@ class DB {
                 let wKey = `${item.type}_${group}`
 
                 let current = this.warnings.data.get(item.id) || {};
-                this.warnings.data.set( item.key, _.extend(current, { group, color, ...item }) );
+                this.warnings.data.set( item.key, _.assignIn(current, { group, color, ...item }) );
 
                 //разбивка по Драгам
                 if(item.subjects && _.isArray(item.subjects)){
