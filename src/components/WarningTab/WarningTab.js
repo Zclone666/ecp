@@ -43,8 +43,8 @@ class WarningTab extends Component {
                   <>
                     <List.Item>
                       <List.Content>
-                        <List.Header>{drug.name}</List.Header>
-                        {drug.name} ({warnInfo.names[item.subjectid]})
+                      <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
+                      {drug.name}
                       </List.Content>
                     </List.Item>
                     <List.Item>
@@ -66,8 +66,8 @@ class WarningTab extends Component {
                 return(
                   <List.Item>
                     <List.Content>
-                      <List.Header>{drug.name}</List.Header>
-                      {drug.name} ({warnInfo.names[item.subjectid]})
+                      <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
+                      {drug.name}
                     </List.Content>
                   </List.Item>
                 )
