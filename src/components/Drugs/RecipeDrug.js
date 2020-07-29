@@ -103,7 +103,7 @@ class RecipeDrug extends React.Component {
             </List.Header>
             <List.Description>
               {edit ?
-                <Input value={inputValue} fluid onChange={this.handleChange}>
+                <Input value={inputValue} size='small' fluid onChange={this.handleChange}>
                   <input />
                   <Button onClick={this.undo} icon disabled={from === 'dosage'}><Icon name='undo' /></Button>
                 </Input>

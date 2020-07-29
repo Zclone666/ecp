@@ -65,7 +65,7 @@ class PatientForm extends Component {
     if( name === 'gestation' ){
       this.props.actions.patientForm.trimester = value > 14 ? ( value > 26 ? 3 : 2) : 1
     }
-    //console.log({ name, value });
+    console.log({ name, value, res: this.props.actions.patientForm[name] });
   }
   handleChangeToggle = (e, { name, value }) => {
     if( !name && !value ){

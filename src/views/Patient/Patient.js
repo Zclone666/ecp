@@ -40,7 +40,7 @@ class Patient extends Component {
   saveForm = () => {
     let shownPage = this.props.router.values && this.props.router.values.page || 'none'
     const {
-      birthDate,
+      birthdate,
       age,
       age_dwmy,
       age_days,
@@ -58,7 +58,7 @@ class Patient extends Component {
     } = this.props.actions.patientForm
     if(shownPage === 'new'){
       Object.assign(this.props.actions.drugStructure.patient, {
-        birthDate,
+        birthdate,
         age,
         age_dwmy,
         age_days,

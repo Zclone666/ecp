@@ -111,13 +111,18 @@ class Conflicts extends Component {
           {_.keys(warnGroups).map((key, i) => {
             let group = warnGroups[key]
             let color = (selectedWarnings[group.type] && selectedWarnings[group.type].color) || group.valuecolor
+            console.log(patientForm.birthdate);
             return(
               <Grid.Column key={'warn'+i} className='conflict' onClick={() => this.selectConflict(key)}>
                 <Icon.Group size='big' className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}>
-                  <Icon as='img' src={`/warningicons/${group.type}.svg`} />
+                  {(group.type === 'age') ?
+                    <Icon as='img' src={`/warningicons/${patientForm.birthdate ? group.type : 'no'+group.type}.svg`} />
+                    :
+                    <Icon as='img' src={`/warningicons/${group.type}.svg`} />
+                  }
                   <Icon size='big' name='circle outline' style={{ color }} />
-                  {group.type === 'age' && <div className='agecontainer'>
-                    {patientForm.birthdate && moment(patientForm.birthdate).year() || '!'}
+                  {(group.type === 'age' && patientForm.birthdate) && <div className='agecontainer'>
+                    {patientForm.birthdate && moment().diff(moment(patientForm.birthdate, 'x'), 'years') || '!'}
                   </div>}
                 </Icon.Group>
               </Grid.Column>

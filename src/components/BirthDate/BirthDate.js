@@ -45,7 +45,7 @@ class BirthDate extends Component {
     if( birthyear > 0 ) date = moment().set('year', birthyear).format('x');
     //let date = moment().year(-year).month(-month).week(-week).day(-day).format('X')
     // console.log('birth', date, birthyear);
-    onChange && onChange(null, { name, value: date })
+    onChange && onChange(null, { name, value: parseInt(date) })
     this.setState({ date, birth: value })
   }
   handleChangeDate = (e, { value }) => {
@@ -61,7 +61,7 @@ class BirthDate extends Component {
     if(weeks > 0) arr.push(weeks, declension(ref_weeks, weeks))
     if(days > 0) arr.push(days, declension(ref_days, days))
 
-    onChange && onChange(null, { name, value: moment(value).format('x') })
+    onChange && onChange(null, { name, value: parseInt(moment(value).format('x')) })
     this.setState({ birth: arr.join(' '), date: moment(value).format('x') })
 
   }
