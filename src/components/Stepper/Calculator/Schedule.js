@@ -75,8 +75,8 @@ class Schedule extends Component {
             <Form.Field>
               <label>Начало периода приема:</label>
               <DatePickerInput
-                onChange={this.handleChange}
-                value={dateStart}
+                onChange={(e, { value }) => this.handleChange(e, { value, name: 'dateStart' })}
+                name='dateStart'
                 showOnInputClick={true}
                 startMode='year'
                 format='DD.MM.YYYY HH:mm'
@@ -92,8 +92,8 @@ class Schedule extends Component {
             <Form.Field>
               <label>Окончание периода приема:</label>
               <DatePickerInput
-                onChange={this.handleChange}
-                value={dateFinish}
+                onChange={(e, { value }) => this.handleChange(e, { value, name: 'dateFinish' })}
+                name='dateFinish'
                 showOnInputClick={true}
                 startMode='year'
                 format='DD.MM.YYYY HH:mm'
