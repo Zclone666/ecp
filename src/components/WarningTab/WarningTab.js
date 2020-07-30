@@ -25,12 +25,23 @@ class WarningTab extends Component {
         selectedDrug,
         selectedConflict,
         activeDrugs,
-        activeConflicts
+        activeConflicts,
+        patientForm
       },
       db: { drugs, selectedRows, warnings, warnGroups, warnIcons, warnInfo },
       router: { values },
       tab
     } = this.props
+
+    const getDrug = (item) => {
+      if(item.type === 'drug'){
+        return drugs.data.get(item.drugkey)
+      }else if(['allergy', 'disease'].includes(item.type)){
+        return _.find(patientForm[item.type], { key: item.drugkey });
+      }else{
+        return { name: warnInfo.names[item.drugkey] }
+      }
+    }
 
     let arr = _.groupBy(tab.subjects, (x) => values.page === x.drugkey ? 'first' : 'last');
     // console.log({arr});
@@ -41,7 +52,7 @@ class WarningTab extends Component {
           <div className='arrowcontainer' style={{ borderColor: tab.color }}></div>
           <List size='big'>
             {arr.first && arr.first.map(( item, i ) => {
-              let drug = item.type === 'drug' ? drugs.data.get(item.drugkey) : { name: warnInfo.names[item.drugkey] }
+              let drug = getDrug(item)
               return(
                 <List.Item key='1'>
                   <List.Content>
@@ -65,7 +76,7 @@ class WarningTab extends Component {
               }
             </List.Item>
             {arr.last && arr.last.map(( item, i ) => {
-              let drug = item.type === 'drug' ? drugs.data.get(item.drugkey) : { name: warnInfo.names[item.drugkey] }
+              let drug = getDrug(item)
               return(
                 <List.Item key='3'>
                   <List.Content>
