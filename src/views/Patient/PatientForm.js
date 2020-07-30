@@ -116,7 +116,7 @@ class PatientForm extends Component {
     } = this.props.actions.patientForm
     let arr = []
     disease.forEach((item, i) => {
-      if(item.list === 'disease') arr.push(item)
+      if(item.main) arr.push(item)
     });
     return arr
   }
@@ -126,7 +126,7 @@ class PatientForm extends Component {
     } = this.props.actions.patientForm
     let arr = []
     disease.forEach((item, i) => {
-      if(item.list === 'disease2') arr.push(item)
+      if(!item.main) arr.push(item)
     });
     return arr
   }

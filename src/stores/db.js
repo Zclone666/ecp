@@ -419,7 +419,7 @@ class DB {
             await data.concepts.forEach(( concept, i ) => {
               data.concepts[i].key = 'concept'+i
               data.concepts[i].title = data.concepts[i].name
-              data.concepts[i].list = saveTo
+              data.concepts[i].main = saveTo === 'disease' ? true : false
             })
             this.diseaseRows = observable([])
             this.diseaseRows = await _.unionWith(data.concepts, this.diseaseRows, (a, b) => a.id === b.id);
