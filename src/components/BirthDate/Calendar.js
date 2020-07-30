@@ -31,7 +31,7 @@ class Calendar extends Component {
   }
   render(){
     let { value } = this.props
-    let date = parseInt(value) > 0 ? moment(parseInt(value) || moment().toDate()).format("DD.MM.YYYY") : ''
+    let date = Math.abs(parseInt(value)) > 0 ? moment(parseInt(value) || moment().toDate()).format("DD.MM.YYYY") : ''
     //console.log({value});
     return (
       <DatePickerInput
