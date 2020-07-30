@@ -578,12 +578,14 @@ class DB {
 
     // this.selectedRows = await _.unionWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.clearData(false, true)
+    //console.log({ warnGroups: this.warnGroups });
     return true
   }
   async unselectDrug(row){
     this.drugs.data.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.clearData(false, true)
+    //console.log({ warnGroups: this.warnGroups });
     return true
   }
 

@@ -74,8 +74,8 @@ class Patient extends Component {
         driving,
         allergy
       });
-
     }
+    this.props.db.clearData(false, true)
     this.props.router.push('/')
     // this.props.db.GetDuration()
   }

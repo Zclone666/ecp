@@ -7,6 +7,7 @@ import {
   Message,
   Header
 } from 'semantic-ui-react'
+import _ from 'lodash';
 
 @inject('router', 'db', 'actions')
 @observer
@@ -27,52 +28,52 @@ class WarningTab extends Component {
         activeConflicts
       },
       db: { drugs, selectedRows, warnings, warnGroups, warnIcons, warnInfo },
+      router: { values },
       tab
     } = this.props
 
+    let arr = _.groupBy(tab.subjects, (x) => values.page === x.drugkey ? 'first' : 'last');
+    // console.log({arr});
     //console.log({warnInfo});
     return (
       <Segment basic>
         <Segment vertical className='warningcontainer'>
           <div className='arrowcontainer' style={{ borderColor: tab.color }}></div>
           <List size='big'>
-            {tab.subjects && tab.subjects.map(( item, i ) => {
+            {arr.first && arr.first.map(( item, i ) => {
               let drug = item.type === 'drug' ? drugs.data.get(item.drugkey) : { name: warnInfo.names[item.drugkey] }
-              if( i === 0 ){
-                return(
-                  <Fragment key='i'>
-                    <List.Item key='1'>
-                      <List.Content>
-                      <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
-                      {drug.name}
-                      </List.Content>
-                    </List.Item>
-                    <List.Item key='2'>
-                      {(tab.id && tab.id.length > 0) &&
-                        warnInfo.outcome[tab.id] && warnInfo.outcome[tab.id].map(( outcome, d ) => {
-                          return(
-                            <Message size='tiny'>
-                              <Message.Content>
-                                {warnInfo.names[outcome]}
-                              </Message.Content>
-                            </Message>
-                          )
-                        })
-                      }
-                    </List.Item>
-                  </Fragment>
-                )
-              }else{
-                return(
-                  <List.Item key='3'>
-                    <List.Content>
-                      <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
-                      {drug.name}
-                    </List.Content>
-                  </List.Item>
-                )
+              return(
+                <List.Item key='1'>
+                  <List.Content>
+                  <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
+                  {drug.name}
+                  </List.Content>
+                </List.Item>
+              )
+            })}
+            <List.Item key='2'>
+              {(tab.id && tab.id.length > 0) &&
+                warnInfo.outcome[tab.id] && warnInfo.outcome[tab.id].map(( outcome, d ) => {
+                  return(
+                    <Message size='tiny'>
+                      <Message.Content>
+                        {warnInfo.names[outcome]}
+                      </Message.Content>
+                    </Message>
+                  )
+                })
               }
-
+            </List.Item>
+            {arr.last && arr.last.map(( item, i ) => {
+              let drug = item.type === 'drug' ? drugs.data.get(item.drugkey) : { name: warnInfo.names[item.drugkey] }
+              return(
+                <List.Item key='3'>
+                  <List.Content>
+                    <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
+                    {drug.name}
+                  </List.Content>
+                </List.Item>
+              )
             })}
 
           </List>

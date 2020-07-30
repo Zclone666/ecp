@@ -217,7 +217,7 @@ class Actions {
         let { alert, ...values } = data
         //this[name]
         Object.assign(this[name], { ...values });
-        console.log(this[name]);
+        // console.log(this[name]);
       },
       fail: alerts => {
         // console.log('FAIL', alerts);

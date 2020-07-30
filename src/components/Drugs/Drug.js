@@ -183,7 +183,6 @@ class Drug extends React.Component {
             </List.Content>
           }
           on='click'
-          position='right'
         >
           <Popup.Content>
             <Menu secondary vertical>
