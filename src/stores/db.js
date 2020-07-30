@@ -22,7 +22,6 @@ class DB {
   @observable searchRows = [];
 
   @observable diseaseRows = [];
-  @observable disease2Rows = [];
   @observable allergyRows = [];
 
   @observable searchReady = true;
@@ -94,7 +93,6 @@ class DB {
     if(withSelects){
       this.selectedRows = observable([]);
       this.diseaseRows = observable([]);
-      this.disease2Rows = observable([]);
       this.allergyRows = observable([]);
       this.drugsDosages.data.clear()
       this.drugs.data.clear()
@@ -421,9 +419,10 @@ class DB {
             await data.concepts.forEach(( concept, i ) => {
               data.concepts[i].key = 'concept'+i
               data.concepts[i].title = data.concepts[i].name
+              data.concepts[i].list = saveTo
             })
-            this[`${saveTo}Rows`] = observable([])
-            this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
+            this.diseaseRows = observable([])
+            this.diseaseRows = await _.unionWith(data.concepts, this.diseaseRows, (a, b) => a.id === b.id);
             this.searchReady = true
           }
         },

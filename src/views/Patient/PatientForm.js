@@ -81,12 +81,14 @@ class PatientForm extends Component {
 
   handleResultSelect = async (e, { name, result }) => {
     // console.log({ name, result });
-    await this.props.actions.selectPatient(result, name)
+    let newName = name === 'disease2' ? 'disease' : name
+    await this.props.actions.selectPatient(result, newName)
     this.setState({ [`search_${name}`]: '' })
   }
   handleResultUnselect = async ( name, result ) => {
     // console.log({ name, result });
-    await this.props.actions.unselectPatient(result, name)
+    let newName = name === 'disease2' ? 'disease' : name
+    await this.props.actions.unselectPatient(result, newName)
     this.forceUpdate()
     // this.setState({ [`search_${name}`]: '' })
   }
@@ -108,6 +110,26 @@ class PatientForm extends Component {
   resultRenderer = ({ name, level, tn, type }) => {
     return <div>{name}{type === 'TN' && <sup>TM</sup>}</div>
   }
+  get disease(){
+    const {
+      disease,
+    } = this.props.actions.patientForm
+    let arr = []
+    disease.forEach((item, i) => {
+      if(item.list === 'disease') arr.push(item)
+    });
+    return arr
+  }
+  get disease2(){
+    const {
+      disease,
+    } = this.props.actions.patientForm
+    let arr = []
+    disease.forEach((item, i) => {
+      if(item.list === 'disease2') arr.push(item)
+    });
+    return arr
+  }
   render() {
     const {
       birthdate,
@@ -116,7 +138,6 @@ class PatientForm extends Component {
       growth,
       weight,
       disease,
-      disease2,
       pregnancy,
       gestation,
       trimester,
@@ -124,7 +145,7 @@ class PatientForm extends Component {
       driving,
       allergy
     } = this.props.actions.patientForm
-    let { diseaseRows, disease2Rows, allergyRows } = this.props.db
+    let { diseaseRows, allergyRows } = this.props.db
     let { search_disease, search_disease2, search_allergy } = this.state
     let searchReady = true, searchRows=[], searchQuery=''
 
@@ -191,7 +212,7 @@ class PatientForm extends Component {
 
           </Form.Group>
           <List divided verticalAlign='middle'>
-            {disease.map((item, i) => {
+            {this.disease.map((item, i) => {
               return(
                 <List.Item key={'disease'+i}>
                   <List.Content floated='right'>
@@ -214,7 +235,7 @@ class PatientForm extends Component {
                 onSearchChange={_.debounce(this.handleSearchChange, 500, {
                   leading: true,
                 })}
-                results={disease2Rows}
+                results={diseaseRows}
                 value={search_disease2}
                 resultRenderer={this.resultRenderer}
                 resultClassName='result-wrapper'
@@ -222,7 +243,7 @@ class PatientForm extends Component {
             </Form.Field>
           </Form.Group>
           <List divided verticalAlign='middle'>
-            {disease2.map((item, i) => {
+            {this.disease2.map((item, i) => {
               return(
                 <List.Item key={'disease2'+i}>
                   <List.Content floated='right'>
