@@ -95,10 +95,10 @@ class Drug extends React.Component {
     let className = selectedDrug === drug.key ? 'selected' : ''
     className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
 
-
+    let hasBorder = selectedDrug === drug.key && maxItem
 
     return(
-      <List.Item className={className}>
+      <List.Item className={className} style={{ borderLeftColor: hasBorder && maxItem.color || '#f3f3f2' }}>
         <List.Content floated='right'>
           {/*<Responsive fireOnMount as={Button.Group} vertical basic color='blue' maxWidth='480'>
             <Button icon>

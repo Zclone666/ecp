@@ -1335,12 +1335,29 @@ td > .collapsable ul li{
 }
 
 .ui.list.drugslist > .item {
-	transition: margin-left .3s ease-in-out, opacity .3s ease-in-out, filter .3s ease-in-out;
-	padding-left: 50px;
+	transition: border-left-color .5s ease-in-out, opacity .3s ease-in-out, filter .3s ease-in-out;
+	padding-left: 45px;
 	position: relative;
+	border-left-color: #f3f3f2;
+	border-left-style: solid;
+	border-left-width: 5px;
+}
+.ui.list.drugslist > .item:active{
+	background: none !important;
 }
 .ui.list.drugslist > .item.selected {
 	margin-left: 0px;
+	border-left-width: 5px;
+	padding-left: 45px;
+	background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.8);
+}
+.ui.list.drugslist > .item .summary{
+	font-size: 1.1em;
+	line-height: 1.2em;
+}
+.ui.list.drugslist > .item.selected .summary{
+	font-weight: bold;
 }
 .ui.list.drugslist > .item.unused {
 	opacity: 0.3;
@@ -1368,6 +1385,7 @@ td > .collapsable ul li{
 	margin-left: -50px;
 	text-align: right;
 	padding-left: 11px;
+  margin-top: .1em;
 	width: 40px;
 	height: 26px;
 	border-radius: 0 20px 20px 0;

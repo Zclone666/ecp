@@ -116,7 +116,7 @@ class Conflicts extends Component {
             //console.log(patientForm.birthdate);
             return(
               <Grid.Column key={'warn'+i} className='conflict'>
-                {(selectedWarnings[group.type]) ?
+                {(!selectedConflict && selectedWarnings[group.type]) ?
                   <RouterLink to={'/warning/' + group.type} className='conflicticon arrowBg' style={{ backgroundColor: color }} >
                     <List.Icon
                       name='arrow alternate circle down'
