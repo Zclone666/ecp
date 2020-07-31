@@ -43,7 +43,7 @@ class WarningTab extends Component {
       }
     }
 
-    let arr = _.groupBy(tab.subjects, (x) => values.page === x.drugkey ? 'first' : 'last');
+    let arr = _.groupBy(tab.subjects, (x) => (values.page === x.drugkey || selectedDrug === x.drugkey) ? 'first' : 'last');
     // console.log({arr});
     //console.log({warnInfo});
     return (

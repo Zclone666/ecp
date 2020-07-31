@@ -106,7 +106,7 @@ class Drug extends React.Component {
             </Button>
           </Responsive>
           */}
-          <Responsive fireOnMount as={Button.Group} basic color='blue' minWidth='481'>
+          <Responsive fireOnMount as={Button.Group} minWidth='481'>
             <Button as={RouterLink} to={url} onClick={this.getLF} icon>
               <Icon name='tint' />
             </Button>
