@@ -107,7 +107,7 @@ class Warning extends Component {
       activeIndex
     } = this.state
 
-    console.log({ length: this.tabs.length});
+    //console.log({ length: this.tabs.length});
 
     let arr = this.tabs.length > 13 ? this.tabs.slice(0, 11) : this.tabs.slice(0, 12)
 
