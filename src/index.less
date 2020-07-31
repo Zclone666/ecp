@@ -1377,6 +1377,32 @@ td > .collapsable ul li{
 .ui.list > .item .arrowBg.none{
 	margin-left: -100px;
 }
+
+.conflict > .conflicticon.arrowBg{
+	transition: margin-top 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    position: absolute;
+    margin-top: -41px;
+    text-align: right;
+    padding-left: 0px;
+    width: 26px;
+    height: 26px;
+    border-radius: 20px;
+    background-color: #ccc;
+    box-shadow: 0.5px 0.5px 2px #bbb;
+    padding: 0;
+    left: 24px;
+}
+.conflict > .conflicticon.arrowBg.none{
+	margin-top: -100px;
+}
+.conflict > .conflicticon.arrowBg > .icon{
+	font-size: 28px;
+  text-align: left;
+  margin-top: -1px;
+  margin-left: -1px;
+  text-shadow: 0.5px 0.5px 1px #bbb;
+}
+
 .ui.feed{
 	overflow: auto;
 }
@@ -1386,6 +1412,8 @@ td > .collapsable ul li{
 
 .conflict.column{
 	width: 74px !important;
+	overflow: hidden;
+	padding-top: 3.5em !important;
 }
 .conflict .big.icons{
 	width: 50px !important;

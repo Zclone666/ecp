@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
+import RouterLink from '../../router/a';
+
 import Conflict from './Conflict';
 
 import {
@@ -111,10 +113,32 @@ class Conflicts extends Component {
           {_.keys(warnGroups).map((key, i) => {
             let group = warnGroups[key]
             let color = (selectedWarnings[group.type] && selectedWarnings[group.type].color) || group.valuecolor
-            console.log(patientForm.birthdate);
+            //console.log(patientForm.birthdate);
             return(
-              <Grid.Column key={'warn'+i} className='conflict' onClick={() => this.selectConflict(key)}>
-                <Icon.Group size='big' className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}>
+              <Grid.Column key={'warn'+i} className='conflict'>
+                {(selectedWarnings[group.type]) ?
+                  <RouterLink to={'/warning/' + group.type} className='conflicticon arrowBg' style={{ backgroundColor: color }} >
+                    <List.Icon
+                      name='arrow alternate circle down'
+                      style={{ color: '#FFF' }}
+                      size='large'
+                      onClick={() => {  }}
+                    />
+                  </RouterLink>
+                  :
+                  <RouterLink to={'/warning/' + group.type} className='conflicticon arrowBg none'>
+                    <List.Icon
+                      name='arrow alternate circle down'
+                      style={{ color: '#FFF' }}
+                      size='large'
+                    />
+                  </RouterLink>
+                }
+                <Icon.Group
+                  onClick={() => this.selectConflict(key)}
+                  size='big'
+                  className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}
+                >
                   {(group.type === 'age') ?
                     <Icon as='img' src={`/warningicons/${patientForm.birthdate ? group.type : 'no'+group.type}.svg`} />
                     :

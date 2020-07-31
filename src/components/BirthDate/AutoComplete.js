@@ -74,7 +74,11 @@ class AutoComplete extends Component {
 
   handleSearchChange = (e, { value }) => {
     let { onChange } = this.props
-    if (value.length < 1) return this.setState({results: [], isLoading: false, searchQuery: ''})
+    if (value.length < 1) {
+      this.setState({results: [], isLoading: false, searchQuery: ''});
+      onChange && onChange(this, { value: '' })
+      return
+    }
     this.setState({ searchQuery: value }, () => {
       onChange && onChange(this, { value })
 

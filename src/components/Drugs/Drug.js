@@ -124,7 +124,7 @@ class Drug extends React.Component {
               name='arrow alternate circle right'
               style={{ color: '#FFF' }}
               size='large'
-              onClick={() => { console.log('hey'); }}
+              onClick={() => {  }}
             />
           </RouterLink>
           :

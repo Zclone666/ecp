@@ -70,17 +70,25 @@ class Warning extends Component {
     let subjTo = false
 
     let warnArr = _.orderBy(Array.from(warnings.data.values()), ['step'], ['asc']);
-
+    let isConflict = !!_.find(warnGroups, { 'type': values.page });
+    //console.log({isConflict, selectedDrug});
     warnArr.forEach(( warn, i ) => {
       if(selectedConflict){
         subjFrom = ( warn.type === selectedConflict )//_.find(warn.subjects, (o) => { return o.drugkey === selectedConflict; })
+        subjTo = _.find(warn.subjects, (o) => { return o.drugkey === values.page; })
+      }else if(isConflict && selectedDrug){
+        //console.log({ selectedDrug, subj: warn.subjects});
+        subjFrom = warn.type === values.page ? warn : false
+        subjTo = _.find(warn.subjects, (o) => { return o.drugkey === selectedDrug; })
       }else{
         subjFrom = _.find(warn.subjects, (o) => { return o.drugkey === selectedDrug; })
+        subjTo = _.find(warn.subjects, (o) => { return o.drugkey === values.page; })
       }
-      subjTo = _.find(warn.subjects, (o) => { return o.drugkey === values.page; })
+
       //console.log({ subjFrom, subjTo });
       if( subjFrom && subjTo ) tabs.push(warn)
     })
+    //console.log({tabs});
     return tabs
   }
 
@@ -99,7 +107,9 @@ class Warning extends Component {
       activeIndex
     } = this.state
 
-    let arr = this.tabs.slice(0, 11)
+    console.log({ length: this.tabs.length});
+
+    let arr = this.tabs.length > 13 ? this.tabs.slice(0, 11) : this.tabs.slice(0, 12)
 
     return arr.map(( warn, i ) => {
       let interaction = getElement('interaction', warn.value)
@@ -164,7 +174,7 @@ class Warning extends Component {
     let {
       activeIndex, open
     } = this.state
-    let widths = this.tabs.length ? (this.tabs.length < 12 ? this.tabs.length : 12) : 1
+    let widths = this.tabs.length ? (this.tabs.length < 13 ? this.tabs.length : 12) : 1
     let warn = this.tabs[activeIndex]
     let interaction = getElement('interaction', warn.value)
     let trust = getElement('trust', warn.trust)
