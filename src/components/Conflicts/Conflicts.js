@@ -109,7 +109,7 @@ class Conflicts extends Component {
     // console.log('activeConflicts', activeConflicts);
     return (
       <>
-        <Grid as={Segment} basic>
+        <Grid as={Segment} basic style={{ marginTop: 0}}>
           {_.keys(warnGroups).map((key, i) => {
             let group = warnGroups[key]
             let color = (selectedWarnings[group.type] && selectedWarnings[group.type].color) || group.valuecolor

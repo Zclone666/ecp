@@ -178,7 +178,7 @@ class Main extends Component {
 
             <div className='scrollwrapper'>
               <Grid>
-                <Grid.Column width={16}>
+                <Grid.Column width={16} style={{boxShadow: '0 0 9px #ccc', borderBottom: '1px solid #fff'}}>
                   {drugs.data.size > 0 ?
                     <Drugs />
                     :
@@ -191,7 +191,7 @@ class Main extends Component {
                   }
                 </Grid.Column>
                 {drugs.data.size > 0 &&
-                  <Grid.Column width={16}>
+                  <Grid.Column width={16} style={{paddingTop: 0}}>
                     <Conflicts />
                   </Grid.Column>
                 }
