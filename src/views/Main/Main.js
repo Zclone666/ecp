@@ -92,7 +92,7 @@ class Main extends Component {
     // console.log('router', this.props.router);
     return (
       <>
-        <Menu className="ui top huge borderless tabular nomargin main menu fixed grey">
+        <Menu className={`ui top huge borderless tabular nomargin main menu fixed grey${showPage && ' hidden'}`}>
 
           <Menu.Item icon onClick={this.handleSidebar}>
             <Icon size='large' name='content' />
@@ -112,7 +112,7 @@ class Main extends Component {
 
 
         <Sidebar.Pushable>
-          <Menu className="ui fluid one item ui top huge text menu fixed menu searchwrapper">
+          <Menu className="fluid one item ui top huge text menu searchwrapper" style={{margin: 0}}>
             <Menu.Item>
               <Segment basic className='fluid'>
                 <Search

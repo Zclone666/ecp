@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { inject, observer } from 'mobx-react';
 
 import RouterLink from '../../router/a';
@@ -10,7 +10,8 @@ import {
   Button,
   Responsive,
   Icon,
-  Popup
+  Popup,
+  Dropdown
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -86,6 +87,7 @@ class Drug extends React.Component {
     let selectedWarnings = warnIcons[selectedDrug]
     let { key, name, level, tn, type, dosage } = drug
     let drugDosages = drugsDosages.data.get(key) || {}
+    let hasWarnings = warnings.data.size > 0
     //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
     let url = drugDosages.url || {}
@@ -98,7 +100,7 @@ class Drug extends React.Component {
     let hasBorder = selectedDrug === drug.key && maxItem
 
     return(
-      <List.Item className={className} style={{ borderLeftColor: hasBorder && maxItem.color || '#f3f3f2' }}>
+      <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`} style={{ borderLeftColor: hasBorder && maxItem.color || '#f3f3f2' }}>
         <List.Content floated='right'>
           {/*<Responsive fireOnMount as={Button.Group} vertical basic color='blue' maxWidth='480'>
             <Button icon>
@@ -136,11 +138,11 @@ class Drug extends React.Component {
             />
           </RouterLink>
         }
-        {hasWarning ?
+        {hasWarnings && (hasWarning ?
           <List.Icon name='warning circle' style={{ color: maxItem.color }} size='large' onClick={(e) => this.selectDrug(e, drug.key)} />
           :
           <List.Icon name='warning circle' size='large' style={{ color: 'transparent', textShadow: 'unset' }} />
-        }
+        )}
         <Responsive as={List.Content} className='ui feed large' fireOnMount minWidth='481'>
 
           <Feed.Event>
@@ -163,47 +165,47 @@ class Drug extends React.Component {
           </Feed.Event>
         </Responsive>
         <Responsive
-          as={Popup}
+          as={Fragment}
           maxWidth='480'
-          trigger={
-            <List.Content className='ui feed large'>
-              <Feed.Event>
-                <Feed.Content>
-                  <Feed.Summary>
-                    <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
-                    <Feed.Date>{names[dosage.method] || ''}</Feed.Date>
-                  </Feed.Summary>
-                  <Feed.Meta>
-                    {dosage.pack.dosage || ''}
-                    {(dosage.pack.dosage && dosage.pack.pack) && ', '}
-                    {dosage.pack.pack || ''}
-                  </Feed.Meta>
-                </Feed.Content>
-              </Feed.Event>
-            </List.Content>
-          }
-          on='click'
         >
-          <Popup.Content>
-            <Menu secondary vertical>
-              <Menu.Item  as={RouterLink} to='/concept/dozes' onClick={this.getLF}>
-                <Icon name='tint' />
-                Дозировки
-              </Menu.Item>
-              <Menu.Item>
-                <Icon name='font' />
-                Аналоги
-              </Menu.Item>
-              <Menu.Item onClick={this.unselectDrug}>
-                <Icon name='delete' />
-                Убрать из списка
-              </Menu.Item>
-              <Menu.Item>
-                <Icon name='ellipsis horizontal' />
-                Подробнее
-              </Menu.Item>
-            </Menu>
-          </Popup.Content>
+            <List.Content className='ui feed large' as={Dropdown} fluid icon={null}
+              trigger={
+                <Feed.Event>
+                  <Feed.Content>
+                    <Feed.Summary>
+                      <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
+                      <Feed.Date>{names[dosage.method] || ''}</Feed.Date>
+                    </Feed.Summary>
+                    <Feed.Meta>
+                      {dosage.pack.dosage || ''}
+                      {(dosage.pack.dosage && dosage.pack.pack) && ', '}
+                      {dosage.pack.pack || ''}
+                    </Feed.Meta>
+                  </Feed.Content>
+                </Feed.Event>
+              }
+            >
+              <Dropdown.Menu>
+                <Menu.Item  as={RouterLink} to='/concept/dozes' onClick={this.getLF}>
+                  <Icon name='tint' />
+                  Дозировки
+                </Menu.Item>
+                <Menu.Item>
+                  <Icon name='font' />
+                  Аналоги
+                </Menu.Item>
+                <Menu.Item onClick={this.unselectDrug}>
+                  <Icon name='delete' />
+                  Убрать из списка
+                </Menu.Item>
+                <Menu.Item>
+                  <Icon name='ellipsis horizontal' />
+                  Подробнее
+                </Menu.Item>
+              </Dropdown.Menu>
+            </List.Content>
+
+
         </Responsive>
 
       </List.Item>

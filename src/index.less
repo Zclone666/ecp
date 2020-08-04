@@ -189,8 +189,8 @@ body > #root,
 body > #root > .ui.body{
   height: 100% !important
 }
-.ui.body{
-	padding-top: 4*@relativeSmall;
+.ui.body > .pushable{
+	padding-top: 4*@relativeSmall !important;
 }
 .login-form{
 	margin-top: -4*@relativeSmall;
@@ -272,7 +272,13 @@ body > #root > .ui.body{
 .ui.main.menu{
   background: #fff !important;
 }
-
+.ui.main.menu.fixed{
+	transition: top .5s ease-in-out;
+}
+.ui.fixed.main.menu.hidden{
+	top: -55px;
+	display: flex !important;
+}
 
 
 .ui.header.middle{
@@ -830,7 +836,7 @@ i.violet.icon, i.big.violet.icon, i.small.violet.icon, i.large.violet.icon, i.hu
 }
 .pusherwrapper.pusher{
 	padding-bottom: 4*@relativeSmall;
-	padding-top: 6*@relativeSmall;
+	// padding-top: 6*@relativeSmall;
 	height: 100%;
 }
 .pusherwrapper.pusher.dimmed{
@@ -1049,6 +1055,10 @@ i.violet.icon, i.big.violet.icon, i.small.violet.icon, i.large.violet.icon, i.hu
     margin-left: 0em;
     align-self: top;
     padding-left: 1.5em;
+}
+.ui.list > .item > .content {
+	position: relative;
+  overflow: visible
 }
 .ui.items > div > .item:after {
     display: block;
@@ -1342,6 +1352,9 @@ td > .collapsable ul li{
 	border-left-style: solid;
 	border-left-width: 5px;
 }
+.ui.list.drugslist > .item.nowarnings {
+	padding-left: 18px;
+}
 .ui.list.drugslist > .item:active{
 	background: none !important;
 }
@@ -1366,6 +1379,7 @@ td > .collapsable ul li{
 .ui.list.drugslist > .item .right.content{
 	position: absolute;
 	right: 22px;
+	z-index: 105;
 }
 
 .ui.list > .item .icon.arrow.circle.right{
@@ -1530,8 +1544,28 @@ td > .collapsable ul li{
   left: 10px;
   top: 22px;
   bottom: 22px;
-  border-width: 5px 0 5px 5px;
+  border-width: 6px 0 6px 6px;
   border-radius: 5px 0 0 5px;
   width: 20px;
   border-style: solid;
+}
+.iconround{
+	position: absolute;
+  left: -16px;
+  top: 50%;
+  margin-top: -16px;
+  width: 28px;
+  height: 28px;
+  padding: 3px;
+  border-radius: 20px;
+}
+.arrowcontainer > .angle{
+	position: absolute;
+	left: 0;
+}
+.toparrow{
+	top: -15px;
+}
+.bottomarrow{
+	bottom: -15px;
 }

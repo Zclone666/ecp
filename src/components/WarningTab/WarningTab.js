@@ -5,7 +5,9 @@ import {
   Segment,
   List,
   Message,
-  Header
+  Header,
+  Icon,
+  Popup
 } from 'semantic-ui-react'
 import _ from 'lodash';
 
@@ -55,10 +57,53 @@ class WarningTab extends Component {
     })
     // console.log({arr});
     //console.log({warnInfo});
+
+    let needIcon = (tab.id && tab.id.length > 0) && warnInfo.outcome[tab.id]
+    let icon = tab.icon || 'info'
+    let popupText = icon === 'syringe' ? 'Фармокологическое взаимодействие' : 'Взаимодействие на уровне ферментов'
+    // syringe - Фармокологическое взаимодействие
+    // cloud upload - Взаимодействие на уровне ферментов
+
     return (
       <Segment basic>
         <Segment vertical className='warningcontainer'>
-          <div className='arrowcontainer' style={{ borderColor: tab.color }}></div>
+          <div className='arrowcontainer' style={{ borderColor: tab.color }}>
+            {(arr.first && arr.first[0] && arr.first[0].arrow) &&
+              <Icon
+                className='toparrow'
+                name='angle right'
+                style={{ color: tab.color }}
+                size='big'
+              />
+            }
+            {needIcon && (icon === 'info' || icon === 'question' ?
+              <div className='iconround' style={{ backgroundColor: tab.color }}>
+                <Icon
+                  name={icon}
+                  style={{ color: '#FFF' }}
+                  size='large'
+                />
+              </div>
+              :
+              <Popup content={popupText} on={['hover','click']} trigger={
+                <div className='iconround' style={{ backgroundColor: tab.color }}>
+                  <Icon
+                    name={icon}
+                    style={{ color: '#FFF' }}
+                    size='large'
+                  />
+                </div>
+              } />
+            )}
+            {(arr.last && arr.last[0] && arr.last[0].arrow) &&
+              <Icon
+                className='bottomarrow'
+                name='angle right'
+                style={{ color: tab.color }}
+                size='big'
+              />
+            }
+          </div>
           <List size='big'>
             {arr.first && arr.first.map(( item, i ) => {
               let drug = getDrug(item)
@@ -103,9 +148,8 @@ class WarningTab extends Component {
             {(tab.id && tab.id.length > 0) &&
               warnInfo.description[tab.id] && warnInfo.description[tab.id].map(( desc, d ) => {
                 return(
-                  <Segment vertical key={`desc_${d}`}>
-                    {warnInfo.names[desc]}
-                  </Segment>
+                  <Segment vertical key={`desc_${d}`} dangerouslySetInnerHTML={{__html: warnInfo.names[desc]}} />
+
                 )
               })
             }

@@ -108,8 +108,8 @@ class Warning extends Component {
     } = this.state
 
     //console.log({ length: this.tabs.length});
-
-    let arr = this.tabs.length > 13 ? this.tabs.slice(0, 11) : this.tabs.slice(0, 12)
+    // console.log({length: this.tabs.length});
+    let arr = this.tabs.length > 13 ? this.tabs.slice(0, 10) : this.tabs.slice(0, 11)
 
     return arr.map(( warn, i ) => {
       let interaction = getElement('interaction', warn.value)
@@ -157,7 +157,7 @@ class Warning extends Component {
       let trust = getElement('trust', warn1.trust)
       // console.log(i);
       return(
-        <Dropdown.Item value={i+10} key={`tab${i+10}`} onClick={() => this.handleTabChange(null, { activeIndex: i+11 })}>
+        <Dropdown.Item value={i+11} key={`tab${i+11}`} onClick={() => this.handleTabChange(null, { activeIndex: i+11 })}>
           <Icon name='circle' style={{ color: warn1.color }} />
           {trust.substring(0, 1).toUpperCase()}
         </Dropdown.Item>
@@ -192,7 +192,7 @@ class Warning extends Component {
         <div className='scrollwrapper'>
           <Menu widths={widths} attached='top' inverted style={{position: 'relative', zIndex: 105}}>
             {this.renderTabs()}
-            {(this.tabs.length && this.tabs.length > 12) &&
+            {(this.tabs.length && this.tabs.length > 11) &&
               <div className={(activeIndex > 11) ? 'active item' : 'item'} style={{ backgroundColor: warn.color }}>
                 <Dropdown
                   style={{textAlign: 'center'}}

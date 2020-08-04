@@ -86,6 +86,7 @@ class DB {
     this.searchRows = observable([])
 
     if(withWarnings){
+      this.warnings.data.clear();
       this.warnIcons = observable({});
       this.warnGroups = observable({});
     }
