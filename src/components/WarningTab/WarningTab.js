@@ -43,7 +43,16 @@ class WarningTab extends Component {
       }
     }
 
-    let arr = _.groupBy(tab.subjects, (x) => (values.page === x.drugkey || selectedDrug === x.drugkey) ? 'first' : 'last');
+    //сортировка какой элемент идет первым плюс усовие, если оба совпадают
+    let c = 0
+    let arr = _.groupBy(tab.subjects, (x) => {
+      let name = 'last'
+      if((values.page === x.drugkey || selectedDrug === x.drugkey) && c<1){
+        c++
+        name = 'first'
+      }
+      return name
+    })
     // console.log({arr});
     //console.log({warnInfo});
     return (
@@ -66,7 +75,7 @@ class WarningTab extends Component {
               {(tab.id && tab.id.length > 0) &&
                 warnInfo.outcome[tab.id] && warnInfo.outcome[tab.id].map(( outcome, d ) => {
                   return(
-                    <Message size='tiny'>
+                    <Message size='tiny' key={'outcome'+d}>
                       <Message.Content>
                         {warnInfo.names[outcome]}
                       </Message.Content>
