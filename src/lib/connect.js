@@ -11,7 +11,7 @@ export const PRE_PATH  = '';
 export const PRODUCTION = false;
 export const API_SERVER = SERVER === 'prod' ? "https://prod.socmedica.com/version/api/stats" : "https://ecp2.socmedica.dev/api";
 
-export const SERVICE = "43";//43
+export const SERVICE = "4";//43
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const AUTH_REG_KEY = "fe2ddc03f0c34724";
 
@@ -69,16 +69,19 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
     headers: headers || { 'Content-Type': 'application/json;charset=UTF-8' },
   }).then(response => {
       let alerts = [];
-      if (response.data.alert || response.data.alerts || response.data.Message) {
+      if (response.data.alert || response.data.alerts || response.data.message || (response.data[0] && response.data[0].message)) {
         if (response.data.alert) {
           alerts = [response.data.alert];
           delete response.data.alert;
         }
-        if (response.data.Message) {
+        if (response.data.message) {
           alerts = [response.data.Message];
         }
         if (response.data.alerts) {
           alerts = [...response.data.alerts];
+        }
+        if (response.data[0] && response.data[0].message) {
+          alerts = [...response.data];
         }
         alerts = alerts.length ? alerts : [{ message: response.data.toString() }];
         alerts = alerts.filter(alert => alert.message || alert.title);

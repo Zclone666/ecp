@@ -4,6 +4,7 @@ import _ from 'lodash';
 import moment from 'moment'
 
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
+export const RESET_PASS_KEY = "c47ee7e666d6be7e";
 class Actions {
 
   @observable view = false;
@@ -56,6 +57,18 @@ class Actions {
 
   @observable getConfirmForm = {
     email: ""
+  }
+
+  @observable resetPassForm = {
+    email: "",
+    key: ''
+  }
+
+  @observable newPassForm = {
+    email: "",
+    code: "",
+    password: "",
+    key: ''
   }
 
   @observable stepsData = {
@@ -348,7 +361,7 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/authorization`,
       data,
       success: async (data) => {
-         //console.log('SUCCESS', data);
+         console.log('SUCCESS', data);
          this.makeAlerts({ alerts:[{
            title: "Введите ключ.",
            message: "Для входа в систему необходимо ввести ваш персональный ключ. Если у вас его нет, обратитесь к поставщику ПО.",
@@ -447,6 +460,52 @@ class Actions {
       success: async (data) => {
         console.log('SUCCESS', data);
         this.stores.router.push('/confirm')
+        // if (data.authkey) {
+        //   await localStorage.setItem('authkey', data.authkey);
+        //   this.authkey = data.authkey
+        // }
+      },
+      fail: alerts => {
+        // console.log('FAIL', alerts);
+      },
+      always: (data) => {
+        this.makeAlerts(data)
+        // console.log('ALWAYS', data);
+      }
+    });
+  }
+
+  async resetPass() {
+    this.resetPassForm.key = RESET_PASS_KEY;
+    return POST({
+      path: `https://cs.socmedica.com/api/user/recovery`,
+      data: this.resetPassForm,
+      success: async (data) => {
+        console.log('SUCCESS', data);
+        this.stores.router.push('/newpass')
+        // if (data.authkey) {
+        //   await localStorage.setItem('authkey', data.authkey);
+        //   this.authkey = data.authkey
+        // }
+      },
+      fail: alerts => {
+        // console.log('FAIL', alerts);
+      },
+      always: (data) => {
+        this.makeAlerts(data)
+        // console.log('ALWAYS', data);
+      }
+    });
+  }
+
+  async newPass() {
+    this.newPassForm.key = RESET_PASS_KEY;
+    return POST({
+      path: `https://cs.socmedica.com/api/user/resetPassword`,
+      data: this.newPassForm,
+      success: async (data) => {
+        console.log('SUCCESS', data);
+        this.stores.router.push('/login')
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey

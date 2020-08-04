@@ -43,7 +43,7 @@ export default class Router {
     let matchedRoute = this.mapper.map(location.pathname, this.options.routes);
      // console.log(matchedRoute);
     let { match, values, route } = matchedRoute
-    if( this.match && match.section == this.match.section ){
+    if( this.match && match.section == this.match.section && match.section !== 'auth' ){
       Object.assign(this, { values, route, location });
       this.match.name = match.name
     }else{

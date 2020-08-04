@@ -6,9 +6,9 @@ import _ from 'lodash';
 // import { colors } from '../components/Charts/colorPallette'
 
 const colorPallette = [
-  '#03529b',
   '#007b2b',
   '#b0d512',
+  '#03529b',
   '#fff42b',
   '#ffca2f',
   '#fc7301',
@@ -507,8 +507,9 @@ class DB {
       id:"", // айди ДВ или ТН
       name: "", // Название ДВ или ТН
       level: 0, //
-      tn: false, // ДВ или ТН
+      //tn: false, // ДВ или ТН
       fp_id: "", //
+      type: null,
       group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
       dosage: { // дозировка
         // way: null,

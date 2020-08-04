@@ -85,7 +85,7 @@ class Confirm extends Component {
               </Form>
               <Message className='squared'>
                 Уже зарегистрированы? <RouterLink to='/login'>Войти</RouterLink><br />
-                Или <RouterLink to="/getconfirm" >выслать</RouterLink> повторный код подтверждение
+                Или <RouterLink to="/getconfirm" >выслать</RouterLink> повторный код подтверждения
               </Message>
             </Segment>
           </Grid.Column>

@@ -95,13 +95,13 @@ class Main extends Component {
         <Menu className="ui top huge borderless tabular nomargin main menu fixed grey">
 
           <Menu.Item icon onClick={this.handleSidebar}>
-            <Icon size='large' name='content' color='blue' />
+            <Icon size='large' name='content' />
           </Menu.Item>
 
 
           <Menu.Menu position='right'>
             <Menu.Item>
-              <Button basic color='blue' as={RouterLink} to='/patient/new'>
+              <Button as={RouterLink} to='/patient/new'>
                 <Icon name='user' />
                 Данные пациента
               </Button>

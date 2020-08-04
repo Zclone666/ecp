@@ -118,6 +118,7 @@ class Login extends Component {
                 </Segment>
               </Form>
               <Message className='squared'>
+                Забыли пароль? <RouterLink to='/resetpass'>Восстановить</RouterLink>. <br />
                 <RouterLink to='/signup'>Регистрация</RouterLink> в системе <br />
                 <RouterLink to='/confirm'>Подтвердить</RouterLink> E-mail
               </Message>

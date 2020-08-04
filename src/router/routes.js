@@ -4,6 +4,9 @@ import Login from '../views/Login';
 import Signup from '../views/Signup';
 import Confirm from '../views/Confirm';
 import Getconfirm from '../views/Getconfirm';
+import NewPass from '../views/NewPass';
+import ResetPass from '../views/ResetPass';
+
 
 export default {
   '/':                                        { section: 'main', name: 'main',       render: <Main />       },
@@ -26,4 +29,8 @@ export default {
   '/confirm':                                 { section: 'auth', name: 'auth',       render: <Confirm/>     },
   '/getconfirm':                              { section: 'auth', name: 'auth',       render: <Getconfirm/>  },
   '/confirm/:code/:email/:service':           { section: 'auth', name: 'auth',       render: <Confirm/>     },
+
+  '/resetpass':                               { section: 'auth', name: 'auth',       render: <ResetPass/>   },
+  '/newpass/:code/:email/:service':           { section: 'auth', name: 'auth',       render: <NewPass/>     },
+  '/newpass':                                 { section: 'auth', name: 'auth',       render: <NewPass/>     },
 }
