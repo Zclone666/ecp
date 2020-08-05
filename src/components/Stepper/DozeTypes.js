@@ -45,7 +45,10 @@ class DozeTypes extends Component {
         pack: '',
         flag: false
       }
-      if(_.isArray(item.pack) && item.pack.length > 0 ){
+      // if(form[stepsData.form].solute){
+      //
+      // }
+      if(form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0 ){
         item.pack.forEach((pack, x) => {
           currPack = {
             dosage: '',
