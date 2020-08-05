@@ -91,7 +91,7 @@ class Actions {
     gestation: null,
     trimester: null,
     lactation: false,
-    driving: false,
+    driving: true,
     allergy: []
   }
 
@@ -125,7 +125,7 @@ class Actions {
       gestation: null,
       trimester: null,
       lactation: false,
-      driving: false,
+      driving: true,
       allergy: []
     },
     save_recipe: false,

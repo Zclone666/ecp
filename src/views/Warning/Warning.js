@@ -19,6 +19,34 @@ import {
 
 import _ from 'lodash';
 
+function getLetter(value){
+  let result = 'A'
+  switch (true) {
+    case value === 0:
+      result = 'X'
+      break;
+    case value === 2:
+      result = '¥'
+      break;
+    case value > 0 && value <= 0.25:
+      result = 'D'
+      break;
+    case value > 0.25 && value <= 0.5:
+      result = 'C'
+      break;
+    case value > 0.5 && value <= 0.75:
+      result = 'B'
+      break;
+    case value > 0.75 && value <= 1:
+      result = 'A'
+      break;
+    default:
+      result = 'A'
+  }
+  return result
+}
+
+
 @inject('router', 'db', 'actions')
 @observer
 class Warning extends Component {
@@ -120,7 +148,7 @@ class Warning extends Component {
             active={i===activeIndex}
             style={{ backgroundColor: warn.color }}
             onClick={() => this.handleTabChange(null, { activeIndex: i })} >
-            {trust.substring(0, 1).toUpperCase()}
+            {getLetter(warn.trust)}
           </Menu.Item>
         )
         // render: () => (
@@ -159,7 +187,7 @@ class Warning extends Component {
       return(
         <Dropdown.Item value={i+11} key={`tab${i+11}`} onClick={() => this.handleTabChange(null, { activeIndex: i+11 })}>
           <Icon name='circle' style={{ color: warn1.color }} />
-          {trust.substring(0, 1).toUpperCase()}
+          {getLetter(warn1.trust)}
         </Dropdown.Item>
       )
     })

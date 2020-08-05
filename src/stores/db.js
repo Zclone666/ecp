@@ -34,7 +34,8 @@ class DB {
     names: observable({}),
     description: observable({}),
     literature: observable({}),
-    outcome: observable({})
+    outcome: observable({}),
+    urls: observable({})
   };
 
   @observable currDrug = {};
@@ -89,6 +90,11 @@ class DB {
       this.warnings.data.clear();
       this.warnIcons = observable({});
       this.warnGroups = observable({});
+      this.warnInfo.names = observable({});
+      this.warnInfo.description = observable({});
+      this.warnInfo.literature = observable({});
+      this.warnInfo.outcome = observable({});
+      this.warnInfo.urls = observable({});
     }
 
     if(withSelects){
@@ -246,6 +252,7 @@ class DB {
             this.warnInfo.description = _.clone(data.description)
             this.warnInfo.literature = _.clone(data.literature)
             this.warnInfo.outcome = _.clone(data.outcome)
+            this.warnInfo.urls = _.clone(data.urls)
 
 
 

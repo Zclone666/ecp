@@ -157,6 +157,13 @@ class WarningTab extends Component {
               <>
                 {warnInfo.literature[tab.id] && <Header as='h3'>Источники</Header>}
                 {warnInfo.literature[tab.id] && warnInfo.literature[tab.id].map(( lit, l ) => {
+                  if( lit && warnInfo.urls[lit] ){
+                    return(
+                      <Segment vertical key={`lit_${l}`}>
+                        <a href={warnInfo.urls[lit]} target='_blank'>{warnInfo.names[lit]} <Icon name='external alternate' /></a>
+                      </Segment>
+                    )
+                  }
                   return(
                     <Segment vertical key={`lit_${l}`}>
                       {warnInfo.names[lit]}
