@@ -1,14 +1,43 @@
-variables:
-    GIT_STRATEGY: fetch
-    NPM_EXE: 'C:\Program Files\nodejs\npm.cmd'
+#variables:
+#    GIT_STRATEGY: fetch
+#    NPM_EXE: 'C:\Program Files\nodejs\npm.cmd'
     
-build dev:
-    stage: build
-    tags:
-        - msbuild
-    only:
-        - dev
-    script:
-        - 'npm i'
-        - '$env:CI="false"'
-        - 'npm run build'
+#build dev:
+#    stage: build
+#    tags:
+#        - msbuild
+#    only:
+#        - dev
+#    script:
+#        - 'npm i'
+#        - '$env:CI="false"'
+#        - 'npm run build'
+
+image: docker:stable
+
+stages:
+  - Build image
+  - Docker stop
+  - Docker run
+
+docker build:
+  stage: Build image
+  tags: 
+  - docker
+  script:
+  - docker build --force-rm -t billing ./
+
+docker stop:
+  stage: Docker stop
+  tags: 
+  - docker
+  script:
+#  - docker stop billing || true && docker rm billing || true
+  - docker stop billing || true
+
+docker run:
+  stage: Docker run
+  tags: 
+  - docker
+  script:
+  - docker run -d --rm -p 127.0.0.1:9099:80 --name billing billing
