@@ -25,7 +25,7 @@ docker build:
   tags: 
   - docker
   script:
-  - docker build --force-rm -t billing ./
+  - docker build --force-rm -t ecp2front ./
 
 docker stop:
   stage: Docker stop
@@ -33,11 +33,11 @@ docker stop:
   - docker
   script:
 #  - docker stop billing || true && docker rm billing || true
-  - docker stop billing || true
+  - docker stop ecp2front || true
 
 docker run:
   stage: Docker run
   tags: 
   - docker
   script:
-  - docker run -d --rm -p 127.0.0.1:9099:80 --name billing billing
+  - docker run -d --rm -p 127.0.0.1:9099:80 --name ecp2front ecp2front
