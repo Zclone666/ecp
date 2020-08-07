@@ -27,8 +27,7 @@ docker build:
   tags: 
   - docker
   script:
-  - docker build -t dockerized-app:dev .
-#  - docker build --force-rm -t $PROJECT ./
+  - docker build --force-rm -t $PROJECT ./
 
 docker run:
   stage: Docker run
