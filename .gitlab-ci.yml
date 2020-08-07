@@ -27,7 +27,7 @@ docker build:
   tags: 
   - docker
   script:
-  - docker build --force-rm -t $PROJECT ./src
+  - docker build --force-rm -t $PROJECT ./
 
 docker run:
   stage: Docker run
