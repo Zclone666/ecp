@@ -1,6 +1,8 @@
-FROM node:12-alpine as builder
+# Берем node.js v8 в качестве родительского образа
+FROM node:8
+# Устанавливаем рабочую директорию
 WORKDIR /app
-COPY package.json /app/package.json
-RUN npm install --only=prod
-COPY . /app
-RUN npm run build
+# Копируем файлы yarn.lock и package.json в рабочую директорию
+COPY package.json yarn.lock /app/
+# Устанавливаем зависимости
+RUN yarn install
