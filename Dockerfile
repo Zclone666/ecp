@@ -12,8 +12,7 @@ COPY package.json ./
 COPY package-lock.json ./
 #RUN npm install --silent
 #RUN npm install react-scripts@3.4.1 -g --silent
-RUN npm install --only=production
-RUN npm run build
+RUN npm i ; npm run build
 
 # add app
 #COPY . ./
