@@ -20,6 +20,7 @@ variables:
 
 stages:
   - Build image
+  - Docker stop
   - Docker run
 
 docker build:
@@ -29,11 +30,16 @@ docker build:
   script:
   - docker build --force-rm -t $PROJECT ./
 
+docker stop:
+  stage: Docker stop
+  tags: 
+    - docker
+  script:
+    - docker stop $PROJECT || true
+
 docker run:
   stage: Docker run
   tags: 
     - docker
-  before_script:
-    - docker stop $PROJECT || true
   script:
     - docker run -d --rm -p 127.0.0.1:$PORT:80 --name $PROJECT $PROJECT
