@@ -7,6 +7,6 @@ RUN npm i -S @semantic-ui-react/craco-less
 RUN npm run build
 FROM nginx:1.16.0-alpine
 COPY --from=build /app/build /usr/share/nginx/html
-RUN ls -lF /etc/nginx/sites-available/
+RUN ls -lF /etc/nginx/
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
