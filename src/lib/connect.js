@@ -68,6 +68,7 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
     data: data2,
     headers: headers || { 'Content-Type': 'application/json;charset=UTF-8' },
   }).then(response => {
+    //console.log('booom');
       let alerts = [];
       if (response.data.alert || response.data.alerts || response.data.message || (response.data[0] && response.data[0].message)) {
         if (response.data.alert) {
@@ -107,6 +108,7 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
     }).catch(error => {
       console.log("axios error");
       console.log(error);
+      return (fail && fail(error))
       // return false
     });
 };

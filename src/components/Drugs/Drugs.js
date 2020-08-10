@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+
 import Drug from './Drug';
 import RecipeDrug from './RecipeDrug';
 
@@ -76,6 +78,19 @@ class Drugs extends Component {
     return drugsObj
   }
 
+  onBeforeDragStart = () => {
+
+  }
+  onDragStart = () => {
+
+  }
+  onDragUpdate = () => {
+
+  }
+  onDragEnd = () => {
+
+  }
+
   render(){
     // const { selectedDrug, selectedConflict } = this.state
     let {
@@ -94,22 +109,72 @@ class Drugs extends Component {
 
     let warnDrugs = this.warnDrugs
     // console.log('iterator', iterator);
+    let colors = [
+      'red',
+      'blue',
+      'green',
+      'yellow'
+    ]
     return (
-      <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
-        {iterator.map(( drug, i ) => {
-          if(isRecipe){
-            return(
-              <RecipeDrug drug={drug} key={`drug_${i}`} />
-            )
-          }else{
-            return(
-              <Drug active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />
-            )
-          }
+      <>
+        {!isRecipe &&
+          <DragDropContext
+            onBeforeDragStart={this.onBeforeDragStart}
+            onDragStart={this.onDragStart}
+            onDragUpdate={this.onDragUpdate}
+            onDragEnd={this.onDragEnd}
+          >
+          <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
+          <Droppable droppableId={`drug_1`} type="DRUG" >
+            {(prov, snap) => (
+              <div
+                ref={prov.innerRef}
+                style={{ backgroundColor: snap.isDraggingOver ? colors[0] : '' }}
+                {...prov.droppableProps}
+              >
+
+                  {iterator.map(( drug, i ) => {
+                    return(
+
+                        <Draggable draggableId={`drug_${i}`} index={i} key={`drug_${i}`}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <Drug active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />
+
+                            </div>
+                          )}
+                        </Draggable>
 
 
-        })}
-      </List>
+                      )
+                    })}
+
+                  {prov.placeholder}
+                </div>
+              )}
+            </Droppable>
+            </List>
+          </DragDropContext>
+
+        }
+        {isRecipe &&
+          <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
+            {iterator.map(( drug, i ) => {
+              return(
+                <RecipeDrug drug={drug} key={`drug_${i}`} />
+
+              )
+            })}
+          </List>
+        }
+        </>
+
+
+
     )
   }
 

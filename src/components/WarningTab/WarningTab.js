@@ -110,15 +110,16 @@ class WarningTab extends Component {
               return(
                 <List.Item key='1'>
                   <List.Content>
-                  <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
-                  {drug.name}
+                  <List.Header>{item.subjectid ? warnInfo.names[item.subjectid] : drug.name}</List.Header>
+                  {!!item.subjectid && drug.name}
                   </List.Content>
                 </List.Item>
               )
             })}
-            <List.Item key='2'>
-              {(tab.id && tab.id.length > 0) &&
-                warnInfo.outcome[tab.id] && warnInfo.outcome[tab.id].map(( outcome, d ) => {
+            {((tab.id && tab.id.length > 0) && warnInfo.outcome[tab.id]) && 
+              <List.Item key='2'>
+
+                {warnInfo.outcome[tab.id].map(( outcome, d ) => {
                   return(
                     <Message size='tiny' key={'outcome'+d}>
                       <Message.Content>
@@ -126,16 +127,16 @@ class WarningTab extends Component {
                       </Message.Content>
                     </Message>
                   )
-                })
-              }
-            </List.Item>
+                })}
+              </List.Item>
+            }
             {arr.last && arr.last.map(( item, i ) => {
               let drug = getDrug(item)
               return(
                 <List.Item key='3'>
                   <List.Content>
-                    <List.Header>{warnInfo.names[item.subjectid]}</List.Header>
-                    {drug.name}
+                    <List.Header>{item.subjectid ? warnInfo.names[item.subjectid] : drug.name}</List.Header>
+                    {!!item.subjectid && drug.name}
                   </List.Content>
                 </List.Item>
               )

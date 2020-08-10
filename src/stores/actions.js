@@ -231,6 +231,7 @@ class Actions {
         // console.log(this[name]);
       },
       fail: alerts => {
+        this.loading = false
         // console.log('FAIL', alerts);
       },
       always: (data) => {
@@ -349,6 +350,7 @@ class Actions {
         // console.log('FAIL', alerts);
       },
       always: (data) => {
+        this.loading = false
         this.makeAlerts(data)
         // console.log('ALWAYS', data);
       }
@@ -398,6 +400,7 @@ class Actions {
         return true
       },
       fail: alerts => {
+        this.loading = false
         return false
         // console.log('FAIL', alerts);
       },
@@ -421,6 +424,7 @@ class Actions {
         // }
       },
       fail: alerts => {
+        this.loading = false
         // console.log('FAIL', alerts);
       },
       always: (data) => {
@@ -444,6 +448,7 @@ class Actions {
         // }
       },
       fail: alerts => {
+        this.loading = false
         // console.log('FAIL', alerts);
       },
       always: (data) => {
@@ -466,6 +471,7 @@ class Actions {
         // }
       },
       fail: alerts => {
+        this.loading = false
         // console.log('FAIL', alerts);
       },
       always: (data) => {
@@ -489,6 +495,7 @@ class Actions {
         // }
       },
       fail: alerts => {
+        this.loading = false
         // console.log('FAIL', alerts);
       },
       always: (data) => {
@@ -512,6 +519,7 @@ class Actions {
         // }
       },
       fail: alerts => {
+        this.loading = false
         // console.log('FAIL', alerts);
       },
       always: (data) => {

@@ -113,6 +113,15 @@ class Conflicts extends Component {
           {_.keys(warnGroups).map((key, i) => {
             let group = warnGroups[key]
             let color = (selectedWarnings[group.type] && selectedWarnings[group.type].color) || group.valuecolor
+
+            let icon = group.type
+
+            let arr = (group.type).split('.')
+            if(arr.length > 1){
+              icon = arr[0]
+            }
+
+
             //console.log(patientForm.birthdate);
             return(
               <Grid.Column key={'warn'+i} className='conflict'>
@@ -140,9 +149,9 @@ class Conflicts extends Component {
                   className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}
                 >
                   {(group.type === 'age') ?
-                    <Icon as='img' src={`/warningicons/${patientForm.birthdate ? group.type : 'no'+group.type}.svg`} />
+                    <Icon as='img' src={`/warningicons/${patientForm.birthdate ? icon : 'no'+icon}.svg`} />
                     :
-                    <Icon as='img' src={`/warningicons/${group.type}.svg`} />
+                    <Icon as='img' src={`/warningicons/${icon}.svg`} />
                   }
                   <Icon size='big' name='circle outline' style={{ color }} />
                   {(group.type === 'age' && patientForm.birthdate) && <div className='agecontainer'>
