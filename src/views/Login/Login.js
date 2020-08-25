@@ -36,7 +36,7 @@ class Login extends Component {
     }else{
       let isOk = await this.props.actions.fakelogin()
       console.log(isOk);
-      if( isOk ) this.setState({ showCode: true })
+      // if( isOk ) this.setState({ showCode: true })
     }
 
   }

@@ -313,7 +313,7 @@ class Actions {
       data,
       success: async (data) => {
         // console.log('SUCCESS', data);
-        if( data && data.level == 'success' ){
+        // if( data && data.level == 'success' ){
           this.privateKey = this.loginForm.privateKey
           this.stores.router.push('/')
           this.authorized = true
@@ -324,14 +324,14 @@ class Actions {
             await localStorage.setItem('authkey', this.authkey);
             await localStorage.setItem('privateKey', this.loginForm.privateKey);
           }
-        }else{
-          this.makeAlerts({ alerts:[{
-            title: "Неверный персональный ключ.",
-            message: "проверьте правильность ключа.",
-            level: "error",
-            sticky: false
-          }]})
-        }
+        // }else{
+        //   this.makeAlerts({ alerts:[{
+        //     title: "Неверный персональный ключ.",
+        //     message: "проверьте правильность ключа.",
+        //     level: "error",
+        //     sticky: false
+        //   }]})
+        // }
         // if (data.authkey) {
         //   if(remember){
         //     await localStorage.setItem('authkey', data.authkey);
@@ -363,13 +363,13 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/authorization`,
       data,
       success: async (data) => {
-         console.log('SUCCESS', data);
-         this.makeAlerts({ alerts:[{
-           title: "Введите ключ.",
-           message: "Для входа в систему необходимо ввести ваш персональный ключ. Если у вас его нет, обратитесь к поставщику ПО.",
-           level: "info",
-           sticky: false
-         }]})
+         // console.log('SUCCESS', data);
+         // this.makeAlerts({ alerts:[{
+         //   title: "Введите ключ.",
+         //   message: "Для входа в систему необходимо ввести ваш персональный ключ. Если у вас его нет, обратитесь к поставщику ПО.",
+         //   level: "info",
+         //   sticky: false
+         // }]})
          if (data.authkey) {
            // console.log('HERE');
            // if(remember){
@@ -382,6 +382,7 @@ class Actions {
            this.authkey = data.authkey
            // this.authorized = true
            this.loading = false
+           return this.login()
            // this.stores.db.getFilters()
          }
         // if (data.authkey) {
