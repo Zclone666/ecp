@@ -100,12 +100,17 @@ class Main extends Component {
 
 
           <Menu.Menu position='right'>
-            <Menu.Item>
+            <Responsive fireOnMount as={Menu.Item} minWidth='481'>
               <Button as={RouterLink} to='/patient/new'>
-                <Icon name='user' />
+                <Icon name='bed' />
                 Данные пациента
               </Button>
-            </Menu.Item>
+            </Responsive>
+            <Responsive fireOnMount as={RouterLink} to='/patient/new' maxWidth='480'>
+              <Menu.Item icon>
+                <Icon name='bed' size='large' />
+              </Menu.Item>
+            </Responsive>
           </Menu.Menu>
 
         </Menu>

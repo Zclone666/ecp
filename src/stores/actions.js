@@ -305,7 +305,7 @@ class Actions {
     //this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey, remember } = this.loginForm
     let data = {
-      key: privateKey,
+      //key: privateKey,
       authkey: this.authkey
     }
     return POST({

@@ -55,12 +55,14 @@ class WayChoice extends Component {
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid as={RouterLink} to='/concept/dozes/lf/1'>
+                    <Card fluid href as={RouterLink} to='/concept/dozes/lf/1'>
+                      <div className='ui image cardbg'>
+                        <Icon name='pills' className='rotated' />
+                        <Icon name='pills' />
+                      </div>
                       <Card.Content>
                         <Card.Header>Лекарственная форма</Card.Header>
-                        <Card.Description>
-                          Сначала выбрать лекарственную форму, потом способ применения
-                        </Card.Description>
+                        <Card.Meta>Сначала выбрать лекарственную форму, потом способ применения</Card.Meta>
                       </Card.Content>
                     </Card>
                   </Grid.Column>
@@ -77,11 +79,13 @@ class WayChoice extends Component {
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
                     <Card fluid href as={RouterLink} to='/concept/dozes/methods/1'>
+                      <div className='ui image cardbg'>
+                        <Icon name='syringe' className='rotated' />
+                        <Icon name='syringe' />
+                      </div>
                       <Card.Content>
                         <Card.Header>Способ применения</Card.Header>
-                        <Card.Description>
-                          Сначала выбрать способ применения, потом лекарственную форму
-                        </Card.Description>
+                        <Card.Meta>Сначала выбрать способ применения, потом лекарственную форму</Card.Meta>
                       </Card.Content>
                     </Card>
                   </Grid.Column>
@@ -101,11 +105,13 @@ class WayChoice extends Component {
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
                     <Card fluid href as={RouterLink} to='/concept/dozes/lf/1'>
+                      <div className='ui image cardbg'>
+                        <Icon name='pills' className='rotated' />
+                        <Icon name='pills' />
+                      </div>
                       <Card.Content>
                         <Card.Header>Лекарственная форма</Card.Header>
-                        <Card.Description>
-                          Сначала выбрать лекарственную форму, потом способ применения
-                        </Card.Description>
+                        <Card.Meta>Сначала выбрать лекарственную форму, потом способ применения</Card.Meta>
                       </Card.Content>
                     </Card>
                   </Grid.Column>
@@ -120,11 +126,13 @@ class WayChoice extends Component {
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
                     <Card fluid href as={RouterLink} to='/concept/dozes/methods/1'>
+                      <div className='ui image cardbg'>
+                        <Icon name='syringe' className='rotated' />
+                        <Icon name='syringe' />
+                      </div>
                       <Card.Content>
                         <Card.Header>Способ применения</Card.Header>
-                        <Card.Description>
-                          Сначала выбрать способ применения, потом лекарственную форму
-                        </Card.Description>
+                        <Card.Meta>Сначала выбрать способ применения, потом лекарственную форму</Card.Meta>
                       </Card.Content>
                     </Card>
                   </Grid.Column>

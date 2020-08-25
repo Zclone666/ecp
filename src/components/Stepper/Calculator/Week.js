@@ -55,7 +55,12 @@ class Schedule extends Component {
       <Form.Group>
         <Form.Field className='fluid'>
           <label>Выберите дни недели:</label>
-          <Responsive as={Segment.Group} horizontal fluid widths={7} minWidth={480}>
+          <Responsive as={Segment.Group} horizontal fluid widths={7} minWidth={481}>
+            {weekdays.map(( day, i ) => {
+              return <Day day={day} index={i} key={'day'+i} onChange={this.handleChange} />
+            })}
+          </Responsive>
+          <Responsive as={Segment.Group} vertical fluid maxWidth={480}>
             {weekdays.map(( day, i ) => {
               return <Day day={day} index={i} key={'day'+i} onChange={this.handleChange} />
             })}

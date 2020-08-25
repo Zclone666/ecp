@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import { inject, observer } from 'mobx-react';
 
+import { useDrag } from 'react-dnd'
+
 import RouterLink from '../../router/a';
 
 import {
@@ -21,6 +23,7 @@ import _ from 'lodash';
 class Drug extends React.Component {
   constructor(props){
     super(props)
+
     this.state = {
       open: true,
     }
@@ -98,9 +101,15 @@ class Drug extends React.Component {
     className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
 
     let hasBorder = selectedDrug === drug.key && maxItem
-
+    // const [{ opacity }, drag] = useDrag({
+    //   item: { name, type },
+    //   collect: (monitor) => ({
+    //     opacity: monitor.isDragging() ? 0.4 : 1,
+    //   }),
+    // })
     return(
-      <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`} style={{ borderLeftColor: hasBorder && maxItem.color || '#f3f3f2' }}>
+      <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
+        <div className='border' style={{ backgroundColor: hasBorder && maxItem.color || 'transparent' }} />
         <List.Content floated='right'>
           {/*<Responsive fireOnMount as={Button.Group} vertical basic color='blue' maxWidth='480'>
             <Button icon>
@@ -120,24 +129,26 @@ class Drug extends React.Component {
             </Button>
           </Responsive>
         </List.Content>
-        {(currWarning && currWarning.color) ?
-          <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
-            <List.Icon
-              name='arrow alternate circle right'
-              style={{ color: '#FFF' }}
-              size='large'
-              onClick={() => {  }}
-            />
-          </RouterLink>
-          :
-          <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg none'>
-            <List.Icon
-              name='arrow alternate circle right'
-              style={{ color: '#FFF' }}
-              size='large'
-            />
-          </RouterLink>
-        }
+        <div className='arrowholder'>
+          {(currWarning && currWarning.color) ?
+            <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
+              <List.Icon
+                name='arrow alternate circle right'
+                style={{ color: '#FFF' }}
+                size='large'
+                onClick={() => {  }}
+              />
+            </RouterLink>
+            :
+            <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg none'>
+              <List.Icon
+                name='arrow alternate circle right'
+                style={{ color: '#FFF' }}
+                size='large'
+              />
+            </RouterLink>
+          }
+        </div>
         {hasWarnings && (hasWarning ?
           <List.Icon name='warning circle' style={{ color: maxItem.color }} size='large' onClick={(e) => this.selectDrug(e, drug.key)} />
           :
