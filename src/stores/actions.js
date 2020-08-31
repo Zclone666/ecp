@@ -95,6 +95,13 @@ class Actions {
     allergy: []
   }
 
+  @observable scheduleForm = {
+    interval: null,
+    once: null,
+    week: null,
+    calendar: null
+  }
+
   @observable selectedDrug = null
   @observable selectedConflict = null
   @observable activeDrugs = []

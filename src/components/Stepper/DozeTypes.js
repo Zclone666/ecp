@@ -111,6 +111,7 @@ class DozeTypes extends Component {
               as={RouterLink}
               to={`/concept/dozes/${way}/${currStep+1}`}
               onClick={() => this.setDosage(dosage)}
+              key={'type'+i}
             >
 
               <List.Content floated='right'>
