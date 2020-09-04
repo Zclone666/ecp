@@ -168,9 +168,9 @@ class DB {
         data,
         success: async data => {
           //console.log('DATA', data);
-          let { drug, form, methodform, names } = data
+          let { drug, form, methodform, names, nameshort } = data
           let current = this.drugsDosages.data.get(drug.key) || {};
-          this.drugsDosages.data.set( drug.key, _.extend(current, { drug, form, methodform, names, url: '/concept/dozes/' }) );
+          this.drugsDosages.data.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, url: '/concept/dozes/' }) );
 
           // let { alert, ...drug } = data
           // _.assign(this.drugDosage, {...drug})

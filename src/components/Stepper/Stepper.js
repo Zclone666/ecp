@@ -110,7 +110,7 @@ class Stepper extends Component {
     } = this.props
 
     let drugsDosage = drugsDosages.data.get(currDrug.key)
-    let { names } = drugsDosage
+    let { names, nameshort } = drugsDosage
 
     let currStep = parseInt(values.step || 0)
     let way = values.way || ''
@@ -135,7 +135,7 @@ class Stepper extends Component {
             let chosedName = ''
             if( i > 0 && i <= currStep ) {
               url += `/${way}/${i}`
-              chosedName = names[stepsData[step.name]]
+              chosedName = nameshort[stepsData[step.name]] || names[stepsData[step.name]]
               if(step.name === 'lf') chosedName = names[stepsData.form]
             } else if( i !== 0 ) {
               url = ''
@@ -147,7 +147,8 @@ class Stepper extends Component {
               }[way]
             }
             if(step.name === 'dosage' && currStep > i){
-              chosedName = stepsData.pack.dosage + ', ' + stepsData.pack.pack
+              console.log({stepsData});
+              chosedName = (stepsData.pack.dosage && (stepsData.pack.dosage.short || stepsData.pack.dosage.full)) + ', ' + (stepsData.pack.pack && (stepsData.pack.pack.short || stepsData.pack.pack.full))
             }
             //console.log({ step, chosedName, stepsData, names });
             return(

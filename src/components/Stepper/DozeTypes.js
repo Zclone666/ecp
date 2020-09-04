@@ -35,14 +35,14 @@ class DozeTypes extends Component {
     } = this.props
 
     let drugDosage = drugsDosages.data.get(currDrug.key)
-    let { drug, form, methodform, names } = drugDosage
+    let { drug, form, methodform, names, nameshort } = drugDosage
 
     let arr = []
 
     form[stepsData.form] && form[stepsData.form].dosage.forEach((item, i) => {
       let currPack = {
-        dosage: '',
-        pack: '',
+        dosage: { short: '', full: '' },
+        pack: { short: '', full: '' },
         flag: false
       }
       // if(form[stepsData.form].solute){
@@ -51,8 +51,8 @@ class DozeTypes extends Component {
       if(form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0 ){
         item.pack.forEach((pack, x) => {
           currPack = {
-            dosage: '',
-            pack: '',
+            dosage: { short: '', full: '' },
+            pack: { short: '', full: '' },
             flag: !!(item.dosage[0] && item.dosage[0].id_2),
             obj: {
               dosages: item.dosage,
@@ -60,16 +60,20 @@ class DozeTypes extends Component {
             }
           }
           if(_.isArray(item.dosage) && item.dosage.length > 1 ){
-            currPack.dosage += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
+            currPack.dosage.full += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
+            currPack.dosage.short += _.map(item.dosage, 'value_1').join(' + ') + ' ' + (nameshort[item.dosage[0].id_1] || names[item.dosage[0].id_1])
           }else if(_.isArray(item.dosage) && item.dosage.length === 1 ){
-            currPack.dosage += item.dosage[0].value_1 + (item.dosage[0].value_2 && '/' + item.dosage[0].value_2) + ' ' + names[item.dosage[0].id_1]
+            currPack.dosage.full += item.dosage[0].value_1 + (item.dosage[0].value_2 && '/' + item.dosage[0].value_2) + ' ' + names[item.dosage[0].id_1]
+            currPack.dosage.short += item.dosage[0].value_1 + (item.dosage[0].value_2 && '/' + item.dosage[0].value_2) + ' ' + (nameshort[item.dosage[0].id_1] || names[item.dosage[0].id_1])
           }
-          currPack.pack += names[pack.id] + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + names[pack.dosage.id_1]) || '')
+          currPack.pack.full += names[pack.id] + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + names[pack.dosage.id_1]) || '')
+          currPack.pack.short += (nameshort[pack.id] || names[pack.id]) + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1])) || '')
           arr.push({ ...currPack })
         })
       }else{
         if(_.isArray(item.dosage) && item.dosage.length > 0 ){
-          currPack.dosage += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
+          currPack.dosage.full += _.map(item.dosage, 'value_1').join(' + ') + ' ' + names[item.dosage[0].id_1]
+          currPack.dosage.short += _.map(item.dosage, 'value_1').join(' + ') + ' ' + (nameshort[item.dosage[0].id_1] || names[item.dosage[0].id_1])
           currPack.flag = !!(item.dosage[0] && item.dosage[0].id_2)
         }
 
@@ -124,9 +128,9 @@ class DozeTypes extends Component {
 
               <List.Content className='large'>
                 {dosage.flag && <Icon name='warning sign' color='red' style={{ float: 'left' }} />}
-                <List.Header>{dosage.dosage}</List.Header>
-                {dosage.pack.length > 0 && <List.Description>
-                  {dosage.pack}
+                <List.Header>{dosage.dosage.full}</List.Header>
+                {dosage.pack.full.length > 0 && <List.Description>
+                  {dosage.pack.full}
                 </List.Description>}
               </List.Content>
 

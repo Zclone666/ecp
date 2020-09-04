@@ -240,32 +240,6 @@ class Interval extends Component {
       router: { values }
     } = this.props
 
-    let consts = {
-      digits: {
-        1: 1,
-        2: 2,
-        3: 3,
-        4: 4,
-        5: 5,
-        6: 6,
-        7: 7,
-        8: 8,
-        9: 9
-      },
-      times: {
-        minutes: 'минут',
-        hours: 'часов',
-        days: 'дней',
-        weeks: 'недель',
-        months: 'месяцев'
-      },
-      concepts: {
-        every: 'каждые',
-        // once: '',
-        once_in: 'раз в',
-        in: 'через',
-      }
-    }
     let concept_types = [
       {
         key: 1,

@@ -102,6 +102,13 @@ class Actions {
     calendar: null
   }
 
+  @observable calculatorForm = {
+    dosage: 0,
+    count: 1,
+    fullDosage: 0,
+    weightDosage: 0
+  }
+
   @observable selectedDrug = null
   @observable selectedConflict = null
   @observable activeDrugs = []
@@ -148,7 +155,11 @@ class Actions {
 
 
     this.autologin()
-
+    autorun(() => {
+      if(this.stepsData.pack.obj && this.stepsData.pack.obj.dosages[0].value_1){
+        this.calculatorForm.dosage = this.stepsData.pack.obj.dosages[0].value_1
+      }
+    })
     // autorun(() => {
     //   console.log(this.currentPage);
     //   if(this.currentPage && _.keys(this.pages).length > 0){

@@ -93,6 +93,7 @@ class Drug extends React.Component {
     let hasWarnings = warnings.data.size > 0
     //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
+    let nameshort = drugDosages.nameshort || {}
     let url = drugDosages.url || {}
     let currWarning = active//activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
@@ -161,16 +162,17 @@ class Drug extends React.Component {
               <Feed.Summary>
                 <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
-                  {dosage.form && names[dosage.form]}
-                  {(dosage.method && dosage.form) && ', '}
-                  {names[dosage.method] || ''}
+                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}
+
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta>
 
-                {dosage.pack.dosage || ''}
-                {(dosage.pack.dosage && dosage.pack.pack) && ', '}
-                {dosage.pack.pack || ''}
+                {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+                {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '}
+                {(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''}
+                {((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '}
+                {(nameshort[dosage.method] || names[dosage.method]) || ''}
               </Feed.Meta>
             </Feed.Content>
           </Feed.Event>
@@ -185,12 +187,13 @@ class Drug extends React.Component {
                   <Feed.Content>
                     <Feed.Summary>
                       <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
-                      <Feed.Date>{names[dosage.method] || ''}</Feed.Date>
                     </Feed.Summary>
                     <Feed.Meta>
-                      {dosage.pack.dosage || ''}
-                      {(dosage.pack.dosage && dosage.pack.pack) && ', '}
-                      {dosage.pack.pack || ''}
+                    {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+                    {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '}
+                    {(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''}
+                    {((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '}
+                    {(nameshort[dosage.method] || names[dosage.method]) || ''}
                     </Feed.Meta>
                   </Feed.Content>
                 </Feed.Event>
