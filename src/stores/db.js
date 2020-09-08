@@ -28,15 +28,6 @@ class DB {
 
   @observable selectedRows = [];
   //@observable warnings = {};
-  @observable warnGroups = {};
-  @observable warnIcons = {};
-  warnInfo = {
-    names: observable({}),
-    description: observable({}),
-    literature: observable({}),
-    outcome: observable({}),
-    urls: observable({})
-  };
 
   @observable currDrug = {};
   @observable drugDosage = {
@@ -69,6 +60,8 @@ class DB {
 
     });
 
+
+
   }
   clearData(withSelects, withWarnings){
     this.stores.actions.selectedDrug = null
@@ -84,25 +77,25 @@ class DB {
       pack: {},
       dosage: {},
     }
-    this.searchRows = observable([])
+    this.stores.drugs.searchRows = observable([])
 
     if(withWarnings){
-      this.warnings.data.clear();
-      this.warnIcons = observable({});
-      this.warnGroups = observable({});
-      this.warnInfo.names = observable({});
-      this.warnInfo.description = observable({});
-      this.warnInfo.literature = observable({});
-      this.warnInfo.outcome = observable({});
-      this.warnInfo.urls = observable({});
+      this.stores.warnings.warning.clear();
+      this.stores.warnings.icons = observable({});
+      this.stores.warnings.groups = observable({});
+      this.stores.warnings.info.names = observable({});
+      this.stores.warnings.info.description = observable({});
+      this.stores.warnings.info.literature = observable({});
+      this.stores.warnings.info.outcome = observable({});
+      this.stores.warnings.info.urls = observable({});
     }
 
     if(withSelects){
-      this.selectedRows = observable([]);
+      this.stores.drugs.selectedRows = observable([]);
       this.diseaseRows = observable([]);
       this.allergyRows = observable([]);
-      this.drugsDosages.data.clear()
-      this.drugs.data.clear()
+      this.stores.dosages.dosage.clear()
+      this.stores.drugs.drug.clear()
     }
   }
   getGroup(val){
@@ -147,6 +140,11 @@ class DB {
   async getLF(drug_obj){
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
+    let currentDosages = await this.drugsDosages.data.get(drug_obj.key);
+    if(currentDosages) {
+      await this.getDosageParams()
+      return
+    }
     let data = {
       // text,
       lib: '52, 62',
@@ -168,10 +166,10 @@ class DB {
         data,
         success: async data => {
           //console.log('DATA', data);
-          let { drug, form, methodform, names, nameshort } = data
+          let { drug, form, methodform, names, nameshort, units } = data
           let current = this.drugsDosages.data.get(drug.key) || {};
           this.drugsDosages.data.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, url: '/concept/dozes/' }) );
-
+          this.getUnitsComplex(units)
           // let { alert, ...drug } = data
           // _.assign(this.drugDosage, {...drug})
         },
@@ -183,7 +181,73 @@ class DB {
         }
     });
   }
+  async getUnitsPharm(){
+    let data = {
+      // text,
+      service: "43",
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `tools/UnitsPharm`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
 
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+  async getUnitsPrimary(){
+    let data = {
+      // text,
+      service: "43",
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `tools/UnitsPrimary`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
+
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+  async getUnitsComplex(units){
+    let data = {
+      // text,
+      service: "43",
+      units: units
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `tools/UnitsComplex`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
+
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
   async GetDuration(drug){
     //this.searchReady = false
     //let data = _.clone(this.stores.actions.filterTpl[filterName])
@@ -483,30 +547,61 @@ class DB {
     let currentDrug = await this.drugs.data.get(drug.key) || {};
     let currentDosages = await this.drugsDosages.data.get(drug.key) || {};
 
-    let { form, method, pack, dosage } = drugData
+    let {
+      key,
+      way,
+      step,
+      form,
+      method,
+      pack,
+      dosage
+    } = drugData
 
-    currentDrug.dosage = { form, method, pack, dosage }
-
+    currentDrug.dosage = {
+      key,
+      way,
+      step,
+      form,
+      method,
+      pack,
+      dosage
+    }
     await this.drugs.data.set( drug.key, currentDrug );
 
     await this.drugsDosages.data.set( drug.key, _.extend(currentDosages, { url }) );
     this.clearData()
   }
-  getDosageParams = async (url) => {
+  getDosageParams = async () => {
     let drugData = this.stores.actions.stepsData
 
     let drug = this.currDrug
     let currentDrug = await this.drugs.data.get(drug.key) || {};
     let currentDosages = await this.drugsDosages.data.get(drug.key) || {};
 
-    let { form, method, pack, dosage } = drugData
+    let {
+      key,
+      way,
+      step,
+      form,
+      method,
+      pack,
+      dosage
+    } = currentDrug.dosage
 
-    currentDrug.dosage = { form, method, pack, dosage }
+    this.stores.actions.stepsData = {
+      key,
+      way,
+      step,
+      form,
+      method,
+      pack,
+      dosage
+    }
 
-    await this.drugs.data.set( drug.key, currentDrug );
+    // await this.drugs.data.set( drug.key, currentDrug );
 
-    await this.drugsDosages.data.set( drug.key, _.extend(currentDosages, { url }) );
-    this.clearData()
+    // await this.drugsDosages.data.set( drug.key, _.extend(currentDosages, { url }) );
+    // this.clearData()
   }
 
   selectFromSearch = async (row) => {

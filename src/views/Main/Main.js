@@ -26,7 +26,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions')
+@inject('router', 'db', 'actions', 'drugs', 'warnings', 'dosages')
 @observer
 class Main extends Component {
   constructor(props){
@@ -50,15 +50,15 @@ class Main extends Component {
   };
 
   handleResultSelect = async (e, { result }) => {
-    await this.props.db.selectFromSearch(result)
+    await this.props.drugs.selectFromSearch(result)
     this.setState({ searchQuery: '' })
   }
 
   handleSearchChange = (e, { value }) => {
     this.setState({ searchQuery: value })
     if(value.length > 1){
-      this.props.db.searchReady = false
-      this.props.db.getSearch(value)
+      this.props.drugs.searchReady = false
+      this.props.drugs.search(value)
     }
 
   }
@@ -68,7 +68,7 @@ class Main extends Component {
   }
 
   getInfoPrep = () => {
-    this.props.db.getInfoPrep()
+    this.props.warnings.check()
   }
 
   resultRenderer = ({ name, level, tn, type }) => {
@@ -86,8 +86,12 @@ class Main extends Component {
   render() {
     const { open, searchQuery, selectedDrug, selectedConflict } = this.state
     let { currentPage, height } = this.props.actions
-    let { searchReady, searchRows, selectedRows, warnings, warnGroups, drugs } = this.props.db
-    let selectedWarnings = warnings[selectedDrug]
+    let {
+      drugs: { searchReady, searchRows, selectedRows, drug }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage },
+      warnings: { warning, groups }, //warnings, warnGroups
+    } = this.props
+    let selectedWarnings = warning[selectedDrug]
     let showPage = !!(this.props.router.values && this.props.router.values.page)
     // console.log('router', this.props.router);
     return (
@@ -137,7 +141,7 @@ class Main extends Component {
               </Segment>
             </Menu.Item>
           </Menu>
-          {drugs.data.size > 0 &&
+          {drug.size > 0 &&
             <Menu className="bottom fixed menu three item huge main">
               <Menu.Item color='red' onClick={this.handleResetAll}>
                 Сбросить
@@ -184,7 +188,7 @@ class Main extends Component {
             <div className='scrollwrapper'>
               <Grid>
                 <Grid.Column width={16} style={{boxShadow: '0 0 9px #ccc', borderBottom: '1px solid #fff'}}>
-                  {drugs.data.size > 0 ?
+                  {drug.size > 0 ?
                     <Drugs />
                     :
                     <Segment basic>
@@ -195,7 +199,7 @@ class Main extends Component {
                     </Segment>
                   }
                 </Grid.Column>
-                {drugs.data.size > 0 &&
+                {drug.size > 0 &&
                   <Grid.Column width={16} style={{paddingTop: 0}}>
                     <Conflicts />
                   </Grid.Column>

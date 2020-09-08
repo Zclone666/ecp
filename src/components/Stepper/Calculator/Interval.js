@@ -32,7 +32,7 @@ ref_weeks = [ 'неделю', 'недели', 'недель' ],
 ref_months = [ 'месяц', 'месяца', 'месяцев' ],
 ref_years = [ 'год', 'года', 'лет' ]
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'warnings')
 @observer
 class Interval extends Component {
   constructor(props){

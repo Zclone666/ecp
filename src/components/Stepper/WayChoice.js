@@ -12,7 +12,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions')
+@inject('db', 'actions', 'drugs', 'warnings')
 @observer
 class WayChoice extends Component {
   constructor(props){

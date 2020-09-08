@@ -11,7 +11,7 @@ import {
 } from 'semantic-ui-react'
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions')
+@inject('router', 'db', 'actions', 'drugs', 'warnings')
 @observer
 class WarningTab extends Component {
   constructor(props){
@@ -30,18 +30,19 @@ class WarningTab extends Component {
         activeConflicts,
         patientForm
       },
-      db: { drugs, selectedRows, warnings, warnGroups, warnIcons, warnInfo },
+      drugs: { drug, selectedRows },
+      warnings: { info },
       router: { values },
       tab
     } = this.props
 
     const getDrug = (item) => {
       if(item.type === 'drug'){
-        return drugs.data.get(item.drugkey)
+        return drug.get(item.drugkey)
       }else if(['allergy', 'disease'].includes(item.type)){
         return _.find(patientForm[item.type], { key: item.drugkey });
       }else{
-        return { name: warnInfo.names[item.drugkey] }
+        return { name: info.names[item.drugkey] }
       }
     }
 
@@ -58,7 +59,7 @@ class WarningTab extends Component {
     // console.log({arr});
     //console.log({warnInfo});
 
-    let needIcon = (tab.id && tab.id.length > 0) && warnInfo.outcome[tab.id]
+    let needIcon = (tab.id && tab.id.length > 0) && info.outcome[tab.id]
     let icon = tab.icon || 'info'
     let popupText = icon === 'syringe' ? 'Фармокологическое взаимодействие' : 'Взаимодействие на уровне ферментов'
     // syringe - Фармокологическое взаимодействие
@@ -110,20 +111,20 @@ class WarningTab extends Component {
               return(
                 <List.Item key='1'>
                   <List.Content>
-                  <List.Header>{item.subjectid ? warnInfo.names[item.subjectid] : drug.name}</List.Header>
+                  <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
                   {!!item.subjectid && drug.name}
                   </List.Content>
                 </List.Item>
               )
             })}
-            {((tab.id && tab.id.length > 0) && warnInfo.outcome[tab.id]) && 
+            {((tab.id && tab.id.length > 0) && info.outcome[tab.id]) &&
               <List.Item key='2'>
 
-                {warnInfo.outcome[tab.id].map(( outcome, d ) => {
+                {info.outcome[tab.id].map(( outcome, d ) => {
                   return(
                     <Message size='tiny' key={'outcome'+d}>
                       <Message.Content>
-                        {warnInfo.names[outcome]}
+                        {info.names[outcome]}
                       </Message.Content>
                     </Message>
                   )
@@ -135,7 +136,7 @@ class WarningTab extends Component {
               return(
                 <List.Item key='3'>
                   <List.Content>
-                    <List.Header>{item.subjectid ? warnInfo.names[item.subjectid] : drug.name}</List.Header>
+                    <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
                     {!!item.subjectid && drug.name}
                   </List.Content>
                 </List.Item>
@@ -147,27 +148,27 @@ class WarningTab extends Component {
         <Segment vertical>
           <Segment basic>
             {(tab.id && tab.id.length > 0) &&
-              warnInfo.description[tab.id] && warnInfo.description[tab.id].map(( desc, d ) => {
+              info.description[tab.id] && info.description[tab.id].map(( desc, d ) => {
                 return(
-                  <Segment vertical key={`desc_${d}`} dangerouslySetInnerHTML={{__html: warnInfo.names[desc]}} />
+                  <Segment vertical key={`desc_${d}`} dangerouslySetInnerHTML={{__html: info.names[desc]}} />
 
                 )
               })
             }
             {(tab.id && tab.id.length > 0) &&
               <>
-                {warnInfo.literature[tab.id] && <Header as='h3'>Источники</Header>}
-                {warnInfo.literature[tab.id] && warnInfo.literature[tab.id].map(( lit, l ) => {
-                  if( lit && warnInfo.urls[lit] ){
+                {info.literature[tab.id] && <Header as='h3'>Источники</Header>}
+                {info.literature[tab.id] && info.literature[tab.id].map(( lit, l ) => {
+                  if( lit && info.urls[lit] ){
                     return(
                       <Segment vertical key={`lit_${l}`}>
-                        <a href={warnInfo.urls[lit]} target='_blank'>{warnInfo.names[lit]} <Icon name='external alternate' /></a>
+                        <a href={info.urls[lit]} target='_blank'>{info.names[lit]} <Icon name='external alternate' /></a>
                       </Segment>
                     )
                   }
                   return(
                     <Segment vertical key={`lit_${l}`}>
-                      {warnInfo.names[lit]}
+                      {info.names[lit]}
                     </Segment>
                   )
                 })}

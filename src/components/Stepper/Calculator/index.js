@@ -16,7 +16,7 @@ import Schedule from './Schedule'
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'warnings')
 @observer
 class Calculator extends Component {
   constructor(props){

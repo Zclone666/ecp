@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import Loader from '../Loader'
 
-@inject('router', 'db', 'actions')
+@inject('router', 'actions')
 @observer
 class UserOnly extends Component {
   render(){

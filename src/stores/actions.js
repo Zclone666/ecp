@@ -342,6 +342,8 @@ class Actions {
             await localStorage.setItem('authkey', this.authkey);
             await localStorage.setItem('privateKey', this.loginForm.privateKey);
           }
+          this.stores.db.getUnitsPrimary()
+          this.stores.db.getUnitsPharm()
         // }else{
         //   this.makeAlerts({ alerts:[{
         //     title: "Неверный персональный ключ.",

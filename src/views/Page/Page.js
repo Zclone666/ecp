@@ -26,7 +26,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions')
+@inject('router', 'actions')
 @observer
 class Page extends Component {
   constructor(props){

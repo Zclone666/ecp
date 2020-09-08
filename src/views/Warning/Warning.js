@@ -47,7 +47,7 @@ function getLetter(value){
 }
 
 
-@inject('router', 'db', 'actions')
+@inject('router', 'db', 'actions', 'drugs', 'warnings')
 @observer
 class Warning extends Component {
   constructor(props){
@@ -85,7 +85,8 @@ class Warning extends Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups, warnIcons },
+      drugs: { selectedRows },
+      warnings: { warning, groups, icons }, //warnings, warnGroups, warnIcons
       router: { values }
     } = this.props
 
@@ -97,8 +98,8 @@ class Warning extends Component {
     let subjFrom = false
     let subjTo = false
 
-    let warnArr = _.orderBy(Array.from(warnings.data.values()), ['step'], ['asc']);
-    let isConflict = !!_.find(warnGroups, { 'type': values.page });
+    let warnArr = _.orderBy(Array.from(warning.values()), ['step'], ['asc']);
+    let isConflict = !!_.find(groups, { 'type': values.page });
     //console.log({isConflict, selectedDrug});
     warnArr.forEach(( warn, i ) => {
       if(selectedConflict){
@@ -129,7 +130,8 @@ class Warning extends Component {
         activeConflicts,
         getElement
       },
-      db: { selectedRows, warnings, warnGroups, warnIcons }
+      drugs: { selectedRows },
+      warnings: { warning, groups, icons }, //warnings, warnGroups, warnIcons
     } = this.props
     let {
       activeIndex
@@ -174,7 +176,8 @@ class Warning extends Component {
         activeConflicts,
         getElement
       },
-      db: { selectedRows, warnings, warnGroups, warnIcons }
+      drugs: { selectedRows },
+      warnings: { warning, groups, icons }, //warnings, warnGroups, warnIcons
     } = this.props
 
     let arr = this.tabs.slice(11)

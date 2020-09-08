@@ -23,7 +23,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions')
+@inject('router', 'db', 'actions', 'drugs', 'warnings')
 @observer
 class Dozes extends Component {
   constructor(props){
@@ -37,12 +37,12 @@ class Dozes extends Component {
     this.contextRef = createRef()
   }
 
-  saveDoze = () => {
+  saveDoze = async () => {
     let {
-      db: { drugs, drugsDosages, currDrug, setDosageParams },
+      drugs: { setDosageParams },
       router: { location }
     } = this.props
-    setDosageParams(location.pathname)
+    await setDosageParams(location.pathname)
     this.props.router.push('/')
     // let current = drugsDosages.data.get(currDrug.key) || {};
     // drugsDosages.data.set( currDrug.key, _.extend(current, { ...current, url: location.pathname }) );

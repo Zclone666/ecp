@@ -20,7 +20,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions')
+@inject('db', 'actions', 'drugs', 'warnings')
 @observer
 class Drugs extends Component {
   constructor(props){
@@ -40,11 +40,12 @@ class Drugs extends Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups, warnIcons }
+      drugs: { drug },
+      warnings: { warning, groups }, //warnings, warnGroups
     } = this.props
     let drugsObj = {}
 
-    Array.from(warnings.data.values()).forEach(( warn, i ) => {
+    Array.from(warning.values()).forEach(( warn, i ) => {
       // console.log({ warn });
       if(selectedConflict){
         if(warn.type === selectedConflict){
@@ -104,12 +105,13 @@ class Drugs extends Component {
         activeDrugs,
         activeConflicts
       },
-      db: { warnings, warnGroups, drugs },
+      drugs: { drug },
+      warnings: { warning, groups }, //warnings, warnGroups
       isRecipe
     } = this.props
-    let selectedWarnings = warnings[selectedDrug]
+    let selectedWarnings = warning[selectedDrug]
     // console.log('activeDrugs', activeDrugs);
-    let iterator = Array.from(drugs.data.values())
+    let iterator = Array.from(drug.values())
     iterator = _.orderBy(iterator, ['group'], ['desc']);
     let warnDrugs = this.warnDrugs
     // console.log('iterator', iterator);

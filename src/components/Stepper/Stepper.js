@@ -20,7 +20,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')
 @observer
 class Stepper extends Component {
   constructor(props){
@@ -105,11 +105,14 @@ class Stepper extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugsDosages, currDrug },
+      drugs: { current, setDosageParams }, //drugs, currDrug, setDosageParams
+      dosages: { dosage }, //drugsDosages
+      warnings: { warning, groups }, //warnings, warnGroups
       router: { values }
     } = this.props
 
-    let drugsDosage = drugsDosages.data.get(currDrug.key)
+    let drugsDosage = dosage.get(current.key)
+    console.log({ drugsDosage });
     let { names, nameshort } = drugsDosage
 
     let currStep = parseInt(values.step || 0)

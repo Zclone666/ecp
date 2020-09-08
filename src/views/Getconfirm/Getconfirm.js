@@ -6,7 +6,7 @@ import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui
 import RouterLink from '../../router/a';
 
 
-@inject('router', 'db', 'actions')
+@inject('router', 'actions')
 @observer
 class Getconfirm extends Component {
   constructor(props) {

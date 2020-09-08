@@ -22,7 +22,7 @@ import Week from './Week';
 import Interval from './Interval';
 import Calendar from './Calendar';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'warnings')
 @observer
 class Schedule extends Component {
   constructor(props){

@@ -18,7 +18,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')
 @observer
 class Drug extends React.Component {
   constructor(props){
@@ -28,16 +28,24 @@ class Drug extends React.Component {
       open: true,
     }
   }
-  getLF = () => {
-    let { drug } = this.props
-    this.props.db.getLF(drug)
+  getLF = async () => {
+    let {
+      drugs: { current, setDosageParams }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage },
+      warnings: { warning, groups }, //warnings, warnGroups
+      router: { location },
+      drug
+    } = this.props
+    this.props.drugs.current = { ...drug }
+    // await getDosageParams(location.pathname)
+    await this.props.dosages.get(drug)
     //this.props.db.GetDuration(drug)
-    this.props.db.currDrug = { ...drug }
+
     // this.props.router.push('/concepts/dozes')
   }
   unselectDrug = () => {
     let { drug } = this.props
-    this.props.db.unselectDrug(drug)
+    this.props.drugs.unselectDrug(drug)
   }
   selectDrug = (e, drugId) => {
     e.preventDefault()
@@ -48,9 +56,11 @@ class Drug extends React.Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups }
+      drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage },
+      warnings: { warning, groups: warnGroups }, //warnings, warnGroups
     } = this.props
-    let selectedWarnings = warnings[drugId]
+    let selectedWarnings = warning[drugId]
     let groups = []
     let drugs = []
     for( let key in selectedWarnings ){
@@ -82,15 +92,17 @@ class Drug extends React.Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
+      drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage: dose },
+      warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
       drug,
       active
     } = this.props
     //console.log('drug', drug);
     let selectedWarnings = warnIcons[selectedDrug]
     let { key, name, level, tn, type, dosage } = drug
-    let drugDosages = drugsDosages.data.get(key) || {}
-    let hasWarnings = warnings.data.size > 0
+    let drugDosages = dose.get(key) || {}
+    let hasWarnings = warning.size > 0
     //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
@@ -162,7 +174,7 @@ class Drug extends React.Component {
               <Feed.Summary>
                 <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
-                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}
+                  {dose.form && (nameshort[dose.form] || names[dose.form])}
 
                 </Feed.Date>
               </Feed.Summary>

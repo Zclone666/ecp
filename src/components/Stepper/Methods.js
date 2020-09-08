@@ -9,7 +9,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'warnings')
 @observer
 class MethodsLF extends Component {
   constructor(props){
