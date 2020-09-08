@@ -30,7 +30,7 @@ import {
 import _ from 'lodash';
 
 
-@inject('router', 'db', 'actions')
+@inject('router', 'diseases', 'actions')
 @observer
 class PatientForm extends Component {
   constructor(props){
@@ -96,11 +96,11 @@ class PatientForm extends Component {
   handleSearchChange = (e, { name, value }) => {
     this.setState({ [`search_${name}`]: value })
     if(value.length > 1){
-      this.props.db.searchReady = false
+      this.props.diseases.searchReady = false
       if( name === 'allergy' ){
-        this.props.db.getSearchAllergy(value, name)
+        this.props.diseases.getSearchAllergy(value, name)
       }else{
-        this.props.db.getSearchDisease(value, name)
+        this.props.diseases.getSearchDisease(value, name)
       }
 
     }
@@ -145,7 +145,7 @@ class PatientForm extends Component {
       driving,
       allergy
     } = this.props.actions.patientForm
-    let { diseaseRows, allergyRows } = this.props.db
+    let { diseaseRows, allergyRows } = this.props.diseases
     let { search_disease, search_disease2, search_allergy } = this.state
     let searchReady = true, searchRows=[], searchQuery=''
 

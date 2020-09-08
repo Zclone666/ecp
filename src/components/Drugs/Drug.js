@@ -30,7 +30,7 @@ class Drug extends React.Component {
   }
   getLF = async () => {
     let {
-      drugs: { current, setDosageParams }, //drugs, drugsDosages, currDrug, setDosageParams
+      drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
       warnings: { warning, groups }, //warnings, warnGroups
       router: { location },
@@ -120,6 +120,7 @@ class Drug extends React.Component {
     //     opacity: monitor.isDragging() ? 0.4 : 1,
     //   }),
     // })
+    // console.log({currWarning});
     return(
       <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
         <div className='border' style={{ backgroundColor: hasBorder && maxItem.color || 'transparent' }} />

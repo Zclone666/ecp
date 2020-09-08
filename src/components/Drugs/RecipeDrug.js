@@ -47,7 +47,7 @@ class RecipeDrug extends React.Component {
   }
   unselectDrug = () => {
     let { drug } = this.props
-    this.props.db.unselectDrug(drug)
+    this.props.drugs.unselectDrug(drug)
   }
 
   edit = () => {

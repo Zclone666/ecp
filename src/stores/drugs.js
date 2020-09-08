@@ -101,7 +101,7 @@ class Drugs {
     await this.drug.set( drug.key, currentDrug );
 
     await this.stores.dosages.dosage.set( drug.key, _.extend(currentDosages, { url }) );
-    this.clearData()
+    this.stores.db.clearData()
   }
   getDosageParams = async () => {
     let drugData = this.stores.actions.stepsData
@@ -167,7 +167,7 @@ class Drugs {
   async unselectDrug(row){
     this.drug.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
-    this.clearData(false, true)
+    this.stores.db.clearData(false, true)
     return true
   }
 

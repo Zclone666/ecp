@@ -105,14 +105,14 @@ class Stepper extends Component {
         activeConflicts,
         stepsData
       },
-      drugs: { current, setDosageParams }, //drugs, currDrug, setDosageParams
+      drugs: { current }, //drugs, currDrug, setDosageParams
       dosages: { dosage }, //drugsDosages
       warnings: { warning, groups }, //warnings, warnGroups
       router: { values }
     } = this.props
 
     let drugsDosage = dosage.get(current.key)
-    console.log({ drugsDosage });
+    // console.log({ drugsDosage });
     let { names, nameshort } = drugsDosage
 
     let currStep = parseInt(values.step || 0)
@@ -139,7 +139,7 @@ class Stepper extends Component {
             if( i > 0 && i <= currStep ) {
               url += `/${way}/${i}`
               chosedName = nameshort[stepsData[step.name]] || names[stepsData[step.name]]
-              if(step.name === 'lf') chosedName = names[stepsData.form]
+              if(step.name === 'lf') chosedName = nameshort[stepsData.form] || names[stepsData.form]
             } else if( i !== 0 ) {
               url = ''
             } else {
@@ -149,8 +149,9 @@ class Stepper extends Component {
                 '': ''
               }[way]
             }
+            console.log({step, stepsData});
             if(step.name === 'dosage' && currStep > i){
-              console.log({stepsData});
+              // console.log({step, stepsData});
               chosedName = (stepsData.pack.dosage && (stepsData.pack.dosage.short || stepsData.pack.dosage.full)) + ', ' + (stepsData.pack.pack && (stepsData.pack.pack.short || stepsData.pack.pack.full))
             }
             //console.log({ step, chosedName, stepsData, names });

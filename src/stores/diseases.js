@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 class Diseases {
   @observable ready = false;
+  @observable searchReady = false;
 
   @observable diseaseRows = [];
   @observable allergyRows = [];
@@ -27,7 +28,73 @@ class Diseases {
 
 
   }
-
+  async getSearchDisease(text, saveTo){
+    this.searchReady = false
+    let data = {
+      text,
+      lib: '61, 25',
+      service: "43",
+      chain: 0
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `search/Diseases`,
+        data,
+        success: async data => {
+          if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
+            await data.concepts.forEach(( concept, i ) => {
+              data.concepts[i].key = 'concept'+i
+              data.concepts[i].title = data.concepts[i].name
+              data.concepts[i].main = saveTo === 'disease' ? true : false
+            })
+            this.diseaseRows = observable([])
+            this.diseaseRows = await _.unionWith(data.concepts, this.diseaseRows, (a, b) => a.id === b.id);
+            this.searchReady = true
+          }
+        },
+        fail: (alerts) => {
+            this.searchReady = true
+          // console.log('fail', alerts);
+        },
+        always: (data) => {
+          // this.stores.actions.makeAlerts(data)
+        }
+    });
+  }
+  async getSearchAllergy(text, saveTo){
+    this.searchReady = false
+    let data = {
+      text,
+      lib: '61, 25',
+      service: "43",
+      chain: 0
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `search/Allergy`,
+        data,
+        success: async data => {
+          if(data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
+            await data.concepts.forEach(( concept, i ) => {
+              data.concepts[i].key = 'concept'+i
+              data.concepts[i].title = data.concepts[i].name
+            })
+            this[`${saveTo}Rows`] = observable([])
+            this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
+            this.searchReady = true
+          }
+        },
+        fail: (alerts) => {
+            this.searchReady = true
+          // console.log('fail', alerts);
+        },
+        always: (data) => {
+          // this.stores.actions.makeAlerts(data)
+        }
+    });
+  }
 
 
 }

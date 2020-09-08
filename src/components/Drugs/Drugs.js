@@ -105,13 +105,13 @@ class Drugs extends Component {
         activeDrugs,
         activeConflicts
       },
-      drugs: { drug },
+      drugs: { drug: drugs },
       warnings: { warning, groups }, //warnings, warnGroups
       isRecipe
     } = this.props
     let selectedWarnings = warning[selectedDrug]
     // console.log('activeDrugs', activeDrugs);
-    let iterator = Array.from(drug.values())
+    let iterator = Array.from(drugs.values())
     iterator = _.orderBy(iterator, ['group'], ['desc']);
     let warnDrugs = this.warnDrugs
     // console.log('iterator', iterator);

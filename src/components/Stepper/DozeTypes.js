@@ -9,7 +9,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings')
+@inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class DozeTypes extends Component {
   constructor(props){
@@ -31,10 +31,11 @@ class DozeTypes extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugsDosages, currDrug },
+      drugs: { current }, //drugs, currDrug, setDosageParams
+      dosages: { dosage }, //drugsDosages
     } = this.props
 
-    let drugDosage = drugsDosages.data.get(currDrug.key)
+    let drugDosage = dosage.get(current.key)
     let { drug, form, methodform, names, nameshort } = drugDosage
 
     let arr = []
@@ -96,25 +97,26 @@ class DozeTypes extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugsDosages, currDrug },
+      drugs: { current }, //drugs, currDrug, setDosageParams
+      dosages: { dosage }, //drugsDosages
       router: { values }
     } = this.props
     let way = values.way || 'lf'
     let currStep = parseInt(values.step || 0)
 
 
-    let drugDosage = drugsDosages.data.get(currDrug.key)
+    let drugDosage = dosage.get(current.key)
     let { drug, form, methodform, names } = drugDosage
 
     return (
       <List animated divided selection verticalAlign='middle' size='large' >
-        {this.dosages.map(( dosage, i ) => {
+        {this.dosages.map(( dose, i ) => {
 
           return(
             <List.Item
               as={RouterLink}
               to={`/concept/dozes/${way}/${currStep+1}`}
-              onClick={() => this.setDosage(dosage)}
+              onClick={() => this.setDosage(dose)}
               key={'type'+i}
             >
 
@@ -127,10 +129,10 @@ class DozeTypes extends Component {
               </List.Content>
 
               <List.Content className='large'>
-                {dosage.flag && <Icon name='warning sign' color='red' style={{ float: 'left' }} />}
-                <List.Header>{dosage.dosage.full}</List.Header>
-                {dosage.pack.full.length > 0 && <List.Description>
-                  {dosage.pack.full}
+                {dose.flag && <Icon name='warning sign' color='red' style={{ float: 'left' }} />}
+                <List.Header>{dose.dosage.full}</List.Header>
+                {dose.pack.full.length > 0 && <List.Description>
+                  {dose.pack.full}
                 </List.Description>}
               </List.Content>
 
