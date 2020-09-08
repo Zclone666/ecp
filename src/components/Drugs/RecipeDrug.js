@@ -16,7 +16,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings')
+@inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class RecipeDrug extends React.Component {
   constructor(props){
@@ -40,9 +40,9 @@ class RecipeDrug extends React.Component {
 
   getLF = () => {
     let { drug } = this.props
-    this.props.db.getLF(drug)
+    this.props.dosages.get(drug)
     //this.props.db.GetDuration(drug)
-    this.props.db.currDrug = { ...drug }
+    this.props.drugs.current = { ...drug }
     // this.props.router.push('/concepts/dozes')
   }
   unselectDrug = () => {
@@ -62,24 +62,26 @@ class RecipeDrug extends React.Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
+      // drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage: dose },
+      // db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
       drug,
       active
     } = this.props
 
     let { edit, text, from } = this.state
 
-    let selectedWarnings = warnIcons[selectedDrug]
+    // let selectedWarnings = warnIcons[selectedDrug]
     let { key, name, level, tn, type, dosage } = drug
-    let drugDosages = drugsDosages.data.get(key) || {}
+    let drugDosages = dose.get(key) || {}
 
     let names = drugDosages.names || {}
 
     let descArr = []
-    if(dosage.form && names[dosage.form]) descArr.push(names[dosage.form])
-    if(dosage.method && names[dosage.method]) descArr.push(names[dosage.method])
-    if(dosage.pack.dosage) descArr.push(dosage.pack.dosage)
-    if(dosage.pack.pack) descArr.push(dosage.pack.pack)
+    // if(dosage.form && names[dosage.form]) descArr.push(names[dosage.form])
+    // if(dosage.method && names[dosage.method]) descArr.push(names[dosage.method])
+    // if(dosage.pack.dosage) descArr.push(dosage.pack.dosage)
+    // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
 
     let inputValue = from === 'dosage' ? descArr.join(', ') : text
 

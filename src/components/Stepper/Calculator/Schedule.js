@@ -22,7 +22,7 @@ import Week from './Week';
 import Interval from './Interval';
 import Calendar from './Calendar';
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings')
+@inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class Schedule extends Component {
   constructor(props){
@@ -52,7 +52,7 @@ class Schedule extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { drug, form, methodform, names } },
+      dosages: { current: { drug, form, methodform, names } },
       router: { values }
     } = this.props
 

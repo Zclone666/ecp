@@ -167,7 +167,7 @@ class Drugs extends Component {
             </List>
           </DragDropContext>
 
-        }
+        */}
         {isRecipe &&
           <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
             {iterator.map(( drug, i ) => {
@@ -177,7 +177,7 @@ class Drugs extends Component {
               )
             })}
           </List>
-        */}
+        }
         {!isRecipe &&
           <DndProvider backend={HTML5Backend}>
             <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>

@@ -32,7 +32,7 @@ ref_weeks = [ 'неделю', 'недели', 'недель' ],
 ref_months = [ 'месяц', 'месяца', 'месяцев' ],
 ref_years = [ 'год', 'года', 'лет' ]
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings')
+@inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class Interval extends Component {
   constructor(props){
@@ -236,7 +236,7 @@ class Interval extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { drug, form, methodform, names } },
+      dosages: { current: { drug, form, methodform, names } },
       router: { values }
     } = this.props
 

@@ -149,7 +149,7 @@ class Stepper extends Component {
                 '': ''
               }[way]
             }
-            console.log({step, stepsData});
+            // console.log({step, stepsData});
             if(step.name === 'dosage' && currStep > i){
               // console.log({step, stepsData});
               chosedName = (stepsData.pack.dosage && (stepsData.pack.dosage.short || stepsData.pack.dosage.full)) + ', ' + (stepsData.pack.pack && (stepsData.pack.pack.short || stepsData.pack.pack.full))
