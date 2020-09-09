@@ -7,7 +7,7 @@ import _ from 'lodash';
 const colorPallette = [
   '#007b2b',
   '#b0d512',
-  '#03529b',
+  '#54C8FF',
   '#fff42b',
   '#ffca2f',
   '#fc7301',
@@ -50,23 +50,23 @@ class Warnings {
         color = colorPallette[1]
         group = 2
         break;
-      case val > 0 && val <= 0.2:
+      case val > 0 && val <= 0.17:
         color = colorPallette[2]
         group = 3
         break;
-      case val > 0.2 && val <= 0.4:
-        color = colorPallette[3]
-        group = 4
-        break;
-      case val > 0.4 && val <= 0.6:
+      // case val > 0.2 && val <= 0.4:
+      //   color = colorPallette[3]
+      //   group = 4
+      //   break;
+      case val > 0.17 && val <= 0.5:
         color = colorPallette[4]
         group = 5
         break;
-      case val > 0.6 && val <= 0.8:
+      case val > 0.5 && val <= 0.75:
         color = colorPallette[5]
         group = 6
         break;
-      case val > 0.8 && val <= 1:
+      case val > 0.75 && val <= 1:
         color = colorPallette[6]
         group = 7
         break;
