@@ -14,6 +14,7 @@ export const API_SERVER = SERVER === 'prod' ? "https://prod.socmedica.com/versio
 export const SERVICE = "4";//43
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const AUTH_REG_KEY = "fe2ddc03f0c34724";
+export const AUTH_PASS_KEY = "9152ea8756f8f2b3";
 
 // export const SERVICE_KEY = "be1fe504f12126fd";
 export const CREATE_API_URL = ({ path }) => {

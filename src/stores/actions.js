@@ -4,7 +4,7 @@ import _ from 'lodash';
 import moment from 'moment'
 
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
-export const RESET_PASS_KEY = "c47ee7e666d6be7e";
+export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 class Actions {
 
   @observable view = false;
