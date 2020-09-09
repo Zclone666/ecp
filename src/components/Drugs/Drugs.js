@@ -63,7 +63,7 @@ class Drugs extends Component {
           })
         }
       }else{
-        if(_.find(warn.subjects, { 'drugkey': selectedDrug }) && warn.type === 'interdrug' ){
+        if(_.find(warn.subjects, { 'drugkey': selectedDrug })){ // && warn.type === 'interdrug' ){
           let arr = _.filter(warn.subjects, (o) => { return o.drugkey !== selectedDrug; }) || []
           // console.log({ arr });
           arr.forEach(( item, x ) => {

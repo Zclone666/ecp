@@ -98,7 +98,7 @@ class Warning extends Component {
     let subjFrom = false
     let subjTo = false
 
-    let warnArr = _.orderBy(Array.from(warning.values()), ['step'], ['asc']);
+    let warnArr = _.orderBy(Array.from(warning.values()), ['value','step'], ['desc','asc']);
     let isConflict = !!_.find(groups, { 'type': values.page });
     //console.log({isConflict, selectedDrug});
     warnArr.forEach(( warn, i ) => {
