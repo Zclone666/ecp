@@ -11,7 +11,7 @@ export const PRE_PATH  = '';
 export const PRODUCTION = false;
 export const API_SERVER = SERVER === 'prod' ? "https://prod.socmedica.com/version/api/stats" : "https://docker.socmedica.dev:9004";
 
-export const SERVICE = "108";//"4";//43
+export const SERVICE = '4' //"108";//"4";//43
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const AUTH_REG_KEY = "fe2ddc03f0c34724";
 export const AUTH_PASS_KEY = "9152ea8756f8f2b3";

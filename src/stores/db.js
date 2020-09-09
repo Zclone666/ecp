@@ -69,73 +69,7 @@ class DB {
       this.stores.drugs.drug.clear()
     }
   }
-  async getUnitsPharm(){
-    let data = {
-      // text,
-      service: "43",
-    }
-    data.authkey = this.stores.actions.authkey
-    data.key = this.stores.actions.privateKey
-    return POST({
-        path: `tools/UnitsPharm`,
-        data,
-        success: async data => {
-          console.log('DATA', data);
 
-        },
-        fail: (alerts) => {
-
-        },
-        always: (data) => {
-
-        }
-    });
-  }
-  async getUnitsPrimary(){
-    let data = {
-      // text,
-      service: "43",
-    }
-    data.authkey = this.stores.actions.authkey
-    data.key = this.stores.actions.privateKey
-    return POST({
-        path: `tools/UnitsPrimary`,
-        data,
-        success: async data => {
-          console.log('DATA', data);
-
-        },
-        fail: (alerts) => {
-
-        },
-        always: (data) => {
-
-        }
-    });
-  }
-  async getUnitsComplex(units){
-    let data = {
-      // text,
-      service: "43",
-      units: units
-    }
-    data.authkey = this.stores.actions.authkey
-    data.key = this.stores.actions.privateKey
-    return POST({
-        path: `tools/UnitsComplex`,
-        data,
-        success: async data => {
-          console.log('DATA', data);
-
-        },
-        fail: (alerts) => {
-
-        },
-        always: (data) => {
-
-        }
-    });
-  }
 
 }
 export default DB;

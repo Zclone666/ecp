@@ -193,7 +193,7 @@ class Actions {
       this.currentPage = page
       if(this.currentPage && _.keys(this.pages).length > 0){
         this.stores.db.clearData()
-        this.stores.db.getFilters()
+        // this.stores.db.getFilters()
       }
 
     }
@@ -344,8 +344,8 @@ class Actions {
             await localStorage.setItem('authkey', this.authkey);
             await localStorage.setItem('privateKey', this.loginForm.privateKey);
           }
-          this.stores.db.getUnitsPrimary()
-          this.stores.db.getUnitsPharm()
+          this.stores.tools.getUnitsPrimary()
+          this.stores.tools.getUnitsPharm()
         // }else{
         //   this.makeAlerts({ alerts:[{
         //     title: "Неверный персональный ключ.",
