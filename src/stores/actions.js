@@ -5,6 +5,8 @@ import moment from 'moment'
 
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const RESET_PASS_KEY = "9152ea8756f8f2b3";
+export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
+//export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 class Actions {
 
   @observable view = false;
@@ -503,7 +505,7 @@ class Actions {
   }
 
   async resetPass() {
-    this.resetPassForm.key = RESET_PASS_KEY;
+    this.resetPassForm.key = REQUEST_PASS_KEY;
     return POST({
       path: `https://cs.socmedica.com/api/user/recovery`,
       data: this.resetPassForm,
