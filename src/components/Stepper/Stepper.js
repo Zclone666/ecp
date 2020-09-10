@@ -129,7 +129,7 @@ class Stepper extends Component {
       swipe: false,
       initialSlide: currStep
     };
-    //console.log({ way, currStep });
+    console.log({ stepsData, way, currStep });
     return (
       <Responsive className='h100 with-steps' fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
         <Step.Group attached='top' fluid unstackable ordered size='tiny'>

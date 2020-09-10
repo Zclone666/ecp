@@ -21,8 +21,10 @@ class Drugs {
     drug: {},
     form: {},
     methodform: {},
-    names: {}
-  };
+    names: {},
+    nameshort: {},
+    units: {}
+  }
 
   constructor({ stores }) {
     this.stores = stores;
@@ -57,9 +59,10 @@ class Drugs {
         success: async data => {
           //console.log('DATA', data);
           let { drug, form, methodform, names, nameshort, units } = data
+          this.stores.tools.setNames(names, nameshort) 
           let current = this.dosage.get(drug.key) || {};
-          this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, url: '/concept/dozes/' }) );
-          this.stores.db.getUnitsComplex(units)
+          this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
+          this.stores.tools.getUnitsComplex(units)
         },
         fail: (alerts) => {
 
@@ -68,6 +71,25 @@ class Drugs {
 
         }
     });
+  }
+
+
+
+  get calcValues(){
+    let drug = this.stores.drugs.current
+    let dosages = this.current
+    let currDos = this.stores.actions.stepsData
+    let result = {
+      dosage: {
+        value: 0,
+        units: [],
+        unit: null
+      },
+      count: {
+        value: 0,
+        unit: null
+      }
+    }
   }
   // setDosageParams = async (url) => {
   //   let drugData = this.stores.actions.stepsData
