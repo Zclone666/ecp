@@ -103,7 +103,7 @@ class Tools {
       let newunit = {
         name: this.names[unitkey],
         shortname: this.shortnames[unitkey],
-        baseunit,
+        baseunit: unit,
         unitkey,
         type: 'simple',
         arr: null
