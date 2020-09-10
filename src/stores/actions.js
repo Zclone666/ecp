@@ -369,7 +369,10 @@ class Actions {
         // }
       },
       fail: alerts => {
-        // console.log('FAIL', alerts);
+        console.log('FAIL', alerts);
+        alerts.forEach((alert) => {
+          if(alert.code != 200) this.logout()
+        })
       },
       always: (data) => {
         this.loading = false
