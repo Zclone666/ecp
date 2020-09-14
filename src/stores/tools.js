@@ -11,7 +11,6 @@ class Tools {
   @observable shortnames = {}
 
   @observable units = {}
-  @observable unittypes = {}
   @observable unitarrs = {}
 
   @observable unitsPharm = {};
@@ -27,9 +26,10 @@ class Tools {
     });
   }
 
-  async getUnitsPharm(){
+  async getUnitsPharm(units){
+    units = units || []
     let data = {
-
+      units
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -38,9 +38,18 @@ class Tools {
         data,
         success: async data => {
           console.log(data);
-          let { names, nameshort, units, unitrefs } = data
+          let { names, nameshort, units, unitrefs, unitpharm } = data
+
+          // kostyl
+          names[99] = 'процент'
+          nameshort[99] = '%'
+          unitpharm.push(99)
+          units[99]=_.clone(units[250])
+          units[99][0].value = 10
+          // end kostyl
+
           await this.setNames(names, nameshort)
-          this.setUnits(units, unitrefs)
+          this.setUnits(units, unitrefs, unitpharm)
         },
         fail: (alerts) => {
 
@@ -94,34 +103,63 @@ class Tools {
   }
 
 
-  setUnits(units, unitrefs){
+  setUnits = (units, unitrefs, unitpharm) => {
     // _.keys(unitrefs).forEach( refkey => {
     //   this.unitarrs.push([ refkey, ...unitrefs[refkey] ])
     // })
+    // console.log({ unitpharm });
     _.keys(units).forEach( unitkey => {
       let unit = units[unitkey]
       let newunit = {
         name: this.names[unitkey],
         shortname: this.shortnames[unitkey],
-        baseunit: unit,
-        unitkey,
+        contains: unit,
+        id: unitkey,
         type: 'simple',
-        arr: null
+        arr: null,
+        show: unitpharm.includes(unitkey) || false
       }
+      if(unitrefs[unitkey]) this.unitarrs[unitkey] = (newunit.show ? [ unitkey, ...unitrefs[unitkey] ] : unitrefs[unitkey])
       if(unit.length < 1){
         newunit.type = 'base'
-        if(unitrefs[unitkey]) this.unitarrs[unitkey] = [ unitkey, ...unitrefs[unitkey] ]
+
         newunit.arr = unitkey
       }else if(unit.length > 1){
         newunit.type = 'complex'
+        _.keys(unitrefs).forEach( refkey => {
+          if(unitrefs[refkey].includes(unitkey)) newunit.arr = refkey
+        })
       }else{
         _.keys(unitrefs).forEach( refkey => {
           if(unitrefs[refkey].includes(unitkey)) newunit.arr = refkey
         })
       }
+
+      if(unitrefs[unitkey]){
+        this.unitarrs[unitkey] = (newunit.show ? [ unitkey, ...unitrefs[unitkey] ] : unitrefs[unitkey])
+      }
+      //if(unitkey === '42') console.log(this.unitarrs[unitkey]);
       this.units[unitkey] = newunit
     })
-    console.log(this.units);
+    //console.log(this.units);
+  }
+
+  getUnitArr = (unitId) => {
+    let result = {}
+    // console.log({unitId});
+    // console.log('unitarrs', this.unitarrs);
+    // console.log(this.units[unitId]);
+    if(this.units[unitId] && this.units[unitId].arr && this.unitarrs[this.units[unitId].arr]){
+      //console.log('here', this.unitarrs[this.units[unitId].arr]);
+      this.unitarrs[this.units[unitId].arr].forEach( arrKey => {
+        //console.log(arrKey, this.units[arrKey], this.units);
+        if(this.units[unitId].type === this.units[arrKey].type || this.units[arrKey].type === 'base'){
+          result[arrKey] = this.units[arrKey]
+        }
+      })
+    }
+    // console.log(result);
+    return result
   }
 
 

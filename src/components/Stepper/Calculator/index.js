@@ -22,7 +22,6 @@ class Calculator extends Component {
   constructor(props){
     super(props)
     this.state = {
-
       weightDosage: 0
     }
   }
@@ -31,52 +30,62 @@ class Calculator extends Component {
       let { name, value } = e.target
     }
     value = parseFloat(value)
+
+    if( name == 'patient.weight' ){
+      this.props.actions.drugStructure.patient.weight = value
+    }else{
+      this.props.actions.calculatorForm[name] = value
+    }
+    let weight = this.props.actions.drugStructure.patient.weight
     let {
       dosage,
       count,
       fullDosage,
       weightDosage
     } = this.props.actions.calculatorForm
-    let weight = this.props.actions.drugStructure.patient.weight
-    if( name == 'patient.weight' ){
-      this.props.actions.drugStructure.patient.weight = value
-    }else{
-      this.props.actions.calculatorForm[name] = value
-    }
     switch (name) {
       case 'dosage':
-        this.props.actions.calculatorForm.fullDosage = value*count
-        this.props.actions.calculatorForm.weightDosage = fullDosage/weight
+        fullDosage = value*count
+        weightDosage = !weight ? 0 :(fullDosage/weight)
         break;
       case 'count':
-        this.props.actions.calculatorForm.fullDosage = dosage*value
-        this.props.actions.calculatorForm.weightDosage = fullDosage/weight
+        fullDosage = dosage*value
+        weightDosage = !weight ? 0 :(fullDosage/weight)
         break;
       case 'patient.weight':
-        this.props.actions.calculatorForm.fullDosage = dosage*count
-        this.props.actions.calculatorForm.weightDosage = fullDosage/weight
+        fullDosage = dosage*count
+        weightDosage = !weight ? 0 :(fullDosage/weight)
         break;
       case 'fullDosage':
-        this.props.actions.calculatorForm.count = fullDosage/count
+        count = fullDosage/dosage
         break;
       case 'weightDosage':
-        this.props.actions.calculatorForm.fullDosage = weightDosage*weight
+        fullDosage = (weightDosage*weight)
+        count = fullDosage/dosage
         break;
       default:
 
     }
+    this.props.actions.calculatorForm.dosage = dosage
+    this.props.actions.calculatorForm.count = count
+    this.props.actions.calculatorForm.fullDosage = fullDosage
+    this.props.actions.calculatorForm.weightDosage = weightDosage
+    setTimeout(() => {
+      this.forceUpdate()
+    }, 300)
+
     //console.log({ name, value });
   }
-  componentDidUpdate(prevProps, prevState){
-    if(this.props.actions.stepsData.pack.obj){
-      if(!prevProps.actions.stepsData.pack.obj || (prevProps.actions.stepsData.pack.obj.dosages[0].value_1 !== this.props.actions.stepsData.pack.obj.dosages[0].value_1 )){
-        this.handleChange(null, {
-          name: 'dosage',
-          value: this.props.actions.stepsData.pack.obj.dosages[0].value_1
-        })
-      }
-    }
-  }
+  // componentDidUpdate(prevProps, prevState){
+  //   if(this.props.actions.stepsData.pack.obj){
+  //     if(!prevProps.actions.stepsData.pack.obj || (prevProps.actions.stepsData.pack.obj.dosages[0].value_1 !== this.props.actions.stepsData.pack.obj.dosages[0].value_1 )){
+  //       this.handleChange(null, {
+  //         name: 'dosage',
+  //         value: this.props.actions.stepsData.pack.obj.dosages[0].value_1
+  //       })
+  //     }
+  //   }
+  // }
   render(){
     let {
       actions: {
@@ -95,20 +104,45 @@ class Calculator extends Component {
           weightDosage
         }
       },
-      dosages: { current: { drug, form, methodform, names } },
+      dosages: { current: { drug, form, methodform, names }, calcValues },
       router: { values }
     } = this.props
+    console.log({
+      dosage,
+      count,
+      fullDosage,
+      weightDosage
+    });
+    let weights = []
+    let { dosage: dos, count: cnt } = calcValues
 
-
-
-    let weights = [
-      { key: 'мг', value: 'мг', text: 'мг' },
-      { key: 'сг', value: 'сг', text: 'сг' },
-      { key: 'мкг', value: 'мкг', text: 'мкг' }
-    ]
+    _.forEach(dos.units, (weight, key) => {
+      if(dos.firstUnit){
+        weights.push({
+          key,
+          value: key,
+          text: `${weight.shortname || weight.name}/${dos.secondUnit.shortname || dos.secondUnit.name}`
+        })
+      }else{
+        weights.push({
+          key,
+          value: key,
+          text: weight.shortname || weight.name
+        })
+      }
+    })
+    // console.log({weights});
+    let secondName = (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name) ) || (dos.unit && (dos.unit.shortname || dos.unit.name))
+    let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
+    // console.log({def});
+    // let weights = [
+    //   { key: 'мг', value: 'мг', text: 'мг' },
+    //   { key: 'сг', value: 'сг', text: 'сг' },
+    //   { key: 'мкг', value: 'мкг', text: 'мкг' }
+    // ]
     // dosage = dosage || (stepsData.pack.obj && stepsData.pack.obj.dosages[0].value_1 || 0)
 
-     // console.log(stepsData.pack.obj);
+      console.log({weights, calcValues, def, dos});
     return (
       <Segment basic>
         <Form>
@@ -119,7 +153,7 @@ class Calculator extends Component {
                 size='big'
                 name='dosage'
                 value={dosage || ''}
-                label={<Dropdown defaultValue='мг' options={weights} />}
+                label={<Dropdown defaultValue='мг' options={weights} value={def} />}
                 labelPosition='right'
                 placeholder='500'
                 onChange={this.handleChange}
@@ -131,8 +165,8 @@ class Calculator extends Component {
                 size='big'
                 name='count'
                 numeric
-                value={count || ''}
-                label={{ basic: true, content: 'шт' }}
+                value={count || cnt.value}
+                label={{ basic: true, content: (cnt.unit && (cnt.unit.shortname || cnt.unit.name) || '') }}
                 labelPosition='right'
                 placeholder='3'
                 onChange={this.handleChange}
@@ -144,7 +178,7 @@ class Calculator extends Component {
                 size='big'
                 name='fullDosage'
                 value={fullDosage || ''}
-                label={{ basic: true, content: 'мг' }}
+                label={{ basic: true, content: secondName || 'мг' }}
                 labelPosition='right'
                 placeholder='500'
                 onChange={this.handleChange}
@@ -168,7 +202,7 @@ class Calculator extends Component {
                 size='big'
                 name='weightDosage'
                 value={weightDosage || ''}
-                label={{ basic: true, content: ' мг/кг' }}
+                label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
                 labelPosition='right'
                 placeholder='0'
                 onChange={this.handleChange}

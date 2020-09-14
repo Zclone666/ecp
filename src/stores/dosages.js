@@ -59,10 +59,10 @@ class Drugs {
         success: async data => {
           //console.log('DATA', data);
           let { drug, form, methodform, names, nameshort, units } = data
-          this.stores.tools.setNames(names, nameshort) 
+          this.stores.tools.setNames(names, nameshort)
           let current = this.dosage.get(drug.key) || {};
           this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
-          this.stores.tools.getUnitsComplex(units)
+          if(units && units.length > 0) this.stores.tools.getUnitsPharm(units)
         },
         fail: (alerts) => {
 
@@ -78,16 +78,33 @@ class Drugs {
   get calcValues(){
     let drug = this.stores.drugs.current
     let dosages = this.current
-    let currDos = this.stores.actions.stepsData
-    let result = {
+    let currDos = this.stores.actions.stepsData.pack
+    let { units, getUnitArr } = this.stores.tools
+
+    let unit = (currDos.dosage && units[currDos.dosage.id]) || null
+    let firstUnit = null
+    let secondUnit = null
+
+    if(unit && unit.type && unit.type === 'complex'){
+      unit.contains.forEach(( item ) => {
+        if(item.action === 'multiplication') firstUnit = units[item.id]
+        if(item.action === 'division') secondUnit = units[item.id]
+      })
+    }
+    // console.log({firstUnit, unit});
+    let unitsArr = ((firstUnit || unit) && getUnitArr((firstUnit && firstUnit.id) || (unit && unit.id))) || {}
+
+    return {
       dosage: {
-        value: 0,
-        units: [],
-        unit: null
+        value: currDos.value,
+        units: unitsArr,
+        unit,
+        firstUnit,
+        secondUnit
       },
       count: {
-        value: 0,
-        unit: null
+        value: 1,
+        unit: currDos.pack && units[currDos.pack.id]
       }
     }
   }

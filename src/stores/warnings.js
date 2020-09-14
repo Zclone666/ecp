@@ -12,6 +12,7 @@ const colorPallette = [
   '#ffca2f',
   '#fc7301',
   '#f42a03',
+  '#6435C9',
 ]
 
 class Warnings {
@@ -42,6 +43,10 @@ class Warnings {
     let color = '#cccccc'
     let group = 0
     switch (true) {
+      case val === 2:
+        color = colorPallette[7]
+        group = 1
+        break;
       case val === -1:
         color = colorPallette[0]
         group = 1

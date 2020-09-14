@@ -106,7 +106,7 @@ class Stepper extends Component {
         stepsData
       },
       drugs: { current }, //drugs, currDrug, setDosageParams
-      dosages: { dosage }, //drugsDosages
+      dosages: { dosage, calcValues }, //drugsDosages
       warnings: { warning, groups }, //warnings, warnGroups
       router: { values }
     } = this.props
@@ -129,7 +129,7 @@ class Stepper extends Component {
       swipe: false,
       initialSlide: currStep
     };
-    console.log({ stepsData, way, currStep });
+    // console.log({ stepsData, calcValues });
     return (
       <Responsive className='h100 with-steps' fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
         <Step.Group attached='top' fluid unstackable ordered size='tiny'>

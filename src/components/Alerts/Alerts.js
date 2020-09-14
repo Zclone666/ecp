@@ -14,7 +14,7 @@ class Alerts extends React.Component {
   render(){
     let { alerts, ...otherProps } = this.props.actions;
     return (
-      <div className='alertbox'>
+      <div className={'alertbox' + ( _.keys(alerts).length === 0 ? ' empty' : '' )}>
         {_.keys(alerts).map((key, i) => {
           let item = alerts[key]
           return <Alert key={`alert_${key}`} open onClose={() => this.onClose(key)} {...item} />
