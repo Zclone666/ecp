@@ -7,7 +7,8 @@ import {
   Message,
   Header,
   Icon,
-  Popup
+  Popup,
+  Divider
 } from 'semantic-ui-react'
 import _ from 'lodash';
 
@@ -50,10 +51,10 @@ class WarningTab extends Component {
     let c = 0
     let arr = _.groupBy(tab.subjects, (x) => {
       let name = 'last'
-      if((values.page === x.drugkey || selectedDrug === x.drugkey) && c<1){
-        c++
+      if(c < (tab.delimiter||1)){
         name = 'first'
       }
+      c++
       return name
     })
     // console.log({arr});
@@ -117,6 +118,9 @@ class WarningTab extends Component {
                 </List.Item>
               )
             })}
+            {tab.delimiter &&
+              <List.Item key='100500'><Divider /></List.Item>
+            }
             {((tab.id && tab.id.length > 0) && info.outcome[tab.id]) &&
               <List.Item key='2'>
 
