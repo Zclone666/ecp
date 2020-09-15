@@ -45,6 +45,8 @@ class Drugs extends Component {
     } = this.props
     let drugsObj = {}
 
+    let currDrug = null
+
     Array.from(warning.values()).forEach(( warn, i ) => {
       // console.log({ warn });
       if(selectedConflict){
@@ -63,8 +65,10 @@ class Drugs extends Component {
           })
         }
       }else{
-        if(_.find(warn.subjects, { 'drugkey': selectedDrug })){ // && warn.type === 'interdrug' ){
-          let arr = _.filter(warn.subjects, (o) => { return o.drugkey !== selectedDrug; }) || []
+        currDrug = _.find(warn.subjects, { 'drugkey': selectedDrug })
+        // console.log({currDrug});
+        if(currDrug){ // && warn.type === 'interdrug' ){
+          let arr = _.filter(warn.subjects, (o) => { return (o.drugkey !== selectedDrug && !o.hidekeys.includes(currDrug.drugkey) ) }) || []
           // console.log({ arr });
           arr.forEach(( item, x ) => {
             // console.log({ item });
