@@ -22,19 +22,35 @@ class Calculator extends Component {
   constructor(props){
     super(props)
     this.state = {
-      weightDosage: 0
+      currUnit: null
     }
+  }
+  handleChangeUnit = (e, { name, value }) => {
+    if( !name && !value ){
+      let { name, value } = e.target
+    }
+    console.log({ name, value });
+    this.setState({ [name]: value })
   }
   handleChange = (e, { name, value }) => {
     if( !name && !value ){
       let { name, value } = e.target
     }
-    value = parseFloat(value)
+    console.log({name, value}, !!value);
+    if( value.length < 1 ) {
+      if( name == 'patient.weight' ){
+        this.props.actions.drugStructure.patient.weight = value
+      }else{
+        this.props.actions.calculatorForm[name] = value
+      }
+      return
+    }
+    value = parseFloat(eval(value))
 
     if( name == 'patient.weight' ){
       this.props.actions.drugStructure.patient.weight = value
     }else{
-      this.props.actions.calculatorForm[name] = value
+      // this.props.actions.calculatorForm[name] = value
     }
     let weight = this.props.actions.drugStructure.patient.weight
     let {
@@ -45,10 +61,12 @@ class Calculator extends Component {
     } = this.props.actions.calculatorForm
     switch (name) {
       case 'dosage':
+        dosage = value
         fullDosage = value*count
         weightDosage = !weight ? 0 :(fullDosage/weight)
         break;
       case 'count':
+        count = value
         fullDosage = dosage*value
         weightDosage = !weight ? 0 :(fullDosage/weight)
         break;
@@ -57,9 +75,11 @@ class Calculator extends Component {
         weightDosage = !weight ? 0 :(fullDosage/weight)
         break;
       case 'fullDosage':
+        fullDosage = value
         count = fullDosage/dosage
         break;
       case 'weightDosage':
+        weightDosage = value
         fullDosage = (weightDosage*weight)
         count = fullDosage/dosage
         break;
@@ -107,6 +127,8 @@ class Calculator extends Component {
       dosages: { current: { drug, form, methodform, names }, calcValues },
       router: { values }
     } = this.props
+    let { currUnit } = this.state
+
     console.log({
       dosage,
       count,
@@ -131,8 +153,12 @@ class Calculator extends Component {
         })
       }
     })
-    // console.log({weights});
-    let secondName = (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name) ) || (dos.unit && (dos.unit.shortname || dos.unit.name))
+
+    let currUnitObj = dos.units[currUnit]
+
+    console.log({currUnitObj});
+
+    let secondName = currUnit ? (currUnitObj && (currUnitObj.shortname || currUnitObj.name)) : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name) ) || (dos.unit && (dos.unit.shortname || dos.unit.name))
     let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
     // console.log({def});
     // let weights = [
@@ -153,7 +179,7 @@ class Calculator extends Component {
                 size='big'
                 name='dosage'
                 value={dosage || ''}
-                label={<Dropdown defaultValue='мг' options={weights} value={def} />}
+                label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} defaultValue={def} options={weights} value={currUnit || def} />}
                 labelPosition='right'
                 placeholder='500'
                 onChange={this.handleChange}

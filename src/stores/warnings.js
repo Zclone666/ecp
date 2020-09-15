@@ -24,7 +24,8 @@ class Warnings {
     description: observable({}),
     literature: observable({}),
     outcome: observable({}),
-    urls: observable({})
+    urls: observable({}),
+    hinttype: observable({})
   };
 
   constructor({ stores }) {
@@ -45,7 +46,7 @@ class Warnings {
     switch (true) {
       case val === 2:
         color = colorPallette[7]
-        group = 1
+        group = 0
         break;
       case val === -1:
         color = colorPallette[0]
@@ -105,6 +106,7 @@ class Warnings {
             this.info.literature = _.clone(data.literature)
             this.info.outcome = _.clone(data.outcome)
             this.info.urls = _.clone(data.urls)
+            this.info.hinttype = _.clone(data.hinttype)
 
             let warnGroups = {}
             let warnIcons = {}
@@ -121,6 +123,8 @@ class Warnings {
               let current = this.warning.get(item.id) || {};
               this.warning.set( item.key, _.assignIn(current, { group, color, ...item }) );
 
+              let hint = data.hinttype[item.type] && data.names[data.hinttype[item.type]]
+
               //разбивка по Драгам
               if(item.subjects && _.isArray(item.subjects)){
                 item.subjects.forEach(( subject, s ) => {
@@ -131,10 +135,11 @@ class Warnings {
                       type: item.type,
                       value: item.value,
                       valuecolor: color,
-                      group
+                      group,
+                      hint
                     }
                   }else{
-                    if(item.value > warnGroups[item.type].value){
+                    if(group > warnGroups[item.type].group){
                       warnGroups[item.type].value = item.value
                       warnGroups[item.type].valuecolor = color
                       warnGroups[item.type].group = group
@@ -144,7 +149,7 @@ class Warnings {
 
 
                     //иконки к Драгам
-                    if( !warnIcons[subject.drugkey] || item.value > warnIcons[subject.drugkey].value ){
+                    if( !warnIcons[subject.drugkey] || group > warnIcons[subject.drugkey].group ){
                       warnIcons[subject.drugkey] = {
                         value: item.value,
                         color,

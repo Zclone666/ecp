@@ -53,7 +53,7 @@ class Drugs extends Component {
           // console.log({ arr });
           arr.forEach(( item, x ) => {
             // console.log({ item });
-            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].value < warn.value ){
+            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].group < warn.group ){
               drugsObj[item.drugkey] = {
                 value: warn.value,
                 group: warn.group,
@@ -68,7 +68,7 @@ class Drugs extends Component {
           // console.log({ arr });
           arr.forEach(( item, x ) => {
             // console.log({ item });
-            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].value < warn.value ){
+            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].group < warn.group ){
               drugsObj[item.drugkey] = {
                 value: warn.value,
                 group: warn.group,

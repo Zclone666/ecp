@@ -13,7 +13,8 @@ import {
   Responsive,
   Icon,
   Grid,
-  Segment
+  Segment,
+  Popup
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -146,21 +147,23 @@ class Conflicts extends Component {
                     />
                   </RouterLink>
                 }
-                <Icon.Group
-                  onClick={() => this.selectConflict(key)}
-                  size='big'
-                  className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}
-                >
-                  {(group.type === 'age') ?
-                    <Icon as='img' src={`/warningicons/${patientForm.birthdate ? icon : 'no'+icon}.svg`} />
-                    :
-                    <Icon as='img' src={`/warningicons/${icon}.svg`} />
-                  }
-                  <Icon size='big' name='circle outline' style={{ color }} />
-                  {(group.type === 'age' && patientForm.birthdate) && <div className='agecontainer'>
-                    {patientForm.birthdate && moment().diff(moment(patientForm.birthdate, 'x'), 'years') || '!'}
-                  </div>}
-                </Icon.Group>
+                <Popup content={group.hint} trigger={
+                  <Icon.Group
+                    onClick={() => this.selectConflict(key)}
+                    size='big'
+                    className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}
+                  >
+                    {(group.type === 'age') ?
+                      <Icon as='img' src={`/warningicons/${patientForm.birthdate ? icon : 'no'+icon}.svg`} />
+                      :
+                      <Icon as='img' src={`/warningicons/${icon}.svg`} />
+                    }
+                    <Icon size='big' name='circle outline' style={{ color }} />
+                    {(group.type === 'age' && patientForm.birthdate) && <div className='agecontainer'>
+                      {patientForm.birthdate && moment().diff(moment(patientForm.birthdate, 'x'), 'years') || '!'}
+                    </div>}
+                  </Icon.Group>
+                } />
               </Grid.Column>
             )
 

@@ -93,7 +93,7 @@ class Drugs {
     }
     // console.log({firstUnit, unit});
     let unitsArr = ((firstUnit || unit) && getUnitArr((firstUnit && firstUnit.id) || (unit && unit.id))) || {}
-
+    //console.log({currDos});
     return {
       dosage: {
         value: currDos.value,
@@ -108,6 +108,19 @@ class Drugs {
       }
     }
   }
+
+  setStepDosage = () => {
+    let vals = this.calcValues
+    let weight = this.stores.actions.drugStructure.patient.weight || null
+
+    this.stores.actions.calculatorForm = {
+      dosage: vals.dosage.value,
+      count: vals.count.value,
+      fullDosage: vals.dosage.value * vals.count.value,
+      weightDosage: (weight ? (vals.dosage.value * vals.count.value)/weight : 0)
+    }
+  }
+
   // setDosageParams = async (url) => {
   //   let drugData = this.stores.actions.stepsData
   //

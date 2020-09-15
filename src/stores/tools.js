@@ -41,11 +41,14 @@ class Tools {
           let { names, nameshort, units, unitrefs, unitpharm } = data
 
           // kostyl
-          names[99] = 'процент'
-          nameshort[99] = '%'
-          unitpharm.push(99)
-          units[99]=_.clone(units[250])
-          units[99][0].value = 10
+          if(units[250]){
+            names[99] = 'процент'
+            nameshort[99] = '%'
+            unitpharm.push(99)
+            units[99]=_.clone(units[250])
+            units[99][0].value = 10
+          }
+
           // end kostyl
 
           await this.setNames(names, nameshort)

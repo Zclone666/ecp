@@ -158,8 +158,8 @@ class Actions {
 
     this.autologin()
     autorun(() => {
-      if(this.stepsData.pack.obj && this.stepsData.pack.obj.dosages[0].value_1){
-        this.calculatorForm.dosage = this.stepsData.pack.obj.dosages[0].value_1
+      if(this.stepsData.pack.obj){
+        this.stores.dosages.setStepDosage()
       }
     })
     // autorun(() => {

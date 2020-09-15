@@ -19,6 +19,7 @@ class DozeTypes extends Component {
     }
   }
   setDosage = ( lf ) => {
+    console.log({lf});
     //this.props.actions.stepsData.dosage = lf.bigid
     this.props.actions.stepsData.pack = lf
   }
@@ -76,7 +77,7 @@ class DozeTypes extends Component {
             currPack.dosage.short += val + ' ' + (nameshort[item.dosage[0].id_1] || names[item.dosage[0].id_1])
             currPack.value = val
           }
-          currPack.pack.full += names[pack.id] + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + names[pack.dosage.id_1]) || '')
+          currPack.pack.full += names[pack.id] + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1])) || '')
           currPack.pack.short += (nameshort[pack.id] || names[pack.id]) + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1])) || '')
           arr.push({ ...currPack })
         })
@@ -145,7 +146,7 @@ class DozeTypes extends Component {
 
               <List.Content className='large'>
                 {dose.flag && <Icon name='warning sign' color='red' style={{ float: 'left' }} />}
-                <List.Header>{dose.dosage.full}</List.Header>
+                <List.Header>{dose.dosage.short.length > 0 ? dose.dosage.short : dose.dosage.full}</List.Header>
                 {dose.pack.full.length > 0 && <List.Description>
                   {dose.pack.full}
                 </List.Description>}
