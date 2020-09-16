@@ -28,6 +28,9 @@ function getLetter(value){
     case value === 2:
       result = '¥'
       break;
+    case value === 3:
+      result = 'F'
+      break;
     case value > 0 && value <= 0.25:
       result = 'D'
       break;
@@ -98,7 +101,7 @@ class Warning extends Component {
     let subjFrom = false
     let subjTo = false
 
-    let warnArr = _.orderBy(Array.from(warning.values()), ['value','step'], ['desc','asc']);
+    let warnArr = _.orderBy(Array.from(warning.values()), ['group','step'], ['desc','asc']);
     let isConflict = !!_.find(groups, { 'type': values.page });
     //console.log({isConflict, selectedDrug});
     warnArr.forEach(( warn, i ) => {

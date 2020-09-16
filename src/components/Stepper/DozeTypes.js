@@ -55,6 +55,7 @@ class DozeTypes extends Component {
       //console.log({item});
       if(form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0 ){
         item.pack.forEach((pack, x) => {
+          if(!pack.dosage) pack.dosage = {}
           currPack = {
             dosage: { short: '', full: '', id: item.dosage[0].id_1 },
             pack: { short: '', full: '', id: pack.dosage.id_1 },

@@ -65,7 +65,7 @@ class LF extends Component {
 
               <List.Content className='large'>
                 <List.Header>{names[lfid]}</List.Header>
-                {lfItem.solute && <List.Description>
+                {(false && lfItem.solute) && <List.Description>
                   Подходит для раствора
                 </List.Description>}
               </List.Content>
