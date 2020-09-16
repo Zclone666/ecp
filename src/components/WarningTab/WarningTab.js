@@ -152,12 +152,15 @@ class WarningTab extends Component {
         <Segment vertical>
           <Segment basic>
             {(tab.id && tab.id.length > 0) &&
-              info.description[tab.id] && info.description[tab.id].map(( desc, d ) => {
-                return(
-                  <Segment vertical key={`desc_${d}`} dangerouslySetInnerHTML={{__html: info.names[desc]}} />
+              <List relaxed>
 
-                )
-              })
+                {info.description[tab.id] && info.description[tab.id].map(( desc, d ) => {
+                  return(
+                    <List.Item key={`desc_${d}`}><div dangerouslySetInnerHTML={{__html: info.names[desc]}} /></List.Item>
+
+                  )
+                })}
+              </List>
             }
             {(tab.id && tab.id.length > 0) &&
               <>

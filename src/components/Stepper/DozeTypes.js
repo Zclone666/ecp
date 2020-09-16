@@ -19,7 +19,7 @@ class DozeTypes extends Component {
     }
   }
   setDosage = ( lf ) => {
-    console.log({lf});
+    // console.log({lf});
     //this.props.actions.stepsData.dosage = lf.bigid
     this.props.actions.stepsData.pack = lf
   }

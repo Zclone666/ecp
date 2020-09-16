@@ -36,8 +36,9 @@ class Calculator extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
-    console.log({name, value}, !!value);
-    if( value.length < 1 ) {
+    //console.log({name, value}, !!value);
+    value = value.split(',').join('.')
+    if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
       if( name == 'patient.weight' ){
         this.props.actions.drugStructure.patient.weight = value
       }else{
@@ -45,7 +46,8 @@ class Calculator extends Component {
       }
       return
     }
-    value = parseFloat(eval(value))
+    //value = parseFloat(eval(value))
+    value = parseFloat(value)
 
     if( name == 'patient.weight' ){
       this.props.actions.drugStructure.patient.weight = value
@@ -118,23 +120,24 @@ class Calculator extends Component {
           patient: { weight }
         },
         calculatorForm: {
+          baseDosage,
           dosage,
           count,
           fullDosage,
           weightDosage
         }
       },
-      dosages: { current: { drug, form, methodform, names }, calcValues },
+      dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
       router: { values }
     } = this.props
     let { currUnit } = this.state
 
-    console.log({
-      dosage,
-      count,
-      fullDosage,
-      weightDosage
-    });
+    // console.log({
+    //   dosage,
+    //   count,
+    //   fullDosage,
+    //   weightDosage
+    // });
     let weights = []
     let { dosage: dos, count: cnt } = calcValues
 
@@ -156,10 +159,12 @@ class Calculator extends Component {
 
     let currUnitObj = dos.units[currUnit]
 
-    console.log({currUnitObj});
+    // console.log({currUnitObj});
 
     let secondName = currUnit ? (currUnitObj && (currUnitObj.shortname || currUnitObj.name)) : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name) ) || (dos.unit && (dos.unit.shortname || dos.unit.name))
     let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
+
+    // let calculated =
     // console.log({def});
     // let weights = [
     //   { key: 'мг', value: 'мг', text: 'мг' },
@@ -168,7 +173,8 @@ class Calculator extends Component {
     // ]
     // dosage = dosage || (stepsData.pack.obj && stepsData.pack.obj.dosages[0].value_1 || 0)
 
-      console.log({weights, calcValues, def, dos});
+      // console.log({weights, calcValues, def, dos});
+    // console.log({ getFromBase: getFromBase((currUnit || def), baseDosage), dosage, baseDosage });
     return (
       <Segment basic>
         <Form>
@@ -178,7 +184,7 @@ class Calculator extends Component {
               <Input
                 size='big'
                 name='dosage'
-                value={dosage || ''}
+                value={getFromBase((currUnit || def), dosage) || ''}
                 label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} defaultValue={def} options={weights} value={currUnit || def} />}
                 labelPosition='right'
                 placeholder='500'
@@ -203,7 +209,7 @@ class Calculator extends Component {
               <Input
                 size='big'
                 name='fullDosage'
-                value={fullDosage || ''}
+                value={getFromBase((currUnit || def), fullDosage) || ''}
                 label={{ basic: true, content: secondName || 'мг' }}
                 labelPosition='right'
                 placeholder='500'
@@ -227,7 +233,7 @@ class Calculator extends Component {
               <Input
                 size='big'
                 name='weightDosage'
-                value={weightDosage || ''}
+                value={getFromBase((currUnit || def), weightDosage) || ''}
                 label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
                 labelPosition='right'
                 placeholder='0'

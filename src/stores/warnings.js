@@ -13,6 +13,7 @@ const colorPallette = [
   '#fc7301',
   '#f42a03',
   '#6435C9',
+  '#A333C8'
 ]
 
 class Warnings {
@@ -45,6 +46,10 @@ class Warnings {
     let group = 0
     switch (true) {
       case val === 2:
+        color = colorPallette[8]
+        group = 0
+        break;
+      case val === 3:
         color = colorPallette[7]
         group = 0
         break;
@@ -85,7 +90,7 @@ class Warnings {
   //getInfoPrep
   async check(){
     this.stores.actions.loading = true
-
+    this.stores.db.clearData(false, true)
     let data = _.clone(this.stores.actions.drugStructure)
     data.drugs = Array.from(this.stores.drugs.drug.values())
 

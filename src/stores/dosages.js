@@ -113,12 +113,53 @@ class Drugs {
     let vals = this.calcValues
     let weight = this.stores.actions.drugStructure.patient.weight || null
 
-    this.stores.actions.calculatorForm = {
-      dosage: vals.dosage.value,
-      count: vals.count.value,
-      fullDosage: vals.dosage.value * vals.count.value,
-      weightDosage: (weight ? (vals.dosage.value * vals.count.value)/weight : 0)
+    // console.log({vals});
+
+    let baseDosage = vals.dosage.value
+    let dosage = vals.dosage.value
+
+    if(vals.dosage.firstUnit){
+      vals.dosage.firstUnit.contains.forEach(( contain ) => {
+        if(contain.action === 'division'){
+          dosage = dosage / contain.value
+        }else{
+          dosage = dosage * contain.value
+        }
+      })
     }
+
+    vals.dosage.unit.contains.forEach(( contain ) => {
+      if(contain.action === 'division'){
+        dosage = dosage / contain.value
+      }else{
+        dosage = dosage * contain.value
+      }
+    })
+
+    this.stores.actions.calculatorForm = {
+      // baseDosage,
+      dosage,
+      count: vals.count.value,
+      fullDosage: dosage * vals.count.value,
+      weightDosage: (weight ? (dosage * vals.count.value)/weight : 0)
+    }
+  }
+
+  getFromBase = ( unitId, value ) => {
+    if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return value
+    let unit = this.stores.tools.units[unitId]
+    if(!unit) return 0
+    let dosage = value
+
+    // console.log({ unit });
+    unit.contains.forEach(( contain ) => {
+      if(contain.action === 'division'){
+        dosage = dosage * contain.value
+      }else{
+        dosage = dosage / contain.value
+      }
+    })
+    return dosage
   }
 
   // setDosageParams = async (url) => {

@@ -74,10 +74,14 @@ class Drugs {
 
   setDosageParams = async (url) => {
     let drugData = this.stores.actions.stepsData
+    let calcData = this.stores.actions.calculatorForm
 
     let drug = this.current
     let currentDrug = await this.drug.get(drug.key) || {};
     let currentDosages = await this.stores.dosages.dosage.get(drug.key) || {};
+
+    let { calcValues, getFromBase } = this.stores.dosages
+    let def = (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id ) || (calcValues.dosage.unit && calcValues.dosage.unit.id)
 
     let {
       key,
@@ -89,6 +93,13 @@ class Drugs {
       dosage
     } = drugData
 
+    let {
+      dosage: dos,
+      count,
+      fullDosage,
+      weightDosage
+    } = calcData
+
     currentDrug.dosage = {
       key,
       way,
@@ -98,11 +109,19 @@ class Drugs {
       pack,
       dosage
     }
+
+    currentDrug.calc = {
+      dosage: getFromBase( def, dos ),
+      count,
+      fullDosage: getFromBase( def, fullDosage ),
+      weightDosage: getFromBase( def, weightDosage )
+    }
     await this.drug.set( drug.key, currentDrug );
 
     await this.stores.dosages.dosage.set( drug.key, _.extend(currentDosages, { url }) );
     this.stores.db.clearData()
   }
+
   getDosageParams = async () => {
     let drugData = this.stores.actions.stepsData
 
@@ -119,6 +138,12 @@ class Drugs {
       pack,
       dosage
     } = currentDrug.dosage
+    let {
+      dosage: dos,
+      count,
+      fullDosage,
+      weightDosage
+    } = currentDrug.calc
 
     this.stores.actions.stepsData = {
       key,
@@ -128,6 +153,12 @@ class Drugs {
       method,
       pack,
       dosage
+    }
+    this.stores.actions.calculatorForm = {
+      dosage: dos,
+      count,
+      fullDosage,
+      weightDosage
     }
 
   }
@@ -151,6 +182,12 @@ class Drugs {
         dosage: {},
 
       },
+      calc: {
+        dosage: 0,
+        count: 1,
+        fullDosage: 0,
+        weightDosage: 0
+      }
     }
     drug = _.assignIn(drug, row);
 
