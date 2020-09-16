@@ -33,6 +33,11 @@ class Calculator extends Component {
     this.setState({ [name]: value })
   }
   handleChange = (e, { name, value }) => {
+    let { getToBase, calcValues } = this.props.dosages
+    let { dosage: dos, count: cnt } = calcValues
+    let { currUnit } = this.state
+    let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
+
     if( !name && !value ){
       let { name, value } = e.target
     }
@@ -63,8 +68,8 @@ class Calculator extends Component {
     } = this.props.actions.calculatorForm
     switch (name) {
       case 'dosage':
-        dosage = value
-        fullDosage = value*count
+        dosage = getToBase((currUnit || def), value)
+        fullDosage = getToBase((currUnit || def), value)*count
         weightDosage = !weight ? 0 :(fullDosage/weight)
         break;
       case 'count':
@@ -77,11 +82,11 @@ class Calculator extends Component {
         weightDosage = !weight ? 0 :(fullDosage/weight)
         break;
       case 'fullDosage':
-        fullDosage = value
+        fullDosage = getToBase((currUnit || def), value)
         count = fullDosage/dosage
         break;
       case 'weightDosage':
-        weightDosage = value
+        weightDosage = getToBase((currUnit || def), value)
         fullDosage = (weightDosage*weight)
         count = fullDosage/dosage
         break;
@@ -197,7 +202,7 @@ class Calculator extends Component {
                 size='big'
                 name='count'
                 numeric
-                value={count || cnt.value}
+                value={count != null ? count : cnt.value}
                 label={{ basic: true, content: (cnt.unit && (cnt.unit.shortname || cnt.unit.name) || '') }}
                 labelPosition='right'
                 placeholder='3'

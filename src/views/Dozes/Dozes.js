@@ -75,7 +75,7 @@ class Dozes extends Component {
           </Menu.Item>
         </Menu>
 
-        <div className='scrollwrapper'>
+        <div className='scrollwrapper bottomMenu'>
           <Stepper />
         </div>
 

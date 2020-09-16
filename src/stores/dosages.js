@@ -162,6 +162,23 @@ class Drugs {
     return dosage
   }
 
+  getToBase = ( unitId, value ) => {
+    if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return value
+    let unit = this.stores.tools.units[unitId]
+    if(!unit) return 0
+    let dosage = value
+
+    // console.log({ unit });
+    unit.contains.forEach(( contain ) => {
+      if(contain.action === 'division'){
+        dosage = dosage / contain.value
+      }else{
+        dosage = dosage * contain.value
+      }
+    })
+    return dosage
+  }
+
   // setDosageParams = async (url) => {
   //   let drugData = this.stores.actions.stepsData
   //
