@@ -9,7 +9,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class MethodsLF extends Component {
   constructor(props){
@@ -30,13 +30,14 @@ class MethodsLF extends Component {
         activeConflicts,
         stepsData,
       },
-      db: { drugsDosages, currDrug },
+      drugs: { current }, //drugs, currDrug, setDosageParams
+      dosages: { dosage }, //drugsDosages
       router: { values }
     } = this.props
     let way = values.way || 'lf'
     let currStep = parseInt(values.step || 0)
 
-    let drugDosage = drugsDosages.data.get(currDrug.key)
+    let drugDosage = dosage.get(current.key)
     let { drug, form, methodform, names } = drugDosage
 
     let iterator = (stepsData.way === 'lf' && stepsData.form) ? (form[stepsData.form] && form[stepsData.form].method || []) : _.keys(methodform)

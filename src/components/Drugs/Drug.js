@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import { inject, observer } from 'mobx-react';
 
+import { useDrag } from 'react-dnd'
+
 import RouterLink from '../../router/a';
 
 import {
@@ -16,25 +18,34 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')
 @observer
 class Drug extends React.Component {
   constructor(props){
     super(props)
+
     this.state = {
       open: true,
     }
   }
-  getLF = () => {
-    let { drug } = this.props
-    this.props.db.getLF(drug)
+  getLF = async () => {
+    let {
+      drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage },
+      warnings: { warning, groups }, //warnings, warnGroups
+      router: { location },
+      drug
+    } = this.props
+    this.props.drugs.current = { ...drug }
+    // await getDosageParams(location.pathname)
+    await this.props.dosages.get(drug)
     //this.props.db.GetDuration(drug)
-    this.props.db.currDrug = { ...drug }
+
     // this.props.router.push('/concepts/dozes')
   }
   unselectDrug = () => {
     let { drug } = this.props
-    this.props.db.unselectDrug(drug)
+    this.props.drugs.unselectDrug(drug)
   }
   selectDrug = (e, drugId) => {
     e.preventDefault()
@@ -45,9 +56,11 @@ class Drug extends React.Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups }
+      drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage },
+      warnings: { warning, groups: warnGroups }, //warnings, warnGroups
     } = this.props
-    let selectedWarnings = warnings[drugId]
+    let selectedWarnings = warning[drugId]
     let groups = []
     let drugs = []
     for( let key in selectedWarnings ){
@@ -79,17 +92,20 @@ class Drug extends React.Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
+      drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage: dose },
+      warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
       drug,
       active
     } = this.props
     //console.log('drug', drug);
     let selectedWarnings = warnIcons[selectedDrug]
     let { key, name, level, tn, type, dosage } = drug
-    let drugDosages = drugsDosages.data.get(key) || {}
-    let hasWarnings = warnings.data.size > 0
+    let drugDosages = dose.get(key) || {}
+    let hasWarnings = warning.size > 0
     //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
+    let nameshort = drugDosages.nameshort || {}
     let url = drugDosages.url || {}
     let currWarning = active//activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
@@ -98,9 +114,16 @@ class Drug extends React.Component {
     className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
 
     let hasBorder = selectedDrug === drug.key && maxItem
-
+    // const [{ opacity }, drag] = useDrag({
+    //   item: { name, type },
+    //   collect: (monitor) => ({
+    //     opacity: monitor.isDragging() ? 0.4 : 1,
+    //   }),
+    // })
+    // console.log({currWarning});
     return(
-      <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`} style={{ borderLeftColor: hasBorder && maxItem.color || '#f3f3f2' }}>
+      <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
+        <div className='border' style={{ backgroundColor: hasBorder && maxItem.color || 'transparent' }} />
         <List.Content floated='right'>
           {/*<Responsive fireOnMount as={Button.Group} vertical basic color='blue' maxWidth='480'>
             <Button icon>
@@ -120,24 +143,26 @@ class Drug extends React.Component {
             </Button>
           </Responsive>
         </List.Content>
-        {(currWarning && currWarning.color) ?
-          <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
-            <List.Icon
-              name='arrow alternate circle right'
-              style={{ color: '#FFF' }}
-              size='large'
-              onClick={() => {  }}
-            />
-          </RouterLink>
-          :
-          <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg none'>
-            <List.Icon
-              name='arrow alternate circle right'
-              style={{ color: '#FFF' }}
-              size='large'
-            />
-          </RouterLink>
-        }
+        <div className='arrowholder'>
+          {(currWarning && currWarning.color) ?
+            <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
+              <List.Icon
+                name='arrow alternate circle right'
+                style={{ color: '#FFF' }}
+                size='large'
+                onClick={() => {  }}
+              />
+            </RouterLink>
+            :
+            <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg none'>
+              <List.Icon
+                name='arrow alternate circle right'
+                style={{ color: '#FFF' }}
+                size='large'
+              />
+            </RouterLink>
+          }
+        </div>
         {hasWarnings && (hasWarning ?
           <List.Icon name='warning circle' style={{ color: maxItem.color }} size='large' onClick={(e) => this.selectDrug(e, drug.key)} />
           :
@@ -150,16 +175,17 @@ class Drug extends React.Component {
               <Feed.Summary>
                 <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
-                  {dosage.form && names[dosage.form]}
-                  {(dosage.method && dosage.form) && ', '}
-                  {names[dosage.method] || ''}
+                  {dose.form && (nameshort[dose.form] || names[dose.form])}
+
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta>
 
-                {dosage.pack.dosage || ''}
-                {(dosage.pack.dosage && dosage.pack.pack) && ', '}
-                {dosage.pack.pack || ''}
+                {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+                {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '}
+                {(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''}
+                {((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '}
+                {(nameshort[dosage.method] || names[dosage.method]) || ''}
               </Feed.Meta>
             </Feed.Content>
           </Feed.Event>
@@ -174,12 +200,13 @@ class Drug extends React.Component {
                   <Feed.Content>
                     <Feed.Summary>
                       <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
-                      <Feed.Date>{names[dosage.method] || ''}</Feed.Date>
                     </Feed.Summary>
                     <Feed.Meta>
-                      {dosage.pack.dosage || ''}
-                      {(dosage.pack.dosage && dosage.pack.pack) && ', '}
-                      {dosage.pack.pack || ''}
+                    {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+                    {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '}
+                    {(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''}
+                    {((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '}
+                    {(nameshort[dosage.method] || names[dosage.method]) || ''}
                     </Feed.Meta>
                   </Feed.Content>
                 </Feed.Event>

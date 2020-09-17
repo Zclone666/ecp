@@ -10,14 +10,15 @@ import {
   Input,
   Button,
   Dropdown,
-  Responsive
+  Responsive,
+  Checkbox
 } from 'semantic-ui-react'
 
 import Day from './Day';
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class Schedule extends Component {
   constructor(props){
@@ -45,24 +46,28 @@ class Schedule extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { drug, form, methodform, names } },
+      dosages: { current: { drug, form, methodform, names } },
       router: { values }
     } = this.props
 
     let weekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
     return (
-
       <Form.Group>
         <Form.Field className='fluid'>
           <label>Выберите дни недели:</label>
-          <Responsive as={Segment.Group} horizontal fluid widths={7} minWidth={480}>
+          <Checkbox label='Ежедневно' onChange={() => this.handleChange(null, { name: 'all' })} checked={this.state.checked} />
+          <Responsive as={Segment.Group} horizontal fluid widths={7} minWidth={768}>
+            {weekdays.map(( day, i ) => {
+              return <Day day={day} index={i} key={'day'+i} onChange={this.handleChange} />
+            })}
+          </Responsive>
+          <Responsive as={Segment.Group} vertical fluid maxWidth={767}>
             {weekdays.map(( day, i ) => {
               return <Day day={day} index={i} key={'day'+i} onChange={this.handleChange} />
             })}
           </Responsive>
         </Form.Field>
       </Form.Group>
-
     )
   }
 

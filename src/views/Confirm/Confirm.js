@@ -7,7 +7,7 @@ import RouterLink from '../../router/a';
 
 
 
-@inject('router', 'db', 'actions')
+@inject('router', 'actions')
 @observer
 class Confirm extends Component {
   constructor(props) {

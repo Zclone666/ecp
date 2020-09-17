@@ -11,19 +11,21 @@ import {
   Input,
   Button,
   Dropdown,
-  Responsive
+  Responsive,
+  Divider
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class Schedule extends Component {
   constructor(props){
     super(props)
     this.state = {
       active: false,
-      time: []
+      time: [],
+      interval: null
     }
   }
   handleChange = () => {
@@ -44,11 +46,20 @@ class Schedule extends Component {
   handleRemoveTime = ({ index }) => {
     // console.log({name, value});
     let { time } = this.state
+    time.splice(index, 1)
+    this.setState({ time })
     // if(index === time.length){
     //   time.push(value)
     // }else{
     //   time[index] = value
     // }
+  }
+  handleChangeInterval = (e, { name, value }) => {
+    //console.log({name, value});
+    e.preventDefault()
+
+    this.setState({ interval: value })
+    return false
   }
   render(){
     let {
@@ -59,18 +70,18 @@ class Schedule extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugDosage: { drug, form, methodform, names } },
+      dosages: { current: { drug, form, methodform, names } },
       router: { values },
       day, index
     } = this.props
-    let { active, time } = this.state
+    let { active, time, interval } = this.state
 
     return (
       <Segment
         className='day'
         primary={active}
 
-        name='weekday'
+        name={'weekday_'+index}
         value='mon'
       >
         <Label onClick={this.handleChange} color={active ? 'blue' : ''} attached='top'>
@@ -78,35 +89,88 @@ class Schedule extends Component {
           {day}
         </Label>
         <Form className='leftPadded'>
-          {time.map(( item, index ) => {
-            return(<Form.Group>
-              <Form.Field className='fluid'>
-                <Dropdown
-                  className='tiny primary'
-                  name='time'
-                  onChange={(e, {name, value}) => this.handleChangeTime(e, {index, name, value})}
-                  button
-                  floating
-                  search
-                  disabled={!active}
-                  options={_.map(Array(48), (item, i) => {
-                    return {
-                      key: i+1,
-                      text: (i === 0 || !(i%2)) ? parseInt(i/2) + '.00' : parseInt(i/2) + '.30',
-                      value: (i === 0 || !(i%2)) ? parseInt(i/2) + '.00' : parseInt(i/2) + '.30'
-                    }
-                  })}
-                  text={item}
-                />
-                <Button icon size='tiny'><Icon name='delete' /></Button>
+
+          <Form.Field className='fluid'>
+            <Button.Group size='tiny' className='four fluid'>
+
+              <Button
+                primary={interval == 1}
+                disabled={!active}
+                onClick={this.handleChangeInterval}
+                name='interval'
+                value={1}
+              >
+                1
+              </Button>
+              <Button
+                primary={interval == 2}
+                disabled={!active}
+                onClick={this.handleChangeInterval}
+                name='interval'
+                value={2}
+              >
+                2
+              </Button>
+              <Button
+                primary={interval == 3}
+                disabled={!active}
+                onClick={this.handleChangeInterval}
+                name='interval'
+                value={3}
+              >
+                3
+              </Button>
+              <Button
+                primary={interval == 4}
+                disabled={!active}
+                onClick={this.handleChangeInterval}
+                name='interval'
+                value={4}
+              >
+                4
+              </Button>
+
+            </Button.Group>
+            <Label
+              size='tiny' className='fluid'
+            >
+              Раза в день
+            </Label>
+          </Form.Field>
+          <Divider horizontal>или</Divider>
+
+          {time.map(( item, x ) => {
+            return(
+              <Form.Field className='fluid' key={'time'+index}>
+                <Button.Group size='tiny' className='fluid'>
+                  <Dropdown
+                    className='tiny primary button'
+                    name={index+'_time_'+x}
+                    onChange={(e, {name, value}) => this.handleChangeTime(e, {x, name, value})}
+
+
+                    search
+                    disabled={!active}
+                    options={_.map(Array(48), (item, i) => {
+                      return {
+                        key: i+1,
+                        text: (i === 0 || !(i%2)) ? parseInt(i/2) + '.00' : parseInt(i/2) + '.30',
+                        value: (i === 0 || !(i%2)) ? parseInt(i/2) + '.00' : parseInt(i/2) + '.30'
+                      }
+                    })}
+                    text={item}
+                  />
+                  <Button primary icon size='tiny' onClick={() => this.handleRemoveTime({x})}><Icon name='delete' /></Button>
+                </Button.Group>
+
+
               </Form.Field>
-            </Form.Group>)
+            )
           })}
-          <Form.Group>
             <Form.Field className='fluid'>
               <Dropdown
-                className='tiny'
-                name='time'
+                className='tiny fluid'
+                name={index+'_time_'+time.length}
                 onChange={(e, {name, value}) => this.handleChangeTime(e, {index: time.length, name, value})}
                 button
                 floating
@@ -122,7 +186,7 @@ class Schedule extends Component {
                 text={'Время'}
               />
             </Form.Field>
-          </Form.Group>
+
 
         </Form>
 

@@ -4,7 +4,9 @@ import _ from 'lodash';
 import moment from 'moment'
 
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
-export const RESET_PASS_KEY = "c47ee7e666d6be7e";
+export const RESET_PASS_KEY = "9152ea8756f8f2b3";
+export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
+//export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 class Actions {
 
   @observable view = false;
@@ -95,6 +97,20 @@ class Actions {
     allergy: []
   }
 
+  @observable scheduleForm = {
+    interval: null,
+    once: null,
+    week: null,
+    calendar: null
+  }
+
+  @observable calculatorForm = {
+    dosage: 0,
+    count: 1,
+    fullDosage: 0,
+    weightDosage: 0
+  }
+
   @observable selectedDrug = null
   @observable selectedConflict = null
   @observable activeDrugs = []
@@ -141,7 +157,11 @@ class Actions {
 
 
     this.autologin()
-
+    autorun(() => {
+      if(this.stepsData.pack.obj){
+        this.stores.dosages.setStepDosage()
+      }
+    })
     // autorun(() => {
     //   console.log(this.currentPage);
     //   if(this.currentPage && _.keys(this.pages).length > 0){
@@ -173,7 +193,7 @@ class Actions {
       this.currentPage = page
       if(this.currentPage && _.keys(this.pages).length > 0){
         this.stores.db.clearData()
-        this.stores.db.getFilters()
+        // this.stores.db.getFilters()
       }
 
     }
@@ -245,7 +265,7 @@ class Actions {
     // console.log({ el: this.elements, name, value});
     let text = ''
     this.elements[name].forEach(( item, i ) => {
-      if( item.from <= value && value < item.to ){
+      if( (item.from < value && value <= item.to) || item.to === value ){
         text = item.name
       }
     })
@@ -305,7 +325,7 @@ class Actions {
     //this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey, remember } = this.loginForm
     let data = {
-      key: privateKey,
+      //key: privateKey,
       authkey: this.authkey
     }
     return POST({
@@ -313,7 +333,7 @@ class Actions {
       data,
       success: async (data) => {
         // console.log('SUCCESS', data);
-        if( data && data.level == 'success' ){
+        // if( data && data.level == 'success' ){
           this.privateKey = this.loginForm.privateKey
           this.stores.router.push('/')
           this.authorized = true
@@ -324,14 +344,16 @@ class Actions {
             await localStorage.setItem('authkey', this.authkey);
             await localStorage.setItem('privateKey', this.loginForm.privateKey);
           }
-        }else{
-          this.makeAlerts({ alerts:[{
-            title: "Неверный персональный ключ.",
-            message: "проверьте правильность ключа.",
-            level: "error",
-            sticky: false
-          }]})
-        }
+          this.stores.tools.getUnitsPrimary()
+          this.stores.tools.getUnitsPharm()
+        // }else{
+        //   this.makeAlerts({ alerts:[{
+        //     title: "Неверный персональный ключ.",
+        //     message: "проверьте правильность ключа.",
+        //     level: "error",
+        //     sticky: false
+        //   }]})
+        // }
         // if (data.authkey) {
         //   if(remember){
         //     await localStorage.setItem('authkey', data.authkey);
@@ -347,7 +369,10 @@ class Actions {
         // }
       },
       fail: alerts => {
-        // console.log('FAIL', alerts);
+        console.log('FAIL', alerts);
+        alerts.forEach((alert) => {
+          if(alert.code != 200) this.logout()
+        })
       },
       always: (data) => {
         this.loading = false
@@ -363,13 +388,13 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/authorization`,
       data,
       success: async (data) => {
-         console.log('SUCCESS', data);
-         this.makeAlerts({ alerts:[{
-           title: "Введите ключ.",
-           message: "Для входа в систему необходимо ввести ваш персональный ключ. Если у вас его нет, обратитесь к поставщику ПО.",
-           level: "info",
-           sticky: false
-         }]})
+         // console.log('SUCCESS', data);
+         // this.makeAlerts({ alerts:[{
+         //   title: "Введите ключ.",
+         //   message: "Для входа в систему необходимо ввести ваш персональный ключ. Если у вас его нет, обратитесь к поставщику ПО.",
+         //   level: "info",
+         //   sticky: false
+         // }]})
          if (data.authkey) {
            // console.log('HERE');
            // if(remember){
@@ -382,6 +407,7 @@ class Actions {
            this.authkey = data.authkey
            // this.authorized = true
            this.loading = false
+           return this.login()
            // this.stores.db.getFilters()
          }
         // if (data.authkey) {
@@ -482,7 +508,7 @@ class Actions {
   }
 
   async resetPass() {
-    this.resetPassForm.key = RESET_PASS_KEY;
+    this.resetPassForm.key = REQUEST_PASS_KEY;
     return POST({
       path: `https://cs.socmedica.com/api/user/recovery`,
       data: this.resetPassForm,

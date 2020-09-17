@@ -99,7 +99,7 @@
 */
 
 @miniSize        : (6 / 14);
-@tinySize        : (10 / 14);
+@tinySize        : (11 / 14);
 @smallSize       : (13 / 14);
 @mediumSize      : (14 / 14);
 @largeSize       : (16 / 14);

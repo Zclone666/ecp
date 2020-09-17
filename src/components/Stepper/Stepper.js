@@ -20,7 +20,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router')
+@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')
 @observer
 class Stepper extends Component {
   constructor(props){
@@ -105,12 +105,15 @@ class Stepper extends Component {
         activeConflicts,
         stepsData
       },
-      db: { drugsDosages, currDrug },
+      drugs: { current }, //drugs, currDrug, setDosageParams
+      dosages: { dosage, calcValues }, //drugsDosages
+      warnings: { warning, groups }, //warnings, warnGroups
       router: { values }
     } = this.props
 
-    let drugsDosage = drugsDosages.data.get(currDrug.key)
-    let { names } = drugsDosage
+    let drugsDosage = dosage.get(current.key)
+    // console.log({ drugsDosage });
+    let { names, nameshort } = drugsDosage
 
     let currStep = parseInt(values.step || 0)
     let way = values.way || ''
@@ -126,7 +129,7 @@ class Stepper extends Component {
       swipe: false,
       initialSlide: currStep
     };
-    //console.log({ way, currStep });
+    // console.log({ stepsData, calcValues });
     return (
       <Responsive className='h100 with-steps' fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
         <Step.Group attached='top' fluid unstackable ordered size='tiny'>
@@ -135,8 +138,8 @@ class Stepper extends Component {
             let chosedName = ''
             if( i > 0 && i <= currStep ) {
               url += `/${way}/${i}`
-              chosedName = names[stepsData[step.name]]
-              if(step.name === 'lf') chosedName = names[stepsData.form]
+              chosedName = nameshort[stepsData[step.name]] || names[stepsData[step.name]]
+              if(step.name === 'lf') chosedName = nameshort[stepsData.form] || names[stepsData.form]
             } else if( i !== 0 ) {
               url = ''
             } else {
@@ -146,8 +149,10 @@ class Stepper extends Component {
                 '': ''
               }[way]
             }
+            // console.log({step, stepsData});
             if(step.name === 'dosage' && currStep > i){
-              chosedName = stepsData.pack.dosage + ', ' + stepsData.pack.pack
+              // console.log({step, stepsData});
+              chosedName = (stepsData.pack.dosage && (stepsData.pack.dosage.short || stepsData.pack.dosage.full)) + ', ' + (stepsData.pack.pack && (stepsData.pack.pack.short || stepsData.pack.pack.full))
             }
             //console.log({ step, chosedName, stepsData, names });
             return(

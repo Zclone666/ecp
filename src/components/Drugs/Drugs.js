@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import Drug from './Drug';
@@ -17,11 +20,13 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions')
+@inject('db', 'actions', 'drugs', 'warnings')
 @observer
 class Drugs extends Component {
   constructor(props){
     super(props)
+
+
     this.state = {
 
     }
@@ -35,11 +40,14 @@ class Drugs extends Component {
         activeDrugs,
         activeConflicts
       },
-      db: { selectedRows, warnings, warnGroups, warnIcons }
+      drugs: { drug },
+      warnings: { warning, groups }, //warnings, warnGroups
     } = this.props
     let drugsObj = {}
 
-    Array.from(warnings.data.values()).forEach(( warn, i ) => {
+    let currDrug = null
+
+    Array.from(warning.values()).forEach(( warn, i ) => {
       // console.log({ warn });
       if(selectedConflict){
         if(warn.type === selectedConflict){
@@ -47,7 +55,7 @@ class Drugs extends Component {
           // console.log({ arr });
           arr.forEach(( item, x ) => {
             // console.log({ item });
-            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].value < warn.value ){
+            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].group < warn.group ){
               drugsObj[item.drugkey] = {
                 value: warn.value,
                 group: warn.group,
@@ -57,12 +65,14 @@ class Drugs extends Component {
           })
         }
       }else{
-        if(_.find(warn.subjects, { 'drugkey': selectedDrug }) && warn.type === 'interdrug' ){
-          let arr = _.filter(warn.subjects, (o) => { return o.drugkey !== selectedDrug; }) || []
+        currDrug = _.find(warn.subjects, { 'drugkey': selectedDrug })
+        // console.log({currDrug});
+        if(currDrug){ // && warn.type === 'interdrug' ){
+          let arr = _.filter(warn.subjects, (o) => { return (o.drugkey !== selectedDrug && !o.hidekeys.includes(currDrug.drugkey) ) }) || []
           // console.log({ arr });
           arr.forEach(( item, x ) => {
             // console.log({ item });
-            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].value < warn.value ){
+            if( !drugsObj[item.drugkey] || drugsObj[item.drugkey].group < warn.group ){
               drugsObj[item.drugkey] = {
                 value: warn.value,
                 group: warn.group,
@@ -78,19 +88,18 @@ class Drugs extends Component {
     return drugsObj
   }
 
-  onBeforeDragStart = () => {
-
+  onBeforeDragStart = (result) => {
+    console.log('onBeforeDragStart', result);
   }
-  onDragStart = () => {
-
+  onDragStart = (result) => {
+    console.log('onDragStart', result);
   }
-  onDragUpdate = () => {
-
+  onDragUpdate = (result) => {
+    console.log('onDragUpdate', result);
   }
-  onDragEnd = () => {
-
+  onDragEnd = (result) => {
+    console.log('onDragEnd', result);
   }
-
   render(){
     // const { selectedDrug, selectedConflict } = this.state
     let {
@@ -100,24 +109,25 @@ class Drugs extends Component {
         activeDrugs,
         activeConflicts
       },
-      db: { warnings, warnGroups, drugs },
+      drugs: { drug: drugs },
+      warnings: { warning, groups }, //warnings, warnGroups
       isRecipe
     } = this.props
-    let selectedWarnings = warnings[selectedDrug]
+    let selectedWarnings = warning[selectedDrug]
     // console.log('activeDrugs', activeDrugs);
-    let iterator = Array.from(drugs.data.values())
-
+    let iterator = Array.from(drugs.values())
+    iterator = _.orderBy(iterator, ['group'], ['desc']);
     let warnDrugs = this.warnDrugs
     // console.log('iterator', iterator);
     let colors = [
-      'red',
+      '#ccc',
       'blue',
       'green',
       'yellow'
     ]
     return (
       <>
-        {!isRecipe &&
+        {/* !isRecipe &&
           <DragDropContext
             onBeforeDragStart={this.onBeforeDragStart}
             onDragStart={this.onDragStart}
@@ -125,17 +135,18 @@ class Drugs extends Component {
             onDragEnd={this.onDragEnd}
           >
           <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
-          <Droppable droppableId={`drug_1`} type="DRUG" >
-            {(prov, snap) => (
-              <div
-                ref={prov.innerRef}
-                style={{ backgroundColor: snap.isDraggingOver ? colors[0] : '' }}
-                {...prov.droppableProps}
-              >
+
 
                   {iterator.map(( drug, i ) => {
                     return(
+                      <Droppable droppableId={`drug_place_${i}`} type="DRUG"  key={`drug_place_${i}`}>
+                        {(prov, snap) => {
 
+                          return(<div
+                            ref={prov.innerRef}
+                            style={{ backgroundColor: snap.isDraggingOver ? colors[0] : '' }}
+                            {...prov.droppableProps}
+                          >
                         <Draggable draggableId={`drug_${i}`} index={i} key={`drug_${i}`}>
                           {(provided, snapshot) => (
                             <div
@@ -148,19 +159,19 @@ class Drugs extends Component {
                             </div>
                           )}
                         </Draggable>
-
+                        {prov.placeholder}
+                        </div>
+                        )}}
+                        </Droppable>
 
                       )
                     })}
 
-                  {prov.placeholder}
-                </div>
-              )}
-            </Droppable>
+
             </List>
           </DragDropContext>
 
-        }
+        */}
         {isRecipe &&
           <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
             {iterator.map(( drug, i ) => {
@@ -170,6 +181,21 @@ class Drugs extends Component {
               )
             })}
           </List>
+        }
+        {!isRecipe &&
+          <DndProvider backend={HTML5Backend}>
+            <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
+              {iterator.map(( drug, i ) => {
+                return(
+                  <Drug
+                    active={warnDrugs[drug.key] || false}
+                    drug={drug}
+                    key={`drug_${i}`}
+                  />
+                )
+              })}
+            </List>
+          </DndProvider>
         }
         </>
 
