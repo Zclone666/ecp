@@ -111,10 +111,10 @@ class Drugs {
     }
 
     currentDrug.calc = {
-      dosage: getFromBase( def, dos ),
+      dosage: dos,
       count,
-      fullDosage: getFromBase( def, fullDosage ),
-      weightDosage: getFromBase( def, weightDosage )
+      fullDosage: fullDosage,
+      weightDosage:  weightDosage
     }
     await this.drug.set( drug.key, currentDrug );
 
