@@ -50,7 +50,8 @@ class Interval extends Component {
   handleAddConcept = (e, { name, value }) => {
     // console.log({ name, value });
     if(!value) return
-    let { concepts } = this.state
+    let { interval } = this.props.actions.scheduleForm
+    if(!interval) interval = []
     let concept = {
       'every': { type: 'every', x: null, timesx: null },
       'period': { type: 'period', x: null, timesx: null },
@@ -60,14 +61,14 @@ class Interval extends Component {
       'count_every': { type: 'count_every', x: null, y: null, timesx: null, timesy: null },
       'time': { type: 'time', time: null }
     }[value]
-    concepts.push(concept)
+    interval.push(concept)
     // console.log('concepts', concepts);
-    this.setState({ concepts })
+    // this.setState({ concepts })
   }
   removeConcept = (i) => {
-    let { concepts } = this.state
-    concepts.splice(i, 100)
-    this.setState({ concepts })
+    // let { interval } = this.state
+    this.props.actions.scheduleForm.interval.splice(i, 100)
+    // this.setState({ concepts })
   }
   renderTimes(num){
     return(
@@ -107,11 +108,12 @@ class Interval extends Component {
     )
   }
   renderNums(x){
+    let type, sort
     return(
       <Dropdown
         name={'x'}
         selection
-        onChange={this.handleChange}
+        onChange={(e, { name, value }) => this.handleChange({ sort, type, name, value })}
         placeholder={'X'}
         options={_.map(Array(x), (item, i) => {
           return {
@@ -123,7 +125,7 @@ class Interval extends Component {
       />
     )
   }
-  renderEvery(i){
+  renderEvery(i, concept){
     return(
       <Form.Field inline>
         <label> каждые </label>
@@ -133,7 +135,7 @@ class Interval extends Component {
       </Form.Field>
     )
   }
-  renderPeriod(i){
+  renderPeriod(i, concept){
     return(
       <Form.Field inline>
         {this.renderNums(20)}
@@ -142,7 +144,7 @@ class Interval extends Component {
       </Form.Field>
     )
   }
-  renderPeriodIn(i){
+  renderPeriodIn(i, concept){
     return(
       <Form.Field inline>
         {this.renderNums(20)}
@@ -154,7 +156,7 @@ class Interval extends Component {
       </Form.Field>
     )
   }
-  renderCount(i){
+  renderCount(i, concept){
     return(
       <Form.Field inline>
         {this.renderNums(20)}
@@ -164,7 +166,7 @@ class Interval extends Component {
       </Form.Field>
     )
   }
-  renderCountEvery(i){
+  renderCountEvery(i, concept){
     return(
       <Form.Field inline>
         {this.renderNums(20)}
@@ -177,7 +179,7 @@ class Interval extends Component {
       </Form.Field>
     )
   }
-  renderIn(i){
+  renderIn(i, concept){
     return(
       <Form.Field inline>
         <label>через</label>
@@ -187,7 +189,7 @@ class Interval extends Component {
       </Form.Field>
     )
   }
-  renderTime(i){
+  renderTime(i, concept){
     return(
       <Form.Field inline>
         <Dropdown
@@ -208,18 +210,19 @@ class Interval extends Component {
     )
   }
   renderConcepts(){
-    let { concepts } = this.state
-    return concepts.map(( concept, i ) => {
+    let { interval } = this.props.actions.scheduleForm
+    if(!interval) interval = []
+    return interval.map(( concept, i ) => {
       return(
         <Label key={'concept'+i}>
           {{
-            'every': this.renderEvery(i),
-            'period': this.renderPeriod(i),
-            'period_in': this.renderPeriodIn(i),
-            'in': this.renderIn(i),
-            'count': this.renderCount(i),
-            'count_every': this.renderCountEvery(i),
-            'time': this.renderTime(i),
+            'every': this.renderEvery(i, concept),
+            'period': this.renderPeriod(i, concept),
+            'period_in': this.renderPeriodIn(i, concept),
+            'in': this.renderIn(i, concept),
+            'count': this.renderCount(i, concept),
+            'count_every': this.renderCountEvery(i, concept),
+            'time': this.renderTime(i, concept),
           }[concept.type]}
         </Label>
       )

@@ -70,7 +70,11 @@ class Drugs {
         }
     });
   }
-
+  setFP = async ( drugKey, fpid ) => {
+    let currentDrug = await this.drug.get(drugKey) || {};
+    currentDrug = await _.extend(currentDrug, { fpid });
+    this.drug.set( drugKey, currentDrug );
+  }
 
   setDosageParams = async (url) => {
     let drugData = this.stores.actions.stepsData
@@ -170,7 +174,7 @@ class Drugs {
       name: "", // Название ДВ или ТН
       level: 0, //
       //tn: false, // ДВ или ТН
-      fp_id: "", //
+      fpid: null, //
       type: null,
       group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
       dosage: { // дозировка

@@ -31,6 +31,7 @@ class Actions {
 
   @observable elements = {}
   @observable buttonTexts = {}
+  @observable UIText = {}
 
   @observable loginForm = {
     email: '',
@@ -98,6 +99,10 @@ class Actions {
   }
 
   @observable scheduleForm = {
+    dateStart: null,
+    dateFinish: null,
+    finishAlternate: null,
+    clarifications: null, //уточнения
     interval: null,
     once: null,
     week: null,
@@ -276,6 +281,7 @@ class Actions {
 
     this.getObject('buttonTexts')
     this.getObject('elements')
+    this.getObject('UIText')
 
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';

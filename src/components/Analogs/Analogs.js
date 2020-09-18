@@ -13,7 +13,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'analogs', 'router')
+@inject('db', 'actions', 'analogs', 'router', 'drugs')
 @observer
 class Analogs extends Component {
   constructor(props){
@@ -32,12 +32,13 @@ class Analogs extends Component {
       this.setState({ opened })
     }
   }
-  setAnalog = () => {
-
-  }
-
-  get analogs(){
-
+  setAnalog = async (id) => {
+    let {
+      router
+    } = this.props
+    let drugKey = router.values && router.values.page
+    await this.props.drugs.setFP( drugKey, id )
+    router.push('/')
   }
 
   render(){
