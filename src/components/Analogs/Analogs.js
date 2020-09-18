@@ -32,12 +32,17 @@ class Analogs extends Component {
       this.setState({ opened })
     }
   }
-  setAnalog = async (id) => {
+  setAnalog = async ({id, drug}) => {
+    // console.log({id, drug});
     let {
       router
     } = this.props
+    drug.fpid = id
+    drug.key = null
     let drugKey = router.values && router.values.page
-    await this.props.drugs.setFP( drugKey, id )
+    await this.props.drugs.unselectDrug({ key: drugKey })
+    await this.props.drugs.selectFromSearch( drug )
+
     router.push('/')
   }
 
@@ -69,7 +74,7 @@ class Analogs extends Component {
                           return(
                             <List.Item
                               key={'analogItem'+x}
-                              onClick={() => this.setAnalog(analogItem.id)}
+                              onClick={() => this.setAnalog({ drug: analog.drug, id: analogItem.id })}
                             >
                               <List.Content className='large'>
                                 <List.Description>{analogItem.name}</List.Description>

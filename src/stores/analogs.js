@@ -62,13 +62,14 @@ class Analogs {
             arr: []
           }
 
-          await _.forEach( tn , ( arr, id ) => {
+          await tn.forEach(( analogObj ) => {
             let analog = {
-              id,
-              name: names[id],
+              id: analogObj.drug.id,
+              drug: analogObj.drug,
+              name: analogObj.drug.name,
               arr: []
             }
-            arr.forEach(( item ) => {
+            analogObj.fp && analogObj.fp.forEach(( item ) => {
               analog.arr.push({
                 id: item,
                 name: names[item]
