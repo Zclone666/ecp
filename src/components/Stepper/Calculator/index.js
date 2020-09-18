@@ -190,7 +190,7 @@ class Calculator extends Component {
                 size='big'
                 name='dosage'
                 value={getFromBase((currUnit || def), dosage) || ''}
-                label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} defaultValue={def} options={weights} value={currUnit || def} />}
+                label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} options={weights} value={currUnit || def} />}
                 labelPosition='right'
                 placeholder='500'
                 onChange={this.handleChange}

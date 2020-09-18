@@ -24,6 +24,8 @@ export default {
 
   '/patient/:page':                           { section: 'main', name: 'patient',    render: <Main />       },
 
+  '/analog/:page':                            { section: 'main', name: 'analog',     render: <Main />       },
+
   '/login':                                   { section: 'auth', name: 'auth',       render: <Login />      },
   '/signup':                                  { section: 'auth', name: 'auth',       render: <Signup/>      },
   '/confirm':                                 { section: 'auth', name: 'auth',       render: <Confirm/>     },

@@ -18,7 +18,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')
+@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages', 'analogs')
 @observer
 class Drug extends React.Component {
   constructor(props){
@@ -42,6 +42,12 @@ class Drug extends React.Component {
     //this.props.db.GetDuration(drug)
 
     // this.props.router.push('/concepts/dozes')
+  }
+  getAnalog = async () => {
+    let {
+      drug
+    } = this.props
+    await this.props.analogs.get(drug)
   }
   unselectDrug = () => {
     let { drug } = this.props
@@ -135,7 +141,7 @@ class Drug extends React.Component {
             <Button as={RouterLink} to={url} onClick={this.getLF} icon>
               <Icon name='tint' />
             </Button>
-            <Button icon>
+            <Button icon as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
               <Icon name='font' />
             </Button>
             <Button icon>

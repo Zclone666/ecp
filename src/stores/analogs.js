@@ -1,0 +1,97 @@
+import { observable, action, autorun, computed } from 'mobx';
+import { GET, POST, PUT } from '../lib/connect'
+import moment from 'moment'
+
+import _ from 'lodash';
+
+
+class Analogs {
+  @observable ready = false;
+
+  @observable current = { //drugDosage
+    drug: {},
+    form: {},
+    methodform: {},
+    names: {},
+    nameshort: {},
+    units: {}
+  }
+
+  @observable names = {}
+
+  constructor({ stores }) {
+    this.stores = stores;
+    this.router = stores.router;
+
+    this.analog = observable.map({}, 'analog')
+
+    autorun(() => {
+
+    });
+
+
+  }
+
+  //getLF
+  async get(drug_obj){
+    this.ready = false
+    // let currentDosages = await this.dosage.get(drug_obj.key);
+    // if(currentDosages) {
+    //   await this.stores.drugs.getDosageParams()
+    //   return
+    // }
+    let data = {
+      drug: drug_obj
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `drugs/Analog`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
+          let { names, tn } = data
+
+          this.names = await _.extend(this.names, names)
+
+          let current = await this.analog.get(drug_obj.key) || {};
+
+          let analogs = {
+            key: drug_obj.key,
+            id: drug_obj.id,
+            arr: []
+          }
+
+          await _.forEach( tn , ( arr, id ) => {
+            let analog = {
+              id,
+              name: names[id],
+              arr: []
+            }
+            arr.forEach(( item ) => {
+              analog.arr.push({
+                id: item,
+                name: names[item]
+              })
+            })
+            analogs.arr.push(analog)
+          })
+          await this.analog.set( drug_obj.key, _.extend(current, analogs) );
+          this.ready = true
+          // this.stores.tools.setNames(names, nameshort)
+          // let current = this.dosage.get(drug.key) || {};
+          // this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
+          // if(units && units.length > 0) this.stores.tools.getUnitsPharm(units)
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+
+
+}
+export default Analogs;
