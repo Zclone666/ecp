@@ -66,7 +66,7 @@ class Analogs extends Component {
 
 
                 <List.Content className='large'>
-                  <List.Header>{analog.name}</List.Header>
+                  <List.Header>{analog.name}{analog.drug.type === 'TN' && <span><sup>TM</sup></span>}</List.Header>
                   <Transition.Group animation={'slide down'} duration={300}>
                     {analog.id === opened && (
                       <List.List>

@@ -208,6 +208,7 @@ class Drugs {
   }
   async unselectDrug(row){
     this.drug.delete(row.key)
+    this.stores.dosages.dosage.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true)
     return true

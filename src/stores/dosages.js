@@ -40,6 +40,28 @@ class Drugs {
   }
 
   //getLF
+  async getFp(drug_obj){
+    let data = {
+      drug: drug_obj
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `drugs/FPDosage`,//Dosages`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
+
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+
   async get(drug_obj, flag=false){
     let currentDosages = await this.dosage.get(drug_obj.key);
     if(currentDosages && !flag) {
@@ -47,8 +69,6 @@ class Drugs {
       return
     }
     let data = {
-      lib: '52, 62',
-      service: "43",
       drug: drug_obj
     }
     data.authkey = this.stores.actions.authkey
@@ -59,10 +79,11 @@ class Drugs {
         success: async data => {
           //console.log('DATA', data);
           let { drug, form, methodform, names, nameshort, units } = data
-          this.stores.tools.setNames(names, nameshort)
+          await this.stores.tools.setNames(names, nameshort)
           let current = this.dosage.get(drug.key) || {};
-          this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
-          if(units && units.length > 0) this.stores.tools.getUnitsPharm(units)
+          await this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
+          if(units && units.length > 0) await this.stores.tools.getUnitsPharm(units)
+          this.getFp(drug_obj)
         },
         fail: (alerts) => {
 
