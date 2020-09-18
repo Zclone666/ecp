@@ -73,7 +73,8 @@ class Drugs {
   setFP = async ( drugKey, fpid ) => {
     let currentDrug = await this.drug.get(drugKey) || {};
     currentDrug = await _.extend(currentDrug, { fpid });
-    this.drug.set( drugKey, currentDrug );
+    await this.drug.set( drugKey, currentDrug );
+    this.stores.dosages.get(currentDrug, true)
   }
 
   setDosageParams = async (url) => {

@@ -40,9 +40,9 @@ class Drugs {
   }
 
   //getLF
-  async get(drug_obj){
+  async get(drug_obj, flag=false){
     let currentDosages = await this.dosage.get(drug_obj.key);
-    if(currentDosages) {
+    if(currentDosages && !flag) {
       await this.stores.drugs.getDosageParams()
       return
     }
