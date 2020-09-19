@@ -80,8 +80,7 @@ class Actions {
     step: null,
     form: null,
     method: null,
-    pack: {},
-    dosage: {},
+    pack: {}
   }
 
   @observable patientForm = {
