@@ -8,7 +8,9 @@ import {
   List,
   Transition,
   Button,
-  Icon
+  Icon,
+  Segment,
+  Label
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -54,49 +56,58 @@ class Analogs extends Component {
     let drugKey = router.values && router.values.page
     let analogObj = analogs.analog.get(drugKey) || {}
     return (
-      <List animated divided selection verticalAlign='middle' size='large' >
-        {analogs.ready && analogObj.arr.map(( analog, i ) => {
+      <Segment basic>
+        <List divided relaxed verticalAlign='middle' size='large' >
+          {analogs.ready && analogObj.arr.map(( analog, i ) => {
 
-          return(
-            <>
-              <List.Item
-                key={'analog'+i}
-                onClick={() => this.collapse(analog.id)}
-              >
+            return(
+              <>
+                <List.Item
+                  key={'analog'+i}
+                  onClick={() => this.collapse(analog.id)}
+                >
 
+                  <List.Content floated='right'>
+                    {analog.min && <Label color='green'>{analog.min} ₽</Label>}
+                    {analog.max && <Label color='orange'>{analog.max} ₽</Label>}
+                  </List.Content>
+                  <List.Content className='large'>
+                    <List.Header>{analog.name}{analog.drug.type === 'TN' && <span><sup>TM</sup></span>}</List.Header>
+                    <Transition.Group animation={'slide down'} duration={300}>
+                      {analog.id === opened && (
+                        <List.List selection>
+                          {analog.arr && analog.arr.map(( analogItem, x ) => {
+                            return(
+                              <List.Item
+                                key={'analogItem'+x}
+                                onClick={() => this.setAnalog({ drug: analog.drug, id: analogItem.id })}
+                              >
+                                <List.Content floated='right'>
+                                  {analogItem.min && <Label color='green'>{analogItem.min} ₽</Label>}
+                                  {analogItem.max && <Label color='orange'>{analogItem.max} ₽</Label>}
+                                </List.Content>
+                                <List.Content className='large'>
+                                  <List.Description>{analogItem.name}</List.Description>
 
-                <List.Content className='large'>
-                  <List.Header>{analog.name}{analog.drug.type === 'TN' && <span><sup>TM</sup></span>}</List.Header>
-                  <Transition.Group animation={'slide down'} duration={300}>
-                    {analog.id === opened && (
-                      <List.List>
-                        {analog.arr && analog.arr.map(( analogItem, x ) => {
-                          return(
-                            <List.Item
-                              key={'analogItem'+x}
-                              onClick={() => this.setAnalog({ drug: analog.drug, id: analogItem.id })}
-                            >
-                              <List.Content className='large'>
-                                <List.Description>{analogItem.name}</List.Description>
+                                </List.Content>
 
-                              </List.Content>
+                              </List.Item>
+                            )
+                          })}
+                        </List.List>
+                      )}
 
-                            </List.Item>
-                          )
-                        })}
-                      </List.List>
-                    )}
+                    </Transition.Group>
+                  </List.Content>
 
-                  </Transition.Group>
-                </List.Content>
+                </List.Item>
 
-              </List.Item>
+              </>
+            )
 
-            </>
-          )
-
-        })}
-      </List>
+          })}
+        </List>
+      </Segment>
 
     )
   }

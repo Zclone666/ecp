@@ -147,7 +147,7 @@ class Main extends Component {
             <Page />
           </Sidebar>
           <Sidebar style={{ paddingTop: '3.6em' }} animation='overlay' onHide={() => this.handleSidebar('close')} visible={open} as={Menu} vertical size='huge'>
-            <Menu.Item>
+            <Menu.Item disabled>
               <Icon name='address book' />
               Пациенты
             </Menu.Item>
@@ -159,7 +159,7 @@ class Main extends Component {
               <Icon name='clipboard outline' />
               Рецепты
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item disabled>
               <Icon name='globe' />
               Язык
             </Menu.Item>

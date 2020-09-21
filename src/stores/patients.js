@@ -51,7 +51,35 @@ class Patients {
         }
     });
   }
+  async save(){
+    let data = {
+      security: {
+        key: this.stores.actions.privateKey,
+        authkey: this.stores.actions.authkey,
+        service: '108'
+      },
+      patient: {
 
+      }
+    }
+    data.patient = _.assignIn({ ...this.stores.actions.drugStructure.patient }, { ...this.stores.actions.patientPassport });
+    // data.authkey = this.stores.actions.authkey
+    // data.key = this.stores.actions.privateKey
+    return POST({
+        path: `tools/PatientAdd`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
+
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
 
 }
 export default Patients;

@@ -119,7 +119,6 @@ class Stepper extends Component {
     let way = values.way || ''
     // let selectedWarnings = warnings[selectedDrug]
     const settings = {
-
       dots: false,
       infinite: false,
       speed: 500,

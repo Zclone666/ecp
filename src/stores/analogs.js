@@ -67,12 +67,18 @@ class Analogs {
               id: analogObj.drug.id,
               drug: analogObj.drug,
               name: analogObj.drug.name,
-              arr: []
+              arr: [],
+              min: null,
+              max: null
             }
-            analogObj.fp && analogObj.fp.forEach(( item ) => {
+            analogObj.fp && _.forEach(analogObj.fp, ( item, id ) => {
+              if( item.pricemin && item.pricemin > analog.min ) analog.min =item.pricemin
+              if( item.pricemax && item.pricemax > analog.max ) analog.max =item.pricemax
               analog.arr.push({
-                id: item,
-                name: names[item]
+                id: id,
+                name: names[id],
+                min: item.pricemin,
+                max: item.pricemax
               })
             })
             analogs.arr.push(analog)

@@ -45,17 +45,17 @@ class PatientPassport extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
-
+    this.props.actions.patientPassport[name] = value;
 
   }
 
   render() {
     const {
       id,
-      name,
+      // name,
       email,
-      miscode,
-      misid,
+      // miscode,
+      // misid,
       fio
     } = this.props.actions.patientPassport
 
@@ -67,11 +67,11 @@ class PatientPassport extends Component {
               <label>ФИО</label>
               <Input
                 size='big'
-                name='growth'
+                name='fio'
                 value={fio || ''}
                 label={{ basic: true, content: 'см' }}
                 labelPosition='right'
-                placeholder='178.5'
+                placeholder='Иванов Иван Иванович'
                 onChange={this.handleChange}
               />
             </Form.Field>
@@ -79,11 +79,11 @@ class PatientPassport extends Component {
               <label>E-mail</label>
               <Input
                 size='big'
-                name='weight'
+                name='email'
                 value={email || ''}
                 label={{ basic: true, content: 'кг' }}
                 labelPosition='right'
-                placeholder='60.5'
+                placeholder='patient@example.ru'
                 onChange={this.handleChange}
               />
             </Form.Field>
