@@ -97,6 +97,15 @@ class Actions {
     allergy: []
   }
 
+  @observable patientPassport = {
+    id: null,
+    name: null,
+    email: null,
+    miscode: null,
+    misid: null,
+    fio: null
+  }
+
   @observable scheduleForm = {
     dateStart: null,
     dateFinish: null,
@@ -282,6 +291,7 @@ class Actions {
     this.getObject('elements')
     this.getObject('UIText')
 
+
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
 
@@ -351,6 +361,7 @@ class Actions {
           }
           this.stores.tools.getUnitsPrimary()
           this.stores.tools.getUnitsPharm()
+          // this.stores.patients.request()
         // }else{
         //   this.makeAlerts({ alerts:[{
         //     title: "Неверный персональный ключ.",

@@ -24,7 +24,33 @@ class Patients {
 
 
   }
+  async request(){
+    let data = {
+      "security":{
+        "key": this.stores.actions.privateKey,
+        "authkey": this.stores.actions.authkey,
+        "service": '108'
+      },
+      "id":null
+    }
 
+    // data.authkey = this.stores.actions.authkey
+    // data.key = this.stores.actions.privateKey
+    return POST({
+        path: `tools/PatientGet`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
+
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
 
 
 }

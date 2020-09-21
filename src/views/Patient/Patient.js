@@ -86,9 +86,12 @@ class Patient extends Component {
 
     return (
       <>
-        <Menu className="bottom fixed menu two item huge main">
+        <Menu className="bottom fixed menu three item huge main">
           <Menu.Item color='red' onClick={this.back}>
             Назад
+          </Menu.Item>
+          <Menu.Item onClick={this.saveForm}>
+            Применить
           </Menu.Item>
           <Menu.Item onClick={this.saveForm}>
             Сохранить
