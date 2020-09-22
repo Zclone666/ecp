@@ -10,7 +10,8 @@ import {
   Button,
   Icon,
   Segment,
-  Label
+  Label,
+  Table
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -73,33 +74,36 @@ class Analogs extends Component {
                   </List.Content>
                   <List.Content className='large'>
                     <List.Header>{analog.name}{analog.drug.type === 'TN' && <span><sup>TM</sup></span>}</List.Header>
-                    <Transition.Group animation={'slide down'} duration={300}>
-                      {analog.id === opened && (
-                        <List.List selection>
-                          {analog.arr && analog.arr.map(( analogItem, x ) => {
-                            return(
-                              <List.Item
-                                key={'analogItem'+x}
-                                onClick={() => this.setAnalog({ drug: analog.drug, id: analogItem.id })}
-                              >
-                                <List.Content floated='right'>
-                                  {analogItem.min && <Label color='green'>{analogItem.min} ₽</Label>}
-                                  {analogItem.max && <Label color='orange'>{analogItem.max} ₽</Label>}
-                                </List.Content>
-                                <List.Content className='large'>
-                                  <List.Description>{analogItem.name}</List.Description>
 
-                                </List.Content>
-
-                              </List.Item>
-                            )
-                          })}
-                        </List.List>
-                      )}
-
-                    </Transition.Group>
                   </List.Content>
+                  <Transition.Group animation={'slide down'} duration={300}>
+                    {analog.id === opened && (
+                      <Table basic='very' collapsing selectable>
+                        <Table.Body>
 
+                        {analog.arr && analog.arr.map(( analogItem, x ) => {
+                          return(
+                            <Table.Row
+                              key={'analogItem'+x}
+                              onClick={() => this.setAnalog({ drug: analog.drug, id: analogItem.id })}
+                            >
+                              <Table.Cell>{analogItem.name}</Table.Cell>
+                              <Table.Cell collapsing textAlign='right'>
+                                {analogItem.min && <Label color='green'>{analogItem.min} ₽</Label>}
+                              </Table.Cell>
+                              <Table.Cell collapsing>
+                                {analogItem.max && <Label color='orange'>{analogItem.max} ₽</Label>}
+                              </Table.Cell>
+                            </Table.Row>
+
+                          )
+                        })}
+
+                      </Table.Body>
+                    </Table>
+                    )}
+
+                  </Transition.Group>
                 </List.Item>
 
               </>

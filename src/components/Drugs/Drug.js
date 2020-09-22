@@ -181,7 +181,7 @@ class Drug extends React.Component {
               <Feed.Summary>
                 <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
-                  {dose.form && (nameshort[dose.form] || names[dose.form])}
+                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}
 
                 </Feed.Date>
               </Feed.Summary>

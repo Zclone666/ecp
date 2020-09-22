@@ -8,6 +8,7 @@ import Slider from "react-slick";
 
 import PatientForm from './PatientForm'
 import PatientPassport from './PatientPassport'
+import PatientsList from './PatientsList'
 
 import {
   Sidebar,
@@ -33,30 +34,43 @@ class Patient extends Component {
     this.state = {
       open: false,
 
-      step: 0,
+      step: null,
 
       isLoading: false,
       searchQuery: ''
     }
     this.sliderRef = createRef()
   }
-  nextStep = () => {
+  newPatient = () => {
     this.saveForm(true)
-    this.sliderRef.current.slickGoTo(1)
-    this.setState({ step: 1 })
+    this.props.router.push('/patient/passport')
+  }
+  nextStep = () => {
+    let { step } = this.state
+    this.sliderRef.current.slickGoTo(step+1)
+    this.setState({ step: step+1 })
+  }
+  prevStep = () => {
+    let { step } = this.state
+    this.sliderRef.current.slickGoTo(step-1)
+    this.setState({ step: step-1 })
+  }
+  goTo = (x) => {
+    this.sliderRef.current.slickGoTo(x)
+    this.setState({ step: x })
   }
 
-  savePatient = () => {
-    this.props.patients.save()
+  savePatient = async () => {
+    let res = await this.props.patients.save()
+    if(res){
+      this.props.router.push('/')
+    }
   }
 
   saveForm = (noClose) => {
     let shownPage = this.props.router.values && this.props.router.values.page || 'none'
     const {
       birthdate,
-      age,
-      age_dwmy,
-      age_days,
       sex,
       growth,
       weight,
@@ -68,12 +82,9 @@ class Patient extends Component {
       driving,
       allergy
     } = this.props.actions.patientForm
-    if(shownPage === 'new'){
+    if(shownPage === 'info'){
       Object.assign(this.props.actions.drugStructure.patient, {
         birthdate,
-        age,
-        age_dwmy,
-        age_days,
         sex,
         growth,
         weight,
@@ -94,9 +105,48 @@ class Patient extends Component {
   back = () => {
     this.props.router.push('/')
   };
+  componentDidUpdate( prevProps, prevState ){
+    let {
+      router: { values }
+    } = this.props
+    // console.log({ next: values.step, prev: this.state.activeIndex });
 
+    let step = null
+    switch (values.page) {
+      case 'list':
+        step = 0
+        break;
+      case 'info':
+        step = 1
+        break;
+      case 'passport':
+        step = 2
+        break;
+      default:
+
+    }
+    if( step !== this.state.step ){
+      this.goTo(step)
+    }
+
+  }
   render() {
+    let shownPage = this.props.router.values && this.props.router.values.page || 'none'
+    let section = (this.props.router && this.props.router.match && this.props.router.match.name) || 'none'
     let { step } = this.state
+    switch (shownPage) {
+      case 'list':
+        step = 0
+        break;
+      case 'info':
+        step = 1
+        break;
+      case 'passport':
+        step = 2
+        break;
+      default:
+
+    }
     const settings = {
       dots: false,
       infinite: false,
@@ -109,19 +159,30 @@ class Patient extends Component {
     };
     return (
       <div className='h100'>
-        {step === 0 ?
+        {step === 0 &&
+          <Menu className="bottom fixed menu two item huge main">
+            <Menu.Item color='red' onClick={this.back}>
+              Отмена
+            </Menu.Item>
+            <Menu.Item onClick={this.nextStep}>
+              Новый
+            </Menu.Item>
+          </Menu>
+        }
+        {step === 1 &&
           <Menu className="bottom fixed menu three item huge main">
             <Menu.Item color='red' onClick={this.back}>
               Назад
             </Menu.Item>
-            <Menu.Item onClick={this.saveForm}>
+            <Menu.Item onClick={() => this.saveForm(false)}>
               Применить
             </Menu.Item>
-            <Menu.Item onClick={this.nextStep}>
+            <Menu.Item onClick={this.newPatient}>
               Сохранить
             </Menu.Item>
           </Menu>
-          :
+        }
+        {step === 2 &&
           <Menu className="bottom fixed menu two item huge main">
             <Menu.Item color='red' onClick={this.back}>
               Отмена
@@ -135,6 +196,9 @@ class Patient extends Component {
 
 
         <Slider ref={this.sliderRef} {...settings}>
+          <div className='scrollwrapper bottomMenu'>
+            <PatientsList />
+          </div>
           <div className='scrollwrapper bottomMenu'>
             <PatientForm />
           </div>

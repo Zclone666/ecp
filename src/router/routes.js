@@ -23,6 +23,7 @@ export default {
   '/recipe/:page':                            { section: 'main', name: 'recipe',     render: <Main />       },
 
   '/patient/:page':                           { section: 'main', name: 'patient',    render: <Main />       },
+  '/patient/:page/:id':                       { section: 'main', name: 'patient',    render: <Main />       },
 
   '/analog/:page':                            { section: 'main', name: 'analog',     render: <Main />       },
 

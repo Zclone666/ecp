@@ -71,6 +71,17 @@ class BirthDate extends Component {
     if( !value ) return
     this.handleChangeDate(null, { value: moment(value, 'x').toDate() })
   }
+  componentDidUpdate( prevProps, prevState ){
+    let { value } = this.props
+    // console.log(value, this.state.date, parseInt(value), parseInt(this.state.date));
+    if( !value && !!this.state.date ){
+      this.setState({ birth: '', date: '' })
+    }
+    if( !value || parseInt(value) === parseInt(this.state.date) ) return
+
+    this.handleChangeDate(null, { value: moment(value, 'x').toDate() })
+
+  }
   render(){
     let { birth, date } = this.state
     return (

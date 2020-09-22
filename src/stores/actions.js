@@ -349,6 +349,9 @@ class Actions {
       success: async (data) => {
         // console.log('SUCCESS', data);
         // if( data && data.level == 'success' ){
+          let { doc, id, lpu, patients, names } = data
+          this.stores.patients.makeList({ patients, names })
+
           this.privateKey = this.loginForm.privateKey
           this.stores.router.push('/')
           this.authorized = true

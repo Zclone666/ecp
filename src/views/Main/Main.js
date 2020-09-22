@@ -106,12 +106,12 @@ class Main extends Component {
 
           <Menu.Menu position='right'>
             <Responsive fireOnMount as={Menu.Item} minWidth='481'>
-              <Button as={RouterLink} to='/patient/new'>
+              <Button as={RouterLink} to='/patient/info'>
                 <Icon name='bed' />
                 Данные пациента
               </Button>
             </Responsive>
-            <Responsive fireOnMount as={RouterLink} to='/patient/new' maxWidth='480'>
+            <Responsive fireOnMount as={RouterLink} to='/patient/info' maxWidth='480'>
               <Menu.Item icon>
                 <Icon name='bed' size='large' />
               </Menu.Item>
@@ -146,8 +146,8 @@ class Main extends Component {
           >
             <Page />
           </Sidebar>
-          <Sidebar style={{ paddingTop: '3.6em' }} animation='overlay' onHide={() => this.handleSidebar('close')} visible={open} as={Menu} vertical size='huge'>
-            <Menu.Item disabled>
+          <Sidebar style={{ paddingTop: '3.6em' }} animation='overlay' onClick={() => this.handleSidebar('close')} onHide={() => this.handleSidebar('close')} visible={open} as={Menu} vertical size='huge'>
+            <Menu.Item as={RouterLink} to='/patient/list'>
               <Icon name='address book' />
               Пациенты
             </Menu.Item>
