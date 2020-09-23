@@ -7,6 +7,8 @@ import Spinner from '../../components/Spinner'
 
 import Drugs from '../../components/Drugs'
 
+import PatientPassport from '../Patient/PatientPassport'
+
 import moment from 'moment'
 import _ from 'lodash'
 
@@ -16,14 +18,15 @@ import {
   Tab,
   Statistic,
   Input,
-  // Search,
+  Modal,
   Segment,
   Form,
-  Dropdown
+  Dropdown,
+  Header,
   // Message,
   // List,
   // Feed,
-  // Button,
+  Button,
   // Responsive,
   // Grid
 } from 'semantic-ui-react'
@@ -34,25 +37,48 @@ class Recipe extends Component {
   constructor(props){
     super(props)
     this.state = {
-      activeIndex: 0
+      open: false,
+      openCode: false,
+      code: null
     }
     //this.contextRef = createRef()
   }
-
+  setOpen = (open) => {
+    open = open || false
+    this.setState({ open })
+  }
+  setOpenCode = (openCode) => {
+    openCode = openCode || false
+    this.setState({ openCode }, () => {
+      if(!openCode) this.props.router.push('/')
+    })
+  }
   save = async () => {
-    await this.props.recipes.save()
-    this.props.router.push('/')
+    let code = await this.props.recipes.save()
+    // console.log({res});
+    if( !code ) return
+    this.setState({ code })
+    this.setOpenCode(true)
+    // this.props.router.push('/')
   }
 
   back = () => {
     this.props.router.push('/')
   };
+  savePatient = async () => {
+    let res = await this.props.patients.save()
 
-  handleAddition = (e, { value }) => {
-    let id = moment().format('x').toString()
-    this.props.patients.patient.set(id, {id, name: value})
-
+    if(res){
+      this.setOpen(false)
+      this.handleChange(null, { name: 'patient', value: res.key })
+    }
   }
+  // handleAddition = async (e, { name, value }) => {
+  //   // console.log({ name, value });
+  //   let key = moment().format('x').toString()
+  //   await this.props.patients.patient.set(key, {key, name: value, id: null})
+  //   this.handleChange(null, { name: 'patient', value: key })
+  // }
 
   handleChange = async (e, { name, value }) => {
     if( !name && !value ){
@@ -60,9 +86,10 @@ class Recipe extends Component {
     }
     if( name === 'patient' ){
       let { patient } = this.props.actions.drugStructure
-      let curr = this.props.patients.patient.get(value)
-      if(!curr || !curr.email) curr = await this.props.patients.request(value)
-      this.props.actions.drugStructure.patient = _.extend(patient, { id: value, name: curr.name || null, email: curr.email || null, fio: curr.fio || null })
+      let curr = await this.props.patients.patient.get(value)
+      if((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id)
+      curr = curr || {}
+      this.props.actions.drugStructure.patient = _.extend(patient, { id: curr.id || null, key: value, name: curr.name || null, email: curr.email || null, fio: curr.fio || null })
     }else{
       this.props.actions.drugStructure[name].val = value
     }
@@ -71,7 +98,7 @@ class Recipe extends Component {
 
   render() {
     let {
-      activeIndex
+      open, code, openCode
     } = this.state
     let {
       drugStructure: {
@@ -82,7 +109,7 @@ class Recipe extends Component {
           val: clinic
         },
         patient: {
-          id: patient
+          key: patient
         }
       },
       doctor: doc
@@ -110,25 +137,56 @@ class Recipe extends Component {
                 <label>Врач</label>
                 <Input name='doctor' value={doctor} onChange={this.handleChange} placeholder='Иван Иванов' />
               </Form.Field>
-              <Form.Field>
-                <label>Пациент</label>
-                <Dropdown
-                  options={this.props.patients.arr.map((item) => {
-                    return {
-                      key: item.id, text: item.name, value: item.id
-                    }
-                  })}
-                  placeholder='Иван Иванов'
-                  search
-                  name='patient'
-                  selection
-                  fluid
-                  allowAdditions
-                  value={patient}
-                  onAddItem={this.handleAddition}
-                  onChange={this.handleChange}
-                />
-              </Form.Field>
+              <Form.Group>
+                <Form.Field width={16}>
+                  <label>Пациент</label>
+                  <Dropdown
+                    options={this.props.patients.arr.map((item) => {
+                      return {
+                        key: item.key, text: item.name, value: item.key
+                      }
+                    })}
+                    placeholder='Иван Иванов'
+                    search
+                    name='patient'
+                    selection
+                    fluid
+
+                    value={patient}
+                    onAddItem={this.handleAddition}
+                    onChange={this.handleChange}
+                  />
+
+                </Form.Field>
+                <Form.Field>
+                  <label>&nbsp;</label>
+                  <Modal
+                    onClose={() => this.setOpen(false)}
+                    onOpen={() => this.setOpen(true)}
+                    open={open}
+                    trigger={<Button>Добавить</Button>}
+                  >
+                    <Modal.Header>Создать пациента</Modal.Header>
+                    <Modal.Content>
+                      <PatientPassport />
+
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button color='black' onClick={() => this.setOpen(false)}>
+                        Отмена
+                      </Button>
+                      <Button
+                        content="Создать"
+                        labelPosition='right'
+                        icon='checkmark'
+                        onClick={() => this.savePatient()}
+                        positive
+                      />
+                    </Modal.Actions>
+                  </Modal>
+
+                </Form.Field>
+              </Form.Group>
               <Form.Field>
                 <label>ЛПУ</label>
                 <Input name='clinic' value={clinic} onChange={this.handleChange} placeholder='ЛПУ' />
@@ -137,7 +195,25 @@ class Recipe extends Component {
             <Drugs isRecipe={true} />
           </Segment>
         </div>
-
+        <Modal
+          onClose={() => this.setOpenCode(false)}
+          onOpen={() => this.setOpenCode(true)}
+          open={openCode}
+        >
+          <Modal.Header>Ваш код для аптеки</Modal.Header>
+          <Modal.Content>
+            <Header as='h1'>{code}</Header>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              content="ОК"
+              labelPosition='right'
+              icon='checkmark'
+              onClick={() => this.setOpenCode(false)}
+              positive
+            />
+          </Modal.Actions>
+        </Modal>
       </>
 
 

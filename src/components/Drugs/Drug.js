@@ -219,7 +219,7 @@ class Drug extends React.Component {
               }
             >
               <Dropdown.Menu>
-                <Menu.Item  as={RouterLink} to='/concept/dozes' onClick={this.getLF}>
+                <Menu.Item as={RouterLink} to={url} onClick={this.getLF}>
                   <Icon name='tint' />
                   Дозировки
                 </Menu.Item>
