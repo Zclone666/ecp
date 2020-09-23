@@ -109,7 +109,7 @@ class Patients {
             name,
           }
 
-          return data.patient
+          return data.patient || {}
         },
         fail: (alerts) => {
 
@@ -123,17 +123,24 @@ class Patients {
   async makeList({ patients, names }){
     if(patients && _.isArray(patients)){
       patients.forEach( async (patientId, i) => {
-
-        let current = await this.patient.get(patientId) || {}
-        let patient = await _.extend(current, { name: names[patientId], id: patientId });
+        let key = (moment().format('x') + i).toString()
+        // let current = await this.patient.get(key) || {}
+        // let patient = await _.extend(current, { name: names[patientId], id: patientId, key });
         // console.log(patient);
-        this.patient.set(patientId, patient)
+        await this.patient.set(key, { name: names[patientId], id: patientId, key })
       });
       this.ready = true
     }
   }
   get arr(){
     return Array.from(this.patient.values())
+  }
+  getById(id){
+    let res = {}
+    Array.from(this.patient.values()).forEach((item, i) => {
+      if(item.id === id) res = item
+    });
+    return res
   }
 
   async search(text, saveTo='search'){
@@ -177,7 +184,8 @@ class Patients {
 
       }
     }
-    data.patient = await _.assignIn({ ...this.stores.actions.drugStructure.patient }, { ...this.stores.actions.patientPassport });
+    let patient = await _.assignIn({ ...this.stores.actions.drugStructure.patient }, { ...this.stores.actions.patientPassport });
+    data.patient = patient
     // data.authkey = this.stores.actions.authkey
     // data.key = this.stores.actions.privateKey
     // console.log(data.patient);
@@ -188,9 +196,10 @@ class Patients {
 
           if(data.patients){
             let { doc, id, lpu, patients, names } = data
-            this.makeList({ patients, names })
+            await this.makeList({ patients, names })
+            await this.request(patients[0])
+            return this.getById(patients[0])
           }
-          return true
 
         },
         fail: (alerts) => {

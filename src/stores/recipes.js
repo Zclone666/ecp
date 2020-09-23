@@ -25,7 +25,7 @@ class Recipes {
 
   }
   save = async () => {
-    // this.stores.actions.loading = true
+    this.stores.actions.loading = true
     await this.stores.db.clearData(false, true)
     let data = await _.clone(this.stores.actions.drugStructure)
     data.drugs = await Array.from(this.stores.drugs.drug.values())
@@ -39,10 +39,15 @@ class Recipes {
         path: 'tools/SaveRecipe', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
         data,
         success: async data => {
-          return true
+          if(data && data.Code){
+            return data.Code
+          }else{
+            return false
+          }
+          this.stores.actions.loading = false
         },
         fail: (alerts) => {
-
+          this.stores.actions.loading = false
         },
         always: (data) => {
           this.stores.actions.makeAlerts(data)

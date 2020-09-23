@@ -40,8 +40,16 @@ class Schedule extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
-    this.setState({ [name]: value })
-    console.log({ name, value });
+    // console.log('HERE');
+    if( name === 'dateStart' || name === 'dateFinish' ){
+      this.props.actions.scheduleForm[name] = moment(value).format('x')
+    }else{
+      this.props.actions.scheduleForm[name] = value
+    }
+
+
+    // this.setState({ [name]: value })
+     // console.log({ name, value });
   }
   componentDidMount(){
     let {
@@ -59,7 +67,7 @@ class Schedule extends Component {
       }
     } = this.props
 
-    this.props.actions.scheduleForm.dateStart = dateStart || moment().format('DD.MM.YYYY HH:mm')
+    this.props.actions.scheduleForm.dateStart = dateStart || moment().format('x')
   }
   render(){
     let {
@@ -92,8 +100,12 @@ class Schedule extends Component {
       weightDosage,
       format
     } = this.state
-
-    // let dateStart = moment().format('DD.MM.YYYY HH:mm')
+    // console.log({dateStart});
+    //
+    dateStart = (dateStart && moment(dateStart, 'x').format('DD.MM.YYYY HH:mm')) || ''
+    dateFinish = (dateFinish && moment(dateFinish, 'x').format('DD.MM.YYYY HH:mm')) || ''
+    //
+    // console.log({_dateStart});
     // let dateFinish = 0
     let sex = 'male'
     return (
@@ -103,7 +115,7 @@ class Schedule extends Component {
             <Form.Field>
               <label>Начало периода приема:</label>
               <DatePickerInput
-                onChange={(e, { value }) => this.handleChange(e, { value, name: 'dateStart' })}
+                onChange={( value ) => this.handleChange(null, { value, name: 'dateStart' })}
                 name='dateStart'
                 value={dateStart}
                 showOnInputClick={true}
@@ -121,7 +133,7 @@ class Schedule extends Component {
             <Form.Field>
               <label>Окончание периода приема:</label>
               <DatePickerInput
-                onChange={(e, { value }) => this.handleChange(e, { value, name: 'dateFinish' })}
+                onChange={( value ) => this.handleChange(null, { value, name: 'dateFinish' })}
                 name='dateFinish'
                 value={dateFinish}
                 showOnInputClick={true}
