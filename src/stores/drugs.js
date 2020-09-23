@@ -128,8 +128,8 @@ class Drugs {
       dosage
     }
     currentDrug.schedule = {
-      dateStart,
-      dateFinish,
+      dateStart: parseInt(dateStart),
+      dateFinish: parseInt(dateFinish),
       finishAlternate,
       clarifications, //уточнения
       interval,

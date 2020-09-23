@@ -63,7 +63,7 @@ class Drugs {
             value: 0,
             flag: false,
             obj: {
-              dosages: dosage[0],
+              dosages: dosage,
               pack: {
                 dosage: pack,
                 id: packname
