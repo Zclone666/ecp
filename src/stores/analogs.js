@@ -35,6 +35,7 @@ class Analogs {
   //getLF
   async get(drug_obj){
     this.ready = false
+    this.stores.actions.loading = true
     // let currentDosages = await this.dosage.get(drug_obj.key);
     // if(currentDosages) {
     //   await this.stores.drugs.getDosageParams()
@@ -85,6 +86,7 @@ class Analogs {
           })
           await this.analog.set( drug_obj.key, _.extend(current, analogs) );
           this.ready = true
+          this.stores.actions.loading = false
           // this.stores.tools.setNames(names, nameshort)
           // let current = this.dosage.get(drug.key) || {};
           // this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
