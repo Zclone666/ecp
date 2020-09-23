@@ -214,10 +214,11 @@ class PatientForm extends Component {
           <List divided verticalAlign='middle'>
             {this.disease.map((item, i) => {
               return(
-                <List.Item key={'disease'+i}>
+                <List.Item key={'disease'+i} style={{ padding: '0.5em', backgroundColor: '#f6f6f0' }}>
                   <List.Content floated='right'>
-                    <Button icon='delete' onClick={() => this.handleResultUnselect('disease', item)}/>
+                    <Button size='tiny' icon='delete' onClick={() => this.handleResultUnselect('disease', item)}/>
                   </List.Content>
+                  <List.Icon name='heartbeat' size='big' verticalAlign='middle' />
                   <List.Content><List.Header>{item.name}</List.Header></List.Content>
                 </List.Item>
               )
@@ -245,10 +246,11 @@ class PatientForm extends Component {
           <List divided verticalAlign='middle'>
             {this.disease2.map((item, i) => {
               return(
-                <List.Item key={'disease2'+i}>
+                <List.Item key={'disease2'+i} style={{ padding: '0.5em', backgroundColor: '#f6f6f0' }}>
                   <List.Content floated='right'>
-                    <Button icon='delete' onClick={() => this.handleResultUnselect('disease2', item)}/>
+                    <Button size='tiny' icon='delete' onClick={() => this.handleResultUnselect('disease2', item)}/>
                   </List.Content>
+                  <List.Icon name='heartbeat' size='big' verticalAlign='middle' />
                   <List.Content><List.Header>{item.name}</List.Header></List.Content>
                 </List.Item>
               )
@@ -276,10 +278,11 @@ class PatientForm extends Component {
           <List divided verticalAlign='middle'>
             {allergy.map((item, i) => {
               return(
-                <List.Item key={'allergy'+i}>
+                <List.Item key={'allergy'+i} style={{ padding: '0.5em', backgroundColor: '#f6f6f0' }}>
                   <List.Content floated='right'>
-                    <Button icon='delete' onClick={() => this.handleResultUnselect('allergy', item)}/>
+                    <Button size='tiny' icon='delete' onClick={() => this.handleResultUnselect('allergy', item)}/>
                   </List.Content>
+                  <List.Icon name='heartbeat' size='big' verticalAlign='middle' />
                   <List.Content><List.Header>{item.name}</List.Header></List.Content>
                 </List.Item>
               )

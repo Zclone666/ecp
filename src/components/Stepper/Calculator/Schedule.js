@@ -102,8 +102,8 @@ class Schedule extends Component {
     } = this.state
     // console.log({dateStart});
     //
-    dateStart = (dateStart && moment(dateStart, 'x').format('DD.MM.YYYY HH:mm')) || ''
-    dateFinish = (dateFinish && moment(dateFinish, 'x').format('DD.MM.YYYY HH:mm')) || ''
+    dateStart = (dateStart && moment(dateStart, 'x').format('DD.MM.YYYY')) || ''
+    dateFinish = (dateFinish && moment(dateFinish, 'x').format('DD.MM.YYYY')) || ''
     //
     // console.log({_dateStart});
     // let dateFinish = 0
@@ -120,10 +120,10 @@ class Schedule extends Component {
                 value={dateStart}
                 showOnInputClick={true}
                 startMode='year'
-                format='DD.MM.YYYY HH:mm'
-                returnFormat='DD.MM.YYYY HH:mm'
-                displayFormat='DD.MM.YYYY HH:mm'
-                validationFormat='DD.MM.YYYY HH:mm'
+                format='DD.MM.YYYY'
+                returnFormat='DD.MM.YYYY'
+                displayFormat='DD.MM.YYYY'
+                validationFormat='DD.MM.YYYY'
                 onClear={this.onClear}
                 className='ui fluid big input '
                 placeholder='__.__.____'
@@ -138,10 +138,10 @@ class Schedule extends Component {
                 value={dateFinish}
                 showOnInputClick={true}
                 startMode='year'
-                format='DD.MM.YYYY HH:mm'
-                returnFormat='DD.MM.YYYY HH:mm'
-                displayFormat='DD.MM.YYYY HH:mm'
-                validationFormat='DD.MM.YYYY HH:mm'
+                format='DD.MM.YYYY'
+                returnFormat='DD.MM.YYYY'
+                displayFormat='DD.MM.YYYY'
+                validationFormat='DD.MM.YYYY'
                 onClear={this.onClear}
                 className='ui fluid big input '
                 placeholder='__.__.____'
