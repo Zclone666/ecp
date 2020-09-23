@@ -61,6 +61,12 @@ class Patients {
             weight
           } = data.patient
           this.stores.actions.patientForm = {
+            id,
+            email,
+            fio,
+            miscode,
+            misid,
+            name,
             allergy,
             birthdate,
             disease,
@@ -75,6 +81,12 @@ class Patients {
             weight
           }
           this.stores.actions.drugStructure.patient = {
+            id,
+            email,
+            fio,
+            miscode,
+            misid,
+            name,
             allergy,
             birthdate,
             disease,
@@ -119,6 +131,9 @@ class Patients {
       });
       this.ready = true
     }
+  }
+  get arr(){
+    return Array.from(this.patient.values())
   }
 
   async search(text, saveTo='search'){
@@ -165,7 +180,7 @@ class Patients {
     data.patient = await _.assignIn({ ...this.stores.actions.drugStructure.patient }, { ...this.stores.actions.patientPassport });
     // data.authkey = this.stores.actions.authkey
     // data.key = this.stores.actions.privateKey
-    console.log(data.patient);
+    // console.log(data.patient);
     return POST({
         path: data.patient.id ? `tools/PatientUpdate` : 'tools/PatientAdd',
         data,

@@ -11,7 +11,9 @@ import {
   Responsive,
   Icon,
   Popup,
-  Input
+  Input,
+  TextArea,
+  Form
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -72,12 +74,19 @@ class RecipeDrug extends React.Component {
     let { edit, text, from } = this.state
 
     // let selectedWarnings = warnIcons[selectedDrug]
-    let { key, name, level, tn, type, dosage } = drug
+    let { key, name, level, tn, type, dosage, schedule } = drug
     let drugDosages = dose.get(key) || {}
 
     let names = drugDosages.names || {}
 
     let descArr = []
+
+    if(dosage.form) descArr.push(names[dosage.form])
+    if(dosage.pack.dosage && dosage.pack.dosage.full) descArr.push(dosage.pack.dosage.full)
+    if(dosage.pack.pack && dosage.pack.pack.full) descArr.push(dosage.pack.pack.full)
+    if(dosage.method) descArr.push(names[dosage.method])
+    if(schedule && schedule.specials) descArr.push(schedule.specials)
+
     // if(dosage.form && names[dosage.form]) descArr.push(names[dosage.form])
     // if(dosage.method && names[dosage.method]) descArr.push(names[dosage.method])
     // if(dosage.pack.dosage) descArr.push(dosage.pack.dosage)
@@ -89,6 +98,9 @@ class RecipeDrug extends React.Component {
       <List.Item>
         <List.Content floated='right'>
           <Button.Group color='blue'>
+            <Button title='отменить изменения предписания' icon onClick={this.undo} icon disabled={from === 'dosage'}>
+              <Icon name='undo' />
+            </Button>
             <Button icon onClick={this.edit}>
               <Icon name={edit ? 'check' : 'edit'} />
             </Button>
@@ -104,17 +116,27 @@ class RecipeDrug extends React.Component {
               <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
             </List.Header>
             <List.Description>
-              {edit ?
-                <Input value={inputValue} size='small' fluid onChange={this.handleChange}>
-                  <input />
-                  <Button onClick={this.undo} icon disabled={from === 'dosage'}><Icon name='undo' /></Button>
-                </Input>
-                :
+              {!edit &&
                 inputValue
               }
             </List.Description>
           </List.Content>
         </List.Content>
+        {edit &&
+          <Form fluid>
+            <TextArea
+              fluid
+              name='text'
+              value={inputValue || ''}
+              placeholder='Особые указания'
+              onChange={this.handleChange}
+            />
+            {/*<Input value={inputValue} size='small' fluid onChange={this.handleChange}>
+              <input />
+              <Button onClick={this.undo} icon disabled={from === 'dosage'}><Icon name='undo' /></Button>
+            </Input>*/}
+          </Form>
+        }
       </List.Item>
 
     )

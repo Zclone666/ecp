@@ -24,7 +24,31 @@ class Recipes {
 
 
   }
+  save = async () => {
+    // this.stores.actions.loading = true
+    await this.stores.db.clearData(false, true)
+    let data = await _.clone(this.stores.actions.drugStructure)
+    data.drugs = await Array.from(this.stores.drugs.drug.values())
 
+    data.service = "43"
+
+    data.return_subjects = false
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: 'tools/SaveRecipe', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+        data,
+        success: async data => {
+          return true
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+          this.stores.actions.makeAlerts(data)
+        }
+    });
+  }
 
 
 }

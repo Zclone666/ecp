@@ -33,6 +33,11 @@ class Actions {
   @observable buttonTexts = {}
   @observable UIText = {}
 
+  @observable doctor = {
+    id: null,
+    name: null
+  }
+
   @observable loginForm = {
     email: '',
     password: '',
@@ -114,7 +119,8 @@ class Actions {
     interval: null,
     once: null,
     week: null,
-    calendar: null
+    calendar: null,
+    specials: null
   }
 
   @observable calculatorForm = {
@@ -145,6 +151,12 @@ class Actions {
       val: null
     },
     patient: {
+      id: null,
+      email: null,
+      fio: null,
+      miscode: null,
+      misid: null,
+      name: null,
       birthdate: null,
       sex: null,
       growth: null,
@@ -351,6 +363,10 @@ class Actions {
         // if( data && data.level == 'success' ){
           let { doc, id, lpu, patients, names } = data
           this.stores.patients.makeList({ patients, names })
+          this.doctor = {
+            id: (doc && doc[0]) || null,
+            name: ((doc && doc[0]) && names[doc[0]]) || null
+          }
 
           this.privateKey = this.loginForm.privateKey
           this.stores.router.push('/')
