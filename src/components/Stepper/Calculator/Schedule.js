@@ -43,6 +43,24 @@ class Schedule extends Component {
     this.setState({ [name]: value })
     console.log({ name, value });
   }
+  componentDidMount(){
+    let {
+      actions: {
+        scheduleForm: {
+          dateStart,
+          dateFinish,
+          finishAlternate,
+          clarifications, //уточнения
+          interval,
+          once,
+          week,
+          calendar
+        }
+      }
+    } = this.props
+
+    this.props.actions.scheduleForm.dateStart = dateStart || moment().format('DD.MM.YYYY HH:mm')
+  }
   render(){
     let {
       actions: {
@@ -50,7 +68,17 @@ class Schedule extends Component {
         selectedConflict,
         activeDrugs,
         activeConflicts,
-        stepsData
+        stepsData,
+        scheduleForm: {
+          dateStart,
+          dateFinish,
+          finishAlternate,
+          clarifications, //уточнения
+          interval,
+          once,
+          week,
+          calendar
+        }
       },
       dosages: { current: { drug, form, methodform, names } },
       router: { values }
@@ -65,13 +93,8 @@ class Schedule extends Component {
       format
     } = this.state
 
-    let weights = [
-      { key: 'мг', value: 'мг', text: 'мг' },
-      { key: 'сг', value: 'сг', text: 'сг' },
-      { key: 'мкг', value: 'мкг', text: 'мкг' }
-    ]
-    let dateStart = moment().format('DD.MM.YYYY HH:mm')
-    let dateFinish = 0
+    // let dateStart = moment().format('DD.MM.YYYY HH:mm')
+    // let dateFinish = 0
     let sex = 'male'
     return (
       <Segment>
@@ -82,6 +105,7 @@ class Schedule extends Component {
               <DatePickerInput
                 onChange={(e, { value }) => this.handleChange(e, { value, name: 'dateStart' })}
                 name='dateStart'
+                value={dateStart}
                 showOnInputClick={true}
                 startMode='year'
                 format='DD.MM.YYYY HH:mm'
@@ -99,6 +123,7 @@ class Schedule extends Component {
               <DatePickerInput
                 onChange={(e, { value }) => this.handleChange(e, { value, name: 'dateFinish' })}
                 name='dateFinish'
+                value={dateFinish}
                 showOnInputClick={true}
                 startMode='year'
                 format='DD.MM.YYYY HH:mm'

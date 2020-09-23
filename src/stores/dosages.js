@@ -40,15 +40,81 @@ class Drugs {
   }
 
   //getLF
-  async get(drug_obj){
+  async getFp(drug_obj){
+    let data = {
+      drug: drug_obj
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `drugs/FPDosage`,
+        data,
+        success: async data => {
+          // console.log('DATA', data);
+          let drugDosage = this.dosage.get(drug_obj.key)
+          let { names, nameshort } = drugDosage
+          let { dosage, fp, lf, method, methodform, name, shortname, pack, packname } = data
+          await this.stores.tools.setNames(name, shortname)
+          dosage = _.isArray(dosage) ? dosage : [dosage]
+          let currPack = {
+            dosage: { short: '', full: '', id: dosage[0].id_1 },
+            pack: { short: '', full: '', id: pack.id_1 },
+            type: 'simple',
+            value: 0,
+            flag: false,
+            obj: {
+              dosages: dosage[0],
+              pack: {
+                dosage: pack,
+                id: packname
+              },
+            }
+          }
+          if(_.isArray(dosage) && dosage.length > 1 ){
+            currPack.dosage.full += _.map(dosage, 'value_1').join(' + ') + ' ' + names[dosage[0].id_1]
+            currPack.dosage.short += _.map(dosage, 'value_1').join(' + ') + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
+            currPack.type = 'multi'
+            currPack.value = Array.from(_.map(dosage, 'value_1'))
+          }else if(_.isArray(dosage) && dosage.length === 1 ){
+            let val = dosage[0].value_2 ? dosage[0].value_1/dosage[0].value_2 : dosage[0].value_1
+            currPack.dosage.full += val + ' ' + names[dosage[0].id_1]
+            currPack.dosage.short += val + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
+            currPack.value = val
+          }
+          currPack.pack.full += names[packname] + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
+          currPack.pack.short += (nameshort[packname] || names[packname]) + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
+
+          this.stores.actions.stepsData = {
+            key: drug_obj.key,
+            way: 'lf',
+            step: 4,
+            form: lf,
+            method,
+            pack: currPack
+          }
+
+          this.stores.drugs.current = drug_obj
+
+          await this.stores.drugs.setDosageParams(`/concept/dozes/lf/4`)
+
+
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+
+  async get(drug_obj, flag=false){
     let currentDosages = await this.dosage.get(drug_obj.key);
-    if(currentDosages) {
+    if(currentDosages && !flag) {
       await this.stores.drugs.getDosageParams()
       return
     }
     let data = {
-      lib: '52, 62',
-      service: "43",
       drug: drug_obj
     }
     data.authkey = this.stores.actions.authkey
@@ -59,10 +125,11 @@ class Drugs {
         success: async data => {
           //console.log('DATA', data);
           let { drug, form, methodform, names, nameshort, units } = data
-          this.stores.tools.setNames(names, nameshort)
+          await this.stores.tools.setNames(names, nameshort)
           let current = this.dosage.get(drug.key) || {};
-          this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
-          if(units && units.length > 0) this.stores.tools.getUnitsPharm(units)
+          await this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
+          if(units && units.length > 0) await this.stores.tools.getUnitsPharm(units)
+          if(drug_obj.fpid) this.getFp(drug_obj)
         },
         fail: (alerts) => {
 

@@ -9,7 +9,8 @@ import {
   Segment,
   Input,
   Button,
-  Dropdown
+  Dropdown,
+  TextArea
 } from 'semantic-ui-react'
 
 import Schedule from './Schedule'
@@ -52,6 +53,10 @@ class Calculator extends Component {
       return
     }
     //value = parseFloat(eval(value))
+    if( name === 'specials' ){
+      this.props.actions.scheduleForm.specials = value
+      return
+    }
     value = parseFloat(value)
 
     if( name == 'patient.weight' ){
@@ -130,6 +135,9 @@ class Calculator extends Component {
           count,
           fullDosage,
           weightDosage
+        },
+        scheduleForm: {
+          specials
         }
       },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
@@ -190,7 +198,7 @@ class Calculator extends Component {
                 size='big'
                 name='dosage'
                 value={getFromBase((currUnit || def), dosage) || ''}
-                label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} defaultValue={def} options={weights} value={currUnit || def} />}
+                label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} options={weights} value={currUnit || def} />}
                 labelPosition='right'
                 placeholder='500'
                 onChange={this.handleChange}
@@ -249,6 +257,19 @@ class Calculator extends Component {
 
         </Form>
         <Schedule />
+        <Form>
+          <Form.Group>
+            <Form.Field width={16}>
+              <TextArea
+                size='big'
+                name='specials'
+                value={specials || ''}
+                placeholder='Особые указания'
+                onChange={this.handleChange}
+              />
+            </Form.Field>
+          </Form.Group>
+        </Form>
       </Segment>
     )
   }

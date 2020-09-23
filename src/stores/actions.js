@@ -31,6 +31,12 @@ class Actions {
 
   @observable elements = {}
   @observable buttonTexts = {}
+  @observable UIText = {}
+
+  @observable doctor = {
+    id: null,
+    name: null
+  }
 
   @observable loginForm = {
     email: '',
@@ -79,8 +85,7 @@ class Actions {
     step: null,
     form: null,
     method: null,
-    pack: {},
-    dosage: {},
+    pack: {}
   }
 
   @observable patientForm = {
@@ -97,11 +102,25 @@ class Actions {
     allergy: []
   }
 
+  @observable patientPassport = {
+    id: null,
+    name: null,
+    email: null,
+    miscode: null,
+    misid: null,
+    fio: null
+  }
+
   @observable scheduleForm = {
+    dateStart: null,
+    dateFinish: null,
+    finishAlternate: null,
+    clarifications: null, //уточнения
     interval: null,
     once: null,
     week: null,
-    calendar: null
+    calendar: null,
+    specials: null
   }
 
   @observable calculatorForm = {
@@ -132,6 +151,12 @@ class Actions {
       val: null
     },
     patient: {
+      id: null,
+      email: null,
+      fio: null,
+      miscode: null,
+      misid: null,
+      name: null,
       birthdate: null,
       sex: null,
       growth: null,
@@ -276,6 +301,8 @@ class Actions {
 
     this.getObject('buttonTexts')
     this.getObject('elements')
+    this.getObject('UIText')
+
 
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
@@ -334,6 +361,13 @@ class Actions {
       success: async (data) => {
         // console.log('SUCCESS', data);
         // if( data && data.level == 'success' ){
+          let { doc, id, lpu, patients, names } = data
+          this.stores.patients.makeList({ patients, names })
+          this.doctor = {
+            id: (doc && doc[0]) || null,
+            name: ((doc && doc[0]) && names[doc[0]]) || null
+          }
+
           this.privateKey = this.loginForm.privateKey
           this.stores.router.push('/')
           this.authorized = true
@@ -346,6 +380,7 @@ class Actions {
           }
           this.stores.tools.getUnitsPrimary()
           this.stores.tools.getUnitsPharm()
+          // this.stores.patients.request()
         // }else{
         //   this.makeAlerts({ alerts:[{
         //     title: "Неверный персональный ключ.",

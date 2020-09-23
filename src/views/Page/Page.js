@@ -9,6 +9,7 @@ import Dozes from '../Dozes'
 import Patient from '../Patient'
 import Warning from '../Warning'
 import Recipe from '../Recipe'
+import Analog from '../Analog'
 
 import {
   Sidebar,
@@ -57,6 +58,7 @@ class Page extends Component {
         'patient': <Patient />,
         'warning': <Warning />,
         'recipe' : <Recipe />,
+        'analog' : <Analog />,
         'none'   : <div />
       }[section] || null
     );

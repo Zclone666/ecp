@@ -96,7 +96,8 @@ class DozeTypes extends Component {
         }
         currPack.flag = !!(item.dosage[0] && item.dosage[0].id_2)
         currPack.obj = {
-          dosages: item.dosage
+          dosages: item.dosage,
+          pack: null
         }
         arr.push({ ...currPack })
       }

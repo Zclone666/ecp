@@ -45,8 +45,9 @@ class Main extends Component {
     this.props.actions.logout()
   }
 
-  handleSidebar = () => {
-    this.setState({ open: !this.state.open })
+
+  handleSidebar = (x) => {
+    this.setState({ open: (x === 'close' ? false : !this.state.open) })
   };
 
   handleResultSelect = async (e, { result }) => {
@@ -105,12 +106,12 @@ class Main extends Component {
 
           <Menu.Menu position='right'>
             <Responsive fireOnMount as={Menu.Item} minWidth='481'>
-              <Button as={RouterLink} to='/patient/new'>
+              <Button as={RouterLink} to='/patient/info'>
                 <Icon name='bed' />
                 Данные пациента
               </Button>
             </Responsive>
-            <Responsive fireOnMount as={RouterLink} to='/patient/new' maxWidth='480'>
+            <Responsive fireOnMount as={RouterLink} to='/patient/info' maxWidth='480'>
               <Menu.Item icon>
                 <Icon name='bed' size='large' />
               </Menu.Item>
@@ -121,26 +122,7 @@ class Main extends Component {
 
 
         <Sidebar.Pushable>
-          <Menu className="fluid one item ui top huge text menu searchwrapper" style={{margin: 0}}>
-            <Menu.Item>
-              <Segment basic className='fluid'>
-                <Search
-                  fluid
-                  size='huge'
-                  height={height-130}
-                  loading={!searchReady}
-                  onResultSelect={this.handleResultSelect}
-                  onSearchChange={_.debounce(this.handleSearchChange, 500, {
-                    leading: true,
-                  })}
-                  results={searchRows}
-                  value={searchQuery}
-                  resultRenderer={this.resultRenderer}
-                  resultClassName='result-wrapper'
-                />
-              </Segment>
-            </Menu.Item>
-          </Menu>
+
           {drug.size > 0 &&
             <Menu className="bottom fixed menu three item huge main">
               <Menu.Item color='red' onClick={this.handleResetAll}>
@@ -164,19 +146,35 @@ class Main extends Component {
           >
             <Page />
           </Sidebar>
-          <Sidebar animation='overlay' visible={open} as={Menu} vertical size='huge'>
-            <Menu.Item>
-              <Icon name='user' />
+          <Sidebar style={{ paddingTop: '3.6em' }} animation='overlay' onClick={() => this.handleSidebar('close')} onHide={() => this.handleSidebar('close')} visible={open} as={Menu} vertical size='huge'>
+            <Menu.Item as={RouterLink} to='/patient/list'>
+              <Icon name='address book' />
               Пациенты
             </Menu.Item>
-            <Menu.Item>
-              <Icon name='user' />
-              Пациенты
+            {/*<Menu.Item disabled>
+              <Icon name='clipboard' />
+              Назначения
+            </Menu.Item>*/}
+            <Menu.Item disabled>
+              <Icon name='clipboard outline' />
+              Рецепты
             </Menu.Item>
-            <Menu.Item>
-              <Icon name='user' />
-              Пациенты
+            <Menu.Item disabled>
+              <Icon name='globe' />
+              Язык
             </Menu.Item>
+            <Menu.Item disabled>
+              <Icon name='book' />
+              Инструкция
+            </Menu.Item>
+            <Menu.Item disabled>
+              <Icon name='chat' />
+              Подсказки
+            </Menu.Item>
+            {/*<Menu.Item>
+              <Icon name='user' />
+              Поделиться
+            </Menu.Item>*/}
             <Menu.Item onClick={this.logout}>
               <Icon name='sign-out' />
               Выход
@@ -184,7 +182,26 @@ class Main extends Component {
           </Sidebar>
 
           <Sidebar.Pusher dimmed={open || showPage} className='pusherwrapper'>
-
+            <Menu className="fluid one item ui top huge text menu searchwrapper" style={{margin: 0}}>
+              <Menu.Item>
+                <Segment basic className='fluid'>
+                  <Search
+                    fluid
+                    size='huge'
+                    height={height-130}
+                    loading={!searchReady}
+                    onResultSelect={this.handleResultSelect}
+                    onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                      leading: true,
+                    })}
+                    results={searchRows}
+                    value={searchQuery}
+                    resultRenderer={this.resultRenderer}
+                    resultClassName='result-wrapper'
+                  />
+                </Segment>
+              </Menu.Item>
+            </Menu>
             <div className='scrollwrapper'>
               <Grid>
                 <Grid.Column width={16} style={{boxShadow: '0 0 9px #ccc', borderBottom: '1px solid #fff'}}>

@@ -70,11 +70,17 @@ class Drugs {
         }
     });
   }
-
+  setFP = async ( drugKey, fpid ) => {
+    let currentDrug = await this.drug.get(drugKey) || {};
+    currentDrug = await _.extend(currentDrug, { fpid });
+    await this.drug.set( drugKey, currentDrug );
+    this.stores.dosages.get(currentDrug, true)
+  }
 
   setDosageParams = async (url) => {
     let drugData = this.stores.actions.stepsData
     let calcData = this.stores.actions.calculatorForm
+    let scheduleData = this.stores.actions.scheduleForm
 
     let drug = this.current
     let currentDrug = await this.drug.get(drug.key) || {};
@@ -94,6 +100,18 @@ class Drugs {
     } = drugData
 
     let {
+      dateStart,
+      dateFinish,
+      finishAlternate,
+      clarifications, //уточнения
+      interval,
+      once,
+      week,
+      calendar,
+      specials
+    } = scheduleData
+
+    let {
       dosage: dos,
       count,
       fullDosage,
@@ -108,6 +126,17 @@ class Drugs {
       method,
       pack,
       dosage
+    }
+    currentDrug.schedule = {
+      dateStart,
+      dateFinish,
+      finishAlternate,
+      clarifications, //уточнения
+      interval,
+      once,
+      week,
+      calendar,
+      specials
     }
 
     currentDrug.calc = {
@@ -139,6 +168,17 @@ class Drugs {
       dosage
     } = currentDrug.dosage
     let {
+      dateStart,
+      dateFinish,
+      finishAlternate,
+      clarifications, //уточнения
+      interval,
+      once,
+      week,
+      calendar,
+      specials
+    } = currentDrug.schedule
+    let {
       dosage: dos,
       count,
       fullDosage,
@@ -160,6 +200,17 @@ class Drugs {
       fullDosage,
       weightDosage
     }
+    this.stores.actions.scheduleForm = {
+      dateStart,
+      dateFinish,
+      finishAlternate,
+      clarifications, //уточнения
+      interval,
+      once,
+      week,
+      calendar,
+      specials
+    }
 
   }
 
@@ -170,9 +221,10 @@ class Drugs {
       name: "", // Название ДВ или ТН
       level: 0, //
       //tn: false, // ДВ или ТН
-      fp_id: "", //
+      fpid: null, //
       type: null,
       group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
+      text: null,
       dosage: { // дозировка
         // way: null,
         // step: null,
@@ -187,6 +239,17 @@ class Drugs {
         count: 1,
         fullDosage: 0,
         weightDosage: 0
+      },
+      schedule: {
+        dateStart: null,
+        dateFinish: null,
+        finishAlternate: null,
+        clarifications: null, //уточнения
+        interval: null,
+        once: null,
+        week: null,
+        calendar: null,
+        specials: null
       }
     }
     drug = _.assignIn(drug, row);
@@ -203,6 +266,7 @@ class Drugs {
   }
   async unselectDrug(row){
     this.drug.delete(row.key)
+    this.stores.dosages.dosage.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true)
     return true
