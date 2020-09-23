@@ -223,7 +223,7 @@ class Drug extends React.Component {
                   <Icon name='tint' />
                   Дозировки
                 </Menu.Item>
-                <Menu.Item>
+                <Menu.Item as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
                   <Icon name='font' />
                   Аналоги
                 </Menu.Item>
