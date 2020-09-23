@@ -164,7 +164,7 @@ class Patient extends Component {
             <Menu.Item color='red' onClick={this.back}>
               Отмена
             </Menu.Item>
-            <Menu.Item onClick={this.nextStep}>
+            <Menu.Item as={RouterLink} to='/patient/info'>
               Новый
             </Menu.Item>
           </Menu>
