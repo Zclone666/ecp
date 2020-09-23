@@ -218,7 +218,7 @@ class PatientForm extends Component {
                   <List.Content floated='right'>
                     <Button icon='delete' onClick={() => this.handleResultUnselect('disease', item)}/>
                   </List.Content>
-                  <List.Content>{item.name}</List.Content>
+                  <List.Content><List.Header>{item.name}</List.Header></List.Content>
                 </List.Item>
               )
             })}
@@ -249,7 +249,7 @@ class PatientForm extends Component {
                   <List.Content floated='right'>
                     <Button icon='delete' onClick={() => this.handleResultUnselect('disease2', item)}/>
                   </List.Content>
-                  <List.Content>{item.name}</List.Content>
+                  <List.Content><List.Header>{item.name}</List.Header></List.Content>
                 </List.Item>
               )
             })}
@@ -280,7 +280,7 @@ class PatientForm extends Component {
                   <List.Content floated='right'>
                     <Button icon='delete' onClick={() => this.handleResultUnselect('allergy', item)}/>
                   </List.Content>
-                  <List.Content>{item.name}</List.Content>
+                  <List.Content><List.Header>{item.name}</List.Header></List.Content>
                 </List.Item>
               )
             })}

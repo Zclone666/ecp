@@ -39,7 +39,7 @@ class Patients {
         path: `tools/PatientGet`,
         data,
         success: async data => {
-          console.log('DATA', data);
+          // console.log('DATA', data);
           let {
             allergy,
             birthdate,
@@ -109,7 +109,7 @@ class Patients {
             name,
           }
 
-          return true
+          return data.patient
         },
         fail: (alerts) => {
 
