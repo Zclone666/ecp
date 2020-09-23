@@ -89,6 +89,12 @@ class Actions {
   }
 
   @observable patientForm = {
+    id: null,
+    email: null,
+    fio: null,
+    miscode: null,
+    misid: null,
+    name: null,
     birthdate: null,
     sex: null,
     growth: null,

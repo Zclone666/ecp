@@ -66,10 +66,55 @@ class Patient extends Component {
       this.props.router.push('/')
     }
   }
-
+  clearPatient = () => {
+    this.props.actions.patientForm = {
+      id: null,
+      email: null,
+      fio: null,
+      miscode: null,
+      misid: null,
+      name: null,
+      birthdate: null,
+      sex: null,
+      growth: null,
+      weight: null,
+      disease: [],
+      pregnancy: false,
+      gestation: null,
+      trimester: null,
+      lactation: false,
+      driving: true,
+      allergy: []
+    }
+    Object.assign(this.props.actions.drugStructure.patient, {
+      id: null,
+      email: null,
+      fio: null,
+      miscode: null,
+      misid: null,
+      name: null,
+      birthdate: null,
+      sex: null,
+      growth: null,
+      weight: null,
+      disease: [],
+      pregnancy: false,
+      gestation: null,
+      trimester: null,
+      lactation: false,
+      driving: true,
+      allergy: []
+    });
+  }
   saveForm = (noClose) => {
     let shownPage = this.props.router.values && this.props.router.values.page || 'none'
     const {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
       birthdate,
       sex,
       growth,
@@ -84,6 +129,12 @@ class Patient extends Component {
     } = this.props.actions.patientForm
     if(shownPage === 'info'){
       Object.assign(this.props.actions.drugStructure.patient, {
+        id,
+        email,
+        fio,
+        miscode,
+        misid,
+        name,
         birthdate,
         sex,
         growth,
@@ -119,6 +170,10 @@ class Patient extends Component {
       case 'info':
         step = 1
         break;
+      case 'new':
+        step = 1
+        this.clearPatient()
+        break;
       case 'passport':
         step = 2
         break;
@@ -139,6 +194,9 @@ class Patient extends Component {
         step = 0
         break;
       case 'info':
+        step = 1
+        break;
+      case 'new':
         step = 1
         break;
       case 'passport':
@@ -164,7 +222,7 @@ class Patient extends Component {
             <Menu.Item color='red' onClick={this.back}>
               Отмена
             </Menu.Item>
-            <Menu.Item as={RouterLink} to='/patient/info'>
+            <Menu.Item as={RouterLink} to='/patient/new'>
               Новый
             </Menu.Item>
           </Menu>
