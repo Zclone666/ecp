@@ -123,7 +123,9 @@ class Patients {
   async makeList({ patients, names }){
     if(patients && _.isArray(patients)){
       patients.forEach( async (patientId, i) => {
-        let key = (moment().format('x') + i).toString()
+        let patient = this.getById(patientId)
+        let key = patient.key || (moment().format('x') + i).toString()
+
         // let current = await this.patient.get(key) || {}
         // let patient = await _.extend(current, { name: names[patientId], id: patientId, key });
         // console.log(patient);
