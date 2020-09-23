@@ -102,8 +102,8 @@ class Schedule extends Component {
     } = this.state
     // console.log({dateStart});
     //
-    // let _dateStart = (dateStart && moment(dateStart, 'x').format('DD.MM.YYYY HH:mm')) || ''
-    // let _dateFinish = (dateFinish && moment(dateFinish, 'x').format('DD.MM.YYYY HH:mm')) || ''
+    dateStart = (dateStart && moment(dateStart, 'x').format('DD.MM.YYYY HH:mm')) || ''
+    dateFinish = (dateFinish && moment(dateFinish, 'x').format('DD.MM.YYYY HH:mm')) || ''
     //
     // console.log({_dateStart});
     // let dateFinish = 0
