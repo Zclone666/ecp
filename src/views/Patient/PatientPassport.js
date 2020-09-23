@@ -69,8 +69,6 @@ class PatientPassport extends Component {
                 size='big'
                 name='fio'
                 value={fio || ''}
-                label={{ basic: true, content: 'см' }}
-                labelPosition='right'
                 placeholder='Иванов Иван Иванович'
                 onChange={this.handleChange}
               />
@@ -81,8 +79,6 @@ class PatientPassport extends Component {
                 size='big'
                 name='email'
                 value={email || ''}
-                label={{ basic: true, content: 'кг' }}
-                labelPosition='right'
                 placeholder='patient@example.ru'
                 onChange={this.handleChange}
               />
