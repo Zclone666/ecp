@@ -54,14 +54,15 @@ class Recipe extends Component {
 
   }
 
-  handleChange = (e, { name, value }) => {
+  handleChange = async (e, { name, value }) => {
     if( !name && !value ){
       let { name, value } = e.target
     }
     if( name === 'patient' ){
       let { patient } = this.props.actions.drugStructure
       let curr = this.props.patients.patient.get(value)
-      this.props.actions.drugStructure.patient = _.extend(patient, { id: value, name: curr.name })
+      if(!curr || !curr.email) curr = await this.props.patients.request(value)
+      this.props.actions.drugStructure.patient = _.extend(patient, { id: value, name: curr.name || null, email: curr.email || null, fio: curr.fio || null })
     }else{
       this.props.actions.drugStructure[name].val = value
     }
