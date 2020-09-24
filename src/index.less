@@ -923,6 +923,15 @@ i.violet.icon, i.big.violet.icon, i.small.violet.icon, i.large.violet.icon, i.hu
   line-height: 1em !important;
   margin: 0em !important;
 }
+
+.ui.list .dropdown .menu, .ui.list .dropdown .menu .item{
+	padding: .78571429rem 1.14285714rem !important;
+	background-color: #FFF !important;
+}
+.ui.list .dropdown .menu .item .icon{
+	display: inline-block !important;
+}
+
 .card .visible.content > .ui.image{
   overflow: hidden;
   height: -webkit-fill-available;
@@ -1473,11 +1482,22 @@ td > .collapsable ul li{
 .warningcontainer.segment .list{
 	margin-top: 0;
 }
+.warningcontainer.segment .list .item{
+	min-height: 38px;
+	position: relative;
+}
+.warningline{
+	position: absolute;
+  width: 20px;
+  height: 6px;
+  left: -30px;
+  top: 10px;
+}
 .arrowcontainer{
 	position: absolute;
   left: 10px;
   top: 22px;
-  bottom: 22px;
+  bottom: 32px;
   border-width: 6px 0 6px 6px;
   border-radius: 5px 0 0 5px;
   width: 20px;

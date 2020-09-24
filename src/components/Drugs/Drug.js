@@ -200,7 +200,7 @@ class Drug extends React.Component {
           as={Fragment}
           maxWidth='480'
         >
-            <List.Content className='ui feed large' as={Dropdown} fluid icon={null}
+            <List.Content className='ui feed large' as={Dropdown} floating fluid icon={null}
               trigger={
                 <Feed.Event>
                   <Feed.Content>
@@ -219,22 +219,29 @@ class Drug extends React.Component {
               }
             >
               <Dropdown.Menu>
-                <Menu.Item as={RouterLink} to={url} onClick={this.getLF}>
-                  <Icon name='tint' />
-                  Дозировки
-                </Menu.Item>
-                <Menu.Item as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
-                  <Icon name='font' />
-                  Аналоги
-                </Menu.Item>
-                <Menu.Item onClick={this.unselectDrug}>
-                  <Icon name='delete' />
-                  Убрать из списка
-                </Menu.Item>
-                <Menu.Item>
-                  <Icon name='ellipsis horizontal' />
-                  Подробнее
-                </Menu.Item>
+                <Dropdown.Item
+                  icon='tint'
+                  as={RouterLink}
+                  to={url}
+                  onClick={this.getLF}
+                  text='Дозировки'
+                />
+                <Dropdown.Item
+                  icon='font'
+                  as={RouterLink}
+                  to={`/analog/${drug.key}`}
+                  onClick={this.getAnalog}
+                  text='Аналоги'
+                />
+                <Dropdown.Item
+                  icon='delete'
+                  onClick={this.unselectDrug}
+                  text='Убрать из списка'
+                />
+                <Dropdown.Item
+                  icon='ellipsis horizontal'
+                  text='Подробнее'
+                />
               </Dropdown.Menu>
             </List.Content>
 

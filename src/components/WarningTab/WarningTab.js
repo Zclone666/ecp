@@ -111,9 +111,10 @@ class WarningTab extends Component {
               let drug = getDrug(item)
               return(
                 <List.Item key='1'>
+                  {i > 0 && <div className='warningline' style={{ backgroundColor: tab.color }}></div>}
                   <List.Content>
-                  <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
-                  {!!item.subjectid && drug.name}
+                    <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
+                    {!!item.subjectid && drug.name}
                   </List.Content>
                 </List.Item>
               )
@@ -139,6 +140,7 @@ class WarningTab extends Component {
               let drug = getDrug(item)
               return(
                 <List.Item key='3'>
+                  {(i < (arr.last.length-1)) && <div className='warningline' style={{ backgroundColor: tab.color }}></div>}
                   <List.Content>
                     <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
                     {!!item.subjectid && drug.name}
