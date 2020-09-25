@@ -249,10 +249,10 @@ class Interval extends Component {
   }
 
   renderPresets(){
-    console.log({clarifications});
-    let { presets } = clarifications.clarifications
-    let { UIText } = this.props.actions
+    let { presets } = clarifications
+    let { UIText, scheduleForm: { interval } } = this.props.actions
     let arr = []
+    interval = interval || []
     _.keys( presets ).forEach(( presetKey, i ) => {
       let preset = presets[presetKey]
       arr.push(
@@ -260,12 +260,14 @@ class Interval extends Component {
           key: i,
           text: UIText.freq[preset.id],
           value: presetKey,
-          onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
+          onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
         }
       )
     })
     return arr
   }
+
+  
 
   render(){
     let {
@@ -274,7 +276,8 @@ class Interval extends Component {
         selectedConflict,
         activeDrugs,
         activeConflicts,
-        stepsData
+        stepsData,
+        scheduleForm: { interval }
       },
       dosages: { current: { drug, form, methodform, names } },
       router: { values }
@@ -335,13 +338,14 @@ class Interval extends Component {
       <>
         <Form.Group>
           <Form.Field inline className='fluid'>
-            <label>Выберите шаблон:</label>
+            <label>Выберите шаблон расписания:</label>
             <Dropdown
               inline
               name={'presets'}
               text={'Выбрать'}
               options={this.renderPresets()}
             />
+            
           </Form.Field>
         </Form.Group>
         <Form.Group>
