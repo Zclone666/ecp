@@ -162,14 +162,14 @@ class Schedule extends Component {
             <Form.Field className='fluid'>
               <label>Условия приема</label>
               <Responsive as={Button.Group} fluid widths={4} minWidth={480}>
-                <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По интервалу</Button>
-                <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>1 раз</Button>
+                <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По расписанию</Button>
+                <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>Однократно</Button>
                 <Button primary={format === 'week'} onClick={this.handleChange} name='format' value='week'>По дням недели</Button>
                 <Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>
               </Responsive>
               <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
-                <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По интервалу</Button>
-                <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>1 раз</Button>
+                <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По расписанию</Button>
+                <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>Однократно</Button>
               </Responsive>
               <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
                 <Button primary={format === 'week'} onClick={this.handleChange} name='format' value='week'>По дням недели</Button>
