@@ -18,8 +18,6 @@ import {
 
 import clarifications from '../../../constants/hardcode'
 
-import Day from './Day';
-
 import _ from 'lodash';
 
 function declension(forms, val) {
@@ -260,7 +258,8 @@ class Interval extends Component {
           key: i,
           text: UIText.freq[preset.id],
           value: presetKey,
-          onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
+          onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
+          //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
         }
       )
     })
@@ -338,7 +337,7 @@ class Interval extends Component {
       <>
         <Form.Group>
           <Form.Field inline className='fluid'>
-            <label>Выберите шаблон расписания:</label>
+            <label>Кратность приема:</label>
             <Dropdown
               inline
               name={'presets'}

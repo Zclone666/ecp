@@ -18,7 +18,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages', 'analogs')
+@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages', 'analogs', 'druginfo')
 @observer
 class Drug extends React.Component {
   constructor(props){
@@ -49,6 +49,14 @@ class Drug extends React.Component {
     } = this.props
     await this.props.analogs.get(drug)
   }
+
+  getInfo = async () => {
+    let {
+      drug
+    } = this.props
+    await this.props.druginfo.get(drug)
+  }
+
   unselectDrug = () => {
     let { drug } = this.props
     this.props.drugs.unselectDrug(drug)
@@ -179,7 +187,7 @@ class Drug extends React.Component {
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
+                <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className='underlined'>{name}</RouterLink>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
                   {dosage.form && (nameshort[dosage.form] || names[dosage.form])}
 
@@ -234,13 +242,16 @@ class Drug extends React.Component {
                   text='Аналоги'
                 />
                 <Dropdown.Item
+                  icon='ellipsis horizontal'
+                  as={RouterLink} 
+                  to={`/druginfo/${drug.key}`}
+                  text='Подробнее'
+                  onClick={this.getInfo}
+                />
+                <Dropdown.Item
                   icon='delete'
                   onClick={this.unselectDrug}
                   text='Убрать из списка'
-                />
-                <Dropdown.Item
-                  icon='ellipsis horizontal'
-                  text='Подробнее'
                 />
               </Dropdown.Menu>
             </List.Content>

@@ -39,11 +39,13 @@ class Drugs {
   //getSearch
   async search(text, saveTo='search'){
     this.searchReady = false
+    let { active_language } = this.stores.actions
     let data = {
       text,
       lib: '62, 52', //'61, 25' - заболевания
       service: "43",
-      chain: 0
+      chain: 0,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -76,6 +78,7 @@ class Drugs {
     await this.drug.set( drugKey, currentDrug );
     this.stores.dosages.get(currentDrug, true)
   }
+
 
   setDosageParams = async (url) => {
     let drugData = this.stores.actions.stepsData

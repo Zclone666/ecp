@@ -27,6 +27,8 @@ export default {
 
   '/analog/:page':                            { section: 'main', name: 'analog',     render: <Main />       },
 
+  '/druginfo/:page':                          { section: 'main', name: 'druginfo',   render: <Main />       },
+
   '/login':                                   { section: 'auth', name: 'auth',       render: <Login />      },
   '/signup':                                  { section: 'auth', name: 'auth',       render: <Signup/>      },
   '/confirm':                                 { section: 'auth', name: 'auth',       render: <Confirm/>     },

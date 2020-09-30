@@ -52,9 +52,6 @@ class Analog extends Component {
           <Menu.Item color='red' onClick={this.back}>
             Назад
           </Menu.Item>
-          <Menu.Item onClick={this.saveDoze}>
-            Сохранить
-          </Menu.Item>
         </Menu>
 
         <div className='scrollwrapper bottomMenu'>

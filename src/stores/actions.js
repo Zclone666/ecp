@@ -22,6 +22,8 @@ class Actions {
   @observable authkey = null;
   @observable privateKey = null;
 
+  @observable active_language = 'ru';
+
   @observable pages = {}
   @observable currentPage = null
 
@@ -126,7 +128,8 @@ class Actions {
     once: null,
     week: null,
     calendar: null,
-    specials: null
+    specials: null,
+    format: 'interval'
   }
 
   @observable calculatorForm = {
@@ -175,8 +178,8 @@ class Actions {
       driving: true,
       allergy: []
     },
-    save_recipe: false,
-    active_language: "RU",
+    // save_recipe: false,
+    active_language: "ru",
     drugs: []
   }
 
@@ -193,6 +196,13 @@ class Actions {
         this.stores.dosages.setStepDosage()
       }
     })
+    autorun(() => {
+      if(this.loading){
+        setTimeout(() => {
+          this.loading = false
+        }, 5000)
+      }
+    });
     // autorun(() => {
     //   console.log(this.currentPage);
     //   if(this.currentPage && _.keys(this.pages).length > 0){
@@ -271,10 +281,12 @@ class Actions {
   }
 
   async getObject(name) {
-
+    let { active_language } = this
     return POST({
       path: `info/${name}`,
-      data: {},
+      data: {
+        active_language
+      },
       success: async (data) => {
         let { alert, ...values } = data
         //this[name]
@@ -357,9 +369,11 @@ class Actions {
   async login() {
     //this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey, remember } = this.loginForm
+    let { active_language } = this
     let data = {
       //key: privateKey,
-      authkey: this.authkey
+      authkey: this.authkey,
+      active_language
     }
     return POST({
       path: `auth/Check`,
@@ -425,6 +439,7 @@ class Actions {
   async fakelogin() {
     this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey, remember, ...data } = this.loginForm
+    // data.active_language = active_language
     return await POST({
       path: `https://cs.socmedica.com/api/user/authorization`,
       data,
@@ -479,6 +494,7 @@ class Actions {
   }
   async signin() {
     this.signinForm.key = AUTH_SERVICE_KEY;
+    
     return POST({
       path: `https://cs.socmedica.com/api/registration/send`,
       data: this.signinForm,

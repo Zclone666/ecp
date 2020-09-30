@@ -41,8 +41,10 @@ class Drugs {
 
   //getLF
   async getFp(drug_obj){
+    let { active_language } = this.stores.actions
     let data = {
-      drug: drug_obj
+      drug: drug_obj,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -110,12 +112,14 @@ class Drugs {
 
   async get(drug_obj, flag=false){
     let currentDosages = await this.dosage.get(drug_obj.key);
+    let { active_language } = this.stores.actions
     if(currentDosages && !flag) {
       await this.stores.drugs.getDosageParams()
       return
     }
     let data = {
-      drug: drug_obj
+      drug: drug_obj,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey

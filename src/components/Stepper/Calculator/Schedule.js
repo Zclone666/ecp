@@ -35,7 +35,7 @@ class Schedule extends Component {
       fullDosage: 0,
       weight: 0,
       weightDosage: 0,
-      format: 'interval',
+      // format: 'interval',
       timeFromStart: null
     }
   }
@@ -119,6 +119,7 @@ class Schedule extends Component {
           interval,
           once,
           week,
+          format,
           calendar
         }
       },
@@ -132,7 +133,7 @@ class Schedule extends Component {
       fullDosage,
       weight,
       weightDosage,
-      format,
+      // format,
       timeFromStart
     } = this.state
     // console.log({dateStart});

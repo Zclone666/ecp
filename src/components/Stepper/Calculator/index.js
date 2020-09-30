@@ -13,6 +13,9 @@ import {
   TextArea
 } from 'semantic-ui-react'
 
+import clarifications from '../../../constants/hardcode'
+
+
 import Schedule from './Schedule'
 
 import _ from 'lodash';
@@ -118,6 +121,32 @@ class Calculator extends Component {
   //     }
   //   }
   // }
+
+  setPreset = (e, {value}) => {
+    // console.log(value);
+    this.props.actions.scheduleForm.interval = value.tpl
+  }
+
+  renderPresets(){
+    let { presets } = clarifications
+    let { UIText, scheduleForm: { interval } } = this.props.actions
+    let arr = []
+    interval = interval || []
+    _.keys( presets ).forEach(( presetKey, i ) => {
+      let preset = presets[presetKey]
+      arr.push(
+        {
+          key: i,
+          text: UIText.freq[preset.id],
+          value: preset,
+          //onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
+          //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
+        }
+      )
+    })
+    return arr
+  }
+
   render(){
     let {
       actions: {
@@ -242,7 +271,7 @@ class Calculator extends Component {
               />
             </Form.Field>
             <Form.Field width={3}>
-              <label>&nbsp;</label>
+              <label>На кг веса</label>
               <Input
                 size='big'
                 name='weightDosage'
@@ -254,7 +283,43 @@ class Calculator extends Component {
               />
             </Form.Field>
           </Form.Group>
-
+          <Form.Group>
+            <Form.Field width={4}>
+              <label>Кратность приема:</label>
+              <Dropdown
+                selection
+                className='input big'
+                name={'presets'}
+                placeholder={'Выбрать'}
+                onChange={this.setPreset}
+                options={this.renderPresets()}
+              />
+            </Form.Field>
+            <Form.Field width={3}>
+              <label>Суточная доза:</label>
+              <Input
+                size='big'
+                name='dayDosage'
+                value={getFromBase((currUnit || def), fullDosage) || ''}
+                label={{ basic: true, content: secondName || 'мг' }}
+                labelPosition='right'
+                placeholder='500'
+                onChange={this.handleChange}
+              />
+            </Form.Field>
+            <Form.Field width={3}>
+              <label>На массу тела</label>
+              <Input
+                size='big'
+                name='dayWeightDosage'
+                value={getFromBase((currUnit || def), weightDosage) || ''}
+                label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
+                labelPosition='right'
+                placeholder='0'
+                onChange={this.handleChange}
+              />
+            </Form.Field>
+          </Form.Group>
         </Form>
         <Schedule />
         <Form>

@@ -26,12 +26,13 @@ class Recipes {
   }
   save = async () => {
     this.stores.actions.loading = true
+    let { active_language } = this.stores.actions
     await this.stores.db.clearData(false, true)
     let data = await _.clone(this.stores.actions.drugStructure)
     data.drugs = await Array.from(this.stores.drugs.drug.values())
 
     data.service = "43"
-
+    data.active_language = active_language
     data.return_subjects = false
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
