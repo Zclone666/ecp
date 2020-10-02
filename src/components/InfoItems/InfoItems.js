@@ -95,13 +95,16 @@ class InfoItems extends Component {
               <>
                 <List.Item
                   key={'info'+i}
+                  style={{ cursor: 'pointer'}}
                   onClick={() => this.collapse(i)}
                 >
                   <List.Content className='large'>
                     <List.Header>{item.title}</List.Header>
 
                   </List.Content>
-                  <Transition.Group animation={'slide down'} duration={300}>
+                  
+                </List.Item>
+                <Transition.Group animation={'slide down'} duration={300}>
                     {i === opened && (
                       {
                         'string': this.renderText(item),
@@ -111,7 +114,6 @@ class InfoItems extends Component {
                       }[item.type]
                     )}
                   </Transition.Group>
-                </List.Item>
               </>
             )
 

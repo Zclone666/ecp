@@ -180,7 +180,9 @@ class Actions {
     },
     // save_recipe: false,
     active_language: "ru",
-    drugs: []
+    drugs: [],
+    text: null,
+    specials: null
   }
 
 
@@ -196,6 +198,7 @@ class Actions {
         this.stores.dosages.setStepDosage()
       }
     })
+   
     autorun(() => {
       if(this.loading){
         setTimeout(() => {
@@ -212,6 +215,13 @@ class Actions {
     // });
     // this.onResize()
     // window.onresize = this.onResize
+  }
+  async setLang(lang){
+    if(lang !== this.active_language){
+      this.drugStructure.active_language = this.active_language = lang
+      await localStorage.setItem('lang', lang)
+      window.location.reload(false);
+    }
   }
   onResize(){
     // console.log('resize');
@@ -317,6 +327,12 @@ class Actions {
 
   async autologin(){
 
+    this.drugStructure.active_language = this.active_language = await localStorage.getItem('lang') || null;
+    if(!this.active_language){
+      this.drugStructure.active_language = this.active_language = 'ru'
+      await localStorage.setItem('lang', 'ru')
+    }
+
     this.getObject('buttonTexts')
     this.getObject('elements')
     this.getObject('UIText')
@@ -324,6 +340,7 @@ class Actions {
 
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
+    
 
     if(!this.authkey && this.stores.router.match.name !== 'auth') {
       this.loading = false

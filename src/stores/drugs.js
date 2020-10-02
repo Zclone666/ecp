@@ -228,6 +228,7 @@ class Drugs {
       type: null,
       group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
       text: null,
+      specials: null,
       dosage: { // дозировка
         // way: null,
         // step: null,
@@ -251,8 +252,7 @@ class Drugs {
         interval: null,
         once: null,
         week: null,
-        calendar: null,
-        specials: null
+        calendar: null
       }
     }
     drug = _.assignIn(drug, row);

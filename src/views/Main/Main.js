@@ -17,11 +17,11 @@ import {
   // Search,
   Segment,
   Message,
-  List,
-  Feed,
+  Dropdown,
   Button,
   Responsive,
-  Grid
+  Grid,
+  Flag
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -66,6 +66,10 @@ class Main extends Component {
 
   handleResetAll = () => {
     if(window.confirm('Сбросить все?')) this.props.db.clearData(true)
+  }
+
+  changeLang = (lang) => {
+    this.props.actions.setLang(lang)
   }
 
   getInfoPrep = () => {
@@ -159,10 +163,12 @@ class Main extends Component {
               <Icon name='clipboard outline' />
               Рецепты
             </Menu.Item>
-            <Menu.Item disabled>
-              <Icon name='globe' />
-              Язык
-            </Menu.Item>
+            <Dropdown item text={<>Русский <Flag name='ru' /></>}>
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => this.changeLang('en')}><Flag name='gb' />English</Dropdown.Item>
+                <Dropdown.Item onClick={() => this.changeLang('ru')}><Flag name='ru' />Русский</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
             <Menu.Item disabled>
               <Icon name='book' />
               Инструкция

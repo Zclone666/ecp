@@ -57,7 +57,7 @@ class Calculator extends Component {
     }
     //value = parseFloat(eval(value))
     if( name === 'specials' ){
-      this.props.actions.scheduleForm.specials = value
+      this.props.actions.drugStructure.specials = value
       return
     }
     value = parseFloat(value)

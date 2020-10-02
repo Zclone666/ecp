@@ -189,16 +189,18 @@ class Drug extends React.Component {
               <Feed.Summary>
                 <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className='underlined'>{name}</RouterLink>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
-                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}
-
+                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
+                  {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
+                  {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta>
 
-                {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
-                {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '}
-                {(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''}
-                {((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '}
+                
+                {/*(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '*/}
+                {/*(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''*/}
+                {/*((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '*/}
+                {/*(nameshort[dosage.method] || names[dosage.method]) && ', '*/}
                 {(nameshort[dosage.method] || names[dosage.method]) || ''}
               </Feed.Meta>
             </Feed.Content>
@@ -215,12 +217,13 @@ class Drug extends React.Component {
                     <Feed.Summary>
                       <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                     </Feed.Summary>
+                    
                     <Feed.Meta>
-                    {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
-                    {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '}
-                    {(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''}
-                    {((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '}
-                    {(nameshort[dosage.method] || names[dosage.method]) || ''}
+                      {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
+                      {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
+                      {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+                      {(nameshort[dosage.method] || names[dosage.method]) && ', '}
+                      {(nameshort[dosage.method] || names[dosage.method]) || ''}
                     </Feed.Meta>
                   </Feed.Content>
                 </Feed.Event>
@@ -232,7 +235,7 @@ class Drug extends React.Component {
                   as={RouterLink}
                   to={url}
                   onClick={this.getLF}
-                  text='Дозировки'
+                  text='Дозировка'
                 />
                 <Dropdown.Item
                   icon='font'
