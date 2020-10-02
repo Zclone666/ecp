@@ -143,13 +143,15 @@ class Warnings {
                       value: item.value,
                       valuecolor: color,
                       group,
-                      hint
+                      hint,
+                      hintarr: item.hint
                     }
                   }else{
                     if(group > warnGroups[item.type].group){
                       warnGroups[item.type].value = item.value
                       warnGroups[item.type].valuecolor = color
                       warnGroups[item.type].group = group
+                      warnGroups[item.type].hintarr = _.unionWith(warnGroups[item.type].hintarr, item.hint, _.isEqual);
                     }
                   }
                   if( subject.type === 'drug' ){

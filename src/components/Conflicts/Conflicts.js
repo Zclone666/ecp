@@ -14,7 +14,8 @@ import {
   Icon,
   Grid,
   Segment,
-  Popup
+  Popup,
+  Header
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -106,7 +107,7 @@ class Conflicts extends Component {
         patientForm
       },
       drugs: { selectedRows },
-      warnings: { warning, groups }, //warnings, warnGroups
+      warnings: { info: { names }, warning, groups }, //warnings, warnGroups
     } = this.props
     let selectedWarnings = this.conflicts
     let noSelections = _.isEmpty(selectedWarnings)
@@ -147,7 +148,21 @@ class Conflicts extends Component {
                     />
                   </RouterLink>
                 }
-                <Popup content={group.hint} trigger={
+                <Popup content={
+                  <>
+                    {(group.hintarr && group.hintarr.length > 0) && <Header as='h5' content={group.hint} />}
+                    {(!group.hintarr || group.hintarr.length < 1) && group.hint}
+                    {(group.hintarr && group.hintarr.length > 0) &&
+                      <List bulleted>
+                        {group.hintarr.map(( hintId, i ) => {
+                          return (
+                            <List.Item>{names[hintId]}</List.Item>
+                          )
+                        })}
+                      </List>
+                    }
+                  </>
+                } trigger={
                   <Icon.Group
                     onClick={() => this.selectConflict(key)}
                     size='big'
