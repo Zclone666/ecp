@@ -28,6 +28,7 @@ import {
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
+import moment from 'moment';
 
 
 @inject('router', 'diseases', 'actions')
@@ -37,7 +38,7 @@ class PatientForm extends Component {
     super(props)
     this.state = {
       search_disease: '',
-      search_disease2: '',
+      search_co_disease: '',
       search_allergy: '',
     }
     //this.contextRef = createRef()
@@ -81,14 +82,14 @@ class PatientForm extends Component {
 
   handleResultSelect = async (e, { name, result }) => {
     // console.log({ name, result });
-    let newName = name === 'disease2' ? 'disease' : name
-    await this.props.actions.selectPatient(result, newName)
+    //let newName = name === 'co_disease' ? 'disease' : name
+    await this.props.actions.selectPatient(result, name)
     this.setState({ [`search_${name}`]: '' })
   }
   handleResultUnselect = async ( name, result ) => {
     // console.log({ name, result });
-    let newName = name === 'disease2' ? 'disease' : name
-    await this.props.actions.unselectPatient(result, newName)
+    //let newName = name === 'co_disease' ? 'disease' : name
+    await this.props.actions.unselectPatient(result, name)
     this.forceUpdate()
     // this.setState({ [`search_${name}`]: '' })
   }
@@ -116,17 +117,17 @@ class PatientForm extends Component {
     } = this.props.actions.patientForm
     let arr = []
     disease.forEach((item, i) => {
-      if(item.main) arr.push(item)
+       arr.push(item)
     });
     return arr
   }
-  get disease2(){
+  get co_disease(){
     const {
-      disease,
+      co_disease,
     } = this.props.actions.patientForm
     let arr = []
-    disease.forEach((item, i) => {
-      if(!item.main) arr.push(item)
+    co_disease.forEach((item, i) => {
+       arr.push(item)
     });
     return arr
   }
@@ -138,6 +139,7 @@ class PatientForm extends Component {
       growth,
       weight,
       disease,
+      co_disease,
       pregnancy,
       gestation,
       trimester,
@@ -146,11 +148,15 @@ class PatientForm extends Component {
       allergy
     } = this.props.actions.patientForm
     let { diseaseRows, allergyRows } = this.props.diseases
-    let { search_disease, search_disease2, search_allergy } = this.state
+    let { search_disease, search_co_disease, search_allergy } = this.state
     let searchReady = true, searchRows=[], searchQuery=''
 
     let isWoman = sex === 'woman'
     let isPregant = !!pregnancy
+
+    // console.log({birthdate});
+    let veryOld = moment().diff(((birthdate && moment(birthdate, 'x')) || moment()), 'years') >= 60
+    // console.log({veryOld});
 
     return (
       <Segment basic>
@@ -230,25 +236,25 @@ class PatientForm extends Component {
               <Search
                 fluid
                 size='big'
-                name='disease2'
+                name='co_disease'
                 loading={!searchReady}
                 onResultSelect={this.handleResultSelect}
                 onSearchChange={_.debounce(this.handleSearchChange, 500, {
                   leading: true,
                 })}
                 results={diseaseRows}
-                value={search_disease2}
+                value={search_co_disease}
                 resultRenderer={this.resultRenderer}
                 resultClassName='result-wrapper'
               />
             </Form.Field>
           </Form.Group>
           <List divided verticalAlign='middle'>
-            {this.disease2.map((item, i) => {
+            {this.co_disease.map((item, i) => {
               return(
-                <List.Item key={'disease2'+i} style={{ padding: '0.5em', backgroundColor: '#f6f6f0' }}>
+                <List.Item key={'co_disease'+i} style={{ padding: '0.5em', backgroundColor: '#f6f6f0' }}>
                   <List.Content floated='right'>
-                    <Button size='tiny' icon='delete' onClick={() => this.handleResultUnselect('disease2', item)}/>
+                    <Button size='tiny' icon='delete' onClick={() => this.handleResultUnselect('co_disease', item)}/>
                   </List.Content>
                   <List.Icon name='heartbeat' size='big' verticalAlign='middle' />
                   <List.Content><List.Header>{item.name}</List.Header></List.Content>
@@ -288,7 +294,7 @@ class PatientForm extends Component {
               )
             })}
           </List>
-          {isWoman &&
+          {(isWoman && !veryOld) &&
             <Responsive as={Form.Group} widths={'equal'} maxWidth={480}>
               <Form.Field>
                 <Button
@@ -384,7 +390,7 @@ class PatientForm extends Component {
             <Form.Field>
               <Button
                 size='big'
-                disabled={!isWoman}
+                disabled={!isWoman || veryOld}
                 icon
                 fluid
                 labelPosition='left'
@@ -398,7 +404,7 @@ class PatientForm extends Component {
               </Button>
             </Form.Field>
           </Responsive>
-          {isWoman &&
+          {(isWoman && !veryOld) &&
             <Responsive as={Form.Group} minWidth={481}>
               <Form.Field>
                 <Button
@@ -490,7 +496,7 @@ class PatientForm extends Component {
             <Form.Field>
               <Button
                 size='big'
-                disabled={!isWoman}
+                disabled={!isWoman || veryOld}
                 icon
                 labelPosition='left'
                 primary={!!lactation}
