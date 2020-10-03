@@ -289,7 +289,7 @@ class PatientForm extends Component {
                     <Button size='tiny' icon='delete' onClick={() => this.handleResultUnselect('allergy', item)}/>
                   </List.Content>
                   <List.Icon name='heartbeat' size='big' verticalAlign='middle' />
-                  <List.Content><List.Header>{item.name}</List.Header></List.Content>
+                  <List.Content><List.Header>{item.name}{item.type === 'TN' && <span><sup>TM</sup></span>}</List.Header></List.Content>
                 </List.Item>
               )
             })}

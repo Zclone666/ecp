@@ -60,9 +60,11 @@ class Schedule extends Component {
   setToday = () => {
     this.props.actions.scheduleForm.dateStart = moment().format('x')
   }
-  setDate = (tpl, text) => {
+  setDate = (tpl, id) => {
+    let { UIText } = this.props.actions
     let { dateStart } = this.props.actions.scheduleForm
-    this.setState({ timeFromStart: text })
+    this.setState({ timeFromStart: UIText.duration[id] })
+    this.props.drugs.current.duration = id
     this.props.actions.scheduleForm.dateFinish = moment(dateStart, 'x').add(tpl.x, tpl.timesx).format('x')
   }
   componentDidMount(){
@@ -96,7 +98,7 @@ class Schedule extends Component {
           key: i,
           text: UIText.duration[duration.id],
           value: durationKey,
-          onClick: () => this.setDate(duration.tpl[0], UIText.duration[duration.id])
+          onClick: () => this.setDate(duration.tpl[0], duration.id)
         }
       )
     })
@@ -192,8 +194,8 @@ class Schedule extends Component {
                   options={this.renderDurations()}
                 />
               </Input>
-              
-              
+
+
             </Form.Field>
             <Form.Field width={5}>
               <label>Или</label>

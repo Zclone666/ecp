@@ -211,8 +211,11 @@ class Drugs {
       // baseDosage,
       dosage,
       count: vals.count.value,
+      dayCount: 1,
       fullDosage: dosage * vals.count.value,
-      weightDosage: (weight ? (dosage * vals.count.value)/weight : 0)
+      weightDosage: (weight ? (dosage * vals.count.value)/weight : 0),
+      dayDosage: dosage * vals.count.value,
+      dayWeightDosage: (weight ? (dosage * vals.count.value)/weight : 0)
     }
   }
 

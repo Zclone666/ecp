@@ -47,6 +47,7 @@ class Patients {
             birthdate,
             disease,
             disease2,
+            co_disease,
             driving,
             email,
             fio,
@@ -62,6 +63,7 @@ class Patients {
             trimester,
             weight
           } = data.patient
+          co_disease = co_disease || []
           this.stores.actions.patientForm = {
             id,
             email,
@@ -73,6 +75,7 @@ class Patients {
             birthdate,
             disease,
             disease2,
+            co_disease,
             driving,
             gestation,
             growth,
@@ -93,6 +96,7 @@ class Patients {
             birthdate,
             disease,
             disease2,
+            co_disease,
             driving,
             gestation,
             growth,

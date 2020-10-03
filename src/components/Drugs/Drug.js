@@ -18,7 +18,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages', 'analogs', 'druginfo')
+@inject('db', 'actions', 'router', 'tools', 'drugs', 'warnings', 'dosages', 'analogs', 'druginfo')
 @observer
 class Drug extends React.Component {
   constructor(props){
@@ -96,7 +96,38 @@ class Drug extends React.Component {
     //return false
   }
 
+  renderRules(){
+    let {
+      dosages: { getFromBase },
+      tools: { names, shortnames },
+      drug: {
+        freq,
+        duration,
+        calc,
+        dosage
+      },
+      drug,
+      actions: { UIText }
+    } = this.props
 
+    let arr = []
+
+    // console.log({drug});
+
+    if(calc.fullDosage && dosage.pack.dosage.id ){
+      let dosageValue = getFromBase(dosage.pack.dosage.id, calc.fullDosage)
+      let dosageName = shortnames[dosage.pack.dosage.id] || names[dosage.pack.dosage.id]
+      arr.push(`${parseInt(dosageValue)} ${dosageName}`)
+    }
+
+    if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
+    if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+
+    return {
+      empty: arr.length < 1,
+      text: arr.join(', ')
+    }
+  }
 
   render(){
     let {
@@ -135,6 +166,9 @@ class Drug extends React.Component {
     //   }),
     // })
     // console.log({currWarning});
+
+    let rules = this.renderRules()
+
     return(
       <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
         <div className='border' style={{ backgroundColor: hasBorder && maxItem.color || 'transparent' }} />
@@ -196,12 +230,14 @@ class Drug extends React.Component {
               </Feed.Summary>
               <Feed.Meta>
 
-                
+
                 {/*(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '*/}
                 {/*(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''*/}
                 {/*((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '*/}
                 {/*(nameshort[dosage.method] || names[dosage.method]) && ', '*/}
                 {(nameshort[dosage.method] || names[dosage.method]) || ''}
+                {!rules.empty && ', '}
+                {rules.text}
               </Feed.Meta>
             </Feed.Content>
           </Feed.Event>
@@ -217,14 +253,19 @@ class Drug extends React.Component {
                     <Feed.Summary>
                       <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                     </Feed.Summary>
-                    
+
                     <Feed.Meta>
                       {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
                       {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
                       {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
                       {(nameshort[dosage.method] || names[dosage.method]) && ', '}
-                      {(nameshort[dosage.method] || names[dosage.method]) || ''}
+                      {rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
                     </Feed.Meta>
+                    {!rules.empty && <Feed.Meta>
+                      {(nameshort[dosage.method] || names[dosage.method]) || ''},
+                      {rules.text}
+                    </Feed.Meta>}
+
                   </Feed.Content>
                 </Feed.Event>
               }
@@ -246,7 +287,7 @@ class Drug extends React.Component {
                 />
                 <Dropdown.Item
                   icon='ellipsis horizontal'
-                  as={RouterLink} 
+                  as={RouterLink}
                   to={`/druginfo/${drug.key}`}
                   text='Подробнее'
                   onClick={this.getInfo}

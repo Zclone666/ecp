@@ -17,32 +17,32 @@ const clarifications = {
 
   //count day
   presets: {
-    perDay1: { id: "CrjuCSzHZJ4I6PSMAXzTpw==", tpl: [{ type: 'count', x: 1, timesx: 'days' }] },
-    perDay2: { id: "Ps9lIMgjH9YIahJr4v1aiQ==", tpl: [{ type: 'count', x: 2, timesx: 'days' }] },
-    perDay3: { id: "d0KWzXuvobA1wfOiLWyusA==", tpl: [{ type: 'count', x: 3, timesx: 'days' }] },
-    perDay4: { id: "WZ8i1CtiQavxPlOh3dRqYw==", tpl: [{ type: 'count', x: 4, timesx: 'days' }] },
-    perDay5: { id: "Ft9B9+D8Yr0lbepkIW5m9A==", tpl: [{ type: 'count', x: 5, timesx: 'days' }] },
+    perDay1: { id: "CrjuCSzHZJ4I6PSMAXzTpw==", tpl: [{ type: 'count', x: 1, timesx: 'days', multiplicate: 1 }] },
+    perDay2: { id: "Ps9lIMgjH9YIahJr4v1aiQ==", tpl: [{ type: 'count', x: 2, timesx: 'days', multiplicate: 2 }] },
+    perDay3: { id: "d0KWzXuvobA1wfOiLWyusA==", tpl: [{ type: 'count', x: 3, timesx: 'days', multiplicate: 3 }] },
+    perDay4: { id: "WZ8i1CtiQavxPlOh3dRqYw==", tpl: [{ type: 'count', x: 4, timesx: 'days', multiplicate: 4 }] },
+    perDay5: { id: "Ft9B9+D8Yr0lbepkIW5m9A==", tpl: [{ type: 'count', x: 5, timesx: 'days', multiplicate: 5 }] },
 
     //count week
-    perWeek1: { id: "pdKXge8w/eC+6L635qb2YA==", tpl: [{ type: 'count', x: 1, timesx: 'weeks' }] },
-    perWeek2: { id: "AmkBNmf+thJ8dohSe+s+RA==", tpl: [{ type: 'count', x: 2, timesx: 'weeks' }] },
+    perWeek1: { id: "pdKXge8w/eC+6L635qb2YA==", tpl: [{ type: 'count', x: 1, timesx: 'weeks', multiplicate: eval(1/7) }] },
+    perWeek2: { id: "AmkBNmf+thJ8dohSe+s+RA==", tpl: [{ type: 'count', x: 2, timesx: 'weeks', multiplicate: eval(2/7) }] },
 
     //every
-    every30min: { id: "BJ6ybdRulIhypOEQtOpszQ==", tpl: [{ type: 'every', x: 30, timesx: 'minutes' }] },
-    every1hour: { id: "lDUWlUY8H+tNs+OKEpt6og==", tpl: [{ type: 'every', x: 1, timesx: 'hours' }] },
-    every2hours: { id: "Po6jgxEdiAPf1vHpdBzegA==", tpl: [{ type: 'every', x: 2, timesx: 'hours' }] },
-    every3hours: { id: "ZN4Ap9s8XKn01RWVlSpNmQ==", tpl: [{ type: 'every', x: 3, timesx: 'hours' }] },
-    every4hours: { id: "QaZjko/HrJx2RYSxfahsZg==", tpl: [{ type: 'every', x: 4, timesx: 'hours' }] },
+    every30min: { id: "BJ6ybdRulIhypOEQtOpszQ==", tpl: [{ type: 'every', x: 30, timesx: 'minutes', multiplicate: 48 }] },
+    every1hour: { id: "lDUWlUY8H+tNs+OKEpt6og==", tpl: [{ type: 'every', x: 1, timesx: 'hours', multiplicate: 24 }] },
+    every2hours: { id: "Po6jgxEdiAPf1vHpdBzegA==", tpl: [{ type: 'every', x: 2, timesx: 'hours', multiplicate: 12 }] },
+    every3hours: { id: "ZN4Ap9s8XKn01RWVlSpNmQ==", tpl: [{ type: 'every', x: 3, timesx: 'hours', multiplicate: 8 }] },
+    every4hours: { id: "QaZjko/HrJx2RYSxfahsZg==", tpl: [{ type: 'every', x: 4, timesx: 'hours', multiplicate: 6 }] },
 
     //every
-    onceIn2days: { id: "PC59kILvXj+gK1I513yvqA==", tpl: [{ type: 'every', x: 2, timesx: 'days' }] },
-    onceIn3days: { id: "wsZymWx36purT46zC9kJyA==", tpl: [{ type: 'every', x: 3, timesx: 'days' }] },
-    onceIn4days: { id: "HjM4QHQn8D6WrCf7on3AtA==", tpl: [{ type: 'every', x: 4, timesx: 'days' }] },
+    onceIn2days: { id: "PC59kILvXj+gK1I513yvqA==", tpl: [{ type: 'every', x: 2, timesx: 'days', multiplicate: eval(1/2) }] },
+    onceIn3days: { id: "wsZymWx36purT46zC9kJyA==", tpl: [{ type: 'every', x: 3, timesx: 'days', multiplicate: eval(1/3) }] },
+    onceIn4days: { id: "HjM4QHQn8D6WrCf7on3AtA==", tpl: [{ type: 'every', x: 4, timesx: 'days', multiplicate: eval(1/4) }] },
 
     //every
-    onceIn3months: { id: "tuOuBQ1wHSnBcZ8utQhA4g==", tpl: [{ type: 'every', x: 3, timesx: 'months' }] },
+    onceIn3months: { id: "tuOuBQ1wHSnBcZ8utQhA4g==", tpl: [{ type: 'every', x: 3, timesx: 'months', multiplicate: eval(1/90) }] },
   },
-  
+
 
   durations: {
     day1: { id: "MCdgBksBJO2voZHSf+8z0Q==", tpl: [{ type: 'period', x: 1, timesx: 'days' }] },
@@ -72,7 +72,7 @@ const clarifications = {
     year2: { id: "aWOOuZwNyEIU8sQx0kl+0w==", tpl: [{ type: 'period', x: 2, timesx: 'years' }] },
 
   },
-  
+
   durationPresets: {
     day1: { id: "MCdgBksBJO2voZHSf+8z0Q==", tpl: [{ type: 'period', x: 1, timesx: 'days' }] },
     day2: { id: "55rf+bPPeuD5fdSYaG+iWQ==", tpl: [{ type: 'period', x: 2, timesx: 'days' }] },

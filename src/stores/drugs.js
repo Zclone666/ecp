@@ -92,6 +92,11 @@ class Drugs {
     let { calcValues, getFromBase } = this.stores.dosages
     let def = (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id ) || (calcValues.dosage.unit && calcValues.dosage.unit.id)
 
+    let { freq, duration } = drug
+    // console.log({ freq, duration });
+    currentDrug.freq = freq || null
+    currentDrug.duration = duration || null
+
     let {
       key,
       way,
@@ -117,8 +122,11 @@ class Drugs {
     let {
       dosage: dos,
       count,
+      dayCount,
       fullDosage,
-      weightDosage
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     } = calcData
 
     currentDrug.dosage = {
@@ -145,8 +153,11 @@ class Drugs {
     currentDrug.calc = {
       dosage: dos,
       count,
-      fullDosage: fullDosage,
-      weightDosage:  weightDosage
+      dayCount,
+      fullDosage,
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     }
     await this.drug.set( drug.key, currentDrug );
 
@@ -160,6 +171,9 @@ class Drugs {
     let drug = this.current
     let currentDrug = await this.drug.get(drug.key) || {};
     let currentDosages = await this.stores.dosages.dosage.get(drug.key) || {};
+
+    let { freq, duration } = drug
+    // console.log({ freq, duration });
 
     let {
       key,
@@ -184,8 +198,11 @@ class Drugs {
     let {
       dosage: dos,
       count,
+      dayCount,
       fullDosage,
-      weightDosage
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     } = currentDrug.calc
 
     this.stores.actions.stepsData = {
@@ -200,8 +217,11 @@ class Drugs {
     this.stores.actions.calculatorForm = {
       dosage: dos,
       count,
+      dayCount,
       fullDosage,
-      weightDosage
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     }
     this.stores.actions.scheduleForm = {
       dateStart,
@@ -229,6 +249,8 @@ class Drugs {
       group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
       text: null,
       specials: null,
+      freq: null,
+      duration: null,
       dosage: { // дозировка
         // way: null,
         // step: null,
@@ -241,8 +263,11 @@ class Drugs {
       calc: {
         dosage: 0,
         count: 1,
+        dayCount: 1,
         fullDosage: 0,
-        weightDosage: 0
+        weightDosage: 0,
+        dayDosage: 0,
+        dayWeightDosage: 0
       },
       schedule: {
         dateStart: null,

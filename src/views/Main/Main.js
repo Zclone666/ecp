@@ -90,7 +90,7 @@ class Main extends Component {
 
   render() {
     const { open, searchQuery, selectedDrug, selectedConflict } = this.state
-    let { currentPage, height } = this.props.actions
+    let { currentPage, height, active_language } = this.props.actions
     let {
       drugs: { searchReady, searchRows, selectedRows, drug }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
@@ -155,15 +155,15 @@ class Main extends Component {
               <Icon name='address book' />
               Пациенты
             </Menu.Item>
-            {/*<Menu.Item disabled>
-              <Icon name='clipboard' />
-              Назначения
-            </Menu.Item>*/}
             <Menu.Item disabled>
-              <Icon name='clipboard outline' />
-              Рецепты
+              <Icon name='list ul' />
+              Текущие назначения
             </Menu.Item>
-            <Dropdown item text={<>Русский <Flag name='ru' /></>}>
+            <Menu.Item disabled>
+              <Icon name='clipboard list' />
+              История назначений
+            </Menu.Item>
+            <Dropdown item text={(active_language == 'ru' ? <>Русский <Flag name='ru' /></> : <>English <Flag name='gb' /></>)}>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => this.changeLang('en')}><Flag name='gb' />English</Dropdown.Item>
                 <Dropdown.Item onClick={() => this.changeLang('ru')}><Flag name='ru' />Русский</Dropdown.Item>

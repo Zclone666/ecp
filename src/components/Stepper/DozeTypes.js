@@ -45,12 +45,12 @@ class DozeTypes extends Component {
       let itemDosage = null
       if(_.isArray(item.dosage) && item.dosage.length > 0) itemDosage = item.dosage
       if(_.isObject(item.dosage) && !(_.isArray(item.dosage))) itemDosage = [item.dosage]
-      
+
       // if(form[stepsData.form].solute){
       //
       // }
       //console.log({item});
-      console.log({itemDosage});
+      //console.log({itemDosage});
       if(!itemDosage){
         arr.push({
           dosage: { short: 'нет данных', full: 'Дозировка не указана', id: null },
@@ -119,7 +119,7 @@ class DozeTypes extends Component {
           arr.push({ ...currPack })
         }
       }
-      
+
 
     })
     return arr

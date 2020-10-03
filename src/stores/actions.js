@@ -136,8 +136,11 @@ class Actions {
   @observable calculatorForm = {
     dosage: 0,
     count: 1,
+    dayCount: 1,
     fullDosage: 0,
-    weightDosage: 0
+    weightDosage: 0,
+    dayDosage: 0,
+    dayWeightDosage: 0
   }
 
   @observable selectedDrug = null
@@ -200,7 +203,7 @@ class Actions {
         this.stores.dosages.setStepDosage()
       }
     })
-   
+
     autorun(() => {
       if(this.loading){
         setTimeout(() => {
@@ -342,7 +345,7 @@ class Actions {
 
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
-    
+
 
     if(!this.authkey && this.stores.router.match.name !== 'auth') {
       this.loading = false
@@ -513,7 +516,7 @@ class Actions {
   }
   async signin() {
     this.signinForm.key = AUTH_SERVICE_KEY;
-    
+
     return POST({
       path: `https://cs.socmedica.com/api/registration/send`,
       data: this.signinForm,

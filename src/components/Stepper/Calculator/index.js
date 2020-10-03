@@ -123,8 +123,35 @@ class Calculator extends Component {
   // }
 
   setPreset = (e, {value}) => {
-    // console.log(value);
-    this.props.actions.scheduleForm.interval = value.tpl
+    let { presets } = clarifications
+    let preset = _.find(presets, { 'id': value});
+    let {
+      dosage,
+      count,
+      dayCount,
+      fullDosage,
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
+    } = this.props.actions.calculatorForm
+    this.props.drugs.current.freq = preset.id
+
+    // console.log({value});
+
+    dayCount = preset.tpl[0].multiplicate
+    dayDosage = preset.tpl[0].multiplicate * (fullDosage || 1)
+    dayWeightDosage = preset.tpl[0].multiplicate * (weightDosage || 1)
+
+    this.props.actions.calculatorForm = {
+      dosage,
+      count,
+      dayCount,
+      fullDosage,
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
+    }
+
   }
 
   renderPresets(){
@@ -138,7 +165,7 @@ class Calculator extends Component {
         {
           key: i,
           text: UIText.freq[preset.id],
-          value: preset,
+          value: preset.id,
           //onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
           //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
         }
@@ -159,20 +186,24 @@ class Calculator extends Component {
           patient: { weight }
         },
         calculatorForm: {
-          baseDosage,
           dosage,
           count,
+          dayCount,
           fullDosage,
-          weightDosage
+          weightDosage,
+          dayDosage,
+          dayWeightDosage
         },
         scheduleForm: {
           specials
         }
       },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
-      router: { values }
+      router: { values },
+      drugs: { current }
     } = this.props
     let { currUnit } = this.state
+
 
     // console.log({
     //   dosage,
@@ -217,6 +248,8 @@ class Calculator extends Component {
 
       // console.log({weights, calcValues, def, dos});
     // console.log({ getFromBase: getFromBase((currUnit || def), baseDosage), dosage, baseDosage });
+
+    // console.log({current});
     return (
       <Segment basic>
         <Form>
@@ -288,8 +321,9 @@ class Calculator extends Component {
               <label>Кратность приема:</label>
               <Dropdown
                 selection
+                defaultValue={(current && current.freq) || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
                 className='input big'
-                name={'presets'}
+                name={'dayCount'}
                 placeholder={'Выбрать'}
                 onChange={this.setPreset}
                 options={this.renderPresets()}
@@ -300,7 +334,7 @@ class Calculator extends Component {
               <Input
                 size='big'
                 name='dayDosage'
-                value={getFromBase((currUnit || def), fullDosage) || ''}
+                value={getFromBase((currUnit || def), dayDosage) || ''}
                 label={{ basic: true, content: secondName || 'мг' }}
                 labelPosition='right'
                 placeholder='500'
@@ -312,7 +346,7 @@ class Calculator extends Component {
               <Input
                 size='big'
                 name='dayWeightDosage'
-                value={getFromBase((currUnit || def), weightDosage) || ''}
+                value={getFromBase((currUnit || def), dayWeightDosage) || ''}
                 label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
                 labelPosition='right'
                 placeholder='0'
