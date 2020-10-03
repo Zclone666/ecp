@@ -64,7 +64,7 @@ class Schedule extends Component {
     let { UIText } = this.props.actions
     let { dateStart } = this.props.actions.scheduleForm
     this.setState({ timeFromStart: UIText.duration[id] })
-    this.props.drugs.current.duration = id
+    this.props.drugs.current.duration = id 
     this.props.actions.scheduleForm.dateFinish = moment(dateStart, 'x').add(tpl.x, tpl.timesx).format('x')
   }
   componentDidMount(){
