@@ -27,6 +27,7 @@ class Confirm extends Component {
   componentDidMount(){
     let { code, email, service } = this.props.router.values
     this.handleChange({ target: { name: 'code', value: code || '' }})
+    // this.handleChange({ target: { name: 'service', value: service || '' }})
     this.handleChange({ target: { name: 'email', value: email || '' }})
     this.props.actions.confirmForm.service = service
   }
