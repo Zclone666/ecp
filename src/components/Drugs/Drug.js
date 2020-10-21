@@ -117,7 +117,7 @@ class Drug extends React.Component {
     if(calc.fullDosage && dosage.pack.dosage.id ){
       let dosageValue = getFromBase(dosage.pack.dosage.id, calc.fullDosage)
       let dosageName = shortnames[dosage.pack.dosage.id] || names[dosage.pack.dosage.id]
-      arr.push(`${parseInt(dosageValue)} ${dosageName}`)
+      arr.push(`${parseFloat(dosageValue)} ${dosageName}`)
     }
 
     if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
@@ -260,9 +260,9 @@ class Drug extends React.Component {
                       {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
                       {(nameshort[dosage.method] || names[dosage.method]) && ', '}
                       {rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
-                    </Feed.Meta>
+                    </Feed.Meta><br />
                     {!rules.empty && <Feed.Meta>
-                      {(nameshort[dosage.method] || names[dosage.method]) || ''},
+                      {(nameshort[dosage.method] || names[dosage.method]) || ''}, &nbsp;
                       {rules.text}
                     </Feed.Meta>}
 

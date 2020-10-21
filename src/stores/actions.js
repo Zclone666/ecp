@@ -108,6 +108,7 @@ class Actions {
     trimester: null,
     lactation: false,
     driving: true,
+    alcohol: false,
     allergy: []
   }
 
@@ -181,6 +182,7 @@ class Actions {
       trimester: null,
       lactation: false,
       driving: true,
+      alcohol: false,
       allergy: []
     },
     // save_recipe: false,
@@ -374,8 +376,12 @@ class Actions {
         // this.stores.db.getFilters()
 
       },
-      fail: () => {
+      fail: async () => {
         // console.log('FAIL');
+        // if(this.stores.router && this.stores.router.route !== '/confirm'){
+        //   this.stores.router.push('/login')
+        // }
+        await localStorage.setItem('authkey', null);
         this.stores.router.push('/login')
         this.authorized = false
         this.loading = false

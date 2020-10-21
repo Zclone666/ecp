@@ -145,7 +145,8 @@ class PatientForm extends Component {
       trimester,
       lactation,
       driving,
-      allergy
+      allergy,
+      alcohol
     } = this.props.actions.patientForm
     let { diseaseRows, allergyRows } = this.props.diseases
     let { search_disease, search_co_disease, search_allergy } = this.state
@@ -389,6 +390,21 @@ class PatientForm extends Component {
             </Form.Field>
             <Form.Field>
               <Button
+                  size='big'
+                  icon
+                  fluid
+                  labelPosition='left'
+                  primary={!!alcohol}
+                  onClick={this.handleChangeToggle}
+                  name='alcohol'
+                  value='alcohol'
+              >
+                <Icon name={!!alcohol ? 'check square' : 'square outline'} />
+                Алкоголь
+              </Button>
+            </Form.Field>
+            <Form.Field>
+              <Button
                 size='big'
                 disabled={!isWoman || veryOld}
                 icon
@@ -491,6 +507,20 @@ class PatientForm extends Component {
               >
                 <Icon name={!!driving ? 'check square' : 'square outline'} />
                 Вождение авто
+              </Button>
+            </Form.Field>
+            <Form.Field>
+              <Button
+                  size='big'
+                  icon
+                  labelPosition='left'
+                  primary={!!alcohol}
+                  onClick={this.handleChangeToggle}
+                  name='alcohol'
+                  value='alcohol'
+              >
+                <Icon name={!!alcohol ? 'check square' : 'square outline'} />
+                Алкоголь
               </Button>
             </Form.Field>
             <Form.Field>

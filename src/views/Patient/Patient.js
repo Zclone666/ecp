@@ -85,6 +85,7 @@ class Patient extends Component {
       trimester: null,
       lactation: false,
       driving: true,
+      alcohol: true,
       allergy: []
     }
     Object.assign(this.props.actions.drugStructure.patient, {
@@ -105,6 +106,7 @@ class Patient extends Component {
       trimester: null,
       lactation: false,
       driving: true,
+      alcohol: true,
       allergy: []
     });
   }
@@ -128,6 +130,7 @@ class Patient extends Component {
       trimester,
       lactation,
       driving,
+      alcohol,
       allergy
     } = this.props.actions.patientForm
     if(shownPage === 'info'){
@@ -149,6 +152,7 @@ class Patient extends Component {
         trimester,
         lactation,
         driving,
+        alcohol,
         allergy
       });
     }
