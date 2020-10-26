@@ -121,7 +121,7 @@ class Conflicts extends Component {
 
             let icon = group.type
 
-            let arr = (group.type).split('.')
+            let arr = (group.type).split('_')
             if(arr.length > 1){
               icon = arr[0]
             }
