@@ -114,6 +114,28 @@ class Tools {
     });
   }
 
+  async getUnitsSchedule(){
+    let { active_language } = this.stores.actions
+    let data = {
+      active_language
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+      path: `info/Schedule`,
+      data,
+      success: async data => {
+        // console.log('DATA', data);
+
+      },
+      fail: (alerts) => {
+
+      },
+      always: (data) => {
+
+      }
+    });
+  }
 
   setUnits = (units, unitrefs, unitpharm) => {
     // _.keys(unitrefs).forEach( refkey => {

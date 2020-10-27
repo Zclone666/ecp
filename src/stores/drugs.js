@@ -36,6 +36,47 @@ class Drugs {
 
 
   }
+
+  async setGroup(keys, group){
+    if(!_.isArray(keys)) {
+      keys = [keys]
+    }
+    keys.forEach(async (key, i) => {
+      let drug = await this.drug.get(key)
+      drug.group = group
+      this.drug.set(key, drug)
+    })
+    this.stores.actions.makeLiquids = true
+    setTimeout(() => {
+      this.checkLiquidsOk()
+    }, 300)
+  }
+  async resetGroups(){
+    this.drug.forEach((item, i) => {
+      if(item.group !== 0){
+        item.group = 0
+        this.drug.set(item.key, item)
+      }
+    })
+  }
+
+  async checkLiquidsOk(){
+    let isOk = true
+    let obj = {}
+    this.drug.forEach((item, i) => {
+      if(item.group !== 0){
+        obj[item.group] = !!obj[item.group] ? obj[item.group]+1 : 1
+      }
+    })
+    _.forEach(obj, (counter) => {
+      if(counter < 2 && counter !== 0){
+        isOk = false
+      }
+    })
+    // console.log(obj)
+    this.stores.actions.isLiquidsOk = isOk
+  }
+
   //getSearch
   async search(text, saveTo='search'){
     this.searchReady = false
@@ -297,6 +338,7 @@ class Drugs {
     this.stores.dosages.dosage.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true)
+    this.checkLiquidsOk()
     return true
   }
 

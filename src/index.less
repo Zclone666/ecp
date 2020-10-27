@@ -1173,8 +1173,11 @@ td > .collapsable ul li{
 }
 
 
-.ui.divided.list .item {
+.ui.divided.list > div > div:not(:first-child) .item, .ui.divided.list > div .item:not(:first-child) {
     border-top: 1px solid rgba(34,36,38,.15);
+}
+.ui.divided.list .menu > .item:first-child{
+  border-top: none;
 }
 .ui.selection.list .list .item, .ui.selection.list .item {
     cursor: pointer;
@@ -1286,7 +1289,7 @@ td > .collapsable ul li{
 .ui.list.drugslist .item {
   padding-left: 50px;
   position: relative;
-	background-color: #f3f3f2 !important;
+  background-color: #f3f3f2;
 }
 .ui.list.drugslist .item .arrowholder{
 	position: absolute;
@@ -1325,7 +1328,7 @@ td > .collapsable ul li{
 
 .ui.list .item .icon.arrow.circle.right{
 	text-shadow: 0.5px 0.5px 1px #bbb;
-	line-height: 21px;
+	line-height: 20px;
 	position: relative;
 	display: block;
 	margin: 0 0;
@@ -1344,10 +1347,10 @@ td > .collapsable ul li{
 	position: absolute;
 	margin-left: -5px;
 	text-align: right;
-	padding-left: 14px;
-  margin-top: .1em;
+	padding-left: 18px;
+    margin-top: .2em;
 	width: 40px;
-	height: 26px;
+	height: 23px;
 	border-radius: 0 20px 20px 0;
 	background-color: #ccc;
 	box-shadow: 0.5px 0.5px 1px #bbb;
@@ -1582,4 +1585,36 @@ td > .collapsable ul li{
 
 .ui.list .item:after, .ui.list .list .item, ol.ui.list li:first-child:after, ul.ui.list li:first-child:after{
 	visibility: visible !important;
+}
+
+
+.liquidcontainer{
+  border-width: 3px;
+  border-style: dashed;
+  border-color: @lightGrey;
+  border-left: 0px;
+  margin: 0 3px 5px 0;
+}
+
+.liquidcontainer .bottomtext{
+  padding: 5px 10px;
+  font-size: @fontSize;
+  border-top: 1px solid rgba(34, 36, 38, 0.15);
+  color: @lightRed;
+}
+
+.liquidcontainer .text{
+  padding: 10px;
+  font-size: @fontSize;
+}
+.liquidcontainer .abstext{
+   padding: 10px;
+   font-size: @small;
+ }
+.liquidcontainer.active .abstext{
+  position: absolute !important;
+}
+
+.dragging{
+  opacity: 0.8;
 }

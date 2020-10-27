@@ -80,6 +80,15 @@ class Main extends Component {
     return <div>{name}{type === 'TN' && <sup>TM</sup>}</div>
   }
 
+  resetLiquids = () => {
+    this.props.drugs.resetGroups()
+    this.props.actions.makeLiquids = false
+  }
+
+  confirmLiquids = () => {
+    this.props.actions.makeLiquids = false
+  }
+
   componentDidMount(){
     setTimeout(() => {
       this.setState({ showPage: !!(this.props.router.values && this.props.router.values.page) })
@@ -90,7 +99,7 @@ class Main extends Component {
 
   render() {
     const { open, searchQuery, selectedDrug, selectedConflict } = this.state
-    let { currentPage, height, active_language } = this.props.actions
+    let { currentPage, height, active_language, makeLiquids, isLiquidsOk } = this.props.actions
     let {
       drugs: { searchReady, searchRows, selectedRows, drug }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
@@ -127,9 +136,9 @@ class Main extends Component {
 
         <Sidebar.Pushable>
 
-          {drug.size > 0 &&
+          {(!makeLiquids && drug.size > 0) &&
             <Menu className="bottom fixed menu three item huge main">
-              <Menu.Item color='red' onClick={this.handleResetAll}>
+              <Menu.Item onClick={this.handleResetAll}>
                 Сбросить
               </Menu.Item>
               <Menu.Item onClick={this.getInfoPrep}>
@@ -138,6 +147,16 @@ class Main extends Component {
               <RouterLink className='item primary' to='/recipe/new'>
                 Выписать
               </RouterLink>
+            </Menu>
+          }
+          {makeLiquids &&
+            <Menu className="bottom fixed menu two item huge main">
+              <Menu.Item onClick={this.resetLiquids}>
+                Сбросить растворы
+              </Menu.Item>
+              <Menu.Item disabled={!isLiquidsOk} onClick={this.confirmLiquids}>
+                Применить
+              </Menu.Item>
             </Menu>
           }
           <Sidebar
@@ -209,8 +228,7 @@ class Main extends Component {
               </Menu.Item>
             </Menu>
             <div className='scrollwrapper'>
-              <Grid>
-                <Grid.Column width={16} style={{boxShadow: '0 0 9px #ccc', borderBottom: '1px solid #fff'}}>
+                <Segment className='basic no-padding' width={16} style={{boxShadow: '0 0 9px #ccc', borderBottom: '1px solid #fff'}}>
                   {drug.size > 0 ?
                     <Drugs />
                     :
@@ -221,14 +239,13 @@ class Main extends Component {
                       </Message>
                     </Segment>
                   }
-                </Grid.Column>
+                </Segment>
                 {drug.size > 0 &&
-                  <Grid.Column width={16} style={{paddingTop: 0}}>
+                  <Segment className='basic no-padding' basic width={16} style={{paddingTop: 0}}>
                     <Conflicts />
-                  </Grid.Column>
+                  </Segment>
                 }
 
-              </Grid>
             </div>
           </Sidebar.Pusher>
         </Sidebar.Pushable>

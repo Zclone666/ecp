@@ -35,6 +35,9 @@ class Actions {
   @observable buttonTexts = {}
   @observable UIText = {}
 
+  @observable makeLiquids = false
+  @observable isLiquidsOk = false
+
   @observable doctor = {
     id: null,
     name: null
@@ -428,6 +431,7 @@ class Actions {
           }
           this.stores.tools.getUnitsPrimary()
           this.stores.tools.getUnitsPharm()
+          this.stores.tools.getUnitsSchedule()
           // this.stores.patients.request()
         // }else{
         //   this.makeAlerts({ alerts:[{

@@ -95,7 +95,7 @@ class Warnings {
     let data = _.clone(this.stores.actions.drugStructure)
     data.drugs = Array.from(this.stores.drugs.drug.values())
 
-    data.service = "43"
+    //data.service = "43"
     data.active_language = active_language
 
     data.return_subjects = false

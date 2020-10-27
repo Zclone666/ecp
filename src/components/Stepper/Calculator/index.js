@@ -183,7 +183,7 @@ class Calculator extends Component {
         activeConflicts,
         stepsData,
         drugStructure: {
-          patient: { weight }
+          patient: { weight, specials }
         },
         calculatorForm: {
           dosage,
@@ -194,9 +194,7 @@ class Calculator extends Component {
           dayDosage,
           dayWeightDosage
         },
-        scheduleForm: {
-          specials
-        }
+
       },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
       router: { values },
@@ -292,7 +290,7 @@ class Calculator extends Component {
               />
             </Form.Field>
             <Form.Field width={3}>
-              <label>На массу тела</label>
+              <label>На массу тела:</label>
               <Input
                 size='big'
                 name='patient.weight'
@@ -304,7 +302,7 @@ class Calculator extends Component {
               />
             </Form.Field>
             <Form.Field width={3}>
-              <label>На кг веса</label>
+              <label>На кг веса:</label>
               <Input
                 size='big'
                 name='weightDosage'
@@ -342,7 +340,7 @@ class Calculator extends Component {
               />
             </Form.Field>
             <Form.Field width={3}>
-              <label>На массу тела</label>
+              <label>На массу тела:</label>
               <Input
                 size='big'
                 name='dayWeightDosage'

@@ -141,7 +141,10 @@ class Drug extends React.Component {
       dosages: { dosage: dose },
       warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
       drug,
-      active
+      active,
+      style,
+      minus,
+      onRemove
     } = this.props
     //console.log('drug', drug);
     let selectedWarnings = warnIcons[selectedDrug]
@@ -168,10 +171,10 @@ class Drug extends React.Component {
     // console.log({currWarning});
 
     let rules = this.renderRules()
-
+    // console.log({style})
     return(
-      <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
-        <div className='border' style={{ backgroundColor: hasBorder && maxItem.color || 'transparent' }} />
+      <List.Item style={style} className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
+
         <List.Content floated='right'>
           {/*<Responsive fireOnMount as={Button.Group} vertical basic color='blue' maxWidth='480'>
             <Button icon>
@@ -180,17 +183,27 @@ class Drug extends React.Component {
           </Responsive>
           */}
           <Responsive fireOnMount as={Button.Group} minWidth='481'>
-            <Button as={RouterLink} to={url} onClick={this.getLF} icon>
+            <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
               <Icon name='tint' />
             </Button>
-            <Button icon as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
+            <Button disabled={drug.group !== 0} icon as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
               <Icon name='font' />
             </Button>
             <Button icon>
               <Icon name='delete' onClick={this.unselectDrug} />
             </Button>
+            {minus && <Button icon>
+              <Icon name='minus' onClick={onRemove} />
+            </Button>}
           </Responsive>
+          {minus && <Responsive fireOnMount as={Button.Group} maxWidth='480'>
+            <Button icon>
+              <Icon name='minus' onClick={onRemove} />
+            </Button>
+          </Responsive>}
+
         </List.Content>
+        <div className='border' style={{ backgroundColor: hasBorder && maxItem.color || 'transparent' }} />
         <div className='arrowholder'>
           {(currWarning && currWarning.color) ?
             <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
@@ -272,6 +285,7 @@ class Drug extends React.Component {
             >
               <Dropdown.Menu>
                 <Dropdown.Item
+                  disabled={drug.group !== 0}
                   icon='tint'
                   as={RouterLink}
                   to={url}
@@ -279,6 +293,7 @@ class Drug extends React.Component {
                   text='Дозировка'
                 />
                 <Dropdown.Item
+                  disabled={drug.group !== 0}
                   icon='font'
                   as={RouterLink}
                   to={`/analog/${drug.key}`}
