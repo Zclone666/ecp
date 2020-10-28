@@ -144,7 +144,8 @@ class Drug extends React.Component {
       active,
       style,
       minus,
-      onRemove
+      onRemove,
+      canDrag
     } = this.props
     //console.log('drug', drug);
     let selectedWarnings = warnIcons[selectedDrug]
@@ -170,10 +171,12 @@ class Drug extends React.Component {
     // })
     // console.log({currWarning});
 
+    let resultStyle = { ...(style || {}), ...(!canDrag ? { cursor: 'default' } : { cursor: 'move' }) }
+
     let rules = this.renderRules()
     // console.log({style})
     return(
-      <List.Item style={style} className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
+      <List.Item style={resultStyle} className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
 
         <List.Content floated='right'>
           {/*<Responsive fireOnMount as={Button.Group} vertical basic color='blue' maxWidth='480'>
@@ -317,6 +320,16 @@ class Drug extends React.Component {
 
 
         </Responsive>
+        {canDrag && <div className='draghandler'>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>}
 
       </List.Item>
 

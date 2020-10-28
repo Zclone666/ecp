@@ -256,7 +256,7 @@ class Drugs extends Component {
                                       {...provided.dragHandleProps}
                                       className={snapshot.isDragging ? 'dragging' : ''}
                                     >
-                                      <Drug style={(!drug.solute || !canDrag) ? { cursor: 'default' } : { cursor: 'move' }} active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />
+                                      <Drug canDrag={!(!drug.solute || !canDrag)} active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />
                                     </div>
                                   )}
                                 </Draggable>

@@ -108,6 +108,7 @@ class Main extends Component {
     let selectedWarnings = warning[selectedDrug]
     let showPage = !!(this.props.router.values && this.props.router.values.page)
     // console.log('router', this.props.router);
+    // let showPage2 = true
     return (
       <>
         <Menu className={`ui top huge borderless tabular nomargin main menu fixed grey${showPage && ' hidden'}`}>
@@ -169,6 +170,7 @@ class Main extends Component {
           >
             <Page />
           </Sidebar>
+
           <Sidebar style={{ paddingTop: '3.6em' }} animation='overlay' onClick={() => this.handleSidebar('close')} onHide={() => this.handleSidebar('close')} visible={open} as={Menu} vertical size='huge'>
             <Menu.Item as={RouterLink} to='/patient/list'>
               <Icon name='address book' />

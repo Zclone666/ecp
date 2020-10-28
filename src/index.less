@@ -1290,6 +1290,7 @@ td > .collapsable ul li{
   padding-left: 50px;
   position: relative;
   background-color: #f3f3f2;
+  padding-right: ;
 }
 .ui.list.drugslist .item .arrowholder{
 	position: absolute;
@@ -1322,7 +1323,7 @@ td > .collapsable ul li{
 }
 .ui.list.drugslist .item .right.content{
 	position: absolute;
-	right: 22px;
+	right: 26px;
 	z-index: 105;
 }
 
@@ -1614,7 +1615,27 @@ td > .collapsable ul li{
 .liquidcontainer.active .abstext{
   position: absolute !important;
 }
+.liquidcontainer .item .right.content {
+  right: 20px !important;
+}
 
 .dragging{
   opacity: 0.8;
+}
+
+.item .draghandler{
+  position: absolute;
+  right: 4px;
+  top: 9px;
+  width: 17px;
+  padding: 1px 2px 2px 1px;
+  background: #f8f8f8;
+  box-shadow: -1px -1px 0px #ddd;
+}
+.item .draghandler > div{
+  width: 3px;
+  height: 3px;
+  margin: 2px;
+  float: left;
+  background: rgba(0, 0, 0, 0.6);
 }
