@@ -138,6 +138,10 @@ class Drugs {
             }
           })
 
+          let drugObj = this.stores.drugs.drug.get(drug.key) || {};
+          drugObj.solute = solute
+          this.stores.drugs.drug.set( drug.key, drugObj )
+
           await this.stores.tools.setNames(names, nameshort)
           let current = this.dosage.get(drug.key) || {};
           await this.dosage.set( drug.key, _.extend(current, { solute, drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );

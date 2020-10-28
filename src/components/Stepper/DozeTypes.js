@@ -65,7 +65,7 @@ class DozeTypes extends Component {
       }else{
         let currPack = {
           dosage: { short: '', full: '', id: itemDosage[0].id_1 },
-          pack: { short: '', full: '', id: item.pack[0].dosage.id_1 },
+          pack: { short: '', full: '', id: item.pack[0].dosage ? item.pack[0].dosage.id_1 : null },
           type: 'simple',
           value: 0,
           flag: false
@@ -95,8 +95,8 @@ class DozeTypes extends Component {
               currPack.dosage.short += val + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
               currPack.value = val
             }
-            currPack.pack.full += names[pack.id] + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1])) || '')
-            currPack.pack.short += (nameshort[pack.id] || names[pack.id]) + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1])) || '')
+            currPack.pack.full += (names[pack.id] || '') + (pack.dosage && (', ' + (pack.dosage.value_1 || '') + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || '')) || '')
+            currPack.pack.short += (nameshort[pack.id] || names[pack.id] || '') + (pack.dosage && (', ' + (pack.dosage.value_1 || '') + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || '')) || '')
             arr.push({ ...currPack })
           })
         }else{

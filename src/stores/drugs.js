@@ -127,8 +127,8 @@ class Drugs {
     let scheduleData = this.stores.actions.scheduleForm
 
     let drug = this.current
-    let currentDrug = await this.drug.get(drug.key) || {};
-    let currentDosages = await this.stores.dosages.dosage.get(drug.key) || {};
+    let currentDrug = this.drug.get(drug.key) || {};
+    let currentDosages = this.stores.dosages.dosage.get(drug.key) || {};
 
     let { calcValues, getFromBase } = this.stores.dosages
     let def = (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id ) || (calcValues.dosage.unit && calcValues.dosage.unit.id)
@@ -170,6 +170,9 @@ class Drugs {
       dayWeightDosage
     } = calcData
 
+    currentDrug.solute = (currentDosages.form && currentDosages.form[form]) ? currentDosages.form[form].solute : currentDrug.solute
+    // console.log({currentDosages, form})
+    // console.log({currentDrug})
     currentDrug.dosage = {
       key,
       way,
@@ -292,6 +295,7 @@ class Drugs {
       specials: null,
       freq: null,
       duration: null,
+      solute: false,
       dosage: { // дозировка
         // way: null,
         // step: null,

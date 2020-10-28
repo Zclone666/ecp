@@ -20,7 +20,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'drugs', 'warnings')
+@inject('db', 'actions', 'drugs', 'dosages', 'warnings')
 @observer
 class Drugs extends Component {
   constructor(props){
@@ -88,6 +88,42 @@ class Drugs extends Component {
     return drugsObj
   }
 
+  get drugsWithGroups(){
+    let {
+      drugs: { drug: drugs },
+      dosages: { dosage },
+    } = this.props
+
+    let groups = []
+    let iterator = []
+    let grouped = {}
+    let hasSolute = 0
+
+    drugs.forEach(( drugObj, key ) => {
+
+      // let dos = dosage.get(drugObj.key) || {}
+
+      let drug = { ...drugObj }
+      // drug.solute = dos.solute
+
+      if(drug.solute) hasSolute++
+
+      if(groups.indexOf(drug.group) === -1){
+        groups.push(drug.group)
+      }
+      iterator.push(drug)
+      grouped[drug.group] = grouped[drug.group] ? [ ...grouped[drug.group], drug ] : [ drug ]
+    })
+
+    if(hasSolute > 1) groups.push((_.max(groups) + 1));
+
+    groups = _.sortBy(groups, [function(o) { return -o; }]);
+
+    return {
+      groups, grouped, iterator, canDrag: (hasSolute > 1)
+    }
+  }
+
   onBeforeDragStart = (result) => {
     // console.log('onBeforeDragStart', result);
   }
@@ -132,26 +168,34 @@ class Drugs extends Component {
         // activeConflicts
       },
       drugs: { drug: drugs },
-      warnings: { warning, groups }, //warnings, warnGroups
+      warnings: { warning }, //warnings, warnGroups
+      dosages: { dosage },
       isRecipe
     } = this.props
     // let selectedWarnings = warning[selectedDrug]
     // console.log('activeDrugs', activeDrugs);
-    let iterator = Array.from(drugs.values())
-    iterator = _.orderBy(iterator, ['group'], ['desc']);
 
-    // let c = 0
-    let liquids = []
-    let iteratorObj = _.groupBy(iterator, (x) => {
-      if(liquids.indexOf(x.group) === -1){
-        liquids.push(x.group)
-      }
-      return x.group
-    })
+    let {
+      groups, grouped, iterator, canDrag
+    } = this.drugsWithGroups
 
-    liquids.push((_.max(liquids) + 1));
 
-    liquids = _.sortBy(liquids, [function(o) { return -o; }]);// _.reverse(_.sortedUniq(liquids));
+
+    // let iterator = Array.from(drugs.values())
+    // iterator = _.orderBy(iterator, ['group'], ['desc']);
+    //
+    // // let c = 0
+    // let liquids = []
+    // let iteratorObj = _.groupBy(iterator, (x) => {
+    //   if(liquids.indexOf(x.group) === -1){
+    //     liquids.push(x.group)
+    //   }
+    //   return x.group
+    // })
+    //
+    // liquids.push((_.max(liquids) + 1));
+    //
+    // liquids = _.sortBy(liquids, [function(o) { return -o; }]);// _.reverse(_.sortedUniq(liquids));
 
     let warnDrugs = this.warnDrugs
     // console.log('iterator', iterator);
@@ -184,7 +228,7 @@ class Drugs extends Component {
             onDragEnd={this.onDragEnd}
           >
             <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
-              {liquids.map(( liquid, l ) => {
+              {groups.map(( liquid, l ) => {
                 if(liquid === 0){
                   return(
                     <Droppable isCombineEnabled droppableId={`drug_place_${liquid}`} type="DRUG"  key={`drug_place_${liquid}`}>
@@ -199,9 +243,12 @@ class Drugs extends Component {
                             }}
                             {...prov.droppableProps}
                           >
-                            {iteratorObj[liquid].map(( drug, i ) => {
+                            {grouped[liquid].map(( drug, i ) => {
+                              // let dosages = dosage.get(drug.key)
+                              // let isLiquid = (dosages && dosages.solute)
+                              // console.log({drug})
                               return(
-                                <Draggable draggableId={drug.key} index={i} key={`drug_${drug.key}`}>
+                                <Draggable isDragDisabled={!drug.solute || !canDrag} draggableId={drug.key} index={i} key={`drug_${drug.key}`}>
                                   {(provided, snapshot) => (
                                     <div
                                       ref={provided.innerRef}
@@ -209,7 +256,7 @@ class Drugs extends Component {
                                       {...provided.dragHandleProps}
                                       className={snapshot.isDragging ? 'dragging' : ''}
                                     >
-                                      <Drug style={{ cursor: 'move' }} active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />
+                                      <Drug style={(!drug.solute || !canDrag) ? { cursor: 'default' } : { cursor: 'move' }} active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />
                                     </div>
                                   )}
                                 </Draggable>
@@ -231,18 +278,18 @@ class Drugs extends Component {
                             ref={prov.innerRef}
                             style={{
                               backgroundColor: snap.isDraggingOver ? colors[liquid] : '',
-                              borderColor: iteratorObj[liquid] ? borderColors[liquid] : borderColors[0]
+                              borderColor: grouped[liquid] ? borderColors[liquid] : borderColors[0]
                             }}
                             {...prov.droppableProps}
                           >
-                            {(!iteratorObj[liquid]) && <div className={'abstext'}>Перетащите сюда не менее двух составляющих для раствора</div>}
-                            {iteratorObj[liquid] && <div className={'text'}>
-                              <Icon name='delete' className='right floated' onClick={() => this.removeLiquid(iteratorObj[liquid])} />
+                            {(!grouped[liquid]) && <div className={'abstext'}>Перетащите сюда не менее двух составляющих для раствора</div>}
+                            {grouped[liquid] && <div className={'text'}>
+                              <Icon name='delete' className='right floated' onClick={() => this.removeLiquid(grouped[liquid])} />
                               <Icon name='lab' className='right floated'  />
                               Раствор {liquid}
                             </div>}
 
-                            {iteratorObj[liquid] && iteratorObj[liquid].map(( drug, i ) => {
+                            {grouped[liquid] && grouped[liquid].map(( drug, i ) => {
                               return(
                                 <Draggable isDragDisabled draggableId={drug.key} index={i} key={`drug_${drug.key}`}>
                                   {(provided, snapshot) => (
@@ -258,7 +305,7 @@ class Drugs extends Component {
                                         drug={drug}
                                         key={`drug_${i}`}
                                         minus={true}
-                                        onRemove={() => this.onRemove(drug.key, iteratorObj[liquid])}
+                                        onRemove={() => this.onRemove(drug.key, grouped[liquid])}
                                       />
                                     </div>
                                   )}
@@ -266,7 +313,7 @@ class Drugs extends Component {
                               )
                             })}
                             {prov.placeholder}
-                            {(iteratorObj[liquid] && iteratorObj[liquid].length === 1) && <div className={'bottomtext'}>
+                            {(grouped[liquid] && grouped[liquid].length === 1) && <div className={'bottomtext'}>
                               Добавьте еще хотя бы один элемент
                             </div>}
                           </div>
