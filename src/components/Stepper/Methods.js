@@ -35,6 +35,8 @@ class MethodsLF extends Component {
       router: { values }
     } = this.props
     let way = values.way || 'lf'
+    let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`
+  
     let currStep = parseInt(values.step || 0)
 
     let drugDosage = dosage.get(current.key)
@@ -51,7 +53,7 @@ class MethodsLF extends Component {
             <List.Item
               key={'doze'+i}
               as={RouterLink}
-              to={`/concept/dozes/${way}/${currStep+1}`}
+              to={`${url}/${currStep+1}`}
               onClick={() => this.setMethod(mid)}
             >
               <List.Content floated='right'>

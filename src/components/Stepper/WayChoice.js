@@ -12,7 +12,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'drugs', 'warnings')
+@inject('db', 'actions', 'drugs', 'warnings', 'router')
 @observer
 class WayChoice extends Component {
   constructor(props){
@@ -30,18 +30,12 @@ class WayChoice extends Component {
     }
   }
   render(){
-    // let { activeIndex } = this.state
-    // let {
-    //   actions: {
-    //     selectedDrug,
-    //     selectedConflict,
-    //     activeDrugs,
-    //     activeConflicts
-    //   },
-    //   db: { drugDosage: { lf, druglf, methodstolf, names } }
-    // } = this.props
-    // // let selectedWarnings = warnings[selectedDrug]
+    let {
+      router: { values }
+    } = this.props
+    let url = !values.liquid ? '/concept/dozes' : `/liquid/calc/${values.liquid}/dozes`
     let { viewType } = this.state
+    
     return (
       <Responsive className='h100' as={Grid} fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
         {viewType == 'columns' ?
@@ -55,7 +49,7 @@ class WayChoice extends Component {
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to='/concept/dozes/lf/1'>
+                    <Card fluid href as={RouterLink} to={`${url}/lf/1`}>
                       <div className='ui image cardbg'>
                         <Icon name='pills' className='rotated' />
                         <Icon name='pills' />
@@ -78,7 +72,7 @@ class WayChoice extends Component {
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to='/concept/dozes/methods/1'>
+                    <Card fluid href as={RouterLink} to={`${url}/methods/1`}>
                       <div className='ui image cardbg'>
                         <Icon name='syringe' className='rotated' />
                         <Icon name='syringe' />
@@ -104,7 +98,7 @@ class WayChoice extends Component {
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to='/concept/dozes/lf/1'>
+                    <Card fluid href as={RouterLink} to={`${url}/lf/1`}>
                       <div className='ui image cardbg'>
                         <Icon name='pills' className='rotated' />
                         <Icon name='pills' />
@@ -125,7 +119,7 @@ class WayChoice extends Component {
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to='/concept/dozes/methods/1'>
+                    <Card fluid href as={RouterLink} to={`${url}/methods/1`}>
                       <div className='ui image cardbg'>
                         <Icon name='syringe' className='rotated' />
                         <Icon name='syringe' />

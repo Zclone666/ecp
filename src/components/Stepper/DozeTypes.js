@@ -139,6 +139,7 @@ class DozeTypes extends Component {
       router: { values }
     } = this.props
     let way = values.way || 'lf'
+    let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`
     let currStep = parseInt(values.step || 0)
 
 
@@ -152,7 +153,7 @@ class DozeTypes extends Component {
           return(
             <List.Item
               as={RouterLink}
-              to={`/concept/dozes/${way}/${currStep+1}`}
+              to={`${url}/${currStep+1}`}
               onClick={() => this.setDosage(dose)}
               key={'type'+i}
             >

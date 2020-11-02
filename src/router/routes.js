@@ -20,8 +20,10 @@ export default {
 
   '/liquid/:page':                            { section: 'main', name: 'liquid',     render: <Main />       },
   '/liquid/:page/:liquid':                    { section: 'main', name: 'liquid',     render: <Main />       },
-  '/liquid/:page/:liquid/:way':               { section: 'main', name: 'liquid',     render: <Main />       },
-  '/liquid/:page/:liquid/:way/:step':         { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/dozes':              { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/dozes/':             { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/dozes/:way':         { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/dozes/:way/:step':   { section: 'main', name: 'liquid',     render: <Main />       },
 
   '/warning/:page':                           { section: 'main', name: 'warning',    render: <Main />       },
 
