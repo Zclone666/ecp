@@ -18,6 +18,11 @@ export default {
   '/concept/:page/:way/:step/:id1/:id2':      { section: 'main', name: 'concept',    render: <Main />       },
   '/concept/:page/:way/:step/:id1/:id2/id3':  { section: 'main', name: 'concept',    render: <Main />       },
 
+  '/liquid/:page':                            { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid':                    { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/:way':               { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/:way/:step':         { section: 'main', name: 'liquid',     render: <Main />       },
+
   '/warning/:page':                           { section: 'main', name: 'warning',    render: <Main />       },
 
   '/recipe/:page':                            { section: 'main', name: 'recipe',     render: <Main />       },

@@ -155,7 +155,7 @@ class Drug extends React.Component {
     //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
-    let url = drugDosages.url || {}
+    let url = drugDosages.url || '/concept/dozes'
     let currWarning = active//activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
     let maxItem = warnIcons[drug.key] //_.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
@@ -179,12 +179,6 @@ class Drug extends React.Component {
       <List.Item style={resultStyle} className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
 
         <List.Content floated='right'>
-          {/*<Responsive fireOnMount as={Button.Group} vertical basic color='blue' maxWidth='480'>
-            <Button icon>
-              <Icon name='ellipsis horizontal' />
-            </Button>
-          </Responsive>
-          */}
           <Responsive fireOnMount as={Button.Group} minWidth='481'>
             <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
               <Icon name='tint' />

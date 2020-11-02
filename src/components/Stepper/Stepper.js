@@ -9,6 +9,7 @@ import LF from './LF'
 import DozeTypes from './DozeTypes'
 import Methods from './Methods'
 import Calculator from './Calculator'
+import Steps from './Steps'
 
 import {
   Transition,
@@ -32,26 +33,7 @@ class Stepper extends Component {
     this.sliderRef = createRef()
   }
 
-  steps = {
-    lf: [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' },
-      { name: 'method', text: 'Способ применения' }
-    ],
-    methods: [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'method', text: 'Способ применения' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' }
-    ],
-    '': [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' },
-      { name: 'method', text: 'Способ применения' }
-    ],
-  }
+  
 
   handleClick = (e, titleProps) => {
     e.preventDefault()
@@ -98,25 +80,21 @@ class Stepper extends Component {
   render(){
     let { activeIndex, viewType } = this.state
     let {
-      actions: {
-        selectedDrug,
-        selectedConflict,
-        activeDrugs,
-        activeConflicts,
-        stepsData
-      },
+      
       drugs: { current }, //drugs, currDrug, setDosageParams
-      dosages: { dosage, calcValues }, //drugsDosages
-      warnings: { warning, groups }, //warnings, warnGroups
-      router: { values }
+      // dosages: { dosage, calcValues }, //drugsDosages
+      // warnings: { warning, groups }, //warnings, warnGroups
+      router: { values },
+      isLiquid
     } = this.props
 
-    let drugsDosage = dosage.get(current.key)
-    // console.log({ drugsDosage });
-    let { names, nameshort } = drugsDosage
+    // let drugsDosage = dosage.get(current.key)
+    // // console.log({ drugsDosage });
+    // let { names, nameshort } = drugsDosage
 
     let currStep = parseInt(values.step || 0)
     let way = values.way || ''
+    if(isLiquid) way = 'liquid'
     // let selectedWarnings = warnings[selectedDrug]
     const settings = {
       dots: false,
@@ -128,71 +106,48 @@ class Stepper extends Component {
       swipe: false,
       initialSlide: currStep
     };
-    // console.log({ stepsData, calcValues });
+    // console.log({ way });
     return (
       <Responsive className='h100 with-steps' fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
-        <Step.Group attached='top' fluid unstackable ordered size='tiny'>
-          {this.steps[way] && this.steps[way].map(( step, i ) => {
-            let url = '/concept/dozes'
-            let chosedName = ''
-            if( i > 0 && i <= currStep ) {
-              url += `/${way}/${i}`
-              chosedName = nameshort[stepsData[step.name]] || names[stepsData[step.name]]
-              if(step.name === 'lf') chosedName = nameshort[stepsData.form] || names[stepsData.form]
-            } else if( i !== 0 ) {
-              url = ''
-            } else {
-              chosedName = {
-                lf: 'Лекарственная форма',
-                methods: 'Способ применения',
-                '': ''
-              }[way]
-            }
-            // console.log({step, stepsData});
-            if(step.name === 'dosage' && currStep > i){
-              // console.log({step, stepsData});
-              chosedName = (stepsData.pack.dosage && (stepsData.pack.dosage.short || stepsData.pack.dosage.full)) + ', ' + (stepsData.pack.pack && (stepsData.pack.pack.short || stepsData.pack.pack.full))
-            }
-            //console.log({ step, chosedName, stepsData, names });
-            return(
-              <Step completed={currStep > i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
-                { ( currStep == i || viewType == 'pc' ) &&
-                  <Step.Content>
-                    <Step.Title>{step.text}</Step.Title>
-                    <Step.Description>{chosedName}</Step.Description>
-                  </Step.Content>
-                }
-              </Step>
-            )
-          })}
-        </Step.Group>
+        {current.key && <Steps viewType={viewType} />}
         <Slider ref={this.sliderRef} {...settings}>
-          <WayChoice />
+          {{
+            '': <WayChoice/>,
+            'lf': <WayChoice/>,
+            'methods': <WayChoice/>,
+            'liquid': (
+              <div className='scrollwrapper'>
+                <Calculator isLiquid />
+              </div>
+            )
+          }[way]}
           <div className='scrollwrapper'>
             {{
               'lf': <LF />,
+              'liquid': current.key ? <LF /> : <div />,
               'methods': <Methods />,
-              undefined: <LF />
+              '': <LF />
             }[way]}
           </div>
           <div className='scrollwrapper'>
             {{
               'lf': <DozeTypes />,
+              'liquid': current.key ? <DozeTypes /> : <div />,
               'methods': <LF />,
-              undefined: <DozeTypes />
+              '': <DozeTypes />
             }[way]}
           </div>
           <div className='scrollwrapper'>
             {{
               'lf': <Methods />,
+              'liquid': current.key ? <Methods /> : <div />,
               'methods': <DozeTypes />,
-              undefined: <Methods />
+              '': <Methods />
             }[way]}
           </div>
           <div className='scrollwrapper'>
-            <Calculator />
+            {current.key && <Calculator/>}
           </div>
-          <WayChoice />
         </Slider>
       </Responsive>
     )

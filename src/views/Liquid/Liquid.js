@@ -3,7 +3,7 @@ import { observer, inject } from 'mobx-react';
 
 import RouterLink from '../../router/a'
 
-import Spinner from '../../components/Spinner'
+import Dozes from '../Dozes'
 
 import Stepper from '../../components/Stepper'
 
@@ -21,11 +21,10 @@ import {
   Grid
 } from 'semantic-ui-react'
 
-import _ from 'lodash';
 
 @inject('router', 'db', 'actions', 'drugs', 'warnings')
 @observer
-class Liquids extends Component {
+class Liquid extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -51,21 +50,22 @@ class Liquids extends Component {
 
   back = () => {
     this.props.router.push('/')
-    this.props.actions.stepsData = {
-      key: null,
-      way: null,
-      step: null,
-      form: null,
-      method: null,
-      pack: {},
-      dosage: {},
-    }
+    // this.props.actions.stepsData = {
+    //   key: null,
+    //   way: null,
+    //   step: null,
+    //   form: null,
+    //   method: null,
+    //   pack: {},
+    //   dosage: {},
+    // }
   };
 
   render() {
-
+    let showPage = !!(this.props.router.values && this.props.router.values.page)
+    let liquid = !!(this.props.router.values && this.props.router.values.liquid)
     return (
-      <>
+      <Sidebar.Pushable>
         <Menu className="bottom fixed menu two item huge main">
           <Menu.Item color='red' onClick={this.back}>
             Назад
@@ -74,16 +74,26 @@ class Liquids extends Component {
             Сохранить
           </Menu.Item>
         </Menu>
-
-        <div className='scrollwrapper bottomMenu'>
-          <Stepper />
-        </div>
-
-      </>
+        <Sidebar
+          width='very wide'
+          direction='right'
+          animation='overlay'
+          visible={showPage}
+          vertical
+          style={{ backgroundColor: '#FFFFFF' }}
+        >
+          <Dozes />
+        </Sidebar>
+        <Sidebar.Pusher dimmed={showPage} className='pusherwrapper'>
+          <div className='scrollwrapper bottomMenu'>
+            {liquid && <Stepper isLiquid/>}
+          </div>
+        </Sidebar.Pusher>
+      </Sidebar.Pushable>
 
 
 
     );
   }
 };
-export default Liquids
+export default Liquid

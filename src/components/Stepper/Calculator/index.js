@@ -17,6 +17,7 @@ import clarifications from '../../../constants/hardcode'
 
 
 import Schedule from './Schedule'
+import Drugs from './Drugs'
 
 import _ from 'lodash';
 
@@ -111,16 +112,6 @@ class Calculator extends Component {
 
     //console.log({ name, value });
   }
-  // componentDidUpdate(prevProps, prevState){
-  //   if(this.props.actions.stepsData.pack.obj){
-  //     if(!prevProps.actions.stepsData.pack.obj || (prevProps.actions.stepsData.pack.obj.dosages[0].value_1 !== this.props.actions.stepsData.pack.obj.dosages[0].value_1 )){
-  //       this.handleChange(null, {
-  //         name: 'dosage',
-  //         value: this.props.actions.stepsData.pack.obj.dosages[0].value_1
-  //       })
-  //     }
-  //   }
-  // }
 
   setPreset = (e, {value}) => {
     let { presets } = clarifications
@@ -177,11 +168,6 @@ class Calculator extends Component {
   render(){
     let {
       actions: {
-        selectedDrug,
-        selectedConflict,
-        activeDrugs,
-        activeConflicts,
-        stepsData,
         drugStructure: {
           patient: { weight, specials }
         },
@@ -194,21 +180,14 @@ class Calculator extends Component {
           dayDosage,
           dayWeightDosage
         },
-
       },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
       router: { values },
-      drugs: { current }
+      drugs: { current },
+      isLiquid
     } = this.props
     let { currUnit } = this.state
 
-
-    // console.log({
-    //   dosage,
-    //   count,
-    //   fullDosage,
-    //   weightDosage
-    // });
     let weights = []
     let { dosage: dos, count: cnt } = calcValues
 
@@ -230,26 +209,16 @@ class Calculator extends Component {
 
     let currUnitObj = dos.units[currUnit]
 
-    // console.log({currUnitObj});
-
     let secondName = currUnit ? (currUnitObj && (currUnitObj.shortname || currUnitObj.name)) : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name) ) || (dos.unit && (dos.unit.shortname || dos.unit.name))
     let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
 
-    // let calculated =
-    // console.log({def});
-    // let weights = [
-    //   { key: 'мг', value: 'мг', text: 'мг' },
-    //   { key: 'сг', value: 'сг', text: 'сг' },
-    //   { key: 'мкг', value: 'мкг', text: 'мкг' }
-    // ]
-    // dosage = dosage || (stepsData.pack.obj && stepsData.pack.obj.dosages[0].value_1 || 0)
-
-      // console.log({weights, calcValues, def, dos});
-    // console.log({ getFromBase: getFromBase((currUnit || def), baseDosage), dosage, baseDosage });
-
-    // console.log({current});
+    let liquid = values && values.liquid || null
+    
     return (
       <Segment basic>
+        {isLiquid && <div className='liquiddrugs'>
+          <Drugs liquid={liquid} />
+        </div>}
         <Form>
           <Form.Group>
             <Form.Field width={4}>
