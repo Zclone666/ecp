@@ -12,8 +12,7 @@ docker build:
   tags:
     - docker-production
   only:
-    - master
-  when: manual
+    - dev
   script:
     - docker build --force-rm -t $PROJECT ./
 
@@ -22,8 +21,7 @@ docker run:
   tags: 
     - docker-production
   only:
-    - master
-  when: manual
+    - dev
   before_script:
     - docker stop $PROJECT || true
   script:
