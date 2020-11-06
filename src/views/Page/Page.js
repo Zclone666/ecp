@@ -10,6 +10,8 @@ import Patient from '../Patient'
 import Warning from '../Warning'
 import Recipe from '../Recipe'
 import Analog from '../Analog'
+import DrugInfo from '../DrugInfo'
+import Liquid from '../Liquid'
 
 import {
   Sidebar,
@@ -50,8 +52,8 @@ class Page extends Component {
   };
 
   render() {
-    let shownPage = this.props.router.values && this.props.router.values.page || 'none'
-    let section = (this.props.router && this.props.router.match && this.props.router.match.name) || 'none'
+    let page = this.props.router.values && this.props.router.values.page || 'none'
+    let name = (this.props.router && this.props.router.match && this.props.router.match.name) || 'none'
     return (
       {
         'concept': <Dozes />,
@@ -59,8 +61,10 @@ class Page extends Component {
         'warning': <Warning />,
         'recipe' : <Recipe />,
         'analog' : <Analog />,
+        'druginfo' : <DrugInfo />,
+        'liquid' : <Liquid />,
         'none'   : <div />
-      }[section] || null
+      }[name] || null
     );
   }
 };

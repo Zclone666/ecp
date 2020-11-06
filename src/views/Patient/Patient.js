@@ -79,11 +79,13 @@ class Patient extends Component {
       growth: null,
       weight: null,
       disease: [],
+      co_disease: [],
       pregnancy: false,
       gestation: null,
       trimester: null,
       lactation: false,
       driving: true,
+      alcohol: true,
       allergy: []
     }
     Object.assign(this.props.actions.drugStructure.patient, {
@@ -98,11 +100,13 @@ class Patient extends Component {
       growth: null,
       weight: null,
       disease: [],
+      co_disease: [],
       pregnancy: false,
       gestation: null,
       trimester: null,
       lactation: false,
       driving: true,
+      alcohol: true,
       allergy: []
     });
   }
@@ -120,11 +124,13 @@ class Patient extends Component {
       growth,
       weight,
       disease,
+      co_disease,
       pregnancy,
       gestation,
       trimester,
       lactation,
       driving,
+      alcohol,
       allergy
     } = this.props.actions.patientForm
     if(shownPage === 'info'){
@@ -140,11 +146,13 @@ class Patient extends Component {
         growth,
         weight,
         disease,
+        co_disease,
         pregnancy,
         gestation,
         trimester,
         lactation,
         driving,
+        alcohol,
         allergy
       });
     }

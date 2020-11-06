@@ -16,7 +16,7 @@ import {
   Label
 } from 'semantic-ui-react'
 
-import Day from './Day';
+import clarifications from '../../../constants/hardcode'
 
 import _ from 'lodash';
 
@@ -30,7 +30,8 @@ ref_hours = [ 'час', 'часа', 'часов' ],
 ref_days = [ 'день', 'дня', 'дней' ],
 ref_weeks = [ 'неделю', 'недели', 'недель' ],
 ref_months = [ 'месяц', 'месяца', 'месяцев' ],
-ref_years = [ 'год', 'года', 'лет' ]
+ref_years = [ 'год', 'года', 'лет' ],
+ref_times = [ 'раз', 'раза', 'раз' ]
 
 @inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
@@ -41,11 +42,15 @@ class Interval extends Component {
       concepts: []
     }
   }
-  handleChange = (e, { name, value }) => {
+  handleChange = (e, { name, type, value, index }) => {
     if( !name && !value ){
       let { name, value } = e.target
     }
-    console.log({ name, value });
+    let { interval } = this.props.actions.scheduleForm
+
+    interval[index][name] = value
+    this.props.actions.scheduleForm.interval = interval
+
   }
   handleAddConcept = (e, { name, value }) => {
     // console.log({ name, value });
@@ -62,6 +67,7 @@ class Interval extends Component {
       'time': { type: 'time', time: null }
     }[value]
     interval.push(concept)
+    this.props.actions.scheduleForm.interval = interval
     // console.log('concepts', concepts);
     // this.setState({ concepts })
   }
@@ -70,12 +76,13 @@ class Interval extends Component {
     this.props.actions.scheduleForm.interval.splice(i, 100)
     // this.setState({ concepts })
   }
-  renderTimes(num){
+  renderTimes({num, name, index, type, currvalue}){
     return(
       <Dropdown
-        name={'times'}
+        name={name}
         selection
-        onChange={this.handleChange}
+        value={currvalue}
+        onChange={(e, { name, value }) => this.handleChange(e, { name, type, value, index })}
         placeholder={'ед. измерения'}
         options={[
           {
@@ -107,13 +114,14 @@ class Interval extends Component {
       />
     )
   }
-  renderNums(x){
-    let type, sort
+  renderNums({x, name, index, type, currvalue}){
+    // let type, sort
     return(
       <Dropdown
-        name={'x'}
+        name={name}
+        value={currvalue}
         selection
-        onChange={(e, { name, value }) => this.handleChange({ sort, type, name, value })}
+        onChange={(e, { name, value }) => this.handleChange(e, { name, type, value, index })}
         placeholder={'X'}
         options={_.map(Array(x), (item, i) => {
           return {
@@ -126,77 +134,85 @@ class Interval extends Component {
     )
   }
   renderEvery(i, concept){
+    let { type, x, timesx } = concept
     return(
       <Form.Field inline>
         <label> каждые </label>
-        {this.renderNums(20)}
-        {this.renderTimes(5)}
+        {this.renderNums({x: 60, name: 'x', index: i, type, currvalue: x})}
+        {this.renderTimes({num: x || 0, name: 'timesx', index: i, type, currvalue: timesx})}
         <Button icon onClick={() => this.removeConcept(i)}><Icon name='delete' /></Button>
       </Form.Field>
     )
   }
   renderPeriod(i, concept){
+    let { type, x, timesx } = concept
     return(
       <Form.Field inline>
-        {this.renderNums(20)}
-        {this.renderTimes(5)}
+        {this.renderNums({x: 24, name: 'x', index: i, type, currvalue: x})}
+        {this.renderTimes({num: x || 0, name: 'timesx', index: i, type, currvalue: timesx})}
         <Button icon onClick={() => this.removeConcept(i)}><Icon name='delete' /></Button>
       </Form.Field>
     )
   }
   renderPeriodIn(i, concept){
+    let { type, x, y, timesx, timesy } = concept
     return(
       <Form.Field inline>
-        {this.renderNums(20)}
-        {this.renderTimes(5)}
+        {this.renderNums({x: 24, name: 'x', index: i, type, currvalue: x})}
+        {this.renderTimes({num: x || 0, name: 'timesx', index: i, type, currvalue: timesx})}
         <label> через </label>
-        {this.renderNums(20)}
-        {this.renderTimes(5)}
+        {this.renderNums({x: 24, name: 'y', index: i, type, currvalue: y})}
+        {this.renderTimes({num: y || 0, name: 'timesy', index: i, type, currvalue: timesy})}
         <Button icon onClick={() => this.removeConcept(i)}><Icon name='delete' /></Button>
       </Form.Field>
     )
   }
   renderCount(i, concept){
+    let { type, x, timesx } = concept
     return(
       <Form.Field inline>
-        {this.renderNums(20)}
-        <label> раз в </label>
-        {this.renderTimes(1)}
+        {this.renderNums({x: 24, name: 'x', index: i, type, currvalue: x})}
+        <label> {declension(ref_times, x || 0)} в </label>
+        {this.renderTimes({num: 1, name: 'timesx', index: i, type, currvalue: timesx})}
         <Button icon onClick={() => this.removeConcept(i)}><Icon name='delete' /></Button>
       </Form.Field>
     )
   }
   renderCountEvery(i, concept){
+    let { type, x, y, timesx, timesy } = concept
     return(
       <Form.Field inline>
-        {this.renderNums(20)}
-        <label> раз в </label>
-        {this.renderTimes(1)}
+        {this.renderNums({x: 24, name: 'x', index: i, type, currvalue: x})}
+        <label> {declension(ref_times, x || 0)} в </label>
+        {this.renderTimes({num: 1, name: 'timesx', index: i, type, currvalue: timesx})}
         <label> с перерывами </label>
-        {this.renderNums(20)}
-        {this.renderTimes(5)}
+        {this.renderNums({x: 24, name: 'y', index: i, type, currvalue: y})}
+        {this.renderTimes({num: y || 0, name: 'timesy', index: i, type, currvalue: timesy})}
         <Button icon onClick={() => this.removeConcept(i)}><Icon name='delete' /></Button>
       </Form.Field>
     )
   }
   renderIn(i, concept){
+    let { type, x, timesx } = concept
     return(
       <Form.Field inline>
         <label>через</label>
-        {this.renderNums(20)}
-        {this.renderTimes(5)}
+        {this.renderNums({x: 24, name: 'x', index: i, type, currvalue: x})}
+        {this.renderTimes({num: x || 0, name: 'timesx', index: i, type, currvalue: timesx})}
         <Button icon onClick={() => this.removeConcept(i)}><Icon name='delete' /></Button>
       </Form.Field>
     )
   }
   renderTime(i, concept){
+    let { type, time } = concept
     return(
       <Form.Field inline>
         <Dropdown
           name={'time'}
           selection
+          value={time}
           placeholder={'время'}
-          onChange={this.handleChange}
+          onChange={(e, { name, value }) => this.handleChange(e, { name, type, value, index: i })}
           options={_.map(Array(48), (item, i) => {
             return {
               key: i+1,
@@ -230,6 +246,28 @@ class Interval extends Component {
 
   }
 
+  renderPresets(){
+    let { presets } = clarifications
+    let { UIText, scheduleForm: { interval } } = this.props.actions
+    let arr = []
+    interval = interval || []
+    _.keys( presets ).forEach(( presetKey, i ) => {
+      let preset = presets[presetKey]
+      arr.push(
+        {
+          key: i,
+          text: UIText.freq[preset.id],
+          value: presetKey,
+          onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
+          //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
+        }
+      )
+    })
+    return arr
+  }
+
+  
+
   render(){
     let {
       actions: {
@@ -237,7 +275,8 @@ class Interval extends Component {
         selectedConflict,
         activeDrugs,
         activeConflicts,
-        stepsData
+        stepsData,
+        scheduleForm: { interval }
       },
       dosages: { current: { drug, form, methodform, names } },
       router: { values }
@@ -297,8 +336,20 @@ class Interval extends Component {
     return (
       <>
         <Form.Group>
+          <Form.Field inline className='fluid'>
+            <label>Кратность приема:</label>
+            <Dropdown
+              inline
+              name={'presets'}
+              text={'Выбрать'}
+              options={this.renderPresets()}
+            />
+            
+          </Form.Field>
+        </Form.Group>
+        <Form.Group>
           <Form.Field className='fluid'>
-            <label>Выберите интервал:</label>
+            <label>Или создайте свой:</label>
           </Form.Field>
         </Form.Group>
         <div className='concept_container'>

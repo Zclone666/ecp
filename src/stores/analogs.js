@@ -36,13 +36,15 @@ class Analogs {
   async get(drug_obj){
     this.ready = false
     this.stores.actions.loading = true
+    let { active_language } = this.stores.actions
     // let currentDosages = await this.dosage.get(drug_obj.key);
     // if(currentDosages) {
     //   await this.stores.drugs.getDosageParams()
     //   return
     // }
     let data = {
-      drug: drug_obj
+      drug: drug_obj,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -50,7 +52,7 @@ class Analogs {
         path: `drugs/Analog`,
         data,
         success: async data => {
-          console.log('DATA', data);
+          // console.log('DATA', data);
           let { names, tn } = data
 
           this.names = await _.extend(this.names, names)

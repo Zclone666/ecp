@@ -30,11 +30,13 @@ class Diseases {
   }
   async getSearchDisease(text, saveTo){
     this.searchReady = false
+    let { active_language } = this.stores.actions
     let data = {
       text,
       lib: '61, 25',
       service: "43",
-      chain: 0
+      chain: 0,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -64,11 +66,13 @@ class Diseases {
   }
   async getSearchAllergy(text, saveTo){
     this.searchReady = false
+    let { active_language } = this.stores.actions
     let data = {
       text,
       lib: '61, 25',
       service: "43",
-      chain: 0
+      chain: 0,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey

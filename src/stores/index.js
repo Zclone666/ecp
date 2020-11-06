@@ -10,6 +10,7 @@ import Drugs from './drugs';
 import Dosages from './dosages';
 import Tools from './tools';
 import Analogs from './analogs';
+import DrugInfo from './druginfo';
 
 
 let stores = {};
@@ -24,6 +25,7 @@ stores.drugs = new Drugs({stores});
 stores.dosages = new Dosages({stores});
 stores.tools = new Tools({stores});
 stores.analogs = new Analogs({stores});
+stores.druginfo = new DrugInfo({stores});
 
 stores.router = new Router({stores, routes});
 window.stores = stores;

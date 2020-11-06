@@ -42,32 +42,64 @@ class DozeTypes extends Component {
     let arr = []
 
     form[stepsData.form] && form[stepsData.form].dosage.forEach((item, i) => {
-      let itemDosage = _.isArray(item.dosage) ? item.dosage : [item.dosage]
-      let currPack = {
-        dosage: { short: '', full: '', id: itemDosage[0].id_1 },
-        pack: { short: '', full: '', id: item.pack[0].dosage.id_1 },
-        type: 'simple',
-        value: 0,
-        flag: false
-      }
+      let itemDosage = null
+      if(_.isArray(item.dosage) && item.dosage.length > 0) itemDosage = item.dosage
+      if(_.isObject(item.dosage) && !(_.isArray(item.dosage))) itemDosage = [item.dosage]
+
       // if(form[stepsData.form].solute){
       //
       // }
       //console.log({item});
-      if(form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0 ){
-        item.pack.forEach((pack, x) => {
-          if(!pack.dosage) pack.dosage = {}
-          currPack = {
-            dosage: { short: '', full: '', id: itemDosage[0].id_1 },
-            pack: { short: '', full: '', id: pack.dosage.id_1 },
-            type: 'simple',
-            value: 0,
-            flag: !!(itemDosage[0] && itemDosage[0].id_2),
-            obj: {
-              dosages: itemDosage,
-              pack: pack,
-            }
+      //console.log({itemDosage});
+      if(!itemDosage){
+        arr.push({
+          dosage: { short: 'нет данных', full: 'Дозировка не указана', id: null },
+          pack: { short: '', full: '', id: null },
+          type: 'simple',
+          value: 0,
+          obj: {
+            dosages: null,
+            pack: null,
           }
+        })
+      }else{
+        let currPack = {
+          dosage: { short: '', full: '', id: itemDosage[0].id_1 },
+          pack: { short: '', full: '', id: item.pack[0].dosage ? item.pack[0].dosage.id_1 : null },
+          type: 'simple',
+          value: 0,
+          flag: false
+        }
+        if(form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0 ){
+          item.pack.forEach((pack, x) => {
+            if(!pack.dosage) pack.dosage = {}
+            currPack = {
+              dosage: { short: '', full: '', id: itemDosage[0].id_1 },
+              pack: { short: '', full: '', id: pack.dosage.id_1 },
+              type: 'simple',
+              value: 0,
+              flag: !!(itemDosage[0] && itemDosage[0].id_2),
+              obj: {
+                dosages: itemDosage,
+                pack: pack,
+              }
+            }
+            if(_.isArray(itemDosage) && itemDosage.length > 1 ){
+              currPack.dosage.full += _.map(itemDosage, 'value_1').join(' + ') + ' ' + names[itemDosage[0].id_1]
+              currPack.dosage.short += _.map(itemDosage, 'value_1').join(' + ') + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
+              currPack.type = 'multi'
+              currPack.value = Array.from(_.map(itemDosage, 'value_1'))
+            }else if(_.isArray(itemDosage) && itemDosage.length === 1 ){
+              let val = itemDosage[0].value_2 ? itemDosage[0].value_1/itemDosage[0].value_2 : itemDosage[0].value_1
+              currPack.dosage.full += val + ' ' + names[itemDosage[0].id_1]
+              currPack.dosage.short += val + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
+              currPack.value = val
+            }
+            currPack.pack.full += (names[pack.id] || '') + (pack.dosage && (', ' + (pack.dosage.value_1 || '') + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || '')) || '')
+            currPack.pack.short += (nameshort[pack.id] || names[pack.id] || '') + (pack.dosage && (', ' + (pack.dosage.value_1 || '') + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || '')) || '')
+            arr.push({ ...currPack })
+          })
+        }else{
           if(_.isArray(itemDosage) && itemDosage.length > 1 ){
             currPack.dosage.full += _.map(itemDosage, 'value_1').join(' + ') + ' ' + names[itemDosage[0].id_1]
             currPack.dosage.short += _.map(itemDosage, 'value_1').join(' + ') + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
@@ -79,29 +111,15 @@ class DozeTypes extends Component {
             currPack.dosage.short += val + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
             currPack.value = val
           }
-          currPack.pack.full += names[pack.id] + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1])) || '')
-          currPack.pack.short += (nameshort[pack.id] || names[pack.id]) + (pack.dosage && (', ' + pack.dosage.value_1 + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1])) || '')
+          currPack.flag = !!(itemDosage[0] && itemDosage[0].id_2)
+          currPack.obj = {
+            dosages: itemDosage,
+            pack: null
+          }
           arr.push({ ...currPack })
-        })
-      }else{
-        if(_.isArray(itemDosage) && itemDosage.length > 1 ){
-          currPack.dosage.full += _.map(itemDosage, 'value_1').join(' + ') + ' ' + names[itemDosage[0].id_1]
-          currPack.dosage.short += _.map(itemDosage, 'value_1').join(' + ') + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
-          currPack.type = 'multi'
-          currPack.value = Array.from(_.map(itemDosage, 'value_1'))
-        }else if(_.isArray(itemDosage) && itemDosage.length === 1 ){
-          let val = itemDosage[0].value_2 ? itemDosage[0].value_1/itemDosage[0].value_2 : itemDosage[0].value_1
-          currPack.dosage.full += val + ' ' + names[itemDosage[0].id_1]
-          currPack.dosage.short += val + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
-          currPack.value = val
         }
-        currPack.flag = !!(itemDosage[0] && itemDosage[0].id_2)
-        currPack.obj = {
-          dosages: itemDosage,
-          pack: null
-        }
-        arr.push({ ...currPack })
       }
+
 
     })
     return arr
@@ -121,6 +139,7 @@ class DozeTypes extends Component {
       router: { values }
     } = this.props
     let way = values.way || 'lf'
+    let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`
     let currStep = parseInt(values.step || 0)
 
 
@@ -134,7 +153,7 @@ class DozeTypes extends Component {
           return(
             <List.Item
               as={RouterLink}
-              to={`/concept/dozes/${way}/${currStep+1}`}
+              to={`${url}/${currStep+1}`}
               onClick={() => this.setDosage(dose)}
               key={'type'+i}
             >

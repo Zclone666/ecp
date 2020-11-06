@@ -22,6 +22,8 @@ class Actions {
   @observable authkey = null;
   @observable privateKey = null;
 
+  @observable active_language = 'ru';
+
   @observable pages = {}
   @observable currentPage = null
 
@@ -32,6 +34,9 @@ class Actions {
   @observable elements = {}
   @observable buttonTexts = {}
   @observable UIText = {}
+
+  @observable makeLiquids = false
+  @observable isLiquidsOk = false
 
   @observable doctor = {
     id: null,
@@ -100,11 +105,13 @@ class Actions {
     growth: null,
     weight: null,
     disease: [],
+    co_disease: [],
     pregnancy: false,
     gestation: null,
     trimester: null,
     lactation: false,
     driving: true,
+    alcohol: false,
     allergy: []
   }
 
@@ -126,14 +133,18 @@ class Actions {
     once: null,
     week: null,
     calendar: null,
-    specials: null
+    specials: null,
+    format: 'interval'
   }
 
   @observable calculatorForm = {
     dosage: 0,
     count: 1,
+    dayCount: 1,
     fullDosage: 0,
-    weightDosage: 0
+    weightDosage: 0,
+    dayDosage: 0,
+    dayWeightDosage: 0
   }
 
   @observable selectedDrug = null
@@ -168,16 +179,20 @@ class Actions {
       growth: null,
       weight: null,
       disease: [],
+      co_disease: [],
       pregnancy: false,
       gestation: null,
       trimester: null,
       lactation: false,
       driving: true,
+      alcohol: false,
       allergy: []
     },
-    save_recipe: false,
-    active_language: "RU",
-    drugs: []
+    // save_recipe: false,
+    active_language: "ru",
+    drugs: [],
+    text: null,
+    specials: null
   }
 
 
@@ -193,6 +208,14 @@ class Actions {
         this.stores.dosages.setStepDosage()
       }
     })
+
+    autorun(() => {
+      if(this.loading){
+        setTimeout(() => {
+          this.loading = false
+        }, 5000)
+      }
+    });
     // autorun(() => {
     //   console.log(this.currentPage);
     //   if(this.currentPage && _.keys(this.pages).length > 0){
@@ -202,6 +225,13 @@ class Actions {
     // });
     // this.onResize()
     // window.onresize = this.onResize
+  }
+  async setLang(lang){
+    if(lang !== this.active_language){
+      this.drugStructure.active_language = this.active_language = lang
+      await localStorage.setItem('lang', lang)
+      window.location.reload(false);
+    }
   }
   onResize(){
     // console.log('resize');
@@ -271,10 +301,12 @@ class Actions {
   }
 
   async getObject(name) {
-
+    let { active_language } = this
     return POST({
       path: `info/${name}`,
-      data: {},
+      data: {
+        active_language
+      },
       success: async (data) => {
         let { alert, ...values } = data
         //this[name]
@@ -305,6 +337,12 @@ class Actions {
 
   async autologin(){
 
+    this.drugStructure.active_language = this.active_language = await localStorage.getItem('lang') || null;
+    if(!this.active_language){
+      this.drugStructure.active_language = this.active_language = 'ru'
+      await localStorage.setItem('lang', 'ru')
+    }
+
     this.getObject('buttonTexts')
     this.getObject('elements')
     this.getObject('UIText')
@@ -312,6 +350,7 @@ class Actions {
 
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
+
 
     if(!this.authkey && this.stores.router.match.name !== 'auth') {
       this.loading = false
@@ -340,8 +379,12 @@ class Actions {
         // this.stores.db.getFilters()
 
       },
-      fail: () => {
+      fail: async () => {
         // console.log('FAIL');
+        // if(this.stores.router && this.stores.router.route !== '/confirm'){
+        //   this.stores.router.push('/login')
+        // }
+        await localStorage.setItem('authkey', null);
         this.stores.router.push('/login')
         this.authorized = false
         this.loading = false
@@ -357,9 +400,11 @@ class Actions {
   async login() {
     //this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey, remember } = this.loginForm
+    let { active_language } = this
     let data = {
       //key: privateKey,
-      authkey: this.authkey
+      authkey: this.authkey,
+      active_language
     }
     return POST({
       path: `auth/Check`,
@@ -386,6 +431,7 @@ class Actions {
           }
           this.stores.tools.getUnitsPrimary()
           this.stores.tools.getUnitsPharm()
+          this.stores.tools.getUnitsSchedule()
           // this.stores.patients.request()
         // }else{
         //   this.makeAlerts({ alerts:[{
@@ -425,6 +471,7 @@ class Actions {
   async fakelogin() {
     this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey, remember, ...data } = this.loginForm
+    // data.active_language = active_language
     return await POST({
       path: `https://cs.socmedica.com/api/user/authorization`,
       data,
@@ -479,6 +526,7 @@ class Actions {
   }
   async signin() {
     this.signinForm.key = AUTH_SERVICE_KEY;
+
     return POST({
       path: `https://cs.socmedica.com/api/registration/send`,
       data: this.signinForm,

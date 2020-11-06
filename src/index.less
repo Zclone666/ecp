@@ -2,7 +2,9 @@
 html, body, .main.container{
 	height: 100% !important;
 }
-
+a.underlined{
+  color: inherit !important;
+}
 .underlined{
 	text-decoration: underline;
 }
@@ -18,6 +20,12 @@ html, body, .main.container{
 }
 .over-y-hidden{
 	overflow-y: hidden !important;
+}
+
+.link{
+  font-weight: normal;
+  border-bottom: 1px dashed #262626;
+  cursor: pointer;
 }
 
 .toolbarSpacer{
@@ -824,6 +832,9 @@ i.violet.icon, i.big.violet.icon, i.small.violet.icon, i.large.violet.icon, i.hu
   display: flex;
   /* direction: rtl; */
 }
+.ui.visible.sidebar{
+  overflow-y: visible !important;
+}
 .ui.sidebar.opened .segment{
   flex: 1;
   min-height: 100% !important;
@@ -923,6 +934,15 @@ i.violet.icon, i.big.violet.icon, i.small.violet.icon, i.large.violet.icon, i.hu
   line-height: 1em !important;
   margin: 0em !important;
 }
+
+.ui.list .dropdown .menu, .ui.list .dropdown .menu .item{
+	padding: .78571429rem 1.14285714rem !important;
+	background-color: #FFF !important;
+}
+.ui.list .dropdown .menu .item .icon{
+	display: inline-block !important;
+}
+
 .card .visible.content > .ui.image{
   overflow: hidden;
   height: -webkit-fill-available;
@@ -1153,8 +1173,11 @@ td > .collapsable ul li{
 }
 
 
-.ui.divided.list .item {
+.ui.divided.list > div > div:not(:first-child) .item, .ui.divided.list > div .item:not(:first-child) {
     border-top: 1px solid rgba(34,36,38,.15);
+}
+.ui.divided.list .menu > .item:first-child{
+  border-top: none;
 }
 .ui.selection.list .list .item, .ui.selection.list .item {
     cursor: pointer;
@@ -1266,7 +1289,8 @@ td > .collapsable ul li{
 .ui.list.drugslist .item {
   padding-left: 50px;
   position: relative;
-	background-color: #f3f3f2 !important;
+  background-color: #f3f3f2;
+  padding-right: ;
 }
 .ui.list.drugslist .item .arrowholder{
 	position: absolute;
@@ -1299,18 +1323,19 @@ td > .collapsable ul li{
 }
 .ui.list.drugslist .item .right.content{
 	position: absolute;
-	right: 22px;
+	right: 26px;
 	z-index: 105;
 }
 
 .ui.list .item .icon.arrow.circle.right{
-	text-shadow: 0.5px 0.5px 1px #bbb;
-	line-height: 21px;
-	position: relative;
-	display: block;
-	margin: 0 0;
-	height: 26px;
-	width: 26px;
+  text-shadow: 0.5px 0.5px 1px #bbb;
+  line-height: 23px;
+  position: relative;
+  display: block;
+  margin: 0 0;
+  height: 26px;
+  width: 26px;
+  padding: 0 !important;
 }
 .ui.list .item .icon.warning.circle{
 	text-shadow: 0.5px 0.5px 1px #bbb;
@@ -1324,10 +1349,10 @@ td > .collapsable ul li{
 	position: absolute;
 	margin-left: -5px;
 	text-align: right;
-	padding-left: 14px;
-  margin-top: .1em;
+	padding-left: 18px;
+    margin-top: .2em;
 	width: 40px;
-	height: 26px;
+	height: 23px;
 	border-radius: 0 20px 20px 0;
 	background-color: #ccc;
 	box-shadow: 0.5px 0.5px 1px #bbb;
@@ -1473,11 +1498,22 @@ td > .collapsable ul li{
 .warningcontainer.segment .list{
 	margin-top: 0;
 }
+.warningcontainer.segment .list .item{
+	min-height: 38px;
+	position: relative;
+}
+.warningline{
+	position: absolute;
+  width: 20px;
+  height: 6px;
+  left: -30px;
+  top: 10px;
+}
 .arrowcontainer{
 	position: absolute;
   left: 10px;
   top: 22px;
-  bottom: 22px;
+  bottom: 32px;
   border-width: 6px 0 6px 6px;
   border-radius: 5px 0 0 5px;
   width: 20px;
@@ -1551,4 +1587,56 @@ td > .collapsable ul li{
 
 .ui.list .item:after, .ui.list .list .item, ol.ui.list li:first-child:after, ul.ui.list li:first-child:after{
 	visibility: visible !important;
+}
+
+
+.liquidcontainer{
+  border-width: 3px;
+  border-style: dashed;
+  border-color: @lightGrey;
+  border-left: 0px;
+  margin: 0 3px 5px 0;
+}
+
+.liquidcontainer .bottomtext{
+  padding: 5px 10px;
+  font-size: @fontSize;
+  border-top: 1px solid rgba(34, 36, 38, 0.15);
+  color: @lightRed;
+}
+
+.liquidcontainer .text{
+  padding: 10px;
+  font-size: @fontSize;
+}
+.liquidcontainer .abstext{
+   padding: 10px;
+   font-size: @small;
+ }
+.liquidcontainer.active .abstext{
+  position: absolute !important;
+}
+.liquidcontainer .item .right.content {
+  right: 20px !important;
+}
+
+.dragging{
+  opacity: 0.8;
+}
+
+.item .draghandler{
+  position: absolute;
+  right: 4px;
+  top: 9px;
+  width: 17px;
+  padding: 1px 2px 2px 1px;
+  background: #f8f8f8;
+  box-shadow: -1px -1px 0px #ddd;
+}
+.item .draghandler > div{
+  width: 3px;
+  height: 3px;
+  margin: 2px;
+  float: left;
+  background: rgba(0, 0, 0, 0.6);
 }

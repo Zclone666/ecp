@@ -90,11 +90,13 @@ class Warnings {
   //getInfoPrep
   async check(){
     this.stores.actions.loading = true
+    let { active_language } = this.stores.actions
     this.stores.db.clearData(false, true)
     let data = _.clone(this.stores.actions.drugStructure)
     data.drugs = Array.from(this.stores.drugs.drug.values())
 
-    data.service = "43"
+    //data.service = "43"
+    data.active_language = active_language
 
     data.return_subjects = false
     data.authkey = this.stores.actions.authkey
@@ -141,13 +143,15 @@ class Warnings {
                       value: item.value,
                       valuecolor: color,
                       group,
-                      hint
+                      hint,
+                      hintarr: item.hint
                     }
                   }else{
                     if(group > warnGroups[item.type].group){
                       warnGroups[item.type].value = item.value
                       warnGroups[item.type].valuecolor = color
                       warnGroups[item.type].group = group
+                      warnGroups[item.type].hintarr = _.unionWith(warnGroups[item.type].hintarr, item.hint, _.isEqual);
                     }
                   }
                   if( subject.type === 'drug' ){

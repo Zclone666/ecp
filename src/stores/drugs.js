@@ -36,14 +36,57 @@ class Drugs {
 
 
   }
+
+  async setGroup(keys, group){
+    if(!_.isArray(keys)) {
+      keys = [keys]
+    }
+    keys.forEach(async (key, i) => {
+      let drug = await this.drug.get(key)
+      drug.group = group
+      this.drug.set(key, drug)
+    })
+    this.stores.actions.makeLiquids = true
+    setTimeout(() => {
+      this.checkLiquidsOk()
+    }, 300)
+  }
+  async resetGroups(){
+    this.drug.forEach((item, i) => {
+      if(item.group !== 0){
+        item.group = 0
+        this.drug.set(item.key, item)
+      }
+    })
+  }
+
+  async checkLiquidsOk(){
+    let isOk = true
+    let obj = {}
+    this.drug.forEach((item, i) => {
+      if(item.group !== 0){
+        obj[item.group] = !!obj[item.group] ? obj[item.group]+1 : 1
+      }
+    })
+    _.forEach(obj, (counter) => {
+      if(counter < 2 && counter !== 0){
+        isOk = false
+      }
+    })
+    // console.log(obj)
+    this.stores.actions.isLiquidsOk = isOk
+  }
+
   //getSearch
   async search(text, saveTo='search'){
     this.searchReady = false
+    let { active_language } = this.stores.actions
     let data = {
       text,
       lib: '62, 52', //'61, 25' - заболевания
       service: "43",
-      chain: 0
+      chain: 0,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -77,17 +120,23 @@ class Drugs {
     this.stores.dosages.get(currentDrug, true)
   }
 
+
   setDosageParams = async (url) => {
     let drugData = this.stores.actions.stepsData
     let calcData = this.stores.actions.calculatorForm
     let scheduleData = this.stores.actions.scheduleForm
 
     let drug = this.current
-    let currentDrug = await this.drug.get(drug.key) || {};
-    let currentDosages = await this.stores.dosages.dosage.get(drug.key) || {};
+    let currentDrug = this.drug.get(drug.key) || {};
+    let currentDosages = this.stores.dosages.dosage.get(drug.key) || {};
 
     let { calcValues, getFromBase } = this.stores.dosages
     let def = (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id ) || (calcValues.dosage.unit && calcValues.dosage.unit.id)
+
+    let { freq, duration } = drug
+    // console.log({ freq, duration });
+    currentDrug.freq = freq || null
+    currentDrug.duration = duration || null
 
     let {
       key,
@@ -114,10 +163,16 @@ class Drugs {
     let {
       dosage: dos,
       count,
+      dayCount,
       fullDosage,
-      weightDosage
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     } = calcData
 
+    currentDrug.solute = (currentDosages.form && currentDosages.form[form]) ? currentDosages.form[form].solute : currentDrug.solute
+    // console.log({currentDosages, form})
+    // console.log({currentDrug})
     currentDrug.dosage = {
       key,
       way,
@@ -142,8 +197,11 @@ class Drugs {
     currentDrug.calc = {
       dosage: dos,
       count,
-      fullDosage: fullDosage,
-      weightDosage:  weightDosage
+      dayCount,
+      fullDosage,
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     }
     await this.drug.set( drug.key, currentDrug );
 
@@ -157,6 +215,9 @@ class Drugs {
     let drug = this.current
     let currentDrug = await this.drug.get(drug.key) || {};
     let currentDosages = await this.stores.dosages.dosage.get(drug.key) || {};
+
+    let { freq, duration } = drug
+    // console.log({ freq, duration });
 
     let {
       key,
@@ -181,8 +242,11 @@ class Drugs {
     let {
       dosage: dos,
       count,
+      dayCount,
       fullDosage,
-      weightDosage
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     } = currentDrug.calc
 
     this.stores.actions.stepsData = {
@@ -197,8 +261,11 @@ class Drugs {
     this.stores.actions.calculatorForm = {
       dosage: dos,
       count,
+      dayCount,
       fullDosage,
-      weightDosage
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     }
     this.stores.actions.scheduleForm = {
       dateStart,
@@ -225,6 +292,10 @@ class Drugs {
       type: null,
       group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
       text: null,
+      specials: null,
+      freq: null,
+      duration: null,
+      solute: false,
       dosage: { // дозировка
         // way: null,
         // step: null,
@@ -237,8 +308,11 @@ class Drugs {
       calc: {
         dosage: 0,
         count: 1,
+        dayCount: 1,
         fullDosage: 0,
-        weightDosage: 0
+        weightDosage: 0,
+        dayDosage: 0,
+        dayWeightDosage: 0
       },
       schedule: {
         dateStart: null,
@@ -248,8 +322,7 @@ class Drugs {
         interval: null,
         once: null,
         week: null,
-        calendar: null,
-        specials: null
+        calendar: null
       }
     }
     drug = _.assignIn(drug, row);
@@ -269,6 +342,7 @@ class Drugs {
     this.stores.dosages.dosage.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true)
+    this.checkLiquidsOk()
     return true
   }
 

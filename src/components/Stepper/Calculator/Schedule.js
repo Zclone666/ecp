@@ -22,6 +22,8 @@ import Week from './Week';
 import Interval from './Interval';
 import Calendar from './Calendar';
 
+import clarifications from '../../../constants/hardcode'
+
 @inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class Schedule extends Component {
@@ -33,7 +35,8 @@ class Schedule extends Component {
       fullDosage: 0,
       weight: 0,
       weightDosage: 0,
-      format: 'interval'
+      // format: 'interval',
+      timeFromStart: null
     }
   }
   handleChange = (e, { name, value }) => {
@@ -41,8 +44,11 @@ class Schedule extends Component {
       let { name, value } = e.target
     }
     // console.log('HERE');
+    console.log({ value });
     if( name === 'dateStart' || name === 'dateFinish' ){
-      this.props.actions.scheduleForm[name] = moment(value).format('x')
+      this.setState({ timeFromStart: null })
+      if(moment(value).format('x') !== 'Invalid date') this.props.actions.scheduleForm[name] = moment(value).format('x')
+      // console.log({ value: moment(value).format('x') } );
     }else{
       this.props.actions.scheduleForm[name] = value
     }
@@ -50,6 +56,16 @@ class Schedule extends Component {
 
     // this.setState({ [name]: value })
      // console.log({ name, value });
+  }
+  setToday = () => {
+    this.props.actions.scheduleForm.dateStart = moment().format('x')
+  }
+  setDate = (tpl, id) => {
+    let { UIText } = this.props.actions
+    let { dateStart } = this.props.actions.scheduleForm
+    this.setState({ timeFromStart: UIText.duration[id] })
+    this.props.drugs.current.duration = id 
+    this.props.actions.scheduleForm.dateFinish = moment(dateStart, 'x').add(tpl.x, tpl.timesx).format('x')
   }
   componentDidMount(){
     let {
@@ -69,6 +85,26 @@ class Schedule extends Component {
 
     this.props.actions.scheduleForm.dateStart = dateStart || moment().format('x')
   }
+
+  renderDurations(){
+    let { durations } = clarifications
+    let { UIText, scheduleForm: { interval } } = this.props.actions
+    let arr = []
+    interval = interval || []
+    _.keys( durations ).forEach(( durationKey, i ) => {
+      let duration = durations[durationKey]
+      arr.push(
+        {
+          key: i,
+          text: UIText.duration[duration.id],
+          value: durationKey,
+          onClick: () => this.setDate(duration.tpl[0], duration.id)
+        }
+      )
+    })
+    return arr
+  }
+
   render(){
     let {
       actions: {
@@ -85,6 +121,7 @@ class Schedule extends Component {
           interval,
           once,
           week,
+          format,
           calendar
         }
       },
@@ -98,7 +135,8 @@ class Schedule extends Component {
       fullDosage,
       weight,
       weightDosage,
-      format
+      // format,
+      timeFromStart
     } = this.state
     // console.log({dateStart});
     //
@@ -111,9 +149,9 @@ class Schedule extends Component {
     return (
       <Segment>
         <Form>
-          <Form.Group widths={3}>
-            <Form.Field>
-              <label>Начало периода приема:</label>
+          <Form.Group>
+            <Form.Field width={4}>
+              <label>Начало приема (<span className='link' onClick={this.setToday}>сегодня</span>):</label>
               <DatePickerInput
                 onChange={( value ) => this.handleChange(null, { value, name: 'dateStart' })}
                 name='dateStart'
@@ -130,30 +168,45 @@ class Schedule extends Component {
                 locale='ru'
               />
             </Form.Field>
-            <Form.Field>
-              <label>Окончание периода приема:</label>
-              <DatePickerInput
-                onChange={( value ) => this.handleChange(null, { value, name: 'dateFinish' })}
-                name='dateFinish'
-                value={dateFinish}
-                showOnInputClick={true}
-                startMode='year'
-                format='DD.MM.YYYY'
-                returnFormat='DD.MM.YYYY'
-                displayFormat='DD.MM.YYYY'
-                validationFormat='DD.MM.YYYY'
-                onClear={this.onClear}
-                className='ui fluid big input '
-                placeholder='__.__.____'
-                locale='ru'
-              />
+            <Form.Field width={7}>
+              <label>Окончание приема:</label>
+              <Input action>
+                <DatePickerInput
+                  onChange={( value ) => this.handleChange(null, { value, name: 'dateFinish' })}
+                  name='dateFinish'
+                  value={dateFinish}
+                  showOnInputClick={true}
+                  startMode='year'
+                  format='DD.MM.YYYY'
+                  returnFormat='DD.MM.YYYY'
+                  displayFormat='DD.MM.YYYY'
+                  validationFormat='DD.MM.YYYY'
+                  onClear={this.onClear}
+                  className='ui fluid big input '
+                  placeholder='__.__.____'
+                  locale='ru'
+                />
+                <Dropdown
+                  disabled={!dateStart || dateStart.length < 1}
+                  className='button'
+                  name={'durations'}
+                  text={timeFromStart || 'Выбрать'}
+                  options={this.renderDurations()}
+                />
+              </Input>
+
+
             </Form.Field>
-            <Form.Field>
+            <Form.Field width={5}>
               <label>Или</label>
-              <Button.Group fluid size='big'>
+              <Responsive as={Button.Group} fluid size='big' minWidth={481}>
                 <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>До отмены</Button>
                 <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>До улучшения</Button>
-              </Button.Group>
+              </Responsive>
+              <Responsive as={Button.Group} fluid maxWidth={480}>
+                <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>До отмены</Button>
+                <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>До улучшения</Button>
+              </Responsive>
             </Form.Field>
 
           </Form.Group>
@@ -161,15 +214,15 @@ class Schedule extends Component {
           <Form.Group>
             <Form.Field className='fluid'>
               <label>Условия приема</label>
-              <Responsive as={Button.Group} fluid widths={4} minWidth={480}>
-                <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По интервалу</Button>
-                <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>1 раз</Button>
+              <Responsive as={Button.Group} fluid widths={4} minWidth={481}>
+                <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По расписанию</Button>
+                <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>Однократно</Button>
                 <Button primary={format === 'week'} onClick={this.handleChange} name='format' value='week'>По дням недели</Button>
                 <Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>
               </Responsive>
               <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
-                <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По интервалу</Button>
-                <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>1 раз</Button>
+                <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По расписанию</Button>
+                <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>Однократно</Button>
               </Responsive>
               <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
                 <Button primary={format === 'week'} onClick={this.handleChange} name='format' value='week'>По дням недели</Button>

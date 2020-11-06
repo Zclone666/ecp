@@ -27,10 +27,12 @@ class Patients {
 
   }
   async request(id){
+    let { active_language } = this.stores.actions
     let data = {
       key: this.stores.actions.privateKey,
       authkey: this.stores.actions.authkey,
-      id
+      id,
+      active_language
     }
 
     // data.authkey = this.stores.actions.authkey
@@ -45,6 +47,7 @@ class Patients {
             birthdate,
             disease,
             disease2,
+            co_disease,
             driving,
             email,
             fio,
@@ -60,6 +63,7 @@ class Patients {
             trimester,
             weight
           } = data.patient
+          co_disease = co_disease || []
           this.stores.actions.patientForm = {
             id,
             email,
@@ -71,6 +75,7 @@ class Patients {
             birthdate,
             disease,
             disease2,
+            co_disease,
             driving,
             gestation,
             growth,
@@ -91,6 +96,7 @@ class Patients {
             birthdate,
             disease,
             disease2,
+            co_disease,
             driving,
             gestation,
             growth,
@@ -147,11 +153,13 @@ class Patients {
 
   async search(text, saveTo='search'){
     this.searchReady = false
+    let { active_language } = this.stores.actions
     let data = {
       text,
       // lib: '62, 52', //'61, 25' - заболевания
       service: "43",
       // chain: 0
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -179,12 +187,14 @@ class Patients {
     });
   }
   async save(){
+    let { active_language } = this.stores.actions
     let data = {
       key: this.stores.actions.privateKey,
       authkey: this.stores.actions.authkey,
       patient: {
 
-      }
+      },
+      active_language
     }
     let patient = await _.assignIn({ ...this.stores.actions.drugStructure.patient }, { ...this.stores.actions.patientPassport });
     data.patient = patient

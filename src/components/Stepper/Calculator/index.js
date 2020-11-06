@@ -13,7 +13,11 @@ import {
   TextArea
 } from 'semantic-ui-react'
 
+import clarifications from '../../../constants/hardcode'
+
+
 import Schedule from './Schedule'
+import Drugs from './Drugs'
 
 import _ from 'lodash';
 
@@ -54,7 +58,7 @@ class Calculator extends Component {
     }
     //value = parseFloat(eval(value))
     if( name === 'specials' ){
-      this.props.actions.scheduleForm.specials = value
+      this.props.actions.drugStructure.specials = value
       return
     }
     value = parseFloat(value)
@@ -108,49 +112,82 @@ class Calculator extends Component {
 
     //console.log({ name, value });
   }
-  // componentDidUpdate(prevProps, prevState){
-  //   if(this.props.actions.stepsData.pack.obj){
-  //     if(!prevProps.actions.stepsData.pack.obj || (prevProps.actions.stepsData.pack.obj.dosages[0].value_1 !== this.props.actions.stepsData.pack.obj.dosages[0].value_1 )){
-  //       this.handleChange(null, {
-  //         name: 'dosage',
-  //         value: this.props.actions.stepsData.pack.obj.dosages[0].value_1
-  //       })
-  //     }
-  //   }
-  // }
+
+  setPreset = (e, {value}) => {
+    let { presets } = clarifications
+    let preset = _.find(presets, { 'id': value});
+    let {
+      dosage,
+      count,
+      dayCount,
+      fullDosage,
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
+    } = this.props.actions.calculatorForm
+    this.props.drugs.current.freq = preset.id
+
+    // console.log({value});
+
+    dayCount = preset.tpl[0].multiplicate
+    dayDosage = preset.tpl[0].multiplicate * (fullDosage || 1)
+    dayWeightDosage = preset.tpl[0].multiplicate * (weightDosage || 1)
+
+    this.props.actions.calculatorForm = {
+      dosage,
+      count,
+      dayCount,
+      fullDosage,
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
+    }
+
+  }
+
+  renderPresets(){
+    let { presets } = clarifications
+    let { UIText, scheduleForm: { interval } } = this.props.actions
+    let arr = []
+    interval = interval || []
+    _.keys( presets ).forEach(( presetKey, i ) => {
+      let preset = presets[presetKey]
+      arr.push(
+        {
+          key: i,
+          text: UIText.freq[preset.id],
+          value: preset.id,
+          //onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
+          //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
+        }
+      )
+    })
+    return arr
+  }
+
   render(){
     let {
       actions: {
-        selectedDrug,
-        selectedConflict,
-        activeDrugs,
-        activeConflicts,
-        stepsData,
         drugStructure: {
-          patient: { weight }
+          patient: { weight, specials }
         },
         calculatorForm: {
-          baseDosage,
           dosage,
           count,
+          dayCount,
           fullDosage,
-          weightDosage
+          weightDosage,
+          dayDosage,
+          dayWeightDosage
         },
-        scheduleForm: {
-          specials
-        }
       },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
-      router: { values }
+      router: { values },
+      drugs: { current },
+      isLiquid
     } = this.props
     let { currUnit } = this.state
 
-    // console.log({
-    //   dosage,
-    //   count,
-    //   fullDosage,
-    //   weightDosage
-    // });
     let weights = []
     let { dosage: dos, count: cnt } = calcValues
 
@@ -172,24 +209,16 @@ class Calculator extends Component {
 
     let currUnitObj = dos.units[currUnit]
 
-    // console.log({currUnitObj});
-
     let secondName = currUnit ? (currUnitObj && (currUnitObj.shortname || currUnitObj.name)) : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name) ) || (dos.unit && (dos.unit.shortname || dos.unit.name))
     let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
 
-    // let calculated =
-    // console.log({def});
-    // let weights = [
-    //   { key: 'мг', value: 'мг', text: 'мг' },
-    //   { key: 'сг', value: 'сг', text: 'сг' },
-    //   { key: 'мкг', value: 'мкг', text: 'мкг' }
-    // ]
-    // dosage = dosage || (stepsData.pack.obj && stepsData.pack.obj.dosages[0].value_1 || 0)
-
-      // console.log({weights, calcValues, def, dos});
-    // console.log({ getFromBase: getFromBase((currUnit || def), baseDosage), dosage, baseDosage });
+    let liquid = values && values.liquid || null
+    
     return (
       <Segment basic>
+        {isLiquid && <div className='liquiddrugs'>
+          <Drugs liquid={liquid} />
+        </div>}
         <Form>
           <Form.Group>
             <Form.Field width={4}>
@@ -230,7 +259,7 @@ class Calculator extends Component {
               />
             </Form.Field>
             <Form.Field width={3}>
-              <label>На массу тела</label>
+              <label>На массу тела:</label>
               <Input
                 size='big'
                 name='patient.weight'
@@ -242,7 +271,7 @@ class Calculator extends Component {
               />
             </Form.Field>
             <Form.Field width={3}>
-              <label>&nbsp;</label>
+              <label>На кг веса:</label>
               <Input
                 size='big'
                 name='weightDosage'
@@ -254,7 +283,44 @@ class Calculator extends Component {
               />
             </Form.Field>
           </Form.Group>
-
+          <Form.Group>
+            <Form.Field width={4}>
+              <label>Кратность приема:</label>
+              <Dropdown
+                selection
+                defaultValue={(current && current.freq) || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
+                className='input big'
+                name={'dayCount'}
+                placeholder={'Выбрать'}
+                onChange={this.setPreset}
+                options={this.renderPresets()}
+              />
+            </Form.Field>
+            <Form.Field width={3}>
+              <label>Суточная доза:</label>
+              <Input
+                size='big'
+                name='dayDosage'
+                value={getFromBase((currUnit || def), dayDosage) || ''}
+                label={{ basic: true, content: secondName || 'мг' }}
+                labelPosition='right'
+                placeholder='500'
+                onChange={this.handleChange}
+              />
+            </Form.Field>
+            <Form.Field width={3}>
+              <label>На массу тела:</label>
+              <Input
+                size='big'
+                name='dayWeightDosage'
+                value={getFromBase((currUnit || def), dayWeightDosage) || ''}
+                label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
+                labelPosition='right'
+                placeholder='0'
+                onChange={this.handleChange}
+              />
+            </Form.Field>
+          </Form.Group>
         </Form>
         <Schedule />
         <Form>

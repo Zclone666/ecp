@@ -30,8 +30,10 @@ class Tools {
 
   async getUnitsPharm(units){
     units = units || []
+    let { active_language } = this.stores.actions
     let data = {
-      units
+      units,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -67,8 +69,9 @@ class Tools {
     });
   }
   async getUnitsPrimary(){
+    let { active_language } = this.stores.actions
     let data = {
-
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -88,8 +91,10 @@ class Tools {
     });
   }
   async getUnitsComplex(units){
+    let { active_language } = this.stores.actions
     let data = {
-      units: units
+      units: units,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -109,6 +114,28 @@ class Tools {
     });
   }
 
+  async getUnitsSchedule(){
+    let { active_language } = this.stores.actions
+    let data = {
+      active_language
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+      path: `info/Schedule`,
+      data,
+      success: async data => {
+        // console.log('DATA', data);
+
+      },
+      fail: (alerts) => {
+
+      },
+      always: (data) => {
+
+      }
+    });
+  }
 
   setUnits = (units, unitrefs, unitpharm) => {
     // _.keys(unitrefs).forEach( refkey => {

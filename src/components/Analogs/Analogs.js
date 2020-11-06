@@ -11,7 +11,9 @@ import {
   Icon,
   Segment,
   Label,
-  Table
+  Table,
+  Dimmer,
+  Header
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -57,9 +59,10 @@ class Analogs extends Component {
     let drugKey = router.values && router.values.page
     let analogObj = analogs.analog.get(drugKey) || {}
     return (
-      <Segment basic>
+      <>
+      {(analogs.ready && analogObj.arr.length > 0) && (<Segment basic>
         <List divided relaxed verticalAlign='middle' size='large' >
-          {analogs.ready && analogObj.arr.map(( analog, i ) => {
+          {analogObj.arr.map(( analog, i ) => {
 
             return(
               <>
@@ -98,21 +101,29 @@ class Analogs extends Component {
 
                           )
                         })}
-
                       </Table.Body>
                     </Table>
                     )}
-
                   </Transition.Group>
                 </List.Item>
-
               </>
             )
 
-          })}
+          })}         
         </List>
-      </Segment>
-
+        
+      </Segment>)}
+      {(analogs.ready && analogObj.arr.length < 1) && 
+        <Dimmer.Dimmable as={Segment} basic dimmed={true} className='h100'>
+          <Dimmer active={true} inverted>
+            <Header as='h2' icon color='grey'>
+              <Icon name='dont' />
+              Нет аналогов
+            </Header>
+          </Dimmer>
+        </Dimmer.Dimmable>
+      }
+      </>
     )
   }
 

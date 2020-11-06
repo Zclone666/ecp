@@ -18,7 +18,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages', 'analogs')
+@inject('db', 'actions', 'router', 'tools', 'drugs', 'warnings', 'dosages', 'analogs', 'druginfo')
 @observer
 class Drug extends React.Component {
   constructor(props){
@@ -49,6 +49,14 @@ class Drug extends React.Component {
     } = this.props
     await this.props.analogs.get(drug)
   }
+
+  getInfo = async () => {
+    let {
+      drug
+    } = this.props
+    await this.props.druginfo.get(drug)
+  }
+
   unselectDrug = () => {
     let { drug } = this.props
     this.props.drugs.unselectDrug(drug)
@@ -88,7 +96,38 @@ class Drug extends React.Component {
     //return false
   }
 
+  renderRules(){
+    let {
+      dosages: { getFromBase },
+      tools: { names, shortnames },
+      drug: {
+        freq,
+        duration,
+        calc,
+        dosage
+      },
+      drug,
+      actions: { UIText }
+    } = this.props
 
+    let arr = []
+
+    // console.log({drug});
+
+    if(calc.fullDosage && dosage.pack.dosage.id ){
+      let dosageValue = getFromBase(dosage.pack.dosage.id, calc.fullDosage)
+      let dosageName = shortnames[dosage.pack.dosage.id] || names[dosage.pack.dosage.id]
+      arr.push(`${parseFloat(dosageValue)} ${dosageName}`)
+    }
+
+    if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
+    if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+
+    return {
+      empty: arr.length < 1,
+      text: arr.join(', ')
+    }
+  }
 
   render(){
     let {
@@ -102,7 +141,11 @@ class Drug extends React.Component {
       dosages: { dosage: dose },
       warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
       drug,
-      active
+      active,
+      style,
+      minus,
+      onRemove,
+      canDrag
     } = this.props
     //console.log('drug', drug);
     let selectedWarnings = warnIcons[selectedDrug]
@@ -112,7 +155,7 @@ class Drug extends React.Component {
     //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
-    let url = drugDosages.url || {}
+    let url = drugDosages.url || '/concept/dozes'
     let currWarning = active//activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
     let maxItem = warnIcons[drug.key] //_.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
@@ -127,28 +170,37 @@ class Drug extends React.Component {
     //   }),
     // })
     // console.log({currWarning});
+
+    let resultStyle = { ...(style || {}), ...(!canDrag ? { cursor: 'default' } : { cursor: 'move' }) }
+
+    let rules = this.renderRules()
+    // console.log({style})
     return(
-      <List.Item className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
-        <div className='border' style={{ backgroundColor: hasBorder && maxItem.color || 'transparent' }} />
+      <List.Item style={resultStyle} className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
+
         <List.Content floated='right'>
-          {/*<Responsive fireOnMount as={Button.Group} vertical basic color='blue' maxWidth='480'>
-            <Button icon>
-              <Icon name='ellipsis horizontal' />
-            </Button>
-          </Responsive>
-          */}
           <Responsive fireOnMount as={Button.Group} minWidth='481'>
-            <Button as={RouterLink} to={url} onClick={this.getLF} icon>
+            <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
               <Icon name='tint' />
             </Button>
-            <Button icon as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
+            <Button disabled={drug.group !== 0} icon as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
               <Icon name='font' />
             </Button>
             <Button icon>
               <Icon name='delete' onClick={this.unselectDrug} />
             </Button>
+            {minus && <Button icon>
+              <Icon name='minus' onClick={onRemove} />
+            </Button>}
           </Responsive>
+          {minus && <Responsive fireOnMount as={Button.Group} maxWidth='480'>
+            <Button icon>
+              <Icon name='minus' onClick={onRemove} />
+            </Button>
+          </Responsive>}
+
         </List.Content>
+        <div className='border' style={{ backgroundColor: hasBorder && maxItem.color || 'transparent' }} />
         <div className='arrowholder'>
           {(currWarning && currWarning.color) ?
             <RouterLink to={'/warning/' + drug.key} className='left floated content arrowBg' style={{ backgroundColor: currWarning.color }} >
@@ -179,19 +231,23 @@ class Drug extends React.Component {
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
+                <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className='underlined'>{name}</RouterLink>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
-                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}
-
+                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
+                  {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
+                  {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta>
 
-                {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
-                {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '}
-                {(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''}
-                {((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '}
+
+                {/*(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '*/}
+                {/*(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''*/}
+                {/*((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '*/}
+                {/*(nameshort[dosage.method] || names[dosage.method]) && ', '*/}
                 {(nameshort[dosage.method] || names[dosage.method]) || ''}
+                {!rules.empty && ', '}
+                {rules.text}
               </Feed.Meta>
             </Feed.Content>
           </Feed.Event>
@@ -200,46 +256,74 @@ class Drug extends React.Component {
           as={Fragment}
           maxWidth='480'
         >
-            <List.Content className='ui feed large' as={Dropdown} fluid icon={null}
+            <List.Content className='ui feed large' as={Dropdown} floating fluid icon={null}
               trigger={
                 <Feed.Event>
                   <Feed.Content>
                     <Feed.Summary>
                       <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
                     </Feed.Summary>
+
                     <Feed.Meta>
-                    {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
-                    {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '}
-                    {(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''}
-                    {((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '}
-                    {(nameshort[dosage.method] || names[dosage.method]) || ''}
-                    </Feed.Meta>
+                      {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
+                      {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
+                      {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+                      {(nameshort[dosage.method] || names[dosage.method]) && ', '}
+                      {rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
+                    </Feed.Meta><br />
+                    {!rules.empty && <Feed.Meta>
+                      {(nameshort[dosage.method] || names[dosage.method]) || ''}, &nbsp;
+                      {rules.text}
+                    </Feed.Meta>}
+
                   </Feed.Content>
                 </Feed.Event>
               }
             >
               <Dropdown.Menu>
-                <Menu.Item as={RouterLink} to={url} onClick={this.getLF}>
-                  <Icon name='tint' />
-                  Дозировки
-                </Menu.Item>
-                <Menu.Item as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
-                  <Icon name='font' />
-                  Аналоги
-                </Menu.Item>
-                <Menu.Item onClick={this.unselectDrug}>
-                  <Icon name='delete' />
-                  Убрать из списка
-                </Menu.Item>
-                <Menu.Item>
-                  <Icon name='ellipsis horizontal' />
-                  Подробнее
-                </Menu.Item>
+                <Dropdown.Item
+                  disabled={drug.group !== 0}
+                  icon='tint'
+                  as={RouterLink}
+                  to={url}
+                  onClick={this.getLF}
+                  text='Дозировка'
+                />
+                <Dropdown.Item
+                  disabled={drug.group !== 0}
+                  icon='font'
+                  as={RouterLink}
+                  to={`/analog/${drug.key}`}
+                  onClick={this.getAnalog}
+                  text='Аналоги'
+                />
+                <Dropdown.Item
+                  icon='ellipsis horizontal'
+                  as={RouterLink}
+                  to={`/druginfo/${drug.key}`}
+                  text='Подробнее'
+                  onClick={this.getInfo}
+                />
+                <Dropdown.Item
+                  icon='delete'
+                  onClick={this.unselectDrug}
+                  text='Убрать из списка'
+                />
               </Dropdown.Menu>
             </List.Content>
 
 
         </Responsive>
+        {canDrag && <div className='draghandler'>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>}
 
       </List.Item>
 

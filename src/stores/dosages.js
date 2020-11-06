@@ -41,8 +41,10 @@ class Drugs {
 
   //getLF
   async getFp(drug_obj){
+    let { active_language } = this.stores.actions
     let data = {
-      drug: drug_obj
+      drug: drug_obj,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -108,14 +110,16 @@ class Drugs {
     });
   }
 
-  async get(drug_obj, flag=false){
+  async get(drug_obj, flag =false){
     let currentDosages = await this.dosage.get(drug_obj.key);
+    let { active_language } = this.stores.actions
     if(currentDosages && !flag) {
       await this.stores.drugs.getDosageParams()
       return
     }
     let data = {
-      drug: drug_obj
+      drug: drug_obj,
+      active_language
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
@@ -125,9 +129,22 @@ class Drugs {
         success: async data => {
           //console.log('DATA', data);
           let { drug, form, methodform, names, nameshort, units } = data
+
+          let solute = false
+
+          await _.forEach(form, ( item ) => {
+            if(item.solute) {
+              solute = true
+            }
+          })
+
+          let drugObj = this.stores.drugs.drug.get(drug.key) || {};
+          drugObj.solute = solute
+          this.stores.drugs.drug.set( drug.key, drugObj )
+
           await this.stores.tools.setNames(names, nameshort)
           let current = this.dosage.get(drug.key) || {};
-          await this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
+          await this.dosage.set( drug.key, _.extend(current, { solute, drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
           if(units && units.length > 0) await this.stores.tools.getUnitsPharm(units)
           if(drug_obj.fpid) this.getFp(drug_obj)
         },
@@ -207,8 +224,11 @@ class Drugs {
       // baseDosage,
       dosage,
       count: vals.count.value,
+      dayCount: 1,
       fullDosage: dosage * vals.count.value,
-      weightDosage: (weight ? (dosage * vals.count.value)/weight : 0)
+      weightDosage: (weight ? (dosage * vals.count.value)/weight : 0),
+      dayDosage: dosage * vals.count.value,
+      dayWeightDosage: (weight ? (dosage * vals.count.value)/weight : 0)
     }
   }
 

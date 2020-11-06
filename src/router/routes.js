@@ -18,6 +18,13 @@ export default {
   '/concept/:page/:way/:step/:id1/:id2':      { section: 'main', name: 'concept',    render: <Main />       },
   '/concept/:page/:way/:step/:id1/:id2/id3':  { section: 'main', name: 'concept',    render: <Main />       },
 
+  '/liquid/:page':                            { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid':                    { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/dozes':              { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/dozes/':             { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/dozes/:way':         { section: 'main', name: 'liquid',     render: <Main />       },
+  '/liquid/:page/:liquid/dozes/:way/:step':   { section: 'main', name: 'liquid',     render: <Main />       },
+
   '/warning/:page':                           { section: 'main', name: 'warning',    render: <Main />       },
 
   '/recipe/:page':                            { section: 'main', name: 'recipe',     render: <Main />       },
@@ -26,6 +33,8 @@ export default {
   '/patient/:page/:id':                       { section: 'main', name: 'patient',    render: <Main />       },
 
   '/analog/:page':                            { section: 'main', name: 'analog',     render: <Main />       },
+
+  '/druginfo/:page':                          { section: 'main', name: 'druginfo',   render: <Main />       },
 
   '/login':                                   { section: 'auth', name: 'auth',       render: <Login />      },
   '/signup':                                  { section: 'auth', name: 'auth',       render: <Signup/>      },
