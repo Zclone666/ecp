@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
-import Drug from '../../Drugs/MiniDrug';
+import Drug from '../../Drugs/Drug';
 
 import {
 	List,

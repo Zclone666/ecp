@@ -34,9 +34,7 @@ class LF extends Component {
       dosages: { dosage }, //drugsDosages
       router: { values }
     } = this.props
-    
     let way = values.way || 'lf'
-    let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`
     let currStep = parseInt(values.step || 0)
     //console.log('currDrug', currDrug);
 
@@ -54,7 +52,7 @@ class LF extends Component {
             <List.Item
               key={'doze'+i}
               as={RouterLink}
-              to={`${url}/${currStep+1}`}
+              to={`/concept/dozes/${way}/${currStep+1}`}
               onClick={() => this.setLF(lfid, lfItem)}
             >
               <List.Content floated='right'>
