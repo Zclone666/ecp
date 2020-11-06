@@ -10,15 +10,19 @@ stages:
 docker build:
   stage: Build image
   tags:
-  - docker-production
+    - docker-production
+  only:
+    - master
   when: manual
   script:
-  - docker build --force-rm -t $PROJECT ./
+    - docker build --force-rm -t $PROJECT ./
 
 docker run:
   stage: Docker run
   tags: 
-  - docker-production
+    - docker-production
+  only:
+    - master
   when: manual
   before_script:
     - docker stop $PROJECT || true
