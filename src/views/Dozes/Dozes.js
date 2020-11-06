@@ -43,16 +43,14 @@ class Dozes extends Component {
       router: { location }
     } = this.props
     await setDosageParams(location.pathname)
-    this.back()
+    this.props.router.push('/')
     // let current = drugsDosages.data.get(currDrug.key) || {};
     // drugsDosages.data.set( currDrug.key, _.extend(current, { ...current, url: location.pathname }) );
 
   }
 
   back = () => {
-    let isLiquid = this.props.router.match.name === 'liquid'
-    let liquid = this.props.router.values.liquid
-    this.props.router.push(isLiquid ? `/liquid/calc/${liquid}` : '/')
+    this.props.router.push('/')
     this.props.actions.stepsData = {
       key: null,
       way: null,
@@ -62,7 +60,6 @@ class Dozes extends Component {
       pack: {},
       dosage: {},
     }
-    this.props.drugs.current = {}
   };
 
   render() {

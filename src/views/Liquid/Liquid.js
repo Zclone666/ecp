@@ -5,7 +5,7 @@ import RouterLink from '../../router/a'
 
 import Dozes from '../Dozes'
 
-import Calculator from '../../components/Stepper/Calculator'
+import Stepper from '../../components/Stepper'
 
 import {
   Sidebar,
@@ -64,9 +64,6 @@ class Liquid extends Component {
   render() {
     let showPage = !!(this.props.router.values && this.props.router.values.page)
     let liquid = !!(this.props.router.values && this.props.router.values.liquid)
-    let {
-      drugs: { current }
-    } = this.props
     return (
       <Sidebar.Pushable>
         <Menu className="bottom fixed menu two item huge main">
@@ -81,15 +78,15 @@ class Liquid extends Component {
           width='very wide'
           direction='right'
           animation='overlay'
-          visible={current.key}
+          visible={showPage}
           vertical
           style={{ backgroundColor: '#FFFFFF' }}
         >
-          {current.key && <Dozes />}
+          <Dozes />
         </Sidebar>
-        <Sidebar.Pusher dimmed={current.key} className='pusherwrapper'>
+        <Sidebar.Pusher dimmed={showPage} className='pusherwrapper'>
           <div className='scrollwrapper bottomMenu'>
-            <Calculator isLiquid/>
+            {liquid && <Stepper isLiquid/>}
           </div>
         </Sidebar.Pusher>
       </Sidebar.Pushable>

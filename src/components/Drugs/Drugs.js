@@ -286,7 +286,7 @@ class Drugs extends Component {
                             {(!grouped[liquid]) && <div className={'abstext'}>Перетащите сюда не менее двух составляющих для раствора</div>}
                             {grouped[liquid] && <div className={'text'}>
                               <Icon name='delete' className='right floated' onClick={() => this.removeLiquid(grouped[liquid])} />
-                              <RouterLink to={'/liquid/calc/'+liquid}><Icon name='lab' className='right floated'  /></RouterLink>
+                              <RouterLink to={'/liquid/calc'}><Icon name='lab' className='right floated'  /></RouterLink>
                               Раствор {liquid}
                             </div>}
 
