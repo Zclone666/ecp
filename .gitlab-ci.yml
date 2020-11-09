@@ -2,9 +2,8 @@ image: docker:stable
 variables:
     PROJECT: "ecp2front"
     PORT: 9009
-    CHANGE_CONST: "dev"
 
 include: 
   - project: 'Backend/NuGetPackages'
     ref: master
-    file: '/template-gitlab-ci.yml'
+    file: '/template-frontend-gitlab-ci.yml'
