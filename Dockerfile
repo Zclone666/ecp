@@ -4,6 +4,7 @@ COPY package.json /app/package.json
 RUN npm install --only=prod
 COPY . /app
 #RUN cd src/ | ls -la
+RUN ["chmod", "+x", "/dummy.sh"]
 RUN cat /dev/null > src/constants/server.js | echo $ENV_BACKEND_URI > src/constants/server.js | cat src/constants/server.js
 
 RUN echo $ENV_BACKEND_URI
