@@ -1,7 +1,5 @@
 FROM node:12-alpine as build
 
-ARG ENV_BACKEND_URI=$ENV_BACKEND_URI
-
 WORKDIR /app
 COPY package.json /app/package.json
 RUN npm install --only=prod
