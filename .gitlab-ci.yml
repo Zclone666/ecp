@@ -2,7 +2,7 @@ image: docker:stable
 variables:
     PROJECT: "ecp2front"
     PORT: 9009
-    FRONT: true
+    FRONT: "true"
 
 include: 
   - project: 'Backend/NuGetPackages'
