@@ -1,4 +1,3 @@
-
 image: docker:stable
 variables:
     PROJECT: "ecp2front"
@@ -10,15 +9,19 @@ stages:
 
 docker build:
   stage: Build image
-  tags: 
-  - docker
+  tags:
+    - docker-production
+  only:
+    - dev
   script:
-  - docker build --force-rm -t $PROJECT ./
+    - docker build --force-rm -t $PROJECT ./
 
 docker run:
   stage: Docker run
   tags: 
-    - docker
+    - docker-production
+  only:
+    - dev
   before_script:
     - docker stop $PROJECT || true
   script:
