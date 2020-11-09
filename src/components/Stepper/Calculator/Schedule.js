@@ -30,12 +30,7 @@ class Schedule extends Component {
   constructor(props){
     super(props)
     this.state = {
-      dosage: 0,
-      count: 0,
-      fullDosage: 0,
-      weight: 0,
-      weightDosage: 0,
-      // format: 'interval',
+      
       timeFromStart: null
     }
   }
@@ -153,12 +148,7 @@ class Schedule extends Component {
     } = this.props
 
     let {
-      dosage,
-      count,
-      fullDosage,
-      weight,
-      weightDosage,
-      // format,
+
       timeFromStart
     } = this.state
     // console.log({dateStart});

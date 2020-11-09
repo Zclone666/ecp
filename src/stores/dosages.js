@@ -237,12 +237,12 @@ class Drugs {
       type: dosage.length > 1 ? 'multi' : 'single', // single, multi, liquid
       dosage,
       count: vals.count.value,
-      dosageUnit: vals.dosage.firstUnit.id || vals.dosage.unit.id,
+      dosageUnit: (( vals.dosage.firstUnit && vals.dosage.firstUnit.id ) || ( vals.dosage.unit && vals.dosage.unit.id )) || null,
       dayCount: 1,
       fullDosage: _.map( dosage, (dos) => dos * vals.count.value ),
-      weightDosage: (weight ? _.map( dosage, (dos) => (dos * vals.count.value)/weight ) : 0),
+      weightDosage: (weight ? _.map( dosage, (dos) => (dos * vals.count.value)/weight ) : [0]),
       dayDosage: _.map( dosage, (dos) => dos * vals.count.value ),
-      dayWeightDosage: (weight ? _.map( dosage, (dos) => (dos * vals.count.value)/weight ) : 0)
+      dayWeightDosage: (weight ? _.map( dosage, (dos) => (dos * vals.count.value)/weight ) : [0])
     }
   }
 

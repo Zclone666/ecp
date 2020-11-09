@@ -91,7 +91,7 @@ class Calculator extends Component {
 
         break;
       case 'count':
-        count = value
+        count = parseFloat(value.split(',').join('.'))
         fullDosage = _.map( dosage, (dos) => { return parseFloat(value.split(',').join('.'))*dos } )
         weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
         break;
@@ -104,8 +104,8 @@ class Calculator extends Component {
         count = fullDosage/dosage
         break;
       case 'weightDosage':
-        weightDosage = getToBase((currUnit || def), value)
-        fullDosage = (weightDosage*weight)
+        weightDosage = getToBase((currUnit || def), value.split(' + '))
+        fullDosage = _.map( weightDosage, (dos) => { return dos*weight } )
         count = fullDosage/dosage
         break;
       default:
@@ -122,6 +122,15 @@ class Calculator extends Component {
     this.props.actions.calculatorForm.dayDosage = dayDosage
     this.props.actions.calculatorForm.dayWeightDosage = dayWeightDosage
     setTimeout(() => {
+      console.log({
+        dosage,
+        count,
+        dayCount,
+        fullDosage,
+        weightDosage,
+        dayDosage,
+        dayWeightDosage
+      });
       this.forceUpdate()
     }, 300)
 
@@ -147,8 +156,8 @@ class Calculator extends Component {
     // console.log({value});
 
     dayCount = preset.tpl[0].multiplicate
-    dayDosage = _.map( (fullDosage || [1]), (dos) => { return preset.tpl[0].multiplicate * dos } )
-    dayWeightDosage = _.map( (weightDosage || [1]), (dos) => { return preset.tpl[0].multiplicate * dos } )
+    dayDosage = _.map( (fullDosage || [0]), (dos) => { return preset.tpl[0].multiplicate * dos } )
+    dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return preset.tpl[0].multiplicate * dos } )
 
     this.props.actions.calculatorForm = {
       type,
