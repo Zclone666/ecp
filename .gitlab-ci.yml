@@ -3,7 +3,16 @@ variables:
     PROJECT: "ecp2front"
     PORT: 9009
 
-include: 
-  - project: 'Backend/NuGetPackages'
-    ref: master
-    file: '/template-gitlab-ci.yml'
+#include: 
+#  - project: 'Backend/NuGetPackages'
+#    ref: master
+#    file: '/template-gitlab-ci.yml'
+
+stages:
+    - compile
+    
+compile:
+    stage: compile
+    script: cat /dev/null > /src/constants/server.js | echo "export const SERVER = 'dev2';" > /src/constants/server.js | cat /src/constants/server.js
+    tags: 
+      - dev
