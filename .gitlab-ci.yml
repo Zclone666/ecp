@@ -3,28 +3,7 @@ variables:
     PROJECT: "ecp2front"
     PORT: 9009
 
-stages:
-  - Build image
-  - Docker run
-
-docker build:
-  stage: Build image
-  tags:
-    - docker-production
-  only:
-    - master
-  when: manual
-  script:
-    - docker build --force-rm -t $PROJECT ./
-
-docker run:
-  stage: Docker run
-  tags: 
-    - docker-production
-  only:
-    - master
-  when: manual
-  before_script:
-    - docker stop $PROJECT || true
-  script:
-    - docker run -d --rm -p 127.0.0.1:$PORT:80 --name $PROJECT $PROJECT
+include: 
+  - project: 'Backend/NuGetPackages'
+    ref: master
+    file: '/template-gitlab-ci.yml'
