@@ -7,4 +7,4 @@ variables:
 include: 
   - project: 'Backend/NuGetPackages'
     ref: master
-    file: '/template-gitlab-ci.yml'
+    file: '/template-frontend-gitlab-ci.yml'
