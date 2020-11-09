@@ -6,6 +6,7 @@ COPY . /app
 #RUN cd src/ | ls -la
 RUN cat /dev/null > src/constants/server.js | echo $ENV_BACKEND_URI > src/constants/server.js | cat src/constants/server.js
 
+RUN echo $ENV_BACKEND_URI
 
 #RUN npm i -S @semantic-ui-react/craco-less
 #RUN npm run build
