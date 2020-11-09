@@ -99,12 +99,13 @@ class Drug extends React.Component {
   renderRules(){
     let {
       dosages: { getFromBase },
-      tools: { names, shortnames },
+      tools: { names, shortnames, round },
       drug: {
         freq,
         duration,
         calc,
-        dosage
+        dosage,
+        helpers
       },
       drug,
       actions: { UIText }
@@ -114,10 +115,10 @@ class Drug extends React.Component {
 
     // console.log({drug});
 
-    if(calc.fullDosage && dosage.pack.dosage.id ){
-      let dosageValue = getFromBase(dosage.pack.dosage.id, calc.fullDosage)
-      let dosageName = shortnames[dosage.pack.dosage.id] || names[dosage.pack.dosage.id]
-      arr.push(`${parseFloat(dosageValue)} ${dosageName}`)
+    if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
+      let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
+      let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit]
+      arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
     }
 
     if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
@@ -149,7 +150,7 @@ class Drug extends React.Component {
     } = this.props
     //console.log('drug', drug);
     let selectedWarnings = warnIcons[selectedDrug]
-    let { key, name, level, tn, type, dosage } = drug
+    let { key, name, level, tn, type, dosage, helpers } = drug
     let drugDosages = dose.get(key) || {}
     let hasWarnings = warning.size > 0
     //console.log('drugDosages', drugDosages);
@@ -234,17 +235,11 @@ class Drug extends React.Component {
                 <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className='underlined'>{name}</RouterLink>{type === 'TN' && <span><sup>TM</sup></span>}
                 <Feed.Date>
                   {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-                  {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
-                  {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+                  {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
+                  {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta>
-
-
-                {/*(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full) && dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) && ', '*/}
-                {/*(dosage.pack.pack && (dosage.pack.pack.short || dosage.pack.pack.full)) || ''*/}
-                {/*((dosage.pack.pack || dosage.pack.dosage) && dosage.form) && ', '*/}
-                {/*(nameshort[dosage.method] || names[dosage.method]) && ', '*/}
                 {(nameshort[dosage.method] || names[dosage.method]) || ''}
                 {!rules.empty && ', '}
                 {rules.text}
@@ -266,8 +261,8 @@ class Drug extends React.Component {
 
                     <Feed.Meta>
                       {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-                      {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
-                      {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+                      {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
+                      {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
                       {(nameshort[dosage.method] || names[dosage.method]) && ', '}
                       {rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
                     </Feed.Meta><br />

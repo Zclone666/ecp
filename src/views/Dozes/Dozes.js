@@ -60,7 +60,9 @@ class Dozes extends Component {
       form: null,
       method: null,
       pack: {},
-      dosage: {},
+      dosage: [],
+      value: null,
+      helpers: {}
     }
     this.props.drugs.current = {}
   };

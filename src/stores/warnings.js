@@ -92,8 +92,13 @@ class Warnings {
     this.stores.actions.loading = true
     let { active_language } = this.stores.actions
     this.stores.db.clearData(false, true)
-    let data = _.clone(this.stores.actions.drugStructure)
-    data.drugs = Array.from(this.stores.drugs.drug.values())
+    let data = _.cloneDeep(this.stores.actions.drugStructure)
+    let drugsFull = Array.from(this.stores.drugs.drug.values())
+    drugsFull.forEach((drugFull, i) => {
+      let { helpers, ...drug } = drugFull
+      data.drugs.push(drug)
+    });
+
 
     //data.service = "43"
     data.active_language = active_language

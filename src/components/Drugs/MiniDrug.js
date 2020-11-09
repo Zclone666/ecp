@@ -23,7 +23,7 @@ import _ from 'lodash';
 class MiniDrug extends React.Component {
 	constructor(props){
 		super(props)
-		
+
 		this.state = {
 			open: true,
 		}
@@ -39,43 +39,44 @@ class MiniDrug extends React.Component {
 		this.props.drugs.current = { ...drug }
 		// await getDosageParams(location.pathname)
 		await this.props.dosages.get(drug)
-		
+
 		// this.props.router.push('/concepts/dozes')
 	}
-	
+
 	renderRules(){
-		let {
-			dosages: { getFromBase },
-			tools: { names, shortnames },
-			drug: {
-				freq,
-				duration,
-				calc,
-				dosage
-			},
-			drug,
-			actions: { UIText }
-		} = this.props
-		
-		let arr = []
-		
-		// console.log({drug});
-		
-		if(calc.fullDosage && dosage.pack.dosage.id ){
-			let dosageValue = getFromBase(dosage.pack.dosage.id, calc.fullDosage)
-			let dosageName = shortnames[dosage.pack.dosage.id] || names[dosage.pack.dosage.id]
-			arr.push(`${parseFloat(dosageValue)} ${dosageName}`)
-		}
-		
-		if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
-		if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
-		
-		return {
-			empty: arr.length < 1,
-			text: arr.join(', ')
-		}
-	}
-	
+    let {
+      dosages: { getFromBase },
+      tools: { names, shortnames },
+      drug: {
+        freq,
+        duration,
+        calc,
+        dosage,
+        helpers
+      },
+      drug,
+      actions: { UIText }
+    } = this.props
+
+    let arr = []
+
+    // console.log({drug});
+
+    if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
+      let dosageValue = getFromBase(helpers.dosage.id, calc.fullDosage)
+      let dosageName = shortnames[helpers.dosage.id] || names[helpers.dosage.id]
+      arr.push(`${_.map(dosageValue, (dos) => parseFloat(dos)).join(' + ')} ${dosageName}`)
+    }
+
+    if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
+    if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+
+    return {
+      empty: arr.length < 1,
+      text: arr.join(', ')
+    }
+  }
+
 	render(){
 		let {
 			actions: {
@@ -92,7 +93,7 @@ class MiniDrug extends React.Component {
 			canDrag,
 		} = this.props
 
-		let { key, name, type, dosage } = drug
+		let { key, name, type, dosage, helpers } = drug
 		let drugDosages = dose.get(key) || {}
 
 		let names = drugDosages.names || {}
@@ -100,9 +101,9 @@ class MiniDrug extends React.Component {
 		let url = `/liquid/calc/${values.liquid}${(drugDosages.url && drugDosages.url.replace('/concept', '')) || '/dozes'}`
 		let className = selectedDrug === drug.key ? 'selected' : ''
 		className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
-		
+
 		let resultStyle = { ...(style || {}), ...(!canDrag ? { cursor: 'default' } : { cursor: 'move' }) }
-		
+
 		let rules = this.renderRules()
 		return(
 			<List.Item style={resultStyle} className={`nowarnings ${className}`}>
@@ -119,8 +120,8 @@ class MiniDrug extends React.Component {
 								<span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
 								<Feed.Date>
 									{dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-									{(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
-									{(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+									{(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
+									{(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
 								</Feed.Date>
 							</Feed.Summary>
 							<Feed.Meta>
@@ -143,8 +144,8 @@ class MiniDrug extends React.Component {
 	              </Feed.Summary>
 	              <Feed.Meta>
 		              {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-		              {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) && ', '}
-		              {(dosage.pack.dosage && (dosage.pack.dosage.short || dosage.pack.dosage.full)) || ''}
+		              {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
+		              {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
 		              {(nameshort[dosage.method] || names[dosage.method]) && ', '}
 		              {rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
 	              </Feed.Meta><br />
@@ -158,9 +159,9 @@ class MiniDrug extends React.Component {
 					</List.Content>
 				</Responsive>
 			</List.Item>
-		
+
 		)
 	}
-	
+
 };
 export default MiniDrug

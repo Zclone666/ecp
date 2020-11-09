@@ -22,7 +22,49 @@ class Drugs {
 
   @observable selectedRows = [];
 
-  @observable current = {}; //currDrug
+  @observable current = {
+    key: null, // уникальный ключ
+    id: "", // айди ДВ или ТН
+    name: "", // Название ДВ или ТН
+    level: 0, //
+    fpid: null, //
+    type: null,
+    group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
+    text: null,
+    specials: null,
+    freq: null,
+    duration: null,
+    solute: false,
+    dosage: { // дозировка
+      form: null,
+      method: null,
+      pack: {},
+      dosage: {},
+    },
+    calc: {
+      dosage: 0,
+      count: 1,
+      dayCount: 1,
+      fullDosage: 0,
+      weightDosage: 0,
+      dayDosage: 0,
+      dayWeightDosage: 0
+    },
+    schedule: {
+      dateStart: null,
+      dateFinish: null,
+      finishAlternate: null,
+      clarifications: null, //уточнения
+      interval: null,
+      once: null,
+      week: null,
+      calendar: null
+    },
+    helpers: {
+      dosage: {},
+      url: ''
+    }
+  }; //currDrug
 
   constructor({ stores }) {
     this.stores = stores;
@@ -145,7 +187,12 @@ class Drugs {
       form,
       method,
       pack,
-      dosage
+      dosage,
+      value,
+      helpers: {
+        dosage: hdosage,
+        pack: hpack
+      }
     } = drugData
 
     let {
@@ -164,6 +211,7 @@ class Drugs {
       dosage: dos,
       count,
       dayCount,
+      dosageUnit,
       fullDosage,
       weightDosage,
       dayDosage,
@@ -174,13 +222,18 @@ class Drugs {
     // console.log({currentDosages, form})
     // console.log({currentDrug})
     currentDrug.dosage = {
-      key,
-      way,
-      step,
       form,
       method,
       pack,
-      dosage
+      dosage,
+      value
+    }
+    currentDrug.helpers = {
+      key,
+      way,
+      step,
+      dosage: hdosage,
+      pack: hpack
     }
     currentDrug.schedule = {
       dateStart: parseInt(dateStart),
@@ -197,6 +250,7 @@ class Drugs {
     currentDrug.calc = {
       dosage: dos,
       count,
+      dosageUnit,
       dayCount,
       fullDosage,
       weightDosage,
@@ -220,14 +274,19 @@ class Drugs {
     // console.log({ freq, duration });
 
     let {
-      key,
-      way,
-      step,
       form,
       method,
       pack,
-      dosage
+      dosage,
+      value
     } = currentDrug.dosage
+    let {
+      key,
+      way,
+      step,
+      dosage: hdosage,
+      pack: hpack
+    } = currentDrug.helpers
     let {
       dateStart,
       dateFinish,
@@ -242,6 +301,7 @@ class Drugs {
     let {
       dosage: dos,
       count,
+      dosageUnit,
       dayCount,
       fullDosage,
       weightDosage,
@@ -256,11 +316,17 @@ class Drugs {
       form,
       method,
       pack,
-      dosage
+      dosage,
+      value,
+      helpers:{
+        dosage: hdosage,
+        pack: hpack
+      }
     }
     this.stores.actions.calculatorForm = {
       dosage: dos,
       count,
+      dosageUnit,
       dayCount,
       fullDosage,
       weightDosage,
@@ -281,6 +347,47 @@ class Drugs {
 
   }
 
+  makeLiquid = () => {
+    let liquid = {
+      name: "", // Название ДВ или ТН
+      group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
+      specials: null,
+      freq: null,
+      duration: null,
+      dosage: { // дозировка
+        form: null,
+        method: null,
+        pack: {},
+        dosage: [],
+        value: null
+      },
+      calc: {
+        dosage: 0,
+        count: 1,
+        dosageUnit: null,
+        dayCount: 1,
+        fullDosage: 0,
+        weightDosage: 0,
+        dayDosage: 0,
+        dayWeightDosage: 0
+      },
+      schedule: {
+        dateStart: null,
+        dateFinish: null,
+        finishAlternate: null,
+        clarifications: null, //уточнения
+        interval: null,
+        once: null,
+        week: null,
+        calendar: null
+      },
+      helpers: {
+        dosage: {},
+        pack: {},
+      }
+    }
+  }
+
   selectFromSearch = async (row) => {
     let drug = {
       //key: moment().format('x').toString(), // уникальный ключ
@@ -297,13 +404,11 @@ class Drugs {
       duration: null,
       solute: false,
       dosage: { // дозировка
-        // way: null,
-        // step: null,
         form: null,
         method: null,
         pack: {},
-        dosage: {},
-
+        dosage: [],
+        value: null
       },
       calc: {
         dosage: 0,
@@ -323,6 +428,14 @@ class Drugs {
         once: null,
         week: null,
         calendar: null
+      },
+      helpers: {
+        dosage: {},
+        pack: {},
+        url: '',
+        key: null,
+        way: null,
+        step: null,
       }
     }
     drug = _.assignIn(drug, row);

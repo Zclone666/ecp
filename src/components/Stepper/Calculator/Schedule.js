@@ -48,9 +48,31 @@ class Schedule extends Component {
     if( name === 'dateStart' || name === 'dateFinish' ){
       this.setState({ timeFromStart: null })
       if(moment(value).format('x') !== 'Invalid date') this.props.actions.scheduleForm[name] = moment(value).format('x')
+      if(name === 'dateFinish') this.props.actions.scheduleForm.finishAlternate = null
       // console.log({ value: moment(value).format('x') } );
     }else{
-      this.props.actions.scheduleForm[name] = value
+      switch (name) {
+        case 'finishAlternate':
+          this.props.actions.scheduleForm.finishAlternate = this.props.actions.scheduleForm.finishAlternate ? null : value
+          this.setState({ timeFromStart: null })
+          this.props.actions.scheduleForm.dateFinish = null
+          break;
+        // case 'finishAlternate':
+        //
+        //   break;
+        // case 'finishAlternate':
+        //
+        //   break;
+        // case 'finishAlternate':
+        //
+        //   break;
+        // case 'finishAlternate':
+        //
+        //   break;
+        default:
+          this.props.actions.scheduleForm[name] = value
+      }
+      //this.props.actions.scheduleForm[name] = value
     }
 
 
@@ -64,8 +86,9 @@ class Schedule extends Component {
     let { UIText } = this.props.actions
     let { dateStart } = this.props.actions.scheduleForm
     this.setState({ timeFromStart: UIText.duration[id] })
-    this.props.drugs.current.duration = id 
+    this.props.drugs.current.duration = id
     this.props.actions.scheduleForm.dateFinish = moment(dateStart, 'x').add(tpl.x, tpl.timesx).format('x')
+    this.props.actions.scheduleForm.finishAlternate = null
   }
   componentDidMount(){
     let {
@@ -200,12 +223,12 @@ class Schedule extends Component {
             <Form.Field width={5}>
               <label>Или</label>
               <Responsive as={Button.Group} fluid size='big' minWidth={481}>
-                <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>До отмены</Button>
-                <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>До улучшения</Button>
+                <Button primary={finishAlternate === 'lQ9LkaNuaG/IgjrmfEhzOQ=='} onClick={this.handleChange} name='finishAlternate' value='lQ9LkaNuaG/IgjrmfEhzOQ=='>До отмены</Button>
+                {/*<Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>До улучшения</Button>*/}
               </Responsive>
               <Responsive as={Button.Group} fluid maxWidth={480}>
-                <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>До отмены</Button>
-                <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>До улучшения</Button>
+                <Button primary={finishAlternate === 'lQ9LkaNuaG/IgjrmfEhzOQ=='} onClick={this.handleChange} name='finishAlternate' value='lQ9LkaNuaG/IgjrmfEhzOQ=='>До отмены</Button>
+                {/*<Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>До улучшения</Button>*/}
               </Responsive>
             </Form.Field>
 
@@ -214,19 +237,19 @@ class Schedule extends Component {
           <Form.Group>
             <Form.Field className='fluid'>
               <label>Условия приема</label>
-              <Responsive as={Button.Group} fluid widths={4} minWidth={481}>
+              <Responsive as={Button.Group} fluid widths={3} minWidth={481}>
                 <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По расписанию</Button>
                 <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>Однократно</Button>
                 <Button primary={format === 'week'} onClick={this.handleChange} name='format' value='week'>По дням недели</Button>
-                <Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>
+                {/*<Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>*/}
               </Responsive>
               <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
                 <Button primary={format === 'interval'} onClick={this.handleChange} name='format' value='interval'>По расписанию</Button>
                 <Button primary={format === 'once'} onClick={this.handleChange} name='format' value='once'>Однократно</Button>
               </Responsive>
-              <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
+              <Responsive as={Button.Group} fluid widths={1} maxWidth={480}>
                 <Button primary={format === 'week'} onClick={this.handleChange} name='format' value='week'>По дням недели</Button>
-                <Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>
+                {/*<Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>*/}
               </Responsive>
             </Form.Field>
           </Form.Group>
@@ -236,25 +259,25 @@ class Schedule extends Component {
             'interval': <Interval />,
             //'calendar': <Calendar />
           }[format]}
-          <Form.Group>
+          {/*<Form.Group>
             <Form.Field className='fluid'>
               <label>Дополнительно</label>
-              <Responsive as={Button.Group} fluid size='big' widths={4} minWidth={480}>
+              <Responsive as={Button.Group} fluid widths={4} minWidth={480}>
                 <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>Перед едой</Button>
                 <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>После еды</Button>
                 <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>Во время еды</Button>
                 <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>Перед сном</Button>
               </Responsive>
-              <Responsive as={Button.Group} fluid size='big' widths={2} maxWidth={480}>
+              <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
                 <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>Перед едой</Button>
                 <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>После еды</Button>
               </Responsive>
-              <Responsive as={Button.Group} fluid size='big' widths={2} maxWidth={480}>
+              <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
                 <Button primary={sex === 'man'} onClick={this.handleChange} name='sex' value='man'>Во время еды</Button>
                 <Button primary={sex === 'woman'} onClick={this.handleChange} name='sex' value='woman'>Перед сном</Button>
               </Responsive>
             </Form.Field>
-          </Form.Group>
+          </Form.Group>*/}
         </Form>
       </Segment>
     )

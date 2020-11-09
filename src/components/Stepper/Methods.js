@@ -48,10 +48,14 @@ class MethodsLF extends Component {
     return (
       <List animated divided selection verticalAlign='middle' size='large' >
         {iterator.map(( mid, i ) => {
-          //let lfItem = lf[lfid]
+          let isLiquid = false
+          methodform[mid].forEach(( id ) => {
+            if(form[id] && form[id].solute) isLiquid = true
+          })
           return(
             <List.Item
               key={'doze'+i}
+              disabled={(values.liquid && !isLiquid)}
               as={RouterLink}
               to={`${url}/${currStep+1}`}
               onClick={() => this.setMethod(mid)}
