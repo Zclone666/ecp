@@ -15,4 +15,4 @@ compile:
     stage: compile
     script: cat /dev/null > /src/constants/server.js | echo "export const SERVER = 'dev2';" > /src/constants/server.js | cat /src/constants/server.js
     tags: 
-      - dev
+      - docker
