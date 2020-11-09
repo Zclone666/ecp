@@ -3,7 +3,8 @@ WORKDIR /app
 COPY package.json /app/package.json
 RUN npm install --only=prod
 COPY . /app
-RUN cat /dev/null > /src/constants/server.js | echo "export const SERVER = 'dev2';" > /src/constants/server.js | cat /src/constants/server.js
+RUN ls -la
+#RUN cat /dev/null > /src/constants/server.js | echo "export const SERVER = 'dev2';" > /src/constants/server.js | cat /src/constants/server.js
 #RUN npm i -S @semantic-ui-react/craco-less
 #RUN npm run build
 #FROM nginx:1.16.0-alpine
