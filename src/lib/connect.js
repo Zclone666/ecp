@@ -9,7 +9,7 @@ import SERVER from '../constants'
 export const PROJECT_TITLE = "ЭКФ";
 export const PRE_PATH  = '';
 export const PRODUCTION = false;
-export const API_SERVER = SERVER === 'prod' ? "https://prod.socmedica.com/version/api/stats" : "https://docker.socmedica.dev:9004";
+export const API_SERVER = SERVER === 'prod' ? "https://service.socmedica.com:9004" : "https://docker.socmedica.dev:9004";
 
 export const SERVICE = '108'//"108";//"4";//43
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";

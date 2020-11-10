@@ -10,6 +10,7 @@ import {
   Input,
   Button,
   Dropdown,
+  Header,
   TextArea
 } from 'semantic-ui-react'
 
@@ -21,7 +22,7 @@ import Drugs from './Drugs'
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'dosages')
+@inject('db', 'actions', 'router', 'drugs', 'dosages', 'tools')
 @observer
 class Calculator extends Component {
   constructor(props){
@@ -34,8 +35,9 @@ class Calculator extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
-    console.log({ name, value });
+    // console.log({ name, value });
     this.setState({ [name]: value })
+    this.props.actions.calculatorForm.dosageUnit = value
   }
   handleChange = (e, { name, value }) => {
     let { getToBase, calcValues } = this.props.dosages
@@ -47,7 +49,8 @@ class Calculator extends Component {
       let { name, value } = e.target
     }
     //console.log({name, value}, !!value);
-    value = value.split(',').join('.')
+    //value = _.map( value, (dos) => dos.split(',').join('.') )
+    //if(!_.isArray(value)) value = [value]
     if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
       if( name == 'patient.weight' ){
         this.props.actions.drugStructure.patient.weight = value
@@ -61,7 +64,7 @@ class Calculator extends Component {
       this.props.actions.drugStructure.specials = value
       return
     }
-    value = parseFloat(value)
+    //value = parseFloat(value)
 
     if( name == 'patient.weight' ){
       this.props.actions.drugStructure.patient.weight = value
@@ -69,44 +72,65 @@ class Calculator extends Component {
       // this.props.actions.calculatorForm[name] = value
     }
     let weight = this.props.actions.drugStructure.patient.weight
+
     let {
       dosage,
       count,
+      dayCount,
       fullDosage,
-      weightDosage
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
     } = this.props.actions.calculatorForm
+
     switch (name) {
       case 'dosage':
-        dosage = getToBase((currUnit || def), value)
-        fullDosage = getToBase((currUnit || def), value)*count
-        weightDosage = !weight ? 0 :(fullDosage/weight)
+        dosage = getToBase((currUnit || def), value.split(' + '))
+        fullDosage = getToBase((currUnit || def), value*count)
+        weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
+
         break;
       case 'count':
-        count = value
-        fullDosage = dosage*value
-        weightDosage = !weight ? 0 :(fullDosage/weight)
+        count = parseFloat(value.split(',').join('.'))
+        fullDosage = _.map( dosage, (dos) => { return parseFloat(value.split(',').join('.'))*dos } )
+        weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
         break;
       case 'patient.weight':
-        fullDosage = dosage*count
-        weightDosage = !weight ? 0 :(fullDosage/weight)
+        fullDosage = _.map( dosage, (dos) => { return count*dos } )
+        weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
         break;
       case 'fullDosage':
-        fullDosage = getToBase((currUnit || def), value)
+        fullDosage = getToBase((currUnit || def), value.split(' + '))
         count = fullDosage/dosage
         break;
       case 'weightDosage':
-        weightDosage = getToBase((currUnit || def), value)
-        fullDosage = (weightDosage*weight)
+        weightDosage = getToBase((currUnit || def), value.split(' + '))
+        fullDosage = _.map( weightDosage, (dos) => { return dos*weight } )
         count = fullDosage/dosage
         break;
       default:
 
     }
+
+    dayDosage = _.map( fullDosage, (dos) => { return dos*dayCount } )
+    dayWeightDosage = !weight ? [0] : _.map( weightDosage, (dos) => { return dos*dayCount } )
+
     this.props.actions.calculatorForm.dosage = dosage
     this.props.actions.calculatorForm.count = count
     this.props.actions.calculatorForm.fullDosage = fullDosage
     this.props.actions.calculatorForm.weightDosage = weightDosage
+    this.props.actions.calculatorForm.dayDosage = dayDosage
+    this.props.actions.calculatorForm.dayWeightDosage = dayWeightDosage
     setTimeout(() => {
+      console.log({
+        dosage,
+        count,
+        dayCount,
+        fullDosage,
+        weightDosage,
+        dayDosage,
+        dayWeightDosage
+      });
       this.forceUpdate()
     }, 300)
 
@@ -117,8 +141,10 @@ class Calculator extends Component {
     let { presets } = clarifications
     let preset = _.find(presets, { 'id': value});
     let {
+      type,
       dosage,
       count,
+      dosageUnit,
       dayCount,
       fullDosage,
       weightDosage,
@@ -126,16 +152,18 @@ class Calculator extends Component {
       dayWeightDosage
     } = this.props.actions.calculatorForm
     this.props.drugs.current.freq = preset.id
-
+    this.props.actions.scheduleForm.interval = preset.tpl
     // console.log({value});
 
     dayCount = preset.tpl[0].multiplicate
-    dayDosage = preset.tpl[0].multiplicate * (fullDosage || 1)
-    dayWeightDosage = preset.tpl[0].multiplicate * (weightDosage || 1)
+    dayDosage = _.map( (fullDosage || [0]), (dos) => { return preset.tpl[0].multiplicate * dos } )
+    dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return preset.tpl[0].multiplicate * dos } )
 
     this.props.actions.calculatorForm = {
+      type,
       dosage,
       count,
+      dosageUnit,
       dayCount,
       fullDosage,
       weightDosage,
@@ -157,7 +185,7 @@ class Calculator extends Component {
           key: i,
           text: UIText.freq[preset.id],
           value: preset.id,
-          //onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
+          // onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
           //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
         }
       )
@@ -169,11 +197,14 @@ class Calculator extends Component {
     let {
       actions: {
         drugStructure: {
-          patient: { weight, specials }
+          patient: { weight },
+          specials
         },
         calculatorForm: {
+          type,
           dosage,
           count,
+          dosageUnit,
           dayCount,
           fullDosage,
           weightDosage,
@@ -181,6 +212,7 @@ class Calculator extends Component {
           dayWeightDosage
         },
       },
+      tools: { round },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
       router: { values },
       drugs: { current },
@@ -213,10 +245,14 @@ class Calculator extends Component {
     let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
 
     let liquid = values && values.liquid || null
-    
+
+    let disableAll = !!isLiquid
+    let disableMulti = type === 'multi'
+
     return (
       <Segment basic>
-        {isLiquid && <div className='liquiddrugs'>
+        {isLiquid && <div className='liquiddrugs' style={{ marginBottom: '15px'}}>
+          <Header>Составляющие раствора</Header>
           <Drugs liquid={liquid} />
         </div>}
         <Form>
@@ -224,9 +260,10 @@ class Calculator extends Component {
             <Form.Field width={4}>
               <label>Дозировка:</label>
               <Input
+                disabled={disableAll || disableMulti}
                 size='big'
                 name='dosage'
-                value={getFromBase((currUnit || def), dosage) || ''}
+                value={getFromBase((currUnit || def), dosage).join(' + ') || ''}
                 label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} options={weights} value={currUnit || def} />}
                 labelPosition='right'
                 placeholder='500'
@@ -236,6 +273,7 @@ class Calculator extends Component {
             <Form.Field width={3}>
               <label>Кол-во доз:</label>
               <Input
+                disabled={disableAll}
                 size='big'
                 name='count'
                 numeric
@@ -249,9 +287,10 @@ class Calculator extends Component {
             <Form.Field width={3}>
               <label>Разовая доза:</label>
               <Input
+                disabled={disableAll || disableMulti}
                 size='big'
                 name='fullDosage'
-                value={getFromBase((currUnit || def), fullDosage) || ''}
+                value={getFromBase((currUnit || def), fullDosage).join(' + ') || ''}
                 label={{ basic: true, content: secondName || 'мг' }}
                 labelPosition='right'
                 placeholder='500'
@@ -261,6 +300,7 @@ class Calculator extends Component {
             <Form.Field width={3}>
               <label>На массу тела:</label>
               <Input
+                disabled={disableAll}
                 size='big'
                 name='patient.weight'
                 value={weight || ''}
@@ -273,9 +313,10 @@ class Calculator extends Component {
             <Form.Field width={3}>
               <label>На кг веса:</label>
               <Input
+                disabled={disableAll || disableMulti}
                 size='big'
                 name='weightDosage'
-                value={getFromBase((currUnit || def), weightDosage) || ''}
+                value={getFromBase((currUnit || def), weightDosage).join(' + ') || ''}
                 label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
                 labelPosition='right'
                 placeholder='0'
@@ -287,6 +328,7 @@ class Calculator extends Component {
             <Form.Field width={4}>
               <label>Кратность приема:</label>
               <Dropdown
+                disabled={disableAll}
                 selection
                 defaultValue={(current && current.freq) || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
                 className='input big'
@@ -299,9 +341,10 @@ class Calculator extends Component {
             <Form.Field width={3}>
               <label>Суточная доза:</label>
               <Input
+                disabled={disableAll || disableMulti}
                 size='big'
                 name='dayDosage'
-                value={getFromBase((currUnit || def), dayDosage) || ''}
+                value={getFromBase((currUnit || def), dayDosage).join(' + ') || ''}
                 label={{ basic: true, content: secondName || 'мг' }}
                 labelPosition='right'
                 placeholder='500'
@@ -311,9 +354,10 @@ class Calculator extends Component {
             <Form.Field width={3}>
               <label>На массу тела:</label>
               <Input
+                disabled={disableAll || disableMulti}
                 size='big'
                 name='dayWeightDosage'
-                value={getFromBase((currUnit || def), dayWeightDosage) || ''}
+                value={getFromBase((currUnit || def), dayWeightDosage).join(' + ') || ''}
                 label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
                 labelPosition='right'
                 placeholder='0'

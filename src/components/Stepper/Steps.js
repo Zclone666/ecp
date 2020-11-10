@@ -59,16 +59,18 @@ class Steps extends Component {
       router: { values },
       viewType
     } = this.props
+    let way = values.way || ''
+    let url = !values.liquid ? `/concept/dozes` : `/liquid/calc/${values.liquid}/dozes`
     let drugsDosage = dosage.get(current.key)
     // console.log({ drugsDosage });
     let { names, nameshort } = drugsDosage
-  
+
     let currStep = parseInt(values.step || 0)
-    let way = values.way || ''
+
     return(
       <Step.Group attached='top' fluid unstackable ordered size='tiny'>
         {this.steps[way] && this.steps[way].map(( step, i ) => {
-          let url = '/concept/dozes'
+          //let url = '/concept/dozes'
           let chosedName = ''
           if( i > 0 && i <= currStep ) {
             url += `/${way}/${i}`
@@ -86,7 +88,7 @@ class Steps extends Component {
           // console.log({step, stepsData});
           if(step.name === 'dosage' && currStep > i){
             // console.log({step, stepsData});
-            chosedName = (stepsData.pack.dosage && (stepsData.pack.dosage.short || stepsData.pack.dosage.full)) + ', ' + (stepsData.pack.pack && (stepsData.pack.pack.short || stepsData.pack.pack.full))
+            chosedName = (stepsData.helpers.dosage && (stepsData.helpers.dosage.short || stepsData.helpers.dosage.full)) + ', ' + (stepsData.helpers.pack && (stepsData.helpers.pack.short || stepsData.helpers.pack.full))
           }
           //console.log({ step, chosedName, stepsData, names });
           return(
@@ -103,6 +105,6 @@ class Steps extends Component {
       </Step.Group>
     )
   }
-  
+
 };
 export default Steps

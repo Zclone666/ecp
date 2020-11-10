@@ -84,7 +84,7 @@ class Patient extends Component {
       gestation: null,
       trimester: null,
       lactation: false,
-      driving: true,
+      driving: false,
       alcohol: true,
       allergy: []
     }
@@ -105,7 +105,7 @@ class Patient extends Component {
       gestation: null,
       trimester: null,
       lactation: false,
-      driving: true,
+      driving: false,
       alcohol: true,
       allergy: []
     });

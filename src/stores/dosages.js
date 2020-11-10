@@ -85,6 +85,9 @@ class Drugs {
           }
           currPack.pack.full += names[packname] + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
           currPack.pack.short += (nameshort[packname] || names[packname]) + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
+          // REFACTORING
+          let { obj, value, ...helpers } = currPack
+          //let { dosages, pack } = obj
 
           this.stores.actions.stepsData = {
             key: drug_obj.key,
@@ -92,7 +95,10 @@ class Drugs {
             step: 4,
             form: lf,
             method,
-            pack: currPack
+            pack: obj.pack,
+            dosage: obj.dosages,
+            value,
+            helpers
           }
 
           this.stores.drugs.current = drug_obj
@@ -162,8 +168,11 @@ class Drugs {
   get calcValues(){
     let drug = this.stores.drugs.current
     let dosages = this.current
-    let currDos = this.stores.actions.stepsData.pack
+    let currDos = this.stores.actions.stepsData.helpers
+    let value = this.stores.actions.stepsData.value
     let { units, getUnitArr } = this.stores.tools
+
+    // console.log({stepsData: this.stores.actions.stepsData});
 
     let unit = (currDos.dosage && units[currDos.dosage.id]) || null
     let firstUnit = null
@@ -180,7 +189,7 @@ class Drugs {
     //console.log({currDos});
     return {
       dosage: {
-        value: currDos.value,
+        value,
         units: unitsArr,
         unit,
         firstUnit,
@@ -197,56 +206,64 @@ class Drugs {
     let vals = this.calcValues
     let weight = this.stores.actions.drugStructure.patient.weight || null
 
-    // console.log({vals});
+    if(!vals.dosage.value) return
 
-    let baseDosage = vals.dosage.value
+    // let baseDosage = vals.dosage.value
     let dosage = vals.dosage.value
+
+    if(!_.isArray(dosage)) dosage = [dosage]
 
     if(vals.dosage.firstUnit){
       vals.dosage.firstUnit.contains.forEach(( contain ) => {
         if(contain.action === 'division'){
-          dosage = dosage / contain.value
+          dosage = _.map( dosage, (dos) => dos / contain.value )
         }else{
-          dosage = dosage * contain.value
+          dosage = _.map( dosage, (dos) => dos * contain.value )
+        }
+      })
+    }
+    if(vals.dosage.unit){
+      vals.dosage.unit.contains.forEach(( contain ) => {
+        if(contain.action === 'division'){
+          dosage = _.map( dosage, (dos) => dos / contain.value )
+        }else{
+          dosage = _.map( dosage, (dos) => dos * contain.value )
         }
       })
     }
 
-    vals.dosage.unit.contains.forEach(( contain ) => {
-      if(contain.action === 'division'){
-        dosage = dosage / contain.value
-      }else{
-        dosage = dosage * contain.value
-      }
-    })
-
     this.stores.actions.calculatorForm = {
       // baseDosage,
+      type: dosage.length > 1 ? 'multi' : 'single', // single, multi, liquid
       dosage,
       count: vals.count.value,
+      dosageUnit: (( vals.dosage.firstUnit && vals.dosage.firstUnit.id ) || ( vals.dosage.unit && vals.dosage.unit.id )) || null,
       dayCount: 1,
-      fullDosage: dosage * vals.count.value,
-      weightDosage: (weight ? (dosage * vals.count.value)/weight : 0),
-      dayDosage: dosage * vals.count.value,
-      dayWeightDosage: (weight ? (dosage * vals.count.value)/weight : 0)
+      fullDosage: _.map( dosage, (dos) => dos * vals.count.value ),
+      weightDosage: (weight ? _.map( dosage, (dos) => (dos * vals.count.value)/weight ) : [0]),
+      dayDosage: _.map( dosage, (dos) => dos * vals.count.value ),
+      dayWeightDosage: (weight ? _.map( dosage, (dos) => (dos * vals.count.value)/weight ) : [0])
     }
   }
 
   getFromBase = ( unitId, value ) => {
-    if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return value
+    let { round } = this.stores.tools
+    if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return [value]
     let unit = this.stores.tools.units[unitId]
-    if(!unit) return 0
-    let dosage = value
+    if(!unit) return [0]
+    //let dosage = value
 
+    if(!_.isArray(value)) value = [value]
     // console.log({ unit });
+
     unit.contains.forEach(( contain ) => {
       if(contain.action === 'division'){
-        dosage = dosage * contain.value
+        value = _.map( value, (dos) => round(dos * contain.value) )
       }else{
-        dosage = dosage / contain.value
+        value = _.map( value, (dos) => round(dos / contain.value) )
       }
     })
-    return dosage
+    return value || []
   }
 
   getToBase = ( unitId, value ) => {

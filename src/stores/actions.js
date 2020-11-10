@@ -90,7 +90,10 @@ class Actions {
     step: null,
     form: null,
     method: null,
-    pack: {}
+    pack: {},
+    dosage: [],
+    value: null,
+    helpers: {}
   }
 
   @observable patientForm = {
@@ -110,7 +113,7 @@ class Actions {
     gestation: null,
     trimester: null,
     lactation: false,
-    driving: true,
+    driving: false,
     alcohol: false,
     allergy: []
   }
@@ -138,13 +141,14 @@ class Actions {
   }
 
   @observable calculatorForm = {
-    dosage: 0,
+    dosage: [0],
     count: 1,
+    dosageUnit: null,
     dayCount: 1,
-    fullDosage: 0,
-    weightDosage: 0,
-    dayDosage: 0,
-    dayWeightDosage: 0
+    fullDosage: [0],
+    weightDosage: [0],
+    dayDosage: [0],
+    dayWeightDosage: [0]
   }
 
   @observable selectedDrug = null
@@ -184,12 +188,13 @@ class Actions {
       gestation: null,
       trimester: null,
       lactation: false,
-      driving: true,
+      driving: false,
       alcohol: false,
       allergy: []
     },
     // save_recipe: false,
     active_language: "ru",
+    liquids: [],
     drugs: [],
     text: null,
     specials: null
@@ -200,11 +205,9 @@ class Actions {
   constructor({ stores }) {
     this.stores = stores;
 
-
-
     this.autologin()
     autorun(() => {
-      if(this.stepsData.pack.obj){
+      if(this.stepsData.value){
         this.stores.dosages.setStepDosage()
       }
     })

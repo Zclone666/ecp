@@ -266,7 +266,7 @@ class Interval extends Component {
     return arr
   }
 
-  
+
 
   render(){
     let {
@@ -297,13 +297,13 @@ class Interval extends Component {
         description: '(Х дней)',
         onClick: this.handleAddConcept
       },
-      {
-        key: 3,
-        text: 'Период + промежуток',
-        value: 'period_in',
-        description: '(Х дней через Y дней)',
-        onClick: this.handleAddConcept
-      },
+      // {
+      //   key: 3,
+      //   text: 'Период + промежуток',
+      //   value: 'period_in',
+      //   description: '(Х дней через Y дней)',
+      //   onClick: this.handleAddConcept
+      // },
       {
         key: 4,
         text: 'Промежуток',
@@ -318,13 +318,13 @@ class Interval extends Component {
         description: '(Х раз в день)',
         onClick: this.handleAddConcept
       },
-      {
-        key: 6,
-        text: 'Количество с перерывом',
-        value: 'count_every',
-        description: '(Х раз в день с перерывом в 3 часа)',
-        onClick: this.handleAddConcept
-      },
+      // {
+      //   key: 6,
+      //   text: 'Количество с перерывом',
+      //   value: 'count_every',
+      //   description: '(Х раз в день с перерывом в 3 часа)',
+      //   onClick: this.handleAddConcept
+      // },
       {
         key: 7,
         text: 'Время приема',
@@ -344,7 +344,7 @@ class Interval extends Component {
               text={'Выбрать'}
               options={this.renderPresets()}
             />
-            
+
           </Form.Field>
         </Form.Group>
         <Form.Group>

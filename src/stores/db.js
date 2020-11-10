@@ -46,7 +46,9 @@ class DB {
       form: null,
       method: null,
       pack: {},
-      dosage: {},
+      dosage: [],
+      value: null,
+      helpers: {}
     }
     this.stores.drugs.searchRows = observable([])
 

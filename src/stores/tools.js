@@ -17,7 +17,7 @@ class Tools {
   @observable unitsPrimary = {};
   @observable unitsComplex = {};
 
-  
+
 
   constructor({ stores }) {
     this.stores = stores;
@@ -200,6 +200,11 @@ class Tools {
   async setNames(names, shortnames){
     this.names = await _.extend(this.names, names)
     if(shortnames) this.shortnames = await _.extend(this.shortnames, shortnames)
+  }
+
+  round = ( val, dec = 2 ) => {
+    let delimiter = 10^dec
+    return Math.floor(val * delimiter) / delimiter
   }
 
 }
