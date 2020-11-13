@@ -295,6 +295,17 @@ body > #root > .ui.body{
 .ui.header.middle{
   padding: .45em 0 0;
 }
+
+.ui.stretched.header{
+	margin: 0 -1em;
+  padding: .5em 1em;
+  background: #eee;
+}
+
+.ReactCollapse--collapse {
+  transition: height 300ms;
+}
+
 .ui.header > span, .header > span{
   font-weight: normal !important;
   margin-right: 3px;
@@ -1160,6 +1171,14 @@ td > .collapsable ul li{
 }
 
 // start
+.ui.divided.list .list .item, .ui.divided.list .item, .ui.divided.list {
+	display: block !important;
+  height: 100%;
+	width: 100% !important;
+}
+.ui.list .item .content {
+  overflow: hidden !important;
+}
 
 .ui.divided.selection.list .list .item, .ui.divided.selection.list .item {
     margin: 0;

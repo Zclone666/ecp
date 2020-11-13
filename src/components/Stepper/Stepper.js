@@ -33,7 +33,7 @@ class Stepper extends Component {
     this.sliderRef = createRef()
   }
 
-  
+
 
   handleClick = (e, titleProps) => {
     e.preventDefault()
@@ -60,11 +60,12 @@ class Stepper extends Component {
       router: { values }
     } = this.props
     // console.log({ next: values.step, prev: this.state.activeIndex });
-
+    // console.log('HEREEE');
     this.props.actions.stepsData.way = values.way
     if( values.step !== prevState.activeIndex ){
       this.setState({ activeIndex: values.step }, () => {
         this.goTo(parseInt(this.state.activeIndex || 0))
+        this.props.dosages.setStepDosage()
       })
 
     }
@@ -80,7 +81,7 @@ class Stepper extends Component {
   render(){
     let { activeIndex, viewType } = this.state
     let {
-      
+
       drugs: { current }, //drugs, currDrug, setDosageParams
       // dosages: { dosage, calcValues }, //drugsDosages
       // warnings: { warning, groups }, //warnings, warnGroups

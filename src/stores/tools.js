@@ -202,8 +202,8 @@ class Tools {
     if(shortnames) this.shortnames = await _.extend(this.shortnames, shortnames)
   }
 
-  round = ( val, dec = 2 ) => {
-    let delimiter = 10^dec
+  round = ( val, dec = 3 ) => {
+    let delimiter = Math.pow(10,dec)
     return Math.floor(val * delimiter) / delimiter
   }
 

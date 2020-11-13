@@ -207,9 +207,10 @@ class Actions {
 
     this.autologin()
     autorun(() => {
-      if(this.stepsData.value){
-        this.stores.dosages.setStepDosage()
-      }
+      // if(this.stepsData.dosage && this.stepsData.dosage[0] && this.stepsData.dosage[0].value_1){
+      //
+      //   this.stores.dosages.setStepDosage()
+      // }
     })
 
     autorun(() => {

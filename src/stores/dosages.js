@@ -170,6 +170,7 @@ class Drugs {
     let dosages = this.current
     let currDos = this.stores.actions.stepsData.helpers
     let value = this.stores.actions.stepsData.value
+    let pack = this.stores.actions.stepsData.pack
     let { units, getUnitArr } = this.stores.tools
 
     // console.log({stepsData: this.stores.actions.stepsData});
@@ -186,7 +187,7 @@ class Drugs {
     }
     // console.log({firstUnit, unit});
     let unitsArr = ((firstUnit || unit) && getUnitArr((firstUnit && firstUnit.id) || (unit && unit.id))) || {}
-    //console.log({currDos});
+    // console.log('pack',pack);
     return {
       dosage: {
         value,
@@ -196,13 +197,14 @@ class Drugs {
         secondUnit
       },
       count: {
-        value: 1,
-        unit: currDos.pack && units[currDos.pack.id]
+        value: (pack && pack.dosage && pack.dosage.value_1) || 1,
+        unit: (currDos.pack && units[currDos.pack.id]) || units[248]
       }
     }
   }
 
   setStepDosage = () => {
+    // console.log('this.calcValues', this.calcValues);
     let vals = this.calcValues
     let weight = this.stores.actions.drugStructure.patient.weight || null
 
@@ -246,7 +248,7 @@ class Drugs {
     }
   }
 
-  getFromBase = ( unitId, value ) => {
+  getFromBase = ( unitId, value, double = 2 ) => {
     let { round } = this.stores.tools
     if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return [value]
     let unit = this.stores.tools.units[unitId]
@@ -254,15 +256,16 @@ class Drugs {
     //let dosage = value
 
     if(!_.isArray(value)) value = [value]
-    // console.log({ unit });
+    //console.log(1,{ value });
 
     unit.contains.forEach(( contain ) => {
       if(contain.action === 'division'){
-        value = _.map( value, (dos) => round(dos * contain.value) )
+        value = _.map( value, (dos) => round((dos * contain.value), double) )
       }else{
-        value = _.map( value, (dos) => round(dos / contain.value) )
+        value = _.map( value, (dos) => round((dos / contain.value), double) )
       }
     })
+    //console.log(2,{ value });
     return value || []
   }
 

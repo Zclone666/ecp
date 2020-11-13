@@ -53,16 +53,17 @@ class DrugInfo {
         data,
         success: async data => {
           // console.log('DATA', data);
-          let { items } = data
+          let { сalculation, instruction } = data
 
           // this.names = await _.extend(this.names, names)
 
           let current = await this.info.get(drug_obj.key) || {};
-          
+
           let info = {
             key: drug_obj.key,
             id: drug_obj.id,
-            items
+            itemsCalc: сalculation,
+            itemsInstr: instruction
           }
 
           await this.info.set( drug_obj.key, _.extend(current, info) );

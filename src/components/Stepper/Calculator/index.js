@@ -48,12 +48,14 @@ class Calculator extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
+    let weight = parseFloat(this.props.actions.drugStructure.patient.weight)
     //console.log({name, value}, !!value);
     //value = _.map( value, (dos) => dos.split(',').join('.') )
     //if(!_.isArray(value)) value = [value]
     if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
       if( name == 'patient.weight' ){
-        this.props.actions.drugStructure.patient.weight = value
+        this.props.actions.drugStructure.patient.weight = parseFloat(value)
+        weight = parseFloat(value)
       }else{
         this.props.actions.calculatorForm[name] = value
       }
@@ -67,22 +69,34 @@ class Calculator extends Component {
     //value = parseFloat(value)
 
     if( name == 'patient.weight' ){
-      this.props.actions.drugStructure.patient.weight = value
+      this.props.actions.drugStructure.patient.weight = parseFloat(value)
+      weight = parseFloat(value)
     }else{
       // this.props.actions.calculatorForm[name] = value
     }
-    let weight = this.props.actions.drugStructure.patient.weight
+
 
     let {
       dosage,
       count,
       dayCount,
+      dosageUnit,
       fullDosage,
       weightDosage,
       dayDosage,
       dayWeightDosage
     } = this.props.actions.calculatorForm
 
+    // console.log(1, {count});
+    // console.log({
+    //   dosage,
+    //   count,
+    //   dayCount,
+    //   fullDosage,
+    //   weightDosage,
+    //   dayDosage,
+    //   dayWeightDosage
+    // });
     switch (name) {
       case 'dosage':
         dosage = getToBase((currUnit || def), value.split(' + '))
@@ -96,12 +110,17 @@ class Calculator extends Component {
         weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
         break;
       case 'patient.weight':
-        fullDosage = _.map( dosage, (dos) => { return count*dos } )
-        weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
+        //fullDosage = _.map( dosage, (dos) => { return count*dos } )
+        weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => {
+          // console.log({dos,weight, res: dos/weight});
+          return dos/weight
+        } )
         break;
       case 'fullDosage':
         fullDosage = getToBase((currUnit || def), value.split(' + '))
         count = fullDosage/dosage
+        // console.log({weight,fullDosage});
+        // weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
         break;
       case 'weightDosage':
         weightDosage = getToBase((currUnit || def), value.split(' + '))
@@ -115,22 +134,34 @@ class Calculator extends Component {
     dayDosage = _.map( fullDosage, (dos) => { return dos*dayCount } )
     dayWeightDosage = !weight ? [0] : _.map( weightDosage, (dos) => { return dos*dayCount } )
 
-    this.props.actions.calculatorForm.dosage = dosage
-    this.props.actions.calculatorForm.count = count
-    this.props.actions.calculatorForm.fullDosage = fullDosage
-    this.props.actions.calculatorForm.weightDosage = weightDosage
-    this.props.actions.calculatorForm.dayDosage = dayDosage
-    this.props.actions.calculatorForm.dayWeightDosage = dayWeightDosage
+    // this.props.actions.calculatorForm.dosage = dosage
+    // this.props.actions.calculatorForm.count = count
+    // this.props.actions.calculatorForm.fullDosage = fullDosage
+    // this.props.actions.calculatorForm.weightDosage = weightDosage
+    // this.props.actions.calculatorForm.dayDosage = dayDosage
+    // this.props.actions.calculatorForm.dayWeightDosage = dayWeightDosage
+    // console.log(2, {count});
+    Object.assign(this.props.actions.calculatorForm, {
+      dosage,
+      count,
+      dayCount,
+      dosageUnit,
+      fullDosage,
+      weightDosage,
+      dayDosage,
+      dayWeightDosage
+    });
+
     setTimeout(() => {
-      console.log({
-        dosage,
-        count,
-        dayCount,
-        fullDosage,
-        weightDosage,
-        dayDosage,
-        dayWeightDosage
-      });
+      // console.log({
+      //   dosage,
+      //   count,
+      //   dayCount,
+      //   fullDosage,
+      //   weightDosage,
+      //   dayDosage,
+      //   dayWeightDosage
+      // });
       this.forceUpdate()
     }, 300)
 
@@ -222,6 +253,8 @@ class Calculator extends Component {
 
     let weights = []
     let { dosage: dos, count: cnt } = calcValues
+
+    console.log({weightDosage});
 
     _.forEach(dos.units, (weight, key) => {
       if(dos.firstUnit){
@@ -316,7 +349,7 @@ class Calculator extends Component {
                 disabled={disableAll || disableMulti}
                 size='big'
                 name='weightDosage'
-                value={getFromBase((currUnit || def), weightDosage).join(' + ') || ''}
+                value={getFromBase((currUnit || def), weightDosage, 4).join(' + ') || ''}
                 label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
                 labelPosition='right'
                 placeholder='0'
