@@ -4,6 +4,6 @@ variables:
     PORT: 9009
 
 include: 
-  - project: 'Backend/NuGetPackages'
+  - project: 'root/template-gitlab'
     ref: master
     file: '/template-frontend-gitlab-ci.yml'
