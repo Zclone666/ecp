@@ -84,9 +84,13 @@ class InfoItems extends Component {
 
         return(
           <List.Item key={id}>
-            <List.Icon name='circle' size='small' />
+            {item.bold?
+              <List.Icon name='chevron circle right' size='small' />
+              :
+              <List.Icon name='circle' size='small' />
+            }
             <List.Content>
-              <List.Description><strong>{item.code}</strong> {item.text}</List.Description>
+              <List.Description><strong>{item.code}</strong> {item.bold? <strong>{item.text}</strong> : item.text}</List.Description>
               {(item.child_ids && item.child_ids.length > 0) &&
                 <List.List>
                   {this.renderTree(items, id)}
@@ -129,7 +133,7 @@ class InfoItems extends Component {
             <Header.Content>Сводная информация</Header.Content>
           </Header>
           {(ready && calc.length > 0) && (
-            <List divided relaxed verticalAlign='middle' size='large' >
+            <List divided relaxed className='draginfo' verticalAlign='middle' size='large' >
               {calc.map(( item, i ) => {
                 // console.log({item});
                 return(
@@ -164,7 +168,7 @@ class InfoItems extends Component {
               <Header.Content>Инструкция</Header.Content>
             </Header>
             {(ready && instr.length > 0) && (
-              <List divided relaxed verticalAlign='middle' size='large' >
+              <List divided relaxed className='draginfo' verticalAlign='middle' size='large' >
                 {instr.map(( item, i ) => {
                   // console.log({item});
                   return(

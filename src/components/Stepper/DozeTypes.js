@@ -223,7 +223,7 @@ class DozeTypes extends Component {
     let { drug, form, methodform, names } = drugDosage
 
     return (
-      <List animated divided selection verticalAlign='middle' size='large' >
+      <List animated divided selection className='dozelist' verticalAlign='middle' size='large' >
         {this.dosages.map(( dose, i ) => {
 
           return(

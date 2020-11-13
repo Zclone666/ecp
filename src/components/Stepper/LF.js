@@ -47,10 +47,10 @@ class LF extends Component {
     let iterator = (stepsData.way === 'methods' && stepsData.method) ? methodform[stepsData.method] : _.keys(form)
 
     return (
-      <List animated divided selection verticalAlign='middle' size='large' >
+      <List animated divided selection className='dozelist' verticalAlign='middle' size='large' >
         {iterator.map(( lfid, i ) => {
           let lfItem = form[lfid]
-          
+
           return(
             <List.Item
               key={'doze'+i}

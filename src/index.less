@@ -302,10 +302,6 @@ body > #root > .ui.body{
   background: #eee;
 }
 
-.ReactCollapse--collapse {
-  transition: height 300ms;
-}
-
 .ui.header > span, .header > span{
   font-weight: normal !important;
   margin-right: 3px;
@@ -1176,6 +1172,15 @@ td > .collapsable ul li{
   height: 100%;
 	width: 100% !important;
 }
+.ui.divided.dozelist.list .list .item, .ui.divided.dozelist.list .item, .ui.divided.dozelist.list {
+	display: block !important;
+  height: auto !important;
+	width: 100% !important;
+}
+.ui.list.draginfo .item .icon{
+	padding: 3px 0 0 0 !important;
+}
+
 .ui.list .item .content {
   overflow: hidden !important;
 }
@@ -1199,95 +1204,95 @@ td > .collapsable ul li{
   border-top: none;
 }
 .ui.selection.list .list .item, .ui.selection.list .item {
-    cursor: pointer;
-    background: transparent;
-    padding: .5em;
-    margin: 0;
-    color: rgba(0,0,0,.4);
-    border-radius: .5em;
-    transition: color .1s ease,padding-left .1s ease,background-color .1s ease;
+  cursor: pointer;
+  background: transparent;
+  padding: .5em;
+  margin: 0;
+  color: rgba(0,0,0,.4);
+  border-radius: .5em;
+  transition: color .1s ease,padding-left .1s ease,background-color .1s ease;
 }
 .ui.list .list .item:last-child, .ui.list .item:last-child, ol.ui.list li:last-child, ul.ui.list li:last-child {
-    padding-bottom: 0;
+  padding-bottom: 0;
 }
 .ui.list .list .item, .ui.list .item, ol.ui.list li, ul.ui.list li {
-    display: list-item;
-    table-layout: fixed;
-    list-style-type: none;
-    list-style-position: outside;
-    padding: .21428571em 0;
-    line-height: 1.14285714em;
+  display: list-item;
+  table-layout: fixed;
+  list-style-type: none;
+  list-style-position: outside;
+  padding: .21428571em 0;
+  line-height: 1.14285714em;
 }
 
 .ui.list .item:after, .ui.list .list .item, ol.ui.list li:first-child:after, ul.ui.list li:first-child:after {
-    content: "";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }
 
 .ui.list .list .item .icon+.content, .ui.list .list .item .image+.content, .ui.list .item .icon+.content, .ui.list .item .image+.content {
-    display: table-cell;
-    width: 100%;
-    padding: 0 0 0 .5em;
-    vertical-align: top;
+  display: table-cell;
+  width: 100%;
+  padding: 0 0 0 .5em;
+  vertical-align: top;
 }
 .ui.list .item .content {
-    position: relative;
-    overflow: visible;
-    display: table-cell;
+  position: relative;
+  overflow: visible;
+  display: table-cell;
 }
 
 .ui.list .list .item .content, .ui.list .item .content {
-    line-height: 1.14285714em;
+  line-height: 1.14285714em;
 }
 
 .ui.selection.list .list .item, .ui.selection.list .item {
-    cursor: pointer;
-    background: transparent;
-    padding: .5em;
-    margin: 0;
-    color: rgba(0,0,0,.4);
-    border-radius: .5em;
-    transition: color .1s ease,padding-left .1s ease,background-color .1s ease;
+  cursor: pointer;
+  background: transparent;
+  padding: .5em;
+  margin: 0;
+  color: rgba(0,0,0,.4);
+  border-radius: .5em;
+  transition: color .1s ease,padding-left .1s ease,background-color .1s ease;
 }
 .ui.list .list .item, .ui.list .item, ol.ui.list li, ul.ui.list li {
-    display: list-item;
-    table-layout: fixed;
-    list-style-type: none;
-    list-style-position: outside;
-    padding: .21428571em 0;
-    line-height: 1.14285714em;
+  display: list-item;
+  table-layout: fixed;
+  list-style-type: none;
+  list-style-position: outside;
+  padding: .21428571em 0;
+  line-height: 1.14285714em;
 }
 
 .ui.list .item .content {
-    position: relative;
-    overflow: visible;
-    display: table-cell;
+  position: relative;
+  overflow: visible;
+  display: table-cell;
 }
 
 .ui.list .list .item [class*="left floated"], .ui.list .item [class*="left floated"] {
-    float: left;
-    margin: 0 1em 0 0;
+  float: left;
+  margin: 0 1em 0 0;
 }
 .ui.list .list .item .content, .ui.list .item .content {
-    line-height: 1.14285714em;
+  line-height: 1.14285714em;
 }
 .ui.list .list .item a, .ui.list .item a {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .ui.list .item .icon.warning.circle {
-    text-shadow: 0.5px 0.5px 1px #bbb;
+  text-shadow: 0.5px 0.5px 1px #bbb;
 }
 .ui.list .list .item i.icon, .ui.list .item i.icon {
-    display: table-cell;
-    margin: 0;
-    padding-top: .07142857em;
-    padding-right: .28571429em;
-    vertical-align: top;
-    transition: color .1s ease;
+  display: table-cell;
+  margin: 0;
+  padding-top: .07142857em;
+  padding-right: .28571429em;
+  vertical-align: top;
+  transition: color .1s ease;
 }
 
 .ui.list .disabled.item{
@@ -1663,4 +1668,10 @@ td > .collapsable ul li{
   margin: 2px;
   float: left;
   background: rgba(0, 0, 0, 0.6);
+}
+
+
+
+.ReactCollapse--collapse {
+  transition: height 300ms;
 }
