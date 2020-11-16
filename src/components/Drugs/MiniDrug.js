@@ -98,7 +98,15 @@ class MiniDrug extends React.Component {
 
 		let names = drugDosages.names || {}
 		let nameshort = drugDosages.nameshort || {}
-		let url = `/liquid/calc/${values.liquid}${(drugDosages.url && drugDosages.url.replace('/concept', '')) || '/dozes'}`
+		// liquid/calc/1/dozes/lf/4
+		// console.log({drug});
+		let urlArr = ['/liquid/calc',values.liquid,'dozes']
+
+		if(helpers.way) urlArr.push(helpers.way)
+		if(helpers.step) urlArr.push(helpers.step)
+
+		let url = urlArr.join('/')
+		// let url = `/liquid/calc/${values.liquid}${(drugDosages.url && drugDosages.url.replace('/concept', '')) || '/dozes'}`
 		let className = selectedDrug === drug.key ? 'selected' : ''
 		className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
 

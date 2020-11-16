@@ -156,7 +156,15 @@ class Drug extends React.Component {
     //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
-    let url = drugDosages.url || '/concept/dozes'
+
+    let urlArr = ['/concept/dozes']
+
+		if(helpers.way) urlArr.push(helpers.way)
+		if(helpers.step) urlArr.push(helpers.step)
+
+		let url = urlArr.join('/')
+
+    // let url = drugDosages.url || '/concept/dozes'
     let currWarning = active//activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
     let maxItem = warnIcons[drug.key] //_.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });

@@ -168,6 +168,7 @@ class Drugs {
     let drugData = this.stores.actions.stepsData
     let calcData = this.stores.actions.calculatorForm
     let scheduleData = this.stores.actions.scheduleForm
+    let { router: { values } } = this.stores
 
     let drug = this.current
     let currentDrug = this.drug.get(drug.key) || {};
@@ -183,8 +184,6 @@ class Drugs {
 
     let {
       key,
-      way,
-      step,
       form,
       method,
       pack,
@@ -195,6 +194,11 @@ class Drugs {
         pack: hpack
       }
     } = drugData
+
+    let {
+      way,
+      step,
+    } = values
 
     let {
       dateStart,
