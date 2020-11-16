@@ -165,7 +165,6 @@ class Main extends Component {
             direction='right'
             animation='overlay'
             visible={showPage}
-            vertical
             style={{ backgroundColor: '#FFFFFF' }}
           >
             <Page />

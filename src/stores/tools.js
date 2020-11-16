@@ -153,6 +153,7 @@ class Tools {
         arr: null,
         show: unitpharm.includes(unitkey) || false
       }
+
       if(unitrefs[unitkey]) this.unitarrs[unitkey] = (newunit.show ? [ unitkey, ...unitrefs[unitkey] ] : unitrefs[unitkey])
       if(unit.length < 1){
         newunit.type = 'base'
@@ -170,9 +171,13 @@ class Tools {
       }
 
       if(unitrefs[unitkey]){
-        this.unitarrs[unitkey] = (newunit.show ? [ unitkey, ...unitrefs[unitkey] ] : unitrefs[unitkey])
+        // this.unitarrs[unitkey] = (newunit.show ? [ unitkey, ...unitrefs[unitkey] ] : unitrefs[unitkey])
+        this.unitarrs[unitkey] = [ unitkey, ...unitrefs[unitkey] ]
       }
-      //if(unitkey === '42') console.log(this.unitarrs[unitkey]);
+      // if(unitkey === '42'){
+      //   console.log(newunit);
+      // }
+      // if(unitkey === '42') console.log(this.unitarrs[unitkey]);
       this.units[unitkey] = newunit
     })
     //console.log(this.units);
@@ -184,10 +189,10 @@ class Tools {
     // console.log('unitarrs', this.unitarrs);
     // console.log(this.units[unitId]);
     if(this.units[unitId] && this.units[unitId].arr && this.unitarrs[this.units[unitId].arr]){
-      //console.log('here', this.unitarrs[this.units[unitId].arr]);
+      // console.log('here', this.unitarrs[this.units[unitId].arr]);
       this.unitarrs[this.units[unitId].arr].forEach( arrKey => {
-        //console.log(arrKey, this.units[arrKey], this.units);
-        if(this.units[unitId].type === this.units[arrKey].type || this.units[arrKey].type === 'base'){
+        // console.log({ type1: this.units[unitId].type, type2: this.units[arrKey].type});
+        if(this.units[unitId].type === this.units[arrKey].type || this.units[arrKey].type !== 'complex'){
           result[arrKey] = this.units[arrKey]
         }
       })

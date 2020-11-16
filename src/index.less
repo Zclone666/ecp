@@ -1670,6 +1670,19 @@ td > .collapsable ul li{
   background: rgba(0, 0, 0, 0.6);
 }
 
+.glowing {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes glowing {
+  0% { color: rgba(0, 0, 0, 0.6); }
+  50% { color: rgba(100, 0, 0, 1); }
+  100% { color: rgba(0, 0, 0, 0.6); }
+}
+
+.glowing {
+  animation: glowing 1000ms infinite;
+}
 
 
 .ReactCollapse--collapse {

@@ -11,7 +11,8 @@ import {
   Button,
   Dropdown,
   Header,
-  TextArea
+  TextArea,
+  Dimmer
 } from 'semantic-ui-react'
 
 import clarifications from '../../../constants/hardcode'
@@ -254,9 +255,10 @@ class Calculator extends Component {
     let weights = []
     let { dosage: dos, count: cnt } = calcValues
 
-    console.log({weightDosage});
-
+    // console.log({weightDosage});
+    // console.log({dos});
     _.forEach(dos.units, (weight, key) => {
+      // console.log({weight, dos});
       if(dos.firstUnit){
         weights.push({
           key,
@@ -288,131 +290,139 @@ class Calculator extends Component {
           <Header>Составляющие раствора</Header>
           <Drugs liquid={liquid} />
         </div>}
-        <Form>
-          <Form.Group>
-            <Form.Field width={4}>
-              <label>Дозировка:</label>
-              <Input
-                disabled={disableAll || disableMulti}
-                size='big'
-                name='dosage'
-                value={getFromBase((currUnit || def), dosage).join(' + ') || ''}
-                label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} options={weights} value={currUnit || def} />}
-                labelPosition='right'
-                placeholder='500'
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field width={3}>
-              <label>Кол-во доз:</label>
-              <Input
-                disabled={disableAll}
-                size='big'
-                name='count'
-                numeric
-                value={count != null ? count : cnt.value}
-                label={{ basic: true, content: (cnt.unit && (cnt.unit.shortname || cnt.unit.name) || '') }}
-                labelPosition='right'
-                placeholder='3'
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field width={3}>
-              <label>Разовая доза:</label>
-              <Input
-                disabled={disableAll || disableMulti}
-                size='big'
-                name='fullDosage'
-                value={getFromBase((currUnit || def), fullDosage).join(' + ') || ''}
-                label={{ basic: true, content: secondName || 'мг' }}
-                labelPosition='right'
-                placeholder='500'
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field width={3}>
-              <label>На массу тела:</label>
-              <Input
-                disabled={disableAll}
-                size='big'
-                name='patient.weight'
-                value={weight || ''}
-                label={{ basic: true, content: 'кг' }}
-                labelPosition='right'
-                placeholder='60.5'
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field width={3}>
-              <label>На кг веса:</label>
-              <Input
-                disabled={disableAll || disableMulti}
-                size='big'
-                name='weightDosage'
-                value={getFromBase((currUnit || def), weightDosage, 4).join(' + ') || ''}
-                label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
-                labelPosition='right'
-                placeholder='0'
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-          </Form.Group>
-          <Form.Group>
-            <Form.Field width={4}>
-              <label>Кратность приема:</label>
-              <Dropdown
-                disabled={disableAll}
-                selection
-                defaultValue={(current && current.freq) || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
-                className='input big'
-                name={'dayCount'}
-                placeholder={'Выбрать'}
-                onChange={this.setPreset}
-                options={this.renderPresets()}
-              />
-            </Form.Field>
-            <Form.Field width={3}>
-              <label>Суточная доза:</label>
-              <Input
-                disabled={disableAll || disableMulti}
-                size='big'
-                name='dayDosage'
-                value={getFromBase((currUnit || def), dayDosage).join(' + ') || ''}
-                label={{ basic: true, content: secondName || 'мг' }}
-                labelPosition='right'
-                placeholder='500'
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field width={3}>
-              <label>На массу тела:</label>
-              <Input
-                disabled={disableAll || disableMulti}
-                size='big'
-                name='dayWeightDosage'
-                value={getFromBase((currUnit || def), dayWeightDosage).join(' + ') || ''}
-                label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
-                labelPosition='right'
-                placeholder='0'
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-          </Form.Group>
-        </Form>
-        <Schedule />
-        <Form>
-          <Form.Group>
-            <Form.Field width={16}>
-              <TextArea
-                size='big'
-                name='specials'
-                value={specials || ''}
-                placeholder='Особые указания'
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-          </Form.Group>
-        </Form>
+        <Dimmer.Dimmable as={'div'} dimmed={disableAll}>
+          <Form>
+            <Form.Group>
+              <Form.Field width={4}>
+                <label>Дозировка:</label>
+                <Input
+                  disabled={disableAll || disableMulti}
+                  size='big'
+                  name='dosage'
+                  value={getFromBase((currUnit || def), dosage).join(' + ') || ''}
+                  label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} options={weights} value={currUnit || def} />}
+                  labelPosition='right'
+                  placeholder='500'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>Кол-во доз:</label>
+                <Input
+                  disabled={disableAll}
+                  size='big'
+                  name='count'
+                  numeric
+                  value={count != null ? count : cnt.value}
+                  label={{ basic: true, content: (cnt.unit && (cnt.unit.shortname || cnt.unit.name) || '') }}
+                  labelPosition='right'
+                  placeholder='3'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>Разовая доза:</label>
+                <Input
+                  disabled={disableAll || disableMulti}
+                  size='big'
+                  name='fullDosage'
+                  value={getFromBase((currUnit || def), fullDosage).join(' + ') || ''}
+                  label={{ basic: true, content: secondName || 'мг' }}
+                  labelPosition='right'
+                  placeholder='500'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>На массу тела:</label>
+                <Input
+                  disabled={disableAll}
+                  size='big'
+                  name='patient.weight'
+                  value={weight || ''}
+                  label={{ basic: true, content: 'кг' }}
+                  labelPosition='right'
+                  placeholder='60.5'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>На кг веса:</label>
+                <Input
+                  disabled={disableAll || disableMulti}
+                  size='big'
+                  name='weightDosage'
+                  value={getFromBase((currUnit || def), weightDosage, 4).join(' + ') || ''}
+                  label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
+                  labelPosition='right'
+                  placeholder='0'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            </Form.Group>
+            <Form.Group>
+              <Form.Field width={4}>
+                <label>Кратность приема:</label>
+                <Dropdown
+                  disabled={disableAll}
+                  selection
+                  defaultValue={(current && current.freq) || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
+                  className='input big'
+                  name={'dayCount'}
+                  placeholder={'Выбрать'}
+                  onChange={this.setPreset}
+                  options={this.renderPresets()}
+                />
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>Суточная доза:</label>
+                <Input
+                  disabled={disableAll || disableMulti}
+                  size='big'
+                  name='dayDosage'
+                  value={getFromBase((currUnit || def), dayDosage).join(' + ') || ''}
+                  label={{ basic: true, content: secondName || 'мг' }}
+                  labelPosition='right'
+                  placeholder='500'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>На массу тела:</label>
+                <Input
+                  disabled={disableAll || disableMulti}
+                  size='big'
+                  name='dayWeightDosage'
+                  value={getFromBase((currUnit || def), dayWeightDosage).join(' + ') || ''}
+                  label={{ basic: true, content: `${secondName || 'мг'}/кг` }}
+                  labelPosition='right'
+                  placeholder='0'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            </Form.Group>
+          </Form>
+          {!disableAll && <Schedule />}
+          <Form>
+            <Form.Group>
+              <Form.Field width={16}>
+                <TextArea
+                  size='big'
+                  name='specials'
+                  value={specials || ''}
+                  placeholder='Особые указания'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            </Form.Group>
+          </Form>
+          <Dimmer inverted active={disableAll}>
+            <Header as='h2' icon color='grey'>
+              <Icon name='external square alternate' />
+              Сначала укажите дозировку для всех составляющих раствора!
+            </Header>
+          </Dimmer>
+        </Dimmer.Dimmable>
       </Segment>
     )
   }

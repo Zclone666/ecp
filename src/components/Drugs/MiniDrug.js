@@ -109,7 +109,7 @@ class MiniDrug extends React.Component {
 			<List.Item style={resultStyle} className={`nowarnings ${className}`}>
 				<List.Content floated='right'>
 					<Button as={RouterLink} to={url} onClick={this.getLF} icon>
-						<Icon name='tint' />
+						<Icon className='glowing' name='tint' />
 					</Button>
 				</List.Content>
 				<div className='border' style={{ backgroundColor: 'transparent' }} />

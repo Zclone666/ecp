@@ -30,7 +30,7 @@ class Schedule extends Component {
   constructor(props){
     super(props)
     this.state = {
-      
+
       timeFromStart: null
     }
   }
@@ -39,7 +39,7 @@ class Schedule extends Component {
       let { name, value } = e.target
     }
     // console.log('HERE');
-    console.log({ value });
+    // console.log({ value });
     if( name === 'dateStart' || name === 'dateFinish' ){
       this.setState({ timeFromStart: null })
       if(moment(value).format('x') !== 'Invalid date') this.props.actions.scheduleForm[name] = moment(value).format('x')
