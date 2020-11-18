@@ -72,6 +72,7 @@ class Drugs {
     this.router = stores.router;
 
     this.drug = observable.map({}, 'drug')
+    this.liquids = observable.map({}, 'liquids')
 
     autorun(() => {
 
@@ -339,7 +340,7 @@ class Drugs {
       dayWeightDosage
     }
     this.stores.actions.scheduleForm = {
-      dateStart,
+      dateStart: dateStart || moment().format('x'),
       dateFinish,
       finishAlternate,
       clarifications, //уточнения
@@ -374,7 +375,11 @@ class Drugs {
         fullDosage: [0],
         weightDosage: [0],
         dayDosage: [0],
-        dayWeightDosage: [0]
+        dayWeightDosage: [0],
+        fullSpeed: [0],
+        weightSpeed: [0],
+        tintSpeed: [0],
+        liquidSpeed: [0]
       },
       schedule: {
         dateStart: null,
@@ -388,9 +393,21 @@ class Drugs {
       },
       helpers: {
         dosage: {},
-        pack: {},
+        pack: {}
       }
     }
+
+    // liquid = _.assignIn(liquid, row);
+
+    liquid.key = moment().format('x').toString()
+    let current = this.liquid.get(liquid.key) || {};
+    this.liquid.set( liquid.key, _.extend(current, liquid) );
+    // console.log('dasf', this.drug.get(drug.key));
+
+    // this.stores.dosages.get(liquid)
+    //
+    // this.stores.db.clearData(false, true)
+    return true
   }
 
   selectFromSearch = async (row) => {
