@@ -360,13 +360,6 @@ class Drugs {
       specials: null,
       freq: null,
       duration: null,
-      dosage: { // дозировка
-        form: null,
-        method: null,
-        pack: {},
-        dosage: [],
-        value: null
-      },
       calc: {
         dosage: [0],
         count: 1,
@@ -390,10 +383,6 @@ class Drugs {
         once: null,
         week: null,
         calendar: null
-      },
-      helpers: {
-        dosage: {},
-        pack: {}
       }
     }
 

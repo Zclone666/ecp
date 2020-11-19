@@ -403,7 +403,7 @@ class PatientForm extends Component {
                 Алкоголь
               </Button>
             </Form.Field>
-            <Form.Field>
+            {isWoman && <Form.Field>
               <Button
                 size='big'
                 disabled={!isWoman || veryOld}
@@ -418,7 +418,7 @@ class PatientForm extends Component {
                 <Icon name={!!lactation ? 'check square' : 'square outline'} />
                 Кормление грудью
               </Button>
-            </Form.Field>
+            </Form.Field>}
           </Responsive>
           {(isWoman && !veryOld) &&
             <Responsive as={Form.Group} minWidth={481}>
@@ -523,7 +523,7 @@ class PatientForm extends Component {
                 Алкоголь
               </Button>
             </Form.Field>
-            <Form.Field>
+            {isWoman && <Form.Field>
               <Button
                 size='big'
                 disabled={!isWoman || veryOld}
@@ -537,7 +537,7 @@ class PatientForm extends Component {
                 <Icon name={!!lactation ? 'check square' : 'square outline'} />
                 Кормление грудью
               </Button>
-            </Form.Field>
+            </Form.Field>}
           </Responsive>
         </Form>
       </Segment>

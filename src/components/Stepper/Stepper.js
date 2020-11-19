@@ -118,7 +118,6 @@ class Stepper extends Component {
             'methods': <WayChoice/>,
             'liquid': (
               <div className='scrollwrapper'>
-                <Calculator isLiquid />
               </div>
             )
           }[way]}

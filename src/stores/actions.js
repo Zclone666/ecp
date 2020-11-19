@@ -151,6 +151,38 @@ class Actions {
     dayWeightDosage: [0]
   }
 
+  @observable liquidForm = {
+    name: "", // Название ДВ или ТН
+    group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
+    specials: null,
+    freq: null,
+    duration: null,
+    calc: {
+      dosage: [0],
+      count: 1,
+      dosageUnit: null,
+      dayCount: 1,
+      fullDosage: [0],
+      weightDosage: [0],
+      dayDosage: [0],
+      dayWeightDosage: [0],
+      fullSpeed: [0],
+      weightSpeed: [0],
+      tintSpeed: [0],
+      liquidSpeed: [0]
+    },
+    schedule: {
+      dateStart: null,
+      dateFinish: null,
+      finishAlternate: null,
+      clarifications: null, //уточнения
+      interval: null,
+      once: null,
+      week: null,
+      calendar: null
+    }
+  }
+
   @observable selectedDrug = null
   @observable selectedConflict = null
   @observable activeDrugs = []

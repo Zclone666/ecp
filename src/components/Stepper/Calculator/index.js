@@ -374,7 +374,7 @@ class Calculator extends Component {
                   options={this.renderPresets()}
                 />
               </Form.Field>
-              <Form.Field width={3}>
+              <Form.Field width={6}>
                 <label>Суточная доза:</label>
                 <Input
                   disabled={disableAll || disableMulti}
@@ -387,8 +387,8 @@ class Calculator extends Component {
                   onChange={this.handleChange}
                 />
               </Form.Field>
-              <Form.Field width={3}>
-                <label>На массу тела:</label>
+              <Form.Field width={6}>
+                <label>На кг веса в сутки:</label>
                 <Input
                   disabled={disableAll || disableMulti}
                   size='big'

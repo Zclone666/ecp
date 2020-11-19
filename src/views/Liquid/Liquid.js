@@ -5,7 +5,7 @@ import RouterLink from '../../router/a'
 
 import Dozes from '../Dozes'
 
-import Calculator from '../../components/Stepper/Calculator'
+import Calculator from '../../components/Stepper/Calculator/Liquid'
 
 import {
   Sidebar,
