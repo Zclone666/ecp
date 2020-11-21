@@ -59,8 +59,8 @@ class Steps extends Component {
       router: { values },
       viewType
     } = this.props
-    let way = values.way || ''
-    let url = !values.liquid ? `/concept/dozes` : `/liquid/calc/${values.liquid}/dozes`
+    let way = values.way || 'lf'
+
     let drugsDosage = dosage.get(current.key)
     // console.log({ drugsDosage });
     let { names, nameshort } = drugsDosage
@@ -70,10 +70,10 @@ class Steps extends Component {
     return(
       <Step.Group attached='top' fluid unstackable ordered size='tiny'>
         {this.steps[way] && this.steps[way].map(( step, i ) => {
-          //let url = '/concept/dozes'
+          let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`
           let chosedName = ''
           if( i > 0 && i <= currStep ) {
-            url += `/${way}/${i}`
+            url += `/${i}`
             chosedName = nameshort[stepsData[step.name]] || names[stepsData[step.name]]
             if(step.name === 'lf') chosedName = nameshort[stepsData.form] || names[stepsData.form]
           } else if( i !== 0 ) {

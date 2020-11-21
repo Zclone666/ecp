@@ -44,7 +44,7 @@ class Calculator extends Component {
     let { getToBase, calcValues } = this.props.dosages
     let { dosage: dos, count: cnt } = calcValues
     let { currUnit } = this.state
-    let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
+    let def = ((dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)) || 248
 
     if( !name && !value ){
       let { name, value } = e.target
@@ -88,26 +88,20 @@ class Calculator extends Component {
       dayWeightDosage
     } = this.props.actions.calculatorForm
 
-    // console.log(1, {count});
-    // console.log({
-    //   dosage,
-    //   count,
-    //   dayCount,
-    //   fullDosage,
-    //   weightDosage,
-    //   dayDosage,
-    //   dayWeightDosage
-    // });
     switch (name) {
       case 'dosage':
-        dosage = getToBase((currUnit || def), value.split(' + '))
-        fullDosage = getToBase((currUnit || def), value*count)
+        dosage = [getToBase((currUnit || def), value.split(' + '))]
+        fullDosage = [getToBase((currUnit || def), value*count)]
         weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
-
+        // console.log({ dosage, value, fullDosage });
         break;
       case 'count':
         count = parseFloat(value.split(',').join('.'))
-        fullDosage = _.map( dosage, (dos) => { return parseFloat(value.split(',').join('.'))*dos } )
+        fullDosage = _.map( dosage, (dos) => {
+          // console.log({value, v1: parseFloat(value.split(',').join('.')),dos});
+          return parseFloat(value.split(',').join('.'))*dos
+        } )
+        // console.log({ dosage, value, fullDosage });
         weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
         break;
       case 'patient.weight':
@@ -248,6 +242,7 @@ class Calculator extends Component {
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
       router: { values },
       drugs: { current },
+      tools: { units },
       isLiquid
     } = this.props
     let { currUnit } = this.state
@@ -256,7 +251,7 @@ class Calculator extends Component {
     let { dosage: dos, count: cnt } = calcValues
 
     // console.log({weightDosage});
-    // console.log({dos});
+     // console.log({cnt});
     _.forEach(dos.units, (weight, key) => {
       // console.log({weight, dos});
       if(dos.firstUnit){
@@ -273,17 +268,36 @@ class Calculator extends Component {
         })
       }
     })
+    if(weights.length === 0){
+      weights.push({
+        key: 248,
+        value: 248,
+        text: units[248].shortname || units[248].name
+      })
+    }
 
     let currUnitObj = dos.units[currUnit]
 
     let secondName = currUnit ? (currUnitObj && (currUnitObj.shortname || currUnitObj.name)) : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name) ) || (dos.unit && (dos.unit.shortname || dos.unit.name))
-    let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
+    let def = ((dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)) || 248
 
     let liquid = values && values.liquid || null
 
     let disableAll = !!isLiquid
     let disableMulti = type === 'multi'
 
+    // console.log({
+    //   type,
+    //   dosage,
+    //   count,
+    //   dosageUnit,
+    //   dayCount,
+    //   fullDosage,
+    //   weightDosage,
+    //   dayDosage,
+    //   dayWeightDosage
+    // });
+    // console.log({dosageUnit});
     return (
       <Segment basic>
         {isLiquid && <div className='liquiddrugs' style={{ marginBottom: '15px'}}>

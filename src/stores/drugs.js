@@ -44,7 +44,7 @@ class Drugs {
     calc: {
       dosage: [0],
       count: 1,
-      dosageUnit: null,
+      dosageUnit: 248,
       dayCount: 1,
       fullDosage: [0],
       weightDosage: [0],
@@ -225,7 +225,7 @@ class Drugs {
     } = calcData
 
     currentDrug.solute = (currentDosages.form && currentDosages.form[form]) ? currentDosages.form[form].solute : currentDrug.solute
-    // console.log({currentDosages, form})
+    // console.log({dosageUnit, fullDosage})
     // console.log({currentDrug})
     currentDrug.dosage = {
       form,
@@ -329,6 +329,7 @@ class Drugs {
         pack: hpack
       }
     }
+    // console.log({dosageUnit});
     this.stores.actions.calculatorForm = {
       dosage: dos,
       count,
@@ -363,7 +364,7 @@ class Drugs {
       calc: {
         dosage: [0],
         count: 1,
-        dosageUnit: null,
+        dosageUnit: 248,
         dayCount: 1,
         fullDosage: [0],
         weightDosage: [0],
@@ -424,7 +425,7 @@ class Drugs {
       calc: {
         dosage: [0],
         count: 1,
-        dosageUnit: null,
+        dosageUnit: 248,
         dayCount: 1,
         fullDosage: [0],
         weightDosage: [0],

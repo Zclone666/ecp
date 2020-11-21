@@ -116,6 +116,7 @@ class Drug extends React.Component {
     // console.log({drug});
 
     if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
+      // console.log(drug.calc.dosageUnit, calc.fullDosag);
       let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
       let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit]
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)

@@ -38,7 +38,7 @@ class LiquidCalculator extends Component {
     }
     // console.log({ name, value });
     this.setState({ [name]: value })
-    this.props.actions.calculatorForm.dosageUnit = value
+    this.props.actions.liquidForm.calc.dosageUnit = value
   }
   handleChange = (e, { name, value }) => {
     let { getToBase, calcValues } = this.props.dosages
@@ -58,13 +58,13 @@ class LiquidCalculator extends Component {
         this.props.actions.drugStructure.patient.weight = parseFloat(value)
         weight = parseFloat(value)
       }else{
-        this.props.actions.calculatorForm[name] = value
+        this.props.actions.liquidForm.calc[name] = value
       }
       return
     }
     //value = parseFloat(eval(value))
     if( name === 'specials' ){
-      this.props.actions.drugStructure.specials = value
+      this.props.actions.liquidForm.specials = value
       return
     }
     //value = parseFloat(value)
@@ -78,15 +78,31 @@ class LiquidCalculator extends Component {
 
 
     let {
-      dosage,
-      count,
-      dayCount,
-      dosageUnit,
-      fullDosage,
-      weightDosage,
-      dayDosage,
-      dayWeightDosage
-    } = this.props.actions.calculatorForm
+      calc: {
+        dosage,
+        count,
+        dosageUnit,
+        dayCount,
+        fullDosage,
+        weightDosage,
+        dayDosage,
+        dayWeightDosage,
+        fullSpeed,
+        weightSpeed,
+        tintSpeed,
+        liquidSpeed
+      },
+      schedule: {
+        dateStart,
+        dateFinish,
+        finishAlternate,
+        clarifications, //уточнения
+        interval,
+        once,
+        week,
+        calendar
+      }
+    } = this.props.actions.liquidForm
 
     // console.log(1, {count});
     // console.log({
@@ -142,15 +158,19 @@ class LiquidCalculator extends Component {
     // this.props.actions.calculatorForm.dayDosage = dayDosage
     // this.props.actions.calculatorForm.dayWeightDosage = dayWeightDosage
     // console.log(2, {count});
-    Object.assign(this.props.actions.calculatorForm, {
+    Object.assign(this.props.actions.liquidForm.calc, {
       dosage,
       count,
-      dayCount,
       dosageUnit,
+      dayCount,
       fullDosage,
       weightDosage,
       dayDosage,
-      dayWeightDosage
+      dayWeightDosage,
+      fullSpeed,
+      weightSpeed,
+      tintSpeed,
+      liquidSpeed
     });
 
     setTimeout(() => {
@@ -173,26 +193,42 @@ class LiquidCalculator extends Component {
     let { presets } = clarifications
     let preset = _.find(presets, { 'id': value});
     let {
-      type,
-      dosage,
-      count,
-      dosageUnit,
-      dayCount,
-      fullDosage,
-      weightDosage,
-      dayDosage,
-      dayWeightDosage
-    } = this.props.actions.calculatorForm
-    this.props.drugs.current.freq = preset.id
-    this.props.actions.scheduleForm.interval = preset.tpl
+      freq,
+      duration,
+      calc: {
+        dosage,
+        count,
+        dosageUnit,
+        dayCount,
+        fullDosage,
+        weightDosage,
+        dayDosage,
+        dayWeightDosage,
+        fullSpeed,
+        weightSpeed,
+        tintSpeed,
+        liquidSpeed
+      },
+      schedule: {
+        dateStart,
+        dateFinish,
+        finishAlternate,
+        clarifications, //уточнения
+        interval,
+        once,
+        week,
+        calendar
+      }
+    } = this.props.actions.liquidForm
+    this.props.actions.liquidForm.freq = preset.id
+    this.props.actions.liquidForm.schedule.interval = preset.tpl
     // console.log({value});
 
     dayCount = preset.tpl[0].multiplicate
     dayDosage = _.map( (fullDosage || [0]), (dos) => { return preset.tpl[0].multiplicate * dos } )
     dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return preset.tpl[0].multiplicate * dos } )
 
-    this.props.actions.calculatorForm = {
-      type,
+    this.props.actions.liquidForm.calc = {
       dosage,
       count,
       dosageUnit,
@@ -200,9 +236,12 @@ class LiquidCalculator extends Component {
       fullDosage,
       weightDosage,
       dayDosage,
-      dayWeightDosage
+      dayWeightDosage,
+      fullSpeed,
+      weightSpeed,
+      tintSpeed,
+      liquidSpeed
     }
-
   }
 
   renderPresets(){
