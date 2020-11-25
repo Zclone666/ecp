@@ -79,8 +79,8 @@ class Actions {
 
   @observable newPassForm = {
     email: "",
-    code: "",
-    password: "",
+    recoveryCode: "",
+    newPassword: "",
     key: ''
   }
 
@@ -166,6 +166,8 @@ class Actions {
       weightDosage: [0],
       dayDosage: [0],
       dayWeightDosage: [0],
+      durationCount: 0,
+      durationUnit: 0,
       fullSpeed: [0],
       weightSpeed: [0],
       tintSpeed: [0],

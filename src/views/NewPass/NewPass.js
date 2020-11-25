@@ -22,18 +22,18 @@ class NewPass extends Component {
     let { name, value } = e.target;
     let { newPassForm } = this.props.actions
     this.props.actions.newPassForm[name] = value;
-    this.setState({ filled: ( newPassForm.email.length > 5 && newPassForm.code.length > 5 ) })
+    this.setState({ filled: ( newPassForm.email.length > 5 && newPassForm.recoveryCode.length > 5 ) })
   }
   componentDidMount(){
-    let { code, email, service } = this.props.router.values
-    console.log({ code, email, service });
-    this.handleChange({ target: { name: 'code', value: code || '' }})
+    let { recoveryCode, email, service } = this.props.router.values
+    console.log({ recoveryCode, email, service });
+    this.handleChange({ target: { name: 'recoveryCode', value: recoveryCode || '' }})
     this.handleChange({ target: { name: 'email', value: email || '' }})
     this.props.actions.newPassForm.service = service
   }
 
   render() {
-    let { projectTitle, newPassForm: { code, email, password } } = this.props.actions
+    let { projectTitle, newPassForm: { recoveryCode, email, newPassword } } = this.props.actions
     return (
 
 
@@ -67,17 +67,17 @@ class NewPass extends Component {
                   />
                   <Form.Input
                     size='huge'
-                    name="code"
+                    name="recoveryCode"
                     fluid
                     icon='lock'
-                    value={code || ''}
+                    value={recoveryCode || ''}
                     iconPosition='left'
                     placeholder='Код подтверждения'
                     onChange={this.handleChange}
                   />
                   <Form.Input
                     size='huge'
-                    name="password"
+                    name="newPassword"
                     fluid
                     icon='lock'
                     iconPosition='left'
