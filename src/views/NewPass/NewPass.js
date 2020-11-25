@@ -26,7 +26,7 @@ class NewPass extends Component {
   }
   componentDidMount(){
     let { code, email, service } = this.props.router.values
-    console.log({ recoveryCode, email, service });
+    // console.log({ code, email, service });
     this.handleChange({ target: { name: 'recoveryCode', value: code || '' }})
     this.handleChange({ target: { name: 'email', value: email || '' }})
     this.props.actions.newPassForm.service = service
