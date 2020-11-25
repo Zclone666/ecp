@@ -25,9 +25,9 @@ class NewPass extends Component {
     this.setState({ filled: ( newPassForm.email.length > 5 && newPassForm.recoveryCode.length > 5 ) })
   }
   componentDidMount(){
-    let { recoveryCode, email, service } = this.props.router.values
+    let { code, email, service } = this.props.router.values
     console.log({ recoveryCode, email, service });
-    this.handleChange({ target: { name: 'recoveryCode', value: recoveryCode || '' }})
+    this.handleChange({ target: { name: 'recoveryCode', value: code || '' }})
     this.handleChange({ target: { name: 'email', value: email || '' }})
     this.props.actions.newPassForm.service = service
   }
