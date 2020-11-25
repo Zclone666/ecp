@@ -399,7 +399,7 @@ class Actions {
       this.loading = false
       return
     }
-
+    if(!this.authkey) return
     return GET({
       path: `https://cs.socmedica.com/api/user/authCheck`, //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
       data: {
