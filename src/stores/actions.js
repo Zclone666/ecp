@@ -167,7 +167,7 @@ class Actions {
       dayDosage: [0],
       dayWeightDosage: [0],
       durationCount: 0,
-      durationUnit: 0,
+      durationUnit: '75',
       fullSpeed: [0],
       weightSpeed: [0],
       tintSpeed: [0],
@@ -395,11 +395,11 @@ class Actions {
       this.stores.router.push('/login')
       return
     }
-    if(!this.authkey) {
+    if(!this.authkey || this.authkey == null || this.authkey == 'null') {
       this.loading = false
       return
     }
-    if(!this.authkey) return
+    //// FIXME: for safari fucking shit
     return GET({
       path: `https://cs.socmedica.com/api/user/authCheck`, //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
       data: {

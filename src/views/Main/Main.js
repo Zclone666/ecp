@@ -86,6 +86,7 @@ class Main extends Component {
   }
 
   confirmLiquids = () => {
+    this.props.drugs.makeLiquids()
     this.props.actions.makeLiquids = false
   }
 

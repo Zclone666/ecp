@@ -94,9 +94,14 @@ class Warnings {
     this.stores.db.clearData(false, true)
     let data = _.cloneDeep(this.stores.actions.drugStructure)
     let drugsFull = Array.from(this.stores.drugs.drug.values())
+    let liquidsFull = Array.from(this.stores.drugs.liquid.values())
     drugsFull.forEach((drugFull, i) => {
       let { helpers, ...drug } = drugFull
       data.drugs.push(drug)
+    });
+    liquidsFull.forEach((liquidFull, i) => {
+      let { helpers, ...liquid } = liquidFull
+      data.liquids.push(liquid)
     });
 
 

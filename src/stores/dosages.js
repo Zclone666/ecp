@@ -248,7 +248,7 @@ class Drugs {
     }
   }
 
-  getFromBase = ( unitId, value, double = 2 ) => {
+  getFromBase = ( unitId, value, double = 4 ) => {
     let { round } = this.stores.tools
     if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return [value]
     let unit = this.stores.tools.units[unitId]

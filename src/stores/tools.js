@@ -16,6 +16,7 @@ class Tools {
   @observable unitsPharm = {};
   @observable unitsPrimary = {};
   @observable unitsComplex = {};
+  @observable unitsSchedule = {};
 
 
 
@@ -126,7 +127,8 @@ class Tools {
       data,
       success: async data => {
         // console.log('DATA', data);
-
+        let { freq } = data
+        this.unitsSchedule.freq = freq
       },
       fail: (alerts) => {
 

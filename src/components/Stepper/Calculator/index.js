@@ -238,11 +238,10 @@ class Calculator extends Component {
           dayWeightDosage
         },
       },
-      tools: { round },
+      tools: { round, units },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
       router: { values },
       drugs: { current },
-      tools: { units },
       isLiquid
     } = this.props
     let { currUnit } = this.state

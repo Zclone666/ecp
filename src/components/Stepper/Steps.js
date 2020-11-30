@@ -92,7 +92,7 @@ class Steps extends Component {
           }
           //console.log({ step, chosedName, stepsData, names });
           return(
-            <Step completed={currStep > i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
+            <Step completed={currStep > i} key={'st'+i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
               { ( currStep == i || viewType == 'pc' ) &&
               <Step.Content>
                 <Step.Title>{step.text}</Step.Title>
