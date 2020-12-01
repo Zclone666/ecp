@@ -415,7 +415,7 @@ class Calculator extends Component {
               </Form.Field>
             </Form.Group>
           </Form>
-          {!disableAll && <Schedule />}
+          {!liquid && <Schedule />}
           <Form>
             <Form.Group>
               <Form.Field width={16}>

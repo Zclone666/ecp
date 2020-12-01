@@ -248,12 +248,33 @@ class LiquidCalculator extends Component {
   }
 
   handleChange = (e, { name, value }) => {
-    let { recalcLiquidParams } = this.props.drugs
-    if(!['count', 'patient.weight', 'dayCount', 'durationCount'].includes(name)) return
-    if(name === 'patient.weight'){
-      this.props.actions.drugStructure.patient.weight = parseFloat(value)
-    }else{
+    let {
+      actions: {
+        liquidForm: {
+          calc: {
+            dosage,
+            count,
+            dosageUnit,
+            dayCount,
+            durationCount,
+            durationUnit
+          }
+        }
+      },
+      drugs: { recalcLiquidParams },
+      dosages: { getToBase, getFromBase }
+    } = this.props
+
+    if(['count', 'dayCount', 'durationCount'].includes(name)){
       this.props.actions.liquidForm.calc[name] = parseFloat(value)
+    }else if(name === 'patient.weight'){
+      this.props.actions.drugStructure.patient.weight = parseFloat(value)
+    }else if(name === 'tintSpeed'){
+      this.props.actions.liquidForm.calc[name] = parseFloat(value)
+      this.props.actions.liquidForm.calc.count = getFromBase(168, getToBase( 799, value ))*durationCount
+    }else if(name === 'liquidSpeed'){
+      this.props.actions.liquidForm.calc[name] = parseFloat(value)
+      this.props.actions.liquidForm.calc.count = parseFloat(value*durationCount)
     }
 
     recalcLiquidParams()
@@ -589,10 +610,7 @@ class LiquidCalculator extends Component {
                   labelPosition='right'
                   placeholder='500'
                   onChange={this.handleChange}
-                >
-                  <input readonly="readonly" className='readonly' />
-                  <Label basic>{`кап/${currTimeUnitName}`}</Label>
-                </Input>
+                />
               </Form.Field>
               <Form.Field width={4}>
                 <label>Скорость в мл:</label>
@@ -604,10 +622,7 @@ class LiquidCalculator extends Component {
                   labelPosition='right'
                   placeholder='0'
                   onChange={this.handleChange}
-                >
-                  <input readonly="readonly" className='readonly' />
-                  <Label basic>{`мл/${currTimeUnitName}`}</Label>
-                </Input>
+                />
               </Form.Field>
             </Form.Group>
           </Form>

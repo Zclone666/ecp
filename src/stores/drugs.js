@@ -444,6 +444,8 @@ class Drugs {
   }
 
   makeLiquid = async (item) => {
+    let current = this.liquid.get(item) || {};
+    if(current.group && current.group !== 0) return
     let liquid = {
       name: "", // Название ДВ или ТН
       group: item, // группа раствора (0 - нет раствора, больше 0 - раствор)
@@ -477,20 +479,21 @@ class Drugs {
         calendar: null
       }
     }
-    let current = this.liquid.get(item) || {};
     await this.liquid.set( item, _.extend(current, liquid) );
     await this.getLiquidParams(item)
     return true
   }
 
-  setLiquidParams = (id=null) => {
+  setLiquidParams = async (id=null) => {
     let {
       stores: {
         router: { values: route }
       }
 		} = this
     id = id || (route && route.liquid || null)
-    let current = this.liquid.get(id) || {};
+    if(!id) return
+    id = parseInt(id)
+    let current = await this.liquid.get(id) || {};
     let {
       name, // Название ДВ или ТН
       group, // группа раствора (0 - нет раствора, больше 0 - раствор)
@@ -558,7 +561,7 @@ class Drugs {
         calendar
       }
     } ) );
-
+    // console.log(this.liquid.get(id));
   }
 
   recalcLiquidParams = (id=null) => {
@@ -625,7 +628,7 @@ class Drugs {
     // });
   }
 
-  getLiquidParams = (id=null) => {
+  getLiquidParams = async (id=null) => {
     let {
       stores: {
         router: { values: route },
@@ -636,7 +639,7 @@ class Drugs {
     if(!id) return
     id = parseInt(id)
 
-    let current = this.liquid.get(id) || {};
+    let current = await this.liquid.get(id) || {};
 
     let flag = false //if dosages changed set true
     let {
@@ -651,7 +654,7 @@ class Drugs {
     });
 
     if(current.calc.dosage && current.calc.dosage[0] === 0) flag = true
-    if(weight.length != current.calc.dosage || calcCount != current.calc.count) flag = true
+    if(weight.length != current.calc.dosage.length || calcCount != current.calc.count) flag = true
     if(!_.isEqual( _.keys(weights), arr )) flag = true
     if(!_.isEqual( weight, current.calc.dosage )) flag = true
     if(!ready) return
