@@ -36,6 +36,9 @@ export default {
 
   '/druginfo/:page':                          { section: 'main', name: 'druginfo',   render: <Main />       },
 
+  '/clinrec/:page':                           { section: 'main', name: 'clinrec',    render: <Main />       },
+  '/clinrec/:page/:step':                     { section: 'main', name: 'clinrec',    render: <Main />       },
+
   '/login':                                   { section: 'auth', name: 'auth',       render: <Login />      },
   '/signup':                                  { section: 'auth', name: 'auth',       render: <Signup/>      },
   '/confirm':                                 { section: 'auth', name: 'auth',       render: <Confirm/>     },

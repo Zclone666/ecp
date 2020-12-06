@@ -113,10 +113,7 @@ class Drug extends React.Component {
 
     let arr = []
 
-    // console.log({drug});
-
     if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
-      // console.log(drug.calc.dosageUnit, calc.fullDosag);
       let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
       let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit]
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
@@ -149,14 +146,15 @@ class Drug extends React.Component {
       onRemove,
       canDrag
     } = this.props
-    //console.log('drug', drug);
+
     let selectedWarnings = warnIcons[selectedDrug]
     let { key, name, level, tn, type, dosage, helpers } = drug
     let drugDosages = dose.get(key) || {}
     let hasWarnings = warning.size > 0
-    //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
+
+    let dosReady = !!drugDosages.names
 
     let urlArr = ['/concept/dozes']
 
@@ -165,34 +163,34 @@ class Drug extends React.Component {
 
 		let url = urlArr.join('/')
 
-    // let url = drugDosages.url || '/concept/dozes'
-    let currWarning = active//activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
+    let currWarning = active
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
-    let maxItem = warnIcons[drug.key] //_.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
+    let maxItem = warnIcons[drug.key]
     let className = selectedDrug === drug.key ? 'selected' : ''
     className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
 
     let hasBorder = selectedDrug === drug.key && maxItem
-    // const [{ opacity }, drag] = useDrag({
-    //   item: { name, type },
-    //   collect: (monitor) => ({
-    //     opacity: monitor.isDragging() ? 0.4 : 1,
-    //   }),
-    // })
-    // console.log({currWarning});
 
     let resultStyle = { ...(style || {}), ...(!canDrag ? { cursor: 'default' } : { cursor: 'move' }) }
 
     let rules = this.renderRules()
-    // console.log({style})
+
     return(
       <List.Item style={resultStyle} className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
 
         <List.Content floated='right'>
           <Responsive fireOnMount as={Button.Group} minWidth='481'>
-            <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
-              <Icon name='tint' />
-            </Button>
+            {dosReady &&
+              <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
+                <Icon name='tint' />
+              </Button>
+            }
+            {!dosReady &&
+              <Button disabled icon>
+                <Icon loading name='circle notch' />
+              </Button>
+            }
+
             <Button disabled={drug.group !== 0} icon as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
               <Icon name='font' />
             </Button>
@@ -285,14 +283,24 @@ class Drug extends React.Component {
               }
             >
               <Dropdown.Menu>
-                <Dropdown.Item
-                  disabled={drug.group !== 0}
-                  icon='tint'
-                  as={RouterLink}
-                  to={url}
-                  onClick={this.getLF}
-                  text='Дозировка'
-                />
+                {dosReady &&
+                  <Dropdown.Item
+                    disabled={drug.group !== 0}
+                    icon='tint'
+                    as={RouterLink}
+                    to={url}
+                    onClick={this.getLF}
+                    text='Дозировка'
+                  />
+                }
+                {!dosReady &&
+                  <Dropdown.Item
+                    disabled
+                    icon={<Icon loading name='circle notch' />}
+                    text='Дозировка'
+                  />
+                }
+
                 <Dropdown.Item
                   disabled={drug.group !== 0}
                   icon='font'

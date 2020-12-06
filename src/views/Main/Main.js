@@ -26,7 +26,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions', 'drugs', 'warnings', 'dosages')
+@inject('router', 'db', 'actions', 'drugs', 'warnings', 'dosages', 'clinrecs')
 @observer
 class Main extends Component {
   constructor(props){
@@ -76,6 +76,10 @@ class Main extends Component {
     this.props.warnings.check()
   }
 
+  getClinrec = () => {
+    this.props.clinrecs.check()
+  }
+
   resultRenderer = ({ name, level, tn, type }) => {
     return <div>{name}{type === 'TN' && <sup>TM</sup>}</div>
   }
@@ -120,15 +124,26 @@ class Main extends Component {
 
 
           <Menu.Menu position='right'>
-            <Responsive fireOnMount as={Menu.Item} minWidth='481'>
-              <Button as={RouterLink} to='/patient/info'>
+            <Responsive as={RouterLink} to='/patient/info' fireOnMount minWidth='481'>
+              <Menu.Item>
                 <Icon name='bed' />
                 Данные пациента
-              </Button>
+              </Menu.Item>
+            </Responsive>
+            <Responsive as={RouterLink} to='/clinrec/checker/1' onClick={this.getClinrec} fireOnMount minWidth='481'>
+              <Menu.Item>
+                <Icon name='clipboard list' />
+                Клинреки
+              </Menu.Item>
             </Responsive>
             <Responsive fireOnMount as={RouterLink} to='/patient/info' maxWidth='480'>
               <Menu.Item icon>
                 <Icon name='bed' size='large' />
+              </Menu.Item>
+            </Responsive>
+            <Responsive fireOnMount as={RouterLink} onClick={this.getClinrec} to='/clinrec/checker/1' maxWidth='480'>
+              <Menu.Item icon>
+                <Icon name='clipboard list' size='large' />
               </Menu.Item>
             </Responsive>
           </Menu.Menu>

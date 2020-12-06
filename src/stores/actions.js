@@ -84,6 +84,11 @@ class Actions {
     key: ''
   }
 
+  @observable clinrecCheckerData = {
+
+  }
+  @observable clinrecCheckerStep = 1
+
   @observable stepsData = {
     key: null,
     way: null,

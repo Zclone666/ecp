@@ -116,7 +116,7 @@ class Drugs {
     });
   }
 
-  async get(drug_obj, flag =false){
+  async get(drug_obj, flag = false){
     let currentDosages = await this.dosage.get(drug_obj.key);
     let { active_language } = this.stores.actions
     if(currentDosages && !flag) {
@@ -150,7 +150,7 @@ class Drugs {
 
           await this.stores.tools.setNames(names, nameshort)
           let current = this.dosage.get(drug.key) || {};
-          await this.dosage.set( drug.key, _.extend(current, { solute, drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
+          await this.dosage.set( drug.key, _.extend(current, { solute, drug, form, methodform, names, nameshort, units }) );
           if(units && units.length > 0) await this.stores.tools.getUnitsPharm(units)
           if(drug_obj.fpid) this.getFp(drug_obj)
         },

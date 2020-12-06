@@ -787,6 +787,7 @@ class Drugs {
           calendar
         }
       }
+      if(this.stores.actions.drugStructure.patient.weight && parseFloat(this.stores.actions.drugStructure.patient.weight) > 0) this.recalcLiquidParams()
     }
     // this.liquid.set( group, _.extend(current, liquid) );
 
@@ -849,7 +850,6 @@ class Drugs {
     drug.key = moment().format('x').toString()
     let current = this.drug.get(drug.key) || {};
     this.drug.set( drug.key, _.extend(current, drug) );
-    // console.log('dasf', this.drug.get(drug.key));
 
     this.stores.dosages.get(drug)
 
