@@ -12,7 +12,7 @@ export default class Binary extends React.Component {
     }
     let { value } = this.props
 
-    onChange({ name, value: !value })
+    onChange({ name, value: !!value ? 0 : 1 })
   }
   render(){
     let { title, name, value } = this.props
