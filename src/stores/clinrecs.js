@@ -63,21 +63,25 @@ class Clinrecs {
               this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker )
               _.keys(data.checker).forEach((id, i) => {
                 let question = data.checker[id]
+                this.stores.actions.clinrecCheckerData[id].value = question.type === 'Binary' ? question.value || 0 : question.value
                 if(pages[question.page]){
                   pages[question.page].arr.push({
                     id,
                     name: data.names[id],
                     type: question.type,
+                    unit: question.unitid ? (data.shortnames[question.unitid] || data.names[question.unitid] || null) : null,
                     unitid: question.unitid,
                     value: question.value
                   })
                 }else{
                   pages[question.page] = {
                     name: data.names[question.page],
+                    isReady: true,
                     arr: [{
                       id,
                       name: data.names[id],
                       type: question.type,
+                      unit: question.unitid ? (data.shortnames[question.unitid] || data.names[question.unitid] || null) : null,
                       unitid: question.unitid,
                       value: question.value
                     }]

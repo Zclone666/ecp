@@ -83,12 +83,13 @@ class Clinrecs extends Component {
   };
 
   render() {
-    let showPage = !!(this.props.router.values && this.props.router.values.page)
-    let liquid = !!(this.props.router.values && this.props.router.values.liquid)
     let {
-      drugs: { current }
+      router: { values },
+      clinrecs: { checker },
+      actions: { clinrecCheckerStep, clinrecCheckerData }
     } = this.props
     let { hasForward, hasBackward } = this.state
+    let currPage = checker[_.keys(checker)[clinrecCheckerStep-1]] || {}
     return (
       <>
         <Menu className="bottom fixed menu three item huge main">
@@ -99,12 +100,12 @@ class Clinrecs extends Component {
             Назад
           </Menu.Item>
           {hasForward &&
-            <Menu.Item onClick={this.forward}>
+            <Menu.Item disabled={!currPage.isReady} onClick={this.forward}>
               Далее
             </Menu.Item>
           }
           {!hasForward &&
-            <Menu.Item as={RouterLink} to={'/clinrec/checker/result'}>
+            <Menu.Item disabled={!currPage.isReady} as={RouterLink} to={'/clinrec/checker/result'}>
               Результат
             </Menu.Item>
           }

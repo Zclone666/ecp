@@ -32,8 +32,20 @@ class Stepper extends Component {
   }
 
   onChange = ({name, value}) => {
-    console.log({name, value});
+    let {
+      router: { values },
+      clinrecs: { checker },
+      actions: { clinrecCheckerStep, clinrecCheckerData }
+    } = this.props
+    let currPage = checker[_.keys(checker)[clinrecCheckerStep-1]] || {}
+
     this.props.actions.clinrecCheckerData[name].value = value
+    let isReady = true
+    currPage.arr.map((item) => {
+      if(clinrecCheckerData[item.id].value === null) isReady = false
+    })
+    currPage.isReady = isReady
+    console.log({name, value, isReady});
   }
 
   handleClick = (e, titleProps) => {
@@ -134,7 +146,7 @@ class Stepper extends Component {
                   {page.arr.map((item, x) => {
                     return {
                       'Binary': <Binary name={item.id} onChange={this.onChange} title={item.name} value={clinrecCheckerData[item.id].value} />,
-                      'Value': <Value name={item.id} onChange={this.onChange} title={item.name} value={clinrecCheckerData[item.id].value} />
+                      'Value': <Value unit={item.unit} name={item.id} onChange={this.onChange} title={item.name} value={clinrecCheckerData[item.id].value} />
                     }[item.type]
                   })}
                 </List>
