@@ -31,7 +31,10 @@ class Stepper extends Component {
     this.sliderRef = createRef()
   }
 
-
+  onChange = ({name, value}) => {
+    console.log({name, value});
+    this.props.actions.clinrecCheckerData[name].value = value
+  }
 
   handleClick = (e, titleProps) => {
     e.preventDefault()
@@ -53,8 +56,19 @@ class Stepper extends Component {
   }
   componentDidUpdate( prevProps, prevState ){
     let {
+      clinrecs: { checker },
       router: { values }
     } = this.props
+
+    if(values.step == 'result' && prevState.activeIndex > _.keys(checker).length) return
+
+    if(values.step == 'result'){
+      this.setState({ activeIndex: _.keys(checker).length+1 }, () => {
+        this.props.actions.clinrecCheckerStep = this.state.activeIndex
+        this.goTo(parseInt(this.state.activeIndex-1 || 0))
+      })
+      return
+    }
 
     let step = parseInt(values.step)
     if( step !== prevState.activeIndex ){
@@ -79,7 +93,7 @@ class Stepper extends Component {
     let {
       router: { values },
       clinrecs: { checker },
-      actions: { clinrecCheckerStep }
+      actions: { clinrecCheckerStep, clinrecCheckerData }
     } = this.props
 
     let currPage = checker[_.keys(checker)[clinrecCheckerStep-1]] || {} //page id is not equal array index!
@@ -94,7 +108,7 @@ class Stepper extends Component {
       swipe: false,
       initialSlide: clinrecCheckerStep-1
     };
-    console.log({checker, clinrecCheckerStep});
+    // console.log({checker, clinrecCheckerStep});
     return (
       <Responsive className='h100 with-steps' fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
         <Step.Group attached='top' className='noborder fluid' style={{backgroundColor: '#f0f0f0'}}>
@@ -113,21 +127,23 @@ class Stepper extends Component {
         <Slider ref={this.sliderRef} {...settings}>
           {_.keys(checker).map((id,i) => {
             let page = checker[id]
-            console.log({id, page});
+            // console.log({id, page});
             return(
               <div className='scrollwrapper' key={'page'+i}>
                 <List selection divided className='dozelist big'>
                   {page.arr.map((item, x) => {
                     return {
-                      'Binary': <Binary name={item.name} value={item.value} />,
-                      'Value': <Value name={item.name} value={item.value} />
+                      'Binary': <Binary name={item.id} onChange={this.onChange} title={item.name} value={clinrecCheckerData[item.id].value} />,
+                      'Value': <Value name={item.id} onChange={this.onChange} title={item.name} value={clinrecCheckerData[item.id].value} />
                     }[item.type]
                   })}
                 </List>
               </div>
             )
           })}
+          <div className='scrollwrapper'>
 
+          </div>
         </Slider>
       </Responsive>
     )

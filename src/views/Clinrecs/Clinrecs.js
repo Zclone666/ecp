@@ -31,7 +31,9 @@ class Clinrecs extends Component {
       open: false,
 
       isLoading: false,
-      searchQuery: ''
+      searchQuery: '',
+      hasForward: true,
+      hasBackward: false
     }
     this.contextRef = createRef()
   }
@@ -49,18 +51,31 @@ class Clinrecs extends Component {
 
   backward = () => {
     let {
+      clinrecs: { checker },
       actions: { clinrecCheckerStep }
     } = this.props
+    console.log({clinrecCheckerStep});
     let step = clinrecCheckerStep > 1 ? parseInt(clinrecCheckerStep)-1 : 1
-    this.props.router.push('/clinrec/checker/'+step)
+    this.setState({ hasBackward: step>1, hasForward: step < _.keys(checker).length }, () => {
+      this.props.router.push('/clinrec/checker/'+step)
+    })
+
   };
   forward = () => {
     let {
       clinrecs: { checker },
       actions: { clinrecCheckerStep }
     } = this.props
-    let step = clinrecCheckerStep < _.keys(checker).length ? parseInt(clinrecCheckerStep)+1 : _.keys(checker).length
-    this.props.router.push('/clinrec/checker/'+step)
+    let step = clinrecCheckerStep < _.keys(checker).length ? parseInt(clinrecCheckerStep)+1 : null
+    this.setState({ hasForward: !!step, hasBackward: (step>1 || !step) }, () => {
+      if(step){
+        this.props.router.push('/clinrec/checker/'+step)
+      }else{
+        this.props.clinrecs.check(true)
+        this.props.router.push('/clinrec/checker/result')
+      }
+    })
+
   };
 
   home = () => {
@@ -73,18 +88,26 @@ class Clinrecs extends Component {
     let {
       drugs: { current }
     } = this.props
+    let { hasForward, hasBackward } = this.state
     return (
       <>
         <Menu className="bottom fixed menu three item huge main">
           <Menu.Item color='red' onClick={this.home}>
             Отмена
           </Menu.Item>
-          <Menu.Item onClick={this.backward}>
+          <Menu.Item disabled={!hasBackward} onClick={this.backward}>
             Назад
           </Menu.Item>
-          <Menu.Item onClick={this.forward}>
-            Далее
-          </Menu.Item>
+          {hasForward &&
+            <Menu.Item onClick={this.forward}>
+              Далее
+            </Menu.Item>
+          }
+          {!hasForward &&
+            <Menu.Item as={RouterLink} to={'/clinrec/checker/result'}>
+              Результат
+            </Menu.Item>
+          }
         </Menu>
 
         <div className='scrollwrapper bottomMenu'>

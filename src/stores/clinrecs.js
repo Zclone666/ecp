@@ -26,7 +26,7 @@ class Clinrecs {
 
 
   }
-  async check(){
+  async check(flag = false){
     this.stores.actions.loading = true
     let { active_language } = this.stores.actions
     this.stores.db.clearData(false, true)
@@ -42,6 +42,10 @@ class Clinrecs {
       data.liquids.push(liquid)
     });
 
+    if(flag){
+      data.checker = _.cloneDeep(this.stores.actions.clinrecCheckerData)
+    }
+
     data.active_language = active_language
 
     data.return_subjects = false
@@ -51,37 +55,41 @@ class Clinrecs {
         path: 'tools/clinicalGuidelines',
         data,
         success: async data => {
-          // console.log('DATA', data);
-
-          let pages = {}
-          if(data && data.checker){
-            this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker )
-            _.keys(data.checker).forEach((id, i) => {
-              let question = data.checker[id]
-              if(pages[question.page]){
-                pages[question.page].arr.push({
-                  id,
-                  name: data.names[id],
-                  type: question.type,
-                  unitid: question.unitid,
-                  value: question.value
-                })
-              }else{
-                pages[question.page] = {
-                  name: data.names[question.page],
-                  arr: [{
+          if(flag){
+            console.log('DATA', data);
+          }else{
+            let pages = {}
+            if(data && data.checker){
+              this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker )
+              _.keys(data.checker).forEach((id, i) => {
+                let question = data.checker[id]
+                if(pages[question.page]){
+                  pages[question.page].arr.push({
                     id,
                     name: data.names[id],
                     type: question.type,
                     unitid: question.unitid,
                     value: question.value
-                  }]
+                  })
+                }else{
+                  pages[question.page] = {
+                    name: data.names[question.page],
+                    arr: [{
+                      id,
+                      name: data.names[id],
+                      type: question.type,
+                      unitid: question.unitid,
+                      value: question.value
+                    }]
+                  }
                 }
-              }
-            });
+              });
 
+            }
+            this.checker = _.assignIn(this.checker, pages )
           }
-          this.checker = _.assignIn(this.checker, pages )
+          // console.log('DATA', data);
+
           this.stores.actions.loading = false
         },
         fail: (alerts) => {
