@@ -155,10 +155,10 @@ class Clinrec extends Component {
       clinrecs: { clinrec }
     } = this.props
     return(
-      <List.Item style={{borderColor: '#eee', borderStyle: 'solid', borderWidth: '1px', padding: '5px'}}>
+      <List.Item>
         <List.Content className='large'>
           <List.Description>
-            Выберите один из вариантов:
+            Выберите один или несколько вариантов:
           </List.Description>
           <List.List>
             {childs.childs && childs.childs.map((childId) => {
@@ -186,7 +186,7 @@ class Clinrec extends Component {
       clinrecs: { clinrec }
     } = this.props
     return(
-      <List.Item style={{borderColor: '#eee', borderStyle: 'solid', borderWidth: '1px', padding: '5px'}}>
+      <List.Item>
         <List.Content className='large'>
           <List.Description>
             Выберите один из вариантов:
@@ -244,7 +244,7 @@ class Clinrec extends Component {
 
   renderGroup = (child) => {
     return(
-      <List.Item style={{borderColor: '#eee', borderStyle: 'solid', borderWidth: '1px', padding: '5px'}}>
+      <List.Item>
         <List.Content className='large'>
           <List.Description>
             {child.name}
@@ -259,7 +259,7 @@ class Clinrec extends Component {
 
   renderFG = (child) => {
     return(
-      <List.Item style={{borderColor: '#eee', borderStyle: 'solid', borderWidth: '1px', padding: '5px'}}>
+      <List.Item>
         <List.Content className='large'>
           <List.Description>
             <strong>{child.name}</strong>
