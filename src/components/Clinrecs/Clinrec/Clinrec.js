@@ -21,7 +21,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'druginfo', 'router', 'drugs', 'clinrecs')
+@inject('db', 'actions', 'druginfo', 'router', 'drugs', 'clinrecs', 'warnings')
 @observer
 class Clinrec extends Component {
   constructor(props){
@@ -292,7 +292,8 @@ class Clinrec extends Component {
 
   renderDrug = (obj) => {
     let {
-      clinrecs: { clinrec, names, shortnames }
+      clinrecs: { clinrec, names, shortnames },
+      warnings: { getGroup }
     } = this.props
     // console.log(obj);
     if(!obj) return null
@@ -315,10 +316,11 @@ class Clinrec extends Component {
         rules.push(names[item])
       });
     }
+    let { color, group } = getGroup(obj.warning)
 
     return(
       <List.Item className={`nowarnings`}>
-				<div className='border' style={{ backgroundColor: 'transparent' }} />
+				{false && <div className='border' style={{ backgroundColor: color }} />}
 				<Responsive as={List.Content} className='ui feed large' fireOnMount minWidth='481'>
 					<Feed.Event>
 						<Feed.Content>
@@ -429,7 +431,7 @@ class Clinrec extends Component {
                   <Icon name='unordered list' />
                   <Header.Content>{rec.name}</Header.Content>
                 </Header>
-                <List divided relaxed className='draginfo' verticalAlign='middle' size='large' >
+                <List divided relaxed className='draginfo clinrec' verticalAlign='middle' size='large' >
                   {rec.childs.map(( courseId, i ) => {
                     let course = clinrec[courseId]
                     if(!course) return null

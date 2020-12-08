@@ -1312,7 +1312,7 @@ td > .collapsable ul li{
 	position: relative;
 }
 
-.ui.list.drugslist .item .border{
+.ui.list.drugslist .item .border, .ui.list.draginfo .item .border{
 	transition: background-color .5s ease-in-out, opacity .3s ease-in-out, filter .3s ease-in-out;
 	position: absolute;
 	left: 0;
@@ -1698,6 +1698,13 @@ td > .collapsable ul li{
 
 
 // clinrecs
+.clinrec{
+
+}
+.clinrec.ui.list .item{
+	border-top: none !important;
+	border-bottom: none !important;
+}
 .checkContainer{
 	padding-left: 25px;
   position: relative;

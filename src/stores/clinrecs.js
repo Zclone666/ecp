@@ -63,6 +63,7 @@ class Clinrecs {
             this.clinrec = _.assignIn(this.clinrec, data.ClinRec )
             this.names = _.assignIn(this.names, data.names )
             this.shortnames = _.assignIn(this.shortnames, data.shortnames )
+            this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker )
           }else{
             let pages = {}
             if(data && data.checker){

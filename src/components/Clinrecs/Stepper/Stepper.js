@@ -130,9 +130,10 @@ class Stepper extends Component {
             <Header.Content>
               Клинические рекомендации
               <Header.Subheader>
-                {`${clinrecCheckerStep}/${_.keys(checker).length}`}
+                {clinrecCheckerStep <= _.keys(checker).length && `${clinrecCheckerStep}/${_.keys(checker).length}`}
+                {clinrecCheckerStep > _.keys(checker).length && 'Результат'}
                 {' '}
-                {currPage.name}
+                {clinrecCheckerStep <= _.keys(checker).length && currPage.name}
               </Header.Subheader>
             </Header.Content>
           </Header>
