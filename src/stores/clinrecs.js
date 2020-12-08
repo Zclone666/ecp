@@ -8,16 +8,19 @@ import _ from 'lodash';
 class Clinrecs {
   @observable ready = false;
   @observable checker = {};
+  @observable clinrec = {};
+  @observable names = {};
+  @observable shortnames = {};
 
   constructor({ stores }) {
     this.stores = stores;
     this.router = stores.router;
 
 
-    this.clinrec = {
-      data: observable.map({}, 'clinrec'),
-      ready: observable.box(true)
-    }
+    // this.clinrec = {
+    //   data: observable.map({}, 'clinrec'),
+    //   ready: observable.box(true)
+    // }
 
 
     autorun(() => {
@@ -56,7 +59,10 @@ class Clinrecs {
         data,
         success: async data => {
           if(flag){
-            console.log('DATA', data);
+            // console.log('DATA', data);
+            this.clinrec = _.assignIn(this.clinrec, data.ClinRec )
+            this.names = _.assignIn(this.names, data.names )
+            this.shortnames = _.assignIn(this.shortnames, data.shortnames )
           }else{
             let pages = {}
             if(data && data.checker){

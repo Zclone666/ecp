@@ -6,6 +6,7 @@ import RouterLink from '../../../router/a'
 
 import Binary from '../Checker/Binary'
 import Value from '../Checker/Value'
+import Clinrec from '../Clinrec'
 
 import {
   Transition,
@@ -154,7 +155,7 @@ class Stepper extends Component {
             )
           })}
           <div className='scrollwrapper'>
-
+            <Clinrec />
           </div>
         </Slider>
       </Responsive>
