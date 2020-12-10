@@ -41,71 +41,6 @@ class Clinrec extends Component {
     }
   }
 
-  renderHtml = (item) => {
-    return(
-      <Segment basic dangerouslySetInnerHTML={{__html: item.text}}></Segment>
-    )
-  }
-  renderList = (item) => {
-    return (
-      <Segment basic>
-        <Feed>
-          {item.items && _.map(item.items, ( listitem, i ) => {
-            return(
-              <Feed.Event key={'infoItem'+i}>
-                <Feed.Content>
-                  {listitem.bold ?
-                    <Feed.Summary style={{ fontWeight: 700 }}>
-                      {listitem.text}
-                    </Feed.Summary>
-                    :
-                    <Feed.Summary style={{ fontWeight: 700 }}>
-                      {listitem.code} <span style={{ fontWeight: 'normal' }}>{listitem.text}</span>
-                    </Feed.Summary>
-                  }
-                </Feed.Content>
-              </Feed.Event>
-            )
-          })}
-        </Feed>
-      </Segment>
-    )
-  }
-  renderText = (item) => {
-    return(
-      <Segment basic>{item.text}</Segment>
-    )
-  }
-
-  renderTree(items, parent){
-    let iteratable = _.keys(items)
-    return iteratable.map(( id ) => {
-      let item = items[id]
-      if((!item.parent_ids && !parent) || (item.parent_ids && item.parent_ids.includes(parent))){
-
-        return(
-          <List.Item key={id}>
-            {item.bold?
-              <List.Icon name='chevron circle right' size='small' />
-              :
-              <List.Icon name='circle' size='small' />
-            }
-            <List.Content>
-              <List.Description><strong>{item.code}</strong> {item.bold? <strong>{item.text}</strong> : item.text}</List.Description>
-              {(item.child_ids && item.child_ids.length > 0) &&
-                <List.List>
-                  {this.renderTree(items, id)}
-                </List.List>
-              }
-            </List.Content>
-          </List.Item>
-        )
-      }else{
-        return null
-      }
-    })
-  }
-
   renderCourse = (course) => {
     // check: null
     // childs: ["1i/z3fg1gP6Tr5TKlg+IQg==", "7NYRZMZPBxOQOW4BwDXDSw==", "Ilv0pGwya9+HyFgV1WljPw==",…]
@@ -148,6 +83,11 @@ class Clinrec extends Component {
     if(this.props.clinrecs.clinrec[name]){
       this.props.clinrecs.clinrec[name].check = !this.props.clinrecs.clinrec[name].check
     }
+  }
+
+  getByFG = (child, childId) => {
+    child.id = childId
+    this.props.clinrecs.getByFG(child)
   }
 
   renderCheck = (childs, id) => {
@@ -213,35 +153,6 @@ class Clinrec extends Component {
     )
   }
 
-  renderPure = (child, childId) => {
-    switch (child.type) {
-      case 'Drug':
-        return this.renderDrug(child)
-        break;
-      case 'GroupSeq':
-        return this.renderGroup(child)
-        break;
-      case 'Regimen':
-        return this.renderRegimen(child)
-        break;
-      case 'OR':
-        return this.renderRadio(child, childId)
-        break;
-      case 'AND':
-        return this.renderCheck(child, childId)
-        break;
-      case 'FG':
-        return this.renderFG(child)
-        break;
-      case 'Unknown':
-        return this.renderFG(child)
-        break;
-      default:
-        return this.renderRecoursive(child, childId)
-    }
-
-  }
-
   renderGroup = (child) => {
     return(
       <List.Item>
@@ -257,12 +168,13 @@ class Clinrec extends Component {
     )
   }
 
-  renderFG = (child) => {
+  renderFG = (child, childId) => {
     return(
       <List.Item>
         <List.Content className='large'>
           <List.Description>
             <strong>{child.name}</strong>
+            <span className='underlined' onClick={() => this.getByFG(child, childId)}>Показать</span>
           </List.Description>
           {child.comment && <List.Description>
             {child.comment}
@@ -383,6 +295,7 @@ class Clinrec extends Component {
           if(child.type === 'GroupSeq') return this.renderGroup(child)
           if(child.type === 'Regimen') return this.renderRegimen(child)
           if(child.type === 'OR') return this.renderRadio(child, childId)
+          if(child.type === 'FG') return this.renderFG(child, childId)
           if(child.type === 'AND') return this.renderCheck(child, childId)
           return(
             <List.Item
@@ -408,6 +321,35 @@ class Clinrec extends Component {
         })}
       </>
     )
+  }
+
+  renderPure = (child, childId) => {
+    switch (child.type) {
+      case 'Drug':
+        return this.renderDrug(child)
+        break;
+      case 'GroupSeq':
+        return this.renderGroup(child)
+        break;
+      case 'Regimen':
+        return this.renderRegimen(child)
+        break;
+      case 'OR':
+        return this.renderRadio(child, childId)
+        break;
+      case 'AND':
+        return this.renderCheck(child, childId)
+        break;
+      case 'FG':
+        return this.renderFG(child, childId)
+        break;
+      case 'Unknown':
+        return this.renderFG(child, childId)
+        break;
+      default:
+        return this.renderRecoursive(child, childId)
+    }
+
   }
 
 

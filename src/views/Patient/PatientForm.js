@@ -50,7 +50,13 @@ class PatientForm extends Component {
     }
 
     if( name === 'weight' || name === 'growth' ){
-      this.props.actions.patientForm[name]=parseFloat(value)
+      if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
+        this.props.actions.patientForm[name]=value
+      }else{
+        this.props.actions.patientForm[name]=parseFloat(value)
+      }
+
+      this.props.actions.patientForm.masIndex = this.props.actions.patientForm.weight/Math.pow((this.props.actions.patientForm.growth/100), 2)
     }else{
       this.props.actions.patientForm[name] = value
     }
@@ -146,7 +152,8 @@ class PatientForm extends Component {
       lactation,
       driving,
       allergy,
-      alcohol
+      alcohol,
+      masIndex
     } = this.props.actions.patientForm
     let { diseaseRows, allergyRows } = this.props.diseases
     let { search_disease, search_co_disease, search_allergy } = this.state
@@ -172,8 +179,8 @@ class PatientForm extends Component {
               </Button.Group>
             </Form.Field>
           </Form.Group>
-          <Form.Group widths={2}>
-            <Form.Field>
+          <Form.Group>
+            <Form.Field width={7}>
               <label>Рост</label>
               <Input
                 size='big'
@@ -185,7 +192,7 @@ class PatientForm extends Component {
                 onChange={this.handleChange}
               />
             </Form.Field>
-            <Form.Field>
+            <Form.Field width={7}>
               <label>Вес</label>
               <Input
                 size='big'
@@ -196,6 +203,18 @@ class PatientForm extends Component {
                 placeholder='60.5'
                 onChange={this.handleChange}
               />
+            </Form.Field>
+            <Form.Field width={2}>
+              <label>Индекс <i>m</i></label>
+              <Input
+                size='big'
+                name='masIndex'
+                className='readonly'
+                readonly="readonly"
+                value={masIndex || ''}
+              >
+                <input readonly="readonly" className='readonly' />
+              </Input>
             </Form.Field>
           </Form.Group>
           <Form.Group widths={1}>

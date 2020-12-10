@@ -120,6 +120,7 @@ class Actions {
     lactation: false,
     driving: false,
     alcohol: false,
+    masIndex: null,
     allergy: []
   }
 

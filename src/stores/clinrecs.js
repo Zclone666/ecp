@@ -111,6 +111,79 @@ class Clinrecs {
         }
     });
   }
+  async getByFG(child){
+    this.ready = false
+    this.stores.actions.loading = true
+    let { active_language } = this.stores.actions
+    let data = {
+      drug: child.concept,
+      active_language
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: 'Drugs/ByFG',
+        data,
+        success: async data => {
+          // console.log('DATA', data);
+          let fakeId = moment().format('x').toString()
+          if(data.concepts && data.concepts.length){
+            this.clinrec[fakeId] = {
+              check: false,
+              childs: [],
+              comment: "",
+              concept: null,
+              dosage: [],
+              drug: null,
+              efficiency: null,
+              form: [],
+              intervalpreset: [],
+              method: [],
+              name: "группировка признаков с условием - ИЛИ",
+              parents: child.id,
+              schedulepreset: [],
+              trust: child.trust,
+              type: "OR",
+              warning: child.warning,
+            }
+            // console.log({
+            //   'child.id': child,
+            //   'this.clinrec[child.id]': this.clinrec[child.id]
+            // });
+            this.clinrec[child.id].childs = [fakeId]
+            data.concepts.forEach((item, i) => {
+              this.clinrec[item.id] = {
+                check: false,
+                childs: [],
+                comment: "",
+                concept: item,
+                dosage: [],
+                drug: item,
+                efficiency: null,
+                form: [],
+                intervalpreset: [],
+                method: [],
+                name: item.name,
+                parents: child.id,
+                schedulepreset: [],
+                trust: child.trust,
+                type: "Drug",
+                warning: child.warning
+              }
+              this.clinrec[fakeId].childs.push(item.id)
+            });
 
+          }
+
+          this.stores.actions.loading = false
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
 }
 export default Clinrecs;
