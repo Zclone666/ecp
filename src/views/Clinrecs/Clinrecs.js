@@ -49,12 +49,26 @@ class Clinrecs extends Component {
 
   }
 
+  setClinrec = () => {
+    this.props.clinrecs.recursiveGetDrugs()
+  }
+
+  componentDidMount(){
+    let {
+      clinrecs: { checker },
+      actions: { clinrecCheckerStep }
+    } = this.props
+    let step = clinrecCheckerStep > 1 ? parseInt(clinrecCheckerStep)-1 : 1
+    this.setState({ hasBackward: step>1 }, () => {
+      // this.props.router.push('/clinrec/checker/'+step)
+    })
+  }
+
   backward = () => {
     let {
       clinrecs: { checker },
       actions: { clinrecCheckerStep }
     } = this.props
-    console.log({clinrecCheckerStep});
     let step = clinrecCheckerStep > 1 ? parseInt(clinrecCheckerStep)-1 : 1
     this.setState({ hasBackward: step>1, hasForward: step < _.keys(checker).length }, () => {
       this.props.router.push('/clinrec/checker/'+step)
@@ -90,6 +104,7 @@ class Clinrecs extends Component {
     } = this.props
     let { hasForward, hasBackward } = this.state
     let currPage = checker[_.keys(checker)[clinrecCheckerStep-1]] || {}
+    let haveResult = clinrecCheckerStep > (_.keys(checker).length - 1)
     return (
       <>
         <Menu className="bottom fixed menu three item huge main">
@@ -104,9 +119,14 @@ class Clinrecs extends Component {
               Далее
             </Menu.Item>
           }
-          {!hasForward &&
+          {(!hasForward && !haveResult) &&
             <Menu.Item disabled={!currPage.isReady} as={RouterLink} to={'/clinrec/checker/result'}>
               Результат
+            </Menu.Item>
+          }
+          {(!hasForward && haveResult) &&
+            <Menu.Item onClick={this.setClinrec}>
+              Применить
             </Menu.Item>
           }
         </Menu>

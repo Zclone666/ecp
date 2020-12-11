@@ -26,7 +26,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions', 'drugs', 'warnings', 'dosages', 'clinrecs')
+@inject('router', 'db', 'actions', 'drugs', 'warnings', 'dosages', 'diseases', 'clinrecs')
 @observer
 class Main extends Component {
   constructor(props){
@@ -109,11 +109,14 @@ class Main extends Component {
       drugs: { searchReady, searchRows, selectedRows, drug }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
       warnings: { warning, groups }, //warnings, warnGroups
+      actions: { patientForm: { disease, co_disease }, clinrecCheckerStep }
     } = this.props
     let selectedWarnings = warning[selectedDrug]
     let showPage = !!(this.props.router.values && this.props.router.values.page)
     // console.log('router', this.props.router);
     // let showPage2 = true
+
+    let isDisease = disease.length > 0 || co_disease.length > 0
     return (
       <>
         <Menu className={`ui top huge borderless tabular nomargin main menu fixed grey${showPage && ' hidden'}`}>
@@ -130,22 +133,22 @@ class Main extends Component {
                 Данные пациента
               </Menu.Item>
             </Responsive>
-            <Responsive as={RouterLink} to='/clinrec/checker/1' onClick={this.getClinrec} fireOnMount minWidth='481'>
+            {isDisease && <Responsive as={RouterLink} to={`/clinrec/checker/${clinrecCheckerStep}`} onClick={this.getClinrec} fireOnMount minWidth='481'>
               <Menu.Item>
                 <Icon name='clipboard list' />
                 Клинреки
               </Menu.Item>
-            </Responsive>
+            </Responsive>}
             <Responsive fireOnMount as={RouterLink} to='/patient/info' maxWidth='480'>
               <Menu.Item icon>
                 <Icon name='bed' size='large' />
               </Menu.Item>
             </Responsive>
-            <Responsive fireOnMount as={RouterLink} onClick={this.getClinrec} to='/clinrec/checker/1' maxWidth='480'>
+            {isDisease && <Responsive fireOnMount as={RouterLink} onClick={this.getClinrec} to={`/clinrec/checker/${clinrecCheckerStep}`} maxWidth='480'>
               <Menu.Item icon>
                 <Icon name='clipboard list' size='large' />
               </Menu.Item>
-            </Responsive>
+            </Responsive>}
           </Menu.Menu>
 
         </Menu>

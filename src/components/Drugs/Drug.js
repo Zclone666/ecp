@@ -157,7 +157,7 @@ class Drug extends React.Component {
     let dosReady = !!drugDosages.names
 
     let urlArr = ['/concept/dozes']
-
+    console.log({drug});
 		if(helpers.way) urlArr.push(helpers.way)
 		if(helpers.step) urlArr.push(helpers.step)
 

@@ -11,6 +11,7 @@ class Clinrecs {
   @observable clinrec = {};
   @observable names = {};
   @observable shortnames = {};
+  @observable druglist = [];
 
   constructor({ stores }) {
     this.stores = stores;
@@ -45,9 +46,9 @@ class Clinrecs {
       data.liquids.push(liquid)
     });
 
-    if(flag){
+    // if(flag){
       data.checker = _.cloneDeep(this.stores.actions.clinrecCheckerData)
-    }
+    // }
 
     data.active_language = active_language
 
@@ -151,9 +152,10 @@ class Clinrecs {
             //   'this.clinrec[child.id]': this.clinrec[child.id]
             // });
             this.clinrec[child.id].childs = [fakeId]
+            let first = true
             data.concepts.forEach((item, i) => {
               this.clinrec[item.id] = {
-                check: false,
+                check: first ? true : false,
                 childs: [],
                 comment: "",
                 concept: item,
@@ -170,6 +172,7 @@ class Clinrecs {
                 type: "Drug",
                 warning: child.warning
               }
+              if(first) first = false
               this.clinrec[fakeId].childs.push(item.id)
             });
 
@@ -185,5 +188,43 @@ class Clinrecs {
         }
     });
   }
+  recursiveGetDrugs = (child = null) => {
+    // console.log(child);
+    if(child && child.check === false) return
+    if(child && child.type == 'Drug' && child.check){
+      let drug = {
+        name: child.drug.name,
+        id: child.drug.id,
+        type: child.drug.type,
+        level: child.drug.level,
+        group: child.drug.group,
+      }
+      //drug.dosage.form
+      // console.log(drug);
+      this.stores.drugs.selectFromSearch(drug)
+      return
+    }
+
+    if(child){
+      if(child.childs && child.childs.length > 0){
+        child.childs.forEach((id, i) => {
+          let item = this.clinrec[id]
+          item && this.recursiveGetDrugs(item)
+        });
+      }
+    }else{
+      this.stores.db.clearData(true)
+      this.druglist = observable([])
+      _.keys(this.clinrec).forEach((id, i) => {
+        let item = this.clinrec[id]
+        if(!item.parents){
+          item && this.recursiveGetDrugs(item)
+        }
+      });
+
+    }
+  }
 }
+
+
 export default Clinrecs;
