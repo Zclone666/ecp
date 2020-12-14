@@ -34,6 +34,7 @@ class RecipeDrug extends React.Component {
     let { value } = e.target
     this.setState({ from: 'text' }, () => {
       this.setState({ text: value })
+
     })
   }
   undo = () => {
@@ -53,7 +54,13 @@ class RecipeDrug extends React.Component {
   }
 
   edit = () => {
+    let {
+      drugs: { drug }, //drugs, drugsDosages, currDrug, setDosageParams
+      drug: current,
+    } = this.props
     this.setState({ edit: !this.state.edit })
+    let currDrug = drug.get(current.key)
+    drug.set(current.key, _.extend(currDrug, {text: this.state.text}))
   }
 
   renderRules(){
