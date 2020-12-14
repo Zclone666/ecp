@@ -17,18 +17,9 @@ class Clinrecs {
     this.stores = stores;
     this.router = stores.router;
 
-
-    // this.clinrec = {
-    //   data: observable.map({}, 'clinrec'),
-    //   ready: observable.box(true)
-    // }
-
-
     autorun(() => {
 
     });
-
-
   }
   async check(flag = false){
     this.stores.actions.loading = true
@@ -130,7 +121,7 @@ class Clinrecs {
           let fakeId = moment().format('x').toString()
           if(data.concepts && data.concepts.length){
             this.clinrec[fakeId] = {
-              check: false,
+              check: true,
               childs: [],
               comment: "",
               concept: null,

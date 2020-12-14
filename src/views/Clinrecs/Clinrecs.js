@@ -51,6 +51,7 @@ class Clinrecs extends Component {
 
   setClinrec = () => {
     this.props.clinrecs.recursiveGetDrugs()
+    this.props.router.push('/')
   }
 
   componentDidMount(){
