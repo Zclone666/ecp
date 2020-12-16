@@ -195,5 +195,132 @@ class Warnings {
     });
   }
 
+  async protocol(protocol){
+    if( !protocol || protocol == '' || typeof(protocol) == 'undefined' ) return
+    if (!this.stores.router) {
+      return
+    }
+    // console.log('HERE', protocol);
+    this.stores.actions.loading = true
+    let { active_language } = this.stores.actions
+    // this.stores.db.clearData(false, true)
+    // let data = _.cloneDeep(this.stores.actions.drugStructure)
+    // let drugsFull = Array.from(this.stores.drugs.drug.values())
+    // let liquidsFull = Array.from(this.stores.drugs.liquid.values())
+    // drugsFull.forEach((drugFull, i) => {
+    //   let { helpers, ...drug } = drugFull
+    //   data.drugs.push(drug)
+    // });
+    // liquidsFull.forEach((liquidFull, i) => {
+    //   let { helpers, ...liquid } = liquidFull
+    //   data.liquids.push(liquid)
+    // });
+    //
+    //
+    // //data.service = "43"
+    // data.active_language = active_language
+    //
+    // data.return_subjects = false
+    // data.authkey = this.stores.actions.authkey
+    // data.key = this.stores.actions.privateKey
+    this.stores.router.push('/')
+    return POST({
+        path: 'mis/Protocol', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+        data: { key: protocol, active_language },
+        success: async data => {
+          if(!data.drugs){
+            this.stores.actions.loading = false
+            return
+          }
+          if( data && data.drugs && _.isArray(data.drugs) ){
+            await data.drugs.forEach(async ( drug, i ) => {
+              await this.stores.drugs.selectFromSearch(drug, true)
+            })
+          }
+
+          if( data && data.warnings && _.isArray(data.warnings) ){
+
+            this.info.names = _.clone(data.names)
+            this.info.description = _.clone(data.description)
+            this.info.literature = _.clone(data.literature)
+            this.info.outcome = _.clone(data.outcome)
+            this.info.urls = _.clone(data.urls)
+            this.info.hinttype = _.clone(data.hinttype)
+
+            let warnGroups = {}
+            let warnIcons = {}
+            let warnForDrug = {}
+            let warnForGroup = {}
+            await data.warnings.forEach(( item, i ) => {
+
+              if(!item.id || item.id.length < 1) item.id = null //moment().format('x').toString()
+              item.key = 'warnkey_' + i
+
+              let { group, color } = this.getGroup(item.value)
+              let wKey = `${item.type}_${group}`
+
+              let current = this.warning.get(item.id) || {};
+              this.warning.set( item.key, _.assignIn(current, { group, color, ...item }) );
+
+              let hint = data.hinttype[item.type] && data.names[data.hinttype[item.type]]
+
+              //разбивка по Драгам
+              if(item.subjects && _.isArray(item.subjects)){
+                item.subjects.forEach(( subject, s ) => {
+
+                  //создание варнингов по Драгам
+                  if( !warnGroups[item.type] ){
+                    warnGroups[item.type]={
+                      type: item.type,
+                      value: item.value,
+                      valuecolor: color,
+                      group,
+                      hint,
+                      hintarr: item.hint
+                    }
+                  }else{
+                    if(group > warnGroups[item.type].group){
+                      warnGroups[item.type].value = item.value
+                      warnGroups[item.type].valuecolor = color
+                      warnGroups[item.type].group = group
+                      warnGroups[item.type].hintarr = _.unionWith(warnGroups[item.type].hintarr, item.hint, _.isEqual);
+                    }
+                  }
+                  if( subject.type === 'drug' ){
+
+
+                    //иконки к Драгам
+                    if( !warnIcons[subject.drugkey] || group > warnIcons[subject.drugkey].group ){
+                      warnIcons[subject.drugkey] = {
+                        value: item.value,
+                        color,
+                        group
+                      }
+                    }
+                  }
+                })
+              }
+            })
+
+            this.icons = _.assignIn(this.warnIcons, warnIcons);
+            this.groups = _.assignIn(this.groups, warnGroups);
+          }
+          // this.stores.actions.loading = false
+
+          // setTimeout(() => {
+
+            this.stores.actions.loading = false
+            this.stores.actions.authorized = true
+          // }, 3000)
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+
 }
 export default Warnings;

@@ -48,4 +48,6 @@ export default {
   '/resetpass':                               { section: 'auth', name: 'auth',       render: <ResetPass/>   },
   '/newpass/:code/:email/:service':           { section: 'auth', name: 'auth',       render: <NewPass/>     },
   '/newpass':                                 { section: 'auth', name: 'auth',       render: <NewPass/>     },
+
+  '/protocol/:protocol':                      { section: 'main', name: 'protocol',   render: <Main/>        },
 }

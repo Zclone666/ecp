@@ -293,17 +293,7 @@ class Actions {
     // console.log(d);
     this.height = h;
   }
-  setCurrentPage(page){
-    if(page){
-      this.currentPage = page
-      if(this.currentPage && _.keys(this.pages).length > 0){
-        this.stores.db.clearData()
-        // this.stores.db.getFilters()
-      }
 
-    }
-
-  }
 
   clearSteps(step){
     if( step === 1 ){
@@ -394,6 +384,12 @@ class Actions {
 
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
+
+    if(this.stores.router.values.protocol) {
+      this.stores.warnings.protocol(this.stores.router.values.protocol)
+      this.loading = false
+      return
+    }
 
 
     if(!this.authkey && this.stores.router.match.name !== 'auth') {

@@ -794,7 +794,7 @@ class Drugs {
     return true
   }
 
-  selectFromSearch = async (row) => {
+  selectFromSearch = async (row, flag = false) => {
     let drug = {
       //key: moment().format('x').toString(), // уникальный ключ
       id:"", // айди ДВ или ТН
@@ -847,13 +847,16 @@ class Drugs {
     }
     drug = _.extend(drug, row);
 
-    drug.key = moment().format('x').toString()
-    let current = this.drug.get(drug.key) || {};
-    this.drug.set( drug.key, _.extend(current, drug) );
+    drug.key = row.key || moment().format('x').toString()
+    let current = await this.drug.get(drug.key) || {};
+    await this.drug.set( drug.key, _.extend(current, drug) );
     // console.log({current, drug});
-    this.stores.dosages.get(drug)
+    await this.stores.dosages.get(drug)
 
-    this.stores.db.clearData(false, true)
+    if(!flag){
+      await this.stores.db.clearData(false, true)
+    }
+
     return true
   }
   async unselectDrug(row){

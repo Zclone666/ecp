@@ -54,12 +54,11 @@ class Tools {
             units[99]=_.cloneDeep(units[250])
             units[99][0].value = 10
           }
-
-
           // end kostyl
 
           await this.setNames(names, nameshort)
           this.setUnits(units, unitrefs, unitpharm)
+          this.stores.actions.loading = false
         },
         fail: (alerts) => {
 

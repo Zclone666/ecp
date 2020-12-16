@@ -113,7 +113,7 @@ class Drug extends React.Component {
 
     let arr = []
 
-    if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
+    if(calc && calc.fullDosage && helpers.dosage && helpers.dosage.id ){
       let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
       let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit]
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
@@ -153,11 +153,12 @@ class Drug extends React.Component {
     let hasWarnings = warning.size > 0
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
+    dosage = dosage || {}
 
     let dosReady = !!drugDosages.names
 
     let urlArr = ['/concept/dozes']
-    console.log({drug});
+    // console.log({drug});
 		if(helpers.way) urlArr.push(helpers.way)
 		if(helpers.step) urlArr.push(helpers.step)
 
