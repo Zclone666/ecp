@@ -21,6 +21,7 @@ import {
   Button,
   Responsive,
   Grid,
+  Modal,
   Flag
 } from 'semantic-ui-react'
 
@@ -33,12 +34,18 @@ class Main extends Component {
     super(props)
     this.state = {
       open: false,
+      openCautions: false,
       showPage: false,
 
       isLoading: false,
       searchQuery: ''
     }
     this.contextRef = createRef()
+  }
+
+  setOpen = (openCautions) => {
+    openCautions = openCautions || false
+    this.setState({ openCautions })
   }
 
   logout = () => {
@@ -94,6 +101,11 @@ class Main extends Component {
     this.props.actions.makeLiquids = false
   }
 
+  goRecipe = () => {
+    this.setOpen(false)
+    this.props.router.push('/recipe/new')
+  }
+
   componentDidMount(){
     setTimeout(() => {
       this.setState({ showPage: !!(this.props.router.values && this.props.router.values.page) })
@@ -103,12 +115,12 @@ class Main extends Component {
   }
 
   render() {
-    const { open, searchQuery, selectedDrug, selectedConflict } = this.state
+    const { open, openCautions, searchQuery, selectedDrug, selectedConflict } = this.state
     let { currentPage, height, active_language, makeLiquids, isLiquidsOk } = this.props.actions
     let {
       drugs: { searchReady, searchRows, selectedRows, drug }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
-      warnings: { warning, groups }, //warnings, warnGroups
+      warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
       actions: { patientForm: { disease, co_disease }, clinrecCheckerStep }
     } = this.props
     let selectedWarnings = warning[selectedDrug]
@@ -164,9 +176,45 @@ class Main extends Component {
               <Menu.Item onClick={this.getInfoPrep}>
                 Проверить
               </Menu.Item>
-              <RouterLink className='item primary' to='/recipe/new'>
-                Выписать
-              </RouterLink>
+              {cautionsTitle ?
+                <Modal
+                  onClose={() => this.setOpen(false)}
+                  onOpen={() => this.setOpen(true)}
+                  open={openCautions}
+                  trigger={<Menu.Item>
+                    Выписать
+                  </Menu.Item>}
+                >
+                  <Modal.Header>{cautionsTitle}</Modal.Header>
+                  <Modal.Content>
+                    {cautions.length > 0 && cautions.map((item, i) => {
+                      return(
+                        <Message negative>
+                          <Message.Header>{item}</Message.Header>
+                        </Message>
+                      )
+                    })}
+                  </Modal.Content>
+                  <Modal.Actions>
+                    <Button color='black' onClick={() => this.setOpen(false)}>
+                      Отмена
+                    </Button>
+                    <Button
+                      content="Продолжить"
+                      labelPosition='right'
+                      icon='checkmark'
+                      onClick={() => this.goRecipe()}
+                      positive
+                    />
+                  </Modal.Actions>
+                </Modal>
+                :
+                <Menu.Item onClick={() => this.goRecipe()}>
+                  Выписать
+                </Menu.Item>
+              }
+
+
             </Menu>
           }
           {makeLiquids &&

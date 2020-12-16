@@ -845,9 +845,12 @@ class Drugs {
         step: null,
       }
     }
+    if(!row.calc) row.calc = drug.calc
+    if(!row.dosage) row.dosage = drug.dosage
+    if(!row.schedule) row.schedule = drug.schedule
     drug = _.extend(drug, row);
-
-    drug.key = row.key || moment().format('x').toString()
+    // console.log(row.key);
+    drug.key = (row.key && row.key.substring(0, 7) !== 'concept') ? row.key : moment().format('x').toString()
     let current = await this.drug.get(drug.key) || {};
     await this.drug.set( drug.key, _.extend(current, drug) );
     // console.log({current, drug});

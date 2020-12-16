@@ -19,6 +19,8 @@ const colorPallette = [
 class Warnings {
   @observable ready = false;
   @observable groups = {};
+  @observable cautionsTitle = null;
+  @observable cautions = [];
   @observable icons = {};
   info = {
     names: observable({}),
@@ -124,6 +126,9 @@ class Warnings {
             this.info.outcome = _.clone(data.outcome)
             this.info.urls = _.clone(data.urls)
             this.info.hinttype = _.clone(data.hinttype)
+
+            this.cautionsTitle = data.cautiontitle && data.names[data.cautiontitle]
+            this.cautions = data.cautionitems && data.cautionitems.map((caut) => { return data.names[caut] })
 
             let warnGroups = {}
             let warnIcons = {}
@@ -232,6 +237,9 @@ class Warnings {
             this.stores.actions.loading = false
             return
           }
+
+          if(data.key) this.stores.actions.privateKey = data.key
+
           if( data && data.drugs && _.isArray(data.drugs) ){
             await data.drugs.forEach(async ( drug, i ) => {
               await this.stores.drugs.selectFromSearch(drug, true)
