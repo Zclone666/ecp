@@ -114,6 +114,7 @@ class Actions {
     weight: null,
     disease: [],
     co_disease: [],
+    lab_data: [],
     pregnancy: false,
     gestation: null,
     trimester: null,

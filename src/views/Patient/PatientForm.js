@@ -40,6 +40,7 @@ class PatientForm extends Component {
       search_disease: '',
       search_co_disease: '',
       search_allergy: '',
+      lab_data: ''
     }
     //this.contextRef = createRef()
   }
@@ -85,7 +86,13 @@ class PatientForm extends Component {
     }
     //console.log({ name, value });
   }
-
+  handleAddLabData = () => {
+    this.props.actions.patientForm.lab_data.push(this.state.lab_data)
+    this.setState({ lab_data: '' })
+  }
+  handleRemoveLabData = (item, i) => {
+    this.props.actions.patientForm.lab_data.splice(i, 1)
+  }
   handleResultSelect = async (e, { name, result }) => {
     // console.log({ name, result });
     //let newName = name === 'co_disease' ? 'disease' : name
@@ -146,6 +153,7 @@ class PatientForm extends Component {
       weight,
       disease,
       co_disease,
+      lab_data,
       pregnancy,
       gestation,
       trimester,
@@ -310,6 +318,45 @@ class PatientForm extends Component {
                   </List.Content>
                   <List.Icon name='heartbeat' size='big' verticalAlign='middle' />
                   <List.Content><List.Header>{item.name}{item.type === 'TN' && <span><sup>TM</sup></span>}</List.Header></List.Content>
+                </List.Item>
+              )
+            })}
+          </List>
+          <Form.Group widths={1}>
+            <Form.Field width={16}>
+              <label>Лабораторные данные</label>
+              <Input
+                fluid
+                size='big'
+                name='lab_data'
+                value={this.state.lab_data}
+                action={{
+                  labelPosition: 'right',
+                  icon: 'plus',
+                  content: 'Добавить',
+                  onClick: this.handleAddLabData
+                }}
+                onChange={(e) => {
+                  this.setState({ lab_data: e.target.value })
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    this.handleAddLabData()
+                  }
+                }}
+              />
+
+            </Form.Field>
+          </Form.Group>
+          <List divided verticalAlign='middle'>
+            {lab_data.map((item, i) => {
+              return(
+                <List.Item key={'allergy'+i} style={{ padding: '0.5em', backgroundColor: '#f6f6f0' }}>
+                  <List.Content floated='right'>
+                    <Button size='tiny' icon='delete' onClick={() => this.handleRemoveLabData(item, i)}/>
+                  </List.Content>
+                  <List.Icon name='heartbeat' size='big' verticalAlign='middle' />
+                  <List.Content><List.Header>{item}</List.Header></List.Content>
                 </List.Item>
               )
             })}

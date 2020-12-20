@@ -97,7 +97,7 @@ class RecipeDrug extends React.Component {
     }
   }
 
-  render(){
+  get inputValue(){
     let {
       actions: {
         selectedDrug,
@@ -136,6 +136,63 @@ class RecipeDrug extends React.Component {
     // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
 
     let inputValue = from === 'dosage' ? descArr.join(', ') : text
+    return inputValue
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    let {
+      drugs: { drug }, //drugs, drugsDosages, currDrug, setDosageParams
+      drug: current,
+    } = this.props
+    let { inputValue } = this
+
+    if(inputValue == this.state.text || this.state.edit) return
+    this.setState({ text: inputValue }, () => {
+      let currDrug = drug.get(current.key)
+      drug.set(current.key, _.extend(currDrug, {text: this.state.text}))
+    })
+
+  }
+
+  render(){
+    let {
+      actions: {
+        selectedDrug,
+        selectedConflict,
+        activeDrugs,
+        activeConflicts
+      },
+      // drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage: dose },
+      // db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
+      drug,
+      active
+    } = this.props
+
+    let { edit, text, from } = this.state
+
+    // let selectedWarnings = warnIcons[selectedDrug]
+    let { key, name, level, tn, type, dosage, schedule, helpers } = drug
+    let drugDosages = dose.get(key) || {}
+
+    let names = drugDosages.names || {}
+
+    // let descArr = []
+    // let rules = this.renderRules()
+    //
+    // if(dosage.form) descArr.push(names[dosage.form])
+    // if(helpers.dosage && helpers.dosage.short) descArr.push(helpers.dosage.short)
+    // if(helpers.pack && helpers.pack.short) descArr.push(helpers.pack.short)
+    // if(dosage.method) descArr.push(names[dosage.method])
+    // if(schedule && schedule.specials) descArr.push(schedule.specials)
+    // if(!rules.empty){ descArr.push(rules.text) }
+
+    // if(dosage.form && names[dosage.form]) descArr.push(names[dosage.form])
+    // if(dosage.method && names[dosage.method]) descArr.push(names[dosage.method])
+    // if(dosage.pack.dosage) descArr.push(dosage.pack.dosage)
+    // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
+
+    let { inputValue } = this
     return(
       <List.Item>
         <List.Content floated='right'>

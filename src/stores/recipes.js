@@ -25,6 +25,8 @@ class Recipes {
 
   }
   save = async () => {
+    if(this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis()
+
     this.stores.actions.loading = true
     let { active_language } = this.stores.actions
     await this.stores.db.clearData(false, true)
@@ -37,22 +39,22 @@ class Recipes {
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
     return POST({
-        path: 'tools/SaveRecipe', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
-        data,
-        success: async data => {
-          if(data && data.Code){
-            return data.Code
-          }else{
-            return false
-          }
-          this.stores.actions.loading = false
-        },
-        fail: (alerts) => {
-          this.stores.actions.loading = false
-        },
-        always: (data) => {
-          this.stores.actions.makeAlerts(data)
+      path: 'tools/SaveRecipe', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      data,
+      success: async data => {
+        if(data && data.Code){
+          return data.Code
+        }else{
+          return false
         }
+        this.stores.actions.loading = false
+      },
+      fail: (alerts) => {
+        this.stores.actions.loading = false
+      },
+      always: (data) => {
+        this.stores.actions.makeAlerts(data)
+      }
     });
   }
 

@@ -225,7 +225,7 @@ class Schedule extends Component {
 
           </Form.Group>
 
-          <Form.Group>
+          {false && <Form.Group>
             <Form.Field className='fluid'>
               <label>Условия приема</label>
               <Responsive as={Button.Group} fluid widths={3} minWidth={481}>
@@ -243,7 +243,7 @@ class Schedule extends Component {
                 {/*<Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>*/}
               </Responsive>
             </Form.Field>
-          </Form.Group>
+          </Form.Group>}
           {{
             'once': <div/>,
             'week': <Week />,

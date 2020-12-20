@@ -157,6 +157,29 @@ class Drugs {
         }
     });
   }
+  async MNNfromTN(drug){
+    let { active_language } = this.stores.actions
+    let data = {
+      drug,
+      active_language
+    }
+    data.authkey = this.stores.actions.authkey
+    data.key = this.stores.actions.privateKey
+    return POST({
+        path: `drugs/MNNfromTN`,
+        data,
+        success: async data => {
+          console.log('DATA', data);
+
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+          
+        }
+    });
+  }
   setFP = async ( drugKey, fpid ) => {
     let currentDrug = await this.drug.get(drugKey) || {};
     currentDrug = await _.extend(currentDrug, { fpid });
