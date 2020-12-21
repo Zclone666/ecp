@@ -96,18 +96,10 @@ class Recipe extends Component {
     }else if( name === 'doctor' ){
       let { doctor } = this.props.actions.drugStructure
       let newDoc = _.find(checkData.doctor, { 'id': value });
-      // console.log({ newDoc });
-      //let curr = await this.props.patients.patient.get(value)
-      //if((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id)
-      //curr = curr || {}
       this.props.actions.drugStructure.doctor = _.extend(doctor, {key: newDoc.id, val: newDoc.name})
     }else if( name === 'clinic' ){
       let { clinic } = this.props.actions.drugStructure
       let newLpu = _.find(checkData.lpu, { 'id': value });
-      // console.log({ newDoc });
-      //let curr = await this.props.patients.patient.get(value)
-      //if((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id)
-      //curr = curr || {}
       this.props.actions.drugStructure.clinic = _.extend(clinic, {key: newLpu.id, val: newLpu.name})
     }else if( name === 'email' ){
       this.props.actions.drugStructure.patient.email = value
@@ -138,6 +130,8 @@ class Recipe extends Component {
 
     doctor = doctor || doc.name
 
+    let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
+
     // console.log({ doctor, clinic, patient });
 
     return (
@@ -146,7 +140,7 @@ class Recipe extends Component {
           <Menu.Item color='red' onClick={this.back}>
             Назад
           </Menu.Item>
-          <Menu.Item onClick={this.save}>
+          <Menu.Item disabled={noEmail} onClick={this.save}>
             Отправить
           </Menu.Item>
         </Menu>
@@ -223,7 +217,7 @@ class Recipe extends Component {
 
                 </Form.Field>
               </Form.Group>
-              <Form.Field>
+              <Form.Field error={patient.key && noEmail}>
                 <label>E-mail пациента</label>
                 <Input name='email' value={patient.email} onChange={this.handleChange} placeholder='some@email.ru' />
               </Form.Field>
