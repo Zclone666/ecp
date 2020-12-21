@@ -240,6 +240,7 @@ class RecipeDrug extends React.Component {
             <List.Header>
               <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}{' '}
               {!helpers.mnn && <label><span className='link' onClick={this.getMNN}>Заменить на МНН</span></label>}
+              {helpers.mnn && <label><span className='link' onClick={this.getMNN}>Вернуть</span></label>}
             </List.Header>
             <List.Description>
               {!edit &&

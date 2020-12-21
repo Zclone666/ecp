@@ -165,24 +165,32 @@ class Drugs {
     }
     data.authkey = this.stores.actions.authkey
     data.key = this.stores.actions.privateKey
-    return POST({
-        path: `drugs/MNNfromTN`,
-        data,
-        success: async data => {
-          let current = this.stores.drugs.drug.get(drug.key)
-          current = _.extend(current, data.mnn)
-          current.helpers.mnn = true
-          this.stores.drugs.drug.set(drug.key, current)
-          // console.log('DATA', data);
+    let current = this.stores.drugs.drug.get(drug.key)
+    if(current.helpers.mnn){
+      current = _.extend(current, current.helpers.drugCache)
+      current.helpers.mnn = false
+      current.helpers.drugCache = null
+    }else{
+      return POST({
+          path: `drugs/MNNfromTN`,
+          data,
+          success: async data => {
+            current = _.extend(current, data.mnn)
+            current.helpers.mnn = true
+            current.helpers.drugCache = _.cloneDeep(drug)
+            this.stores.drugs.drug.set(drug.key, current)
+            // console.log('DATA', data);
 
-        },
-        fail: (alerts) => {
+          },
+          fail: (alerts) => {
 
-        },
-        always: (data) => {
+          },
+          always: (data) => {
 
-        }
-    });
+          }
+      });
+    }
+
   }
   setFP = async ( drugKey, fpid ) => {
     let currentDrug = await this.drug.get(drugKey) || {};
@@ -870,7 +878,8 @@ class Drugs {
         key: null,
         way: null,
         step: null,
-        mnn: false
+        mnn: false,
+        drugCache: null
       }
     }
     if(!row.calc) row.calc = drug.calc
