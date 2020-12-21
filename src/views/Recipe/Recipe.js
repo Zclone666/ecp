@@ -61,9 +61,26 @@ class Recipe extends Component {
     this.setOpenCode(true)
     // this.props.router.push('/')
   }
+  print = async () => {
+    let code = await this.props.recipes.print()
+    // console.log({res});
+    if( !code ) return
+
+
+    var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+    pri.document.open();
+    pri.document.write(code);
+    pri.document.close();
+    pri.focus();
+    pri.print();
+    // this.setState({ code })
+    // this.setOpenCode(true)
+    // this.props.router.push('/')
+  }
 
   back = () => {
     this.props.router.push('/')
+    this.props.recipes.code = null
   };
   savePatient = async () => {
     let res = await this.props.patients.save()
@@ -111,21 +128,24 @@ class Recipe extends Component {
 
   render() {
     let {
-      open, code, openCode
+      open, openCode
     } = this.state
     let {
-      drugStructure: {
-        doctor: {
-          key: doctor
+      actions: {
+        drugStructure: {
+          doctor: {
+            key: doctor
+          },
+          clinic: {
+            key: clinic
+          },
+          patient
         },
-        clinic: {
-          key: clinic
-        },
-        patient
+        doctor: doc,
+        checkData
       },
-      doctor: doc,
-      checkData
-    } = this.props.actions
+      recipes: { code }
+    } = this.props
     // let { patient: { id: patient } } = this.props.actions.drugStructure
 
     doctor = doctor || doc.name
@@ -140,9 +160,12 @@ class Recipe extends Component {
           <Menu.Item color='red' onClick={this.back}>
             Назад
           </Menu.Item>
-          <Menu.Item disabled={noEmail} onClick={this.save}>
+          {!code && <Menu.Item disabled={noEmail} onClick={this.save}>
             Отправить
-          </Menu.Item>
+          </Menu.Item>}
+          {code && <Menu.Item disabled={noEmail} onClick={this.print}>
+            Печать
+          </Menu.Item>}
         </Menu>
 
         <div className='scrollwrapper'>
@@ -253,6 +276,14 @@ class Recipe extends Component {
             <Header as='h1'>{code}</Header>
           </Modal.Content>
           <Modal.Actions>
+            <Button
+              content="Печать рецепта"
+              labelPosition='right'
+              primary
+              icon='file alternate outline'
+              onClick={() => this.print()}
+
+            />
             <Button
               content="ОК"
               labelPosition='right'
