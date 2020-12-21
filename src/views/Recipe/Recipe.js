@@ -84,12 +84,33 @@ class Recipe extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
+    let {
+      checkData
+    } = this.props.actions
     if( name === 'patient' ){
       let { patient } = this.props.actions.drugStructure
       let curr = await this.props.patients.patient.get(value)
       if((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id)
       curr = curr || {}
       this.props.actions.drugStructure.patient = _.extend(patient, { id: curr.id || null, key: value, name: curr.name || null, email: curr.email || null, fio: curr.fio || null })
+    }else if( name === 'doctor' ){
+      let { doctor } = this.props.actions.drugStructure
+      let newDoc = _.find(checkData.doctor, { 'id': value });
+      // console.log({ newDoc });
+      //let curr = await this.props.patients.patient.get(value)
+      //if((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id)
+      //curr = curr || {}
+      this.props.actions.drugStructure.doctor = _.extend(doctor, {key: newDoc.id, val: newDoc.name})
+    }else if( name === 'clinic' ){
+      let { clinic } = this.props.actions.drugStructure
+      let newLpu = _.find(checkData.lpu, { 'id': value });
+      // console.log({ newDoc });
+      //let curr = await this.props.patients.patient.get(value)
+      //if((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id)
+      //curr = curr || {}
+      this.props.actions.drugStructure.clinic = _.extend(clinic, {key: newLpu.id, val: newLpu.name})
+    }else if( name === 'email' ){
+      this.props.actions.drugStructure.patient.email = value
     }else{
       this.props.actions.drugStructure[name].val = value
     }
@@ -103,21 +124,21 @@ class Recipe extends Component {
     let {
       drugStructure: {
         doctor: {
-          val: doctor
+          key: doctor
         },
         clinic: {
-          val: clinic
+          key: clinic
         },
-        patient: {
-          key: patient
-        }
+        patient
       },
-      doctor: doc
+      doctor: doc,
+      checkData
     } = this.props.actions
     // let { patient: { id: patient } } = this.props.actions.drugStructure
 
     doctor = doctor || doc.name
 
+    // console.log({ doctor, clinic, patient });
 
     return (
       <>
@@ -135,8 +156,23 @@ class Recipe extends Component {
             <Form>
               <Form.Field>
                 <label>Врач</label>
-                <Input name='doctor' value={doctor} onChange={this.handleChange} placeholder='Иван Иванов' />
+                <Dropdown
+                  options={checkData.doctor.map((item) => {
+                    return {
+                      key: item.id, text: item.name, value: item.id
+                    }
+                  })}
+                  placeholder='Иван Иванов'
+                  search
+                  name='doctor'
+                  selection
+                  fluid
+
+                  value={doctor}
+                  onChange={this.handleChange}
+                />
               </Form.Field>
+
               <Form.Group>
                 <Form.Field width={16}>
                   <label>Пациент</label>
@@ -152,7 +188,7 @@ class Recipe extends Component {
                     selection
                     fluid
 
-                    value={patient}
+                    value={patient.key}
                     onAddItem={this.handleAddition}
                     onChange={this.handleChange}
                   />
@@ -188,8 +224,26 @@ class Recipe extends Component {
                 </Form.Field>
               </Form.Group>
               <Form.Field>
+                <label>E-mail пациента</label>
+                <Input name='email' value={patient.email} onChange={this.handleChange} placeholder='some@email.ru' />
+              </Form.Field>
+              <Form.Field>
                 <label>ЛПУ</label>
-                <Input name='clinic' value={clinic} onChange={this.handleChange} placeholder='ЛПУ' />
+                <Dropdown
+                  options={checkData.lpu.map((item) => {
+                    return {
+                      key: item.id, text: item.name, value: item.id
+                    }
+                  })}
+                  placeholder='Клиника'
+                  search
+                  name='clinic'
+                  selection
+                  fluid
+
+                  value={clinic}
+                  onChange={this.handleChange}
+                />
               </Form.Field>
             </Form>
             <Drugs isRecipe={true} />

@@ -38,6 +38,11 @@ class Actions {
   @observable makeLiquids = false
   @observable isLiquidsOk = false
 
+  @observable checkData = {
+    lpu: [],
+    doctor: []
+  }
+
   @observable doctor = {
     id: null,
     name: null
@@ -455,6 +460,15 @@ class Actions {
         // if( data && data.level == 'success' ){
           let { doc, id, lpu, patients, names } = data
           this.stores.patients.makeList({ patients, names })
+
+          lpu && lpu.forEach((item, i) => {
+            this.checkData.lpu.push({id: item, name: names[item]})
+          });
+          doc && doc.forEach((item, i) => {
+            this.checkData.doctor.push({id: item, name: names[item]})
+          });
+
+
           this.doctor = {
             id: (doc && doc[0]) || null,
             name: ((doc && doc[0]) && names[doc[0]]) || null
