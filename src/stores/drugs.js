@@ -169,14 +169,18 @@ class Drugs {
         path: `drugs/MNNfromTN`,
         data,
         success: async data => {
-          console.log('DATA', data);
+          let current = this.stores.drugs.drug.get(drug.key)
+          current = _.extend(current, data.mnn)
+          current.helpers.mnn = true
+          this.stores.drugs.drug.set(drug.key, current)
+          // console.log('DATA', data);
 
         },
         fail: (alerts) => {
 
         },
         always: (data) => {
-          
+
         }
     });
   }
@@ -866,6 +870,7 @@ class Drugs {
         key: null,
         way: null,
         step: null,
+        mnn: false
       }
     }
     if(!row.calc) row.calc = drug.calc

@@ -63,6 +63,34 @@ class RecipeDrug extends React.Component {
     drug.set(current.key, _.extend(currDrug, {text: this.state.text}))
   }
 
+  getMNN = () => {
+    let {
+      drug: {
+        fpid,
+        group,
+        id,
+        key,
+        level,
+        main,
+        name,
+        namesearch,
+        type
+      }
+    } = this.props
+    // console.log(drug);
+    this.props.drugs.MNNfromTN({
+      fpid,
+      group,
+      id,
+      key,
+      level,
+      main,
+      name,
+      namesearch,
+      type
+    })
+  }
+
   renderRules(){
     let {
       dosages: { getFromBase },
@@ -162,9 +190,7 @@ class RecipeDrug extends React.Component {
         activeDrugs,
         activeConflicts
       },
-      // drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage: dose },
-      // db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
       drug,
       active
     } = this.props
@@ -212,7 +238,8 @@ class RecipeDrug extends React.Component {
         <List.Content>
           <List.Content>
             <List.Header>
-              <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
+              <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}{' '}
+              {!helpers.mnn && <label><span className='link' onClick={this.getMNN}>Заменить на МНН</span></label>}
             </List.Header>
             <List.Description>
               {!edit &&
