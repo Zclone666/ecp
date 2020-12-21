@@ -1,7 +1,7 @@
 image: docker:stable
 variables:
-    PROJECT: "ecp2front"
-    PORT: 9009
+    PROJECT: "monitoringfront"
+    PORT: 9021
 
 include: 
   - project: 'root/template-gitlab'
