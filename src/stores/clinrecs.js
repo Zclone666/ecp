@@ -179,8 +179,10 @@ class Clinrecs {
         }
     });
   }
+  iterator = 1
   recursiveGetDrugs = (child = null) => {
     // console.log(child);
+    this.iterator++
     if(child && child.check === false) return
     if(child && child.type == 'Drug' && child.check){
       let drug = {
@@ -190,9 +192,13 @@ class Clinrecs {
         level: child.drug.level,
         group: child.drug.group,
       }
+      if(child.comment){
+        console.log(child.comment);
+        drug.specials = child.comment
+      }
       //drug.dosage.form
       // console.log(drug);
-      this.stores.drugs.selectFromSearch(drug)
+      setTimeout(() => this.stores.drugs.selectFromSearch(drug), this.iterator*10)
       return
     }
 

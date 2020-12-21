@@ -217,6 +217,7 @@ class Drugs {
     // console.log({ freq, duration });
     currentDrug.freq = freq || null
     currentDrug.duration = duration || null
+    currentDrug.specials = this.stores.actions.drugStructure.specials
 
     let {
       key,
@@ -244,8 +245,7 @@ class Drugs {
       interval,
       once,
       week,
-      calendar,
-      specials
+      calendar
     } = scheduleData
 
     let {
@@ -284,8 +284,7 @@ class Drugs {
       interval,
       once,
       week,
-      calendar,
-      specials
+      calendar
     }
 
     currentDrug.calc = {

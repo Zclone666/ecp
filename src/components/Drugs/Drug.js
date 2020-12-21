@@ -146,9 +146,9 @@ class Drug extends React.Component {
       onRemove,
       canDrag
     } = this.props
-
+    drug = this.props.drugs.drug.get(drug.key)
     let selectedWarnings = warnIcons[selectedDrug]
-    let { key, name, level, tn, type, dosage, helpers } = drug
+    let { key, name, level, tn, type, dosage, helpers, specials } = drug
     let drugDosages = dose.get(key) || {}
     let hasWarnings = warning.size > 0
     let names = drugDosages.names || {}
@@ -241,6 +241,7 @@ class Drug extends React.Component {
             <Feed.Content>
               <Feed.Summary>
                 <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className='underlined'>{name}</RouterLink>{type === 'TN' && <span><sup>TM</sup></span>}
+                {specials && <Popup content={specials} trigger={<Icon name='file alternate' />} />}
                 <Feed.Date>
                   {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
                   {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
@@ -265,6 +266,7 @@ class Drug extends React.Component {
                   <Feed.Content>
                     <Feed.Summary>
                       <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
+                      {specials && <Popup content={specials} trigger={<Icon name='file alternate' />} />}
                     </Feed.Summary>
 
                     <Feed.Meta>

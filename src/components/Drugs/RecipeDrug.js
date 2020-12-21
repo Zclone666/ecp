@@ -243,9 +243,7 @@ class RecipeDrug extends React.Component {
               {helpers.mnn && <label><span className='link' onClick={this.getMNN}>Вернуть</span></label>}
             </List.Header>
             <List.Description>
-              {!edit &&
-                inputValue
-              }
+              { !edit && inputValue }
             </List.Description>
           </List.Content>
         </List.Content>
