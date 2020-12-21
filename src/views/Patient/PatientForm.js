@@ -349,7 +349,7 @@ class PatientForm extends Component {
             </Form.Field>
           </Form.Group>
           <List divided verticalAlign='middle'>
-            {lab_data.map((item, i) => {
+            {lab_data && lab_data.map((item, i) => {
               return(
                 <List.Item key={'allergy'+i} style={{ padding: '0.5em', backgroundColor: '#f6f6f0' }}>
                   <List.Content floated='right'>
