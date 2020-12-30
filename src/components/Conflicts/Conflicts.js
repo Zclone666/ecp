@@ -169,9 +169,9 @@ class Conflicts extends Component {
                     className={noSelections || selectedWarnings[group.type] ? 'selected' : 'gray'}
                   >
                     {(group.type === 'age') ?
-                      <Icon as='img' src={`/warningicons/${patientForm.birthdate ? icon : 'no'+icon}.svg`} />
+                      <Icon as='img' src={`/warnicons/${patientForm.birthdate ? icon : 'no'+icon}.svg`} />
                       :
-                      <Icon as='img' src={`/warningicons/${icon}.svg`} />
+                      <Icon as='img' src={`/warnicons/${icon}.svg`} />
                     }
                     <Icon size='big' name='circle outline' style={{ color }} />
                     {(group.type === 'age' && patientForm.birthdate) && <div className='agecontainer'>

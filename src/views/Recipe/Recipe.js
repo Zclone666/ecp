@@ -61,9 +61,26 @@ class Recipe extends Component {
     this.setOpenCode(true)
     // this.props.router.push('/')
   }
+  print = async () => {
+    let code = await this.props.recipes.print()
+    // console.log({res});
+    if( !code ) return
+
+
+    var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+    pri.document.open();
+    pri.document.write(code);
+    pri.document.close();
+    pri.focus();
+    pri.print();
+    // this.setState({ code })
+    // this.setOpenCode(true)
+    // this.props.router.push('/')
+  }
 
   back = () => {
     this.props.router.push('/')
+    this.props.recipes.code = null
   };
   savePatient = async () => {
     let res = await this.props.patients.save()
@@ -84,12 +101,25 @@ class Recipe extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
+    let {
+      checkData
+    } = this.props.actions
     if( name === 'patient' ){
       let { patient } = this.props.actions.drugStructure
       let curr = await this.props.patients.patient.get(value)
       if((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id)
       curr = curr || {}
       this.props.actions.drugStructure.patient = _.extend(patient, { id: curr.id || null, key: value, name: curr.name || null, email: curr.email || null, fio: curr.fio || null })
+    }else if( name === 'doctor' ){
+      let { doctor } = this.props.actions.drugStructure
+      let newDoc = _.find(checkData.doctor, { 'id': value });
+      this.props.actions.drugStructure.doctor = _.extend(doctor, {key: newDoc.id, val: newDoc.name})
+    }else if( name === 'clinic' ){
+      let { clinic } = this.props.actions.drugStructure
+      let newLpu = _.find(checkData.lpu, { 'id': value });
+      this.props.actions.drugStructure.clinic = _.extend(clinic, {key: newLpu.id, val: newLpu.name})
+    }else if( name === 'email' ){
+      this.props.actions.drugStructure.patient.email = value
     }else{
       this.props.actions.drugStructure[name].val = value
     }
@@ -98,26 +128,31 @@ class Recipe extends Component {
 
   render() {
     let {
-      open, code, openCode
+      open, openCode
     } = this.state
     let {
-      drugStructure: {
-        doctor: {
-          val: doctor
+      actions: {
+        drugStructure: {
+          doctor: {
+            key: doctor
+          },
+          clinic: {
+            key: clinic
+          },
+          patient
         },
-        clinic: {
-          val: clinic
-        },
-        patient: {
-          key: patient
-        }
+        doctor: doc,
+        checkData
       },
-      doctor: doc
-    } = this.props.actions
+      recipes: { code }
+    } = this.props
     // let { patient: { id: patient } } = this.props.actions.drugStructure
 
     doctor = doctor || doc.name
 
+    let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
+
+    // console.log({ doctor, clinic, patient });
 
     return (
       <>
@@ -125,9 +160,12 @@ class Recipe extends Component {
           <Menu.Item color='red' onClick={this.back}>
             Назад
           </Menu.Item>
-          <Menu.Item onClick={this.save}>
+          {!code && <Menu.Item disabled={noEmail} onClick={this.save}>
             Отправить
-          </Menu.Item>
+          </Menu.Item>}
+          {code && <Menu.Item disabled={noEmail} onClick={this.print}>
+            Печать
+          </Menu.Item>}
         </Menu>
 
         <div className='scrollwrapper'>
@@ -135,8 +173,23 @@ class Recipe extends Component {
             <Form>
               <Form.Field>
                 <label>Врач</label>
-                <Input name='doctor' value={doctor} onChange={this.handleChange} placeholder='Иван Иванов' />
+                <Dropdown
+                  options={checkData.doctor.map((item) => {
+                    return {
+                      key: item.id, text: item.name, value: item.id
+                    }
+                  })}
+                  placeholder='Иван Иванов'
+                  search
+                  name='doctor'
+                  selection
+                  fluid
+
+                  value={doctor}
+                  onChange={this.handleChange}
+                />
               </Form.Field>
+
               <Form.Group>
                 <Form.Field width={16}>
                   <label>Пациент</label>
@@ -152,7 +205,7 @@ class Recipe extends Component {
                     selection
                     fluid
 
-                    value={patient}
+                    value={patient.key}
                     onAddItem={this.handleAddition}
                     onChange={this.handleChange}
                   />
@@ -187,9 +240,27 @@ class Recipe extends Component {
 
                 </Form.Field>
               </Form.Group>
+              <Form.Field error={patient.key && noEmail}>
+                <label>E-mail пациента</label>
+                <Input name='email' value={patient.email} onChange={this.handleChange} placeholder='some@email.ru' />
+              </Form.Field>
               <Form.Field>
                 <label>ЛПУ</label>
-                <Input name='clinic' value={clinic} onChange={this.handleChange} placeholder='ЛПУ' />
+                <Dropdown
+                  options={checkData.lpu.map((item) => {
+                    return {
+                      key: item.id, text: item.name, value: item.id
+                    }
+                  })}
+                  placeholder='Клиника'
+                  search
+                  name='clinic'
+                  selection
+                  fluid
+
+                  value={clinic}
+                  onChange={this.handleChange}
+                />
               </Form.Field>
             </Form>
             <Drugs isRecipe={true} />
@@ -205,6 +276,14 @@ class Recipe extends Component {
             <Header as='h1'>{code}</Header>
           </Modal.Content>
           <Modal.Actions>
+            <Button
+              content="Печать рецепта"
+              labelPosition='right'
+              primary
+              icon='file alternate outline'
+              onClick={() => this.print()}
+
+            />
             <Button
               content="ОК"
               labelPosition='right'

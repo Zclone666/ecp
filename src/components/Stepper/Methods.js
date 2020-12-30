@@ -36,7 +36,7 @@ class MethodsLF extends Component {
     } = this.props
     let way = values.way || 'lf'
     let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`
-  
+
     let currStep = parseInt(values.step || 0)
 
     let drugDosage = dosage.get(current.key)
@@ -46,7 +46,7 @@ class MethodsLF extends Component {
     // console.log('iterator', iterator);
     // console.log('stepsData', stepsData);
     return (
-      <List animated divided selection verticalAlign='middle' size='large' >
+      <List animated divided selection className='dozelist' verticalAlign='middle' size='large' >
         {iterator.map(( mid, i ) => {
           let isLiquid = false
           methodform[mid].forEach(( id ) => {

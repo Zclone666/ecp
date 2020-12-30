@@ -12,6 +12,7 @@ import Recipe from '../Recipe'
 import Analog from '../Analog'
 import DrugInfo from '../DrugInfo'
 import Liquid from '../Liquid'
+import Clinrecs from '../Clinrecs'
 
 import {
   Sidebar,
@@ -63,6 +64,7 @@ class Page extends Component {
         'analog' : <Analog />,
         'druginfo' : <DrugInfo />,
         'liquid' : <Liquid />,
+        'clinrec' : <Clinrecs />,
         'none'   : <div />
       }[name] || null
     );

@@ -116,7 +116,7 @@ class Drugs {
     });
   }
 
-  async get(drug_obj, flag =false){
+  async get(drug_obj, flag = false){
     let currentDosages = await this.dosage.get(drug_obj.key);
     let { active_language } = this.stores.actions
     if(currentDosages && !flag) {
@@ -150,7 +150,7 @@ class Drugs {
 
           await this.stores.tools.setNames(names, nameshort)
           let current = this.dosage.get(drug.key) || {};
-          await this.dosage.set( drug.key, _.extend(current, { solute, drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
+          await this.dosage.set( drug.key, _.extend(current, { solute, drug, form, methodform, names, nameshort, units }) );
           if(units && units.length > 0) await this.stores.tools.getUnitsPharm(units)
           if(drug_obj.fpid) this.getFp(drug_obj)
         },
@@ -170,11 +170,12 @@ class Drugs {
     let dosages = this.current
     let currDos = this.stores.actions.stepsData.helpers
     let value = this.stores.actions.stepsData.value
+    let pack = this.stores.actions.stepsData.pack
     let { units, getUnitArr } = this.stores.tools
 
-    // console.log({stepsData: this.stores.actions.stepsData});
+    // console.log({ currDos });
 
-    let unit = (currDos.dosage && units[currDos.dosage.id]) || null
+    let unit = (currDos.dosage && units[currDos.dosage.id]) || 248
     let firstUnit = null
     let secondUnit = null
 
@@ -186,7 +187,7 @@ class Drugs {
     }
     // console.log({firstUnit, unit});
     let unitsArr = ((firstUnit || unit) && getUnitArr((firstUnit && firstUnit.id) || (unit && unit.id))) || {}
-    //console.log({currDos});
+    // console.log('pack',pack);
     return {
       dosage: {
         value,
@@ -196,13 +197,14 @@ class Drugs {
         secondUnit
       },
       count: {
-        value: 1,
-        unit: currDos.pack && units[currDos.pack.id]
+        value: (pack && pack.dosage && pack.dosage.value_1) || 1,
+        unit: (currDos.pack && units[currDos.pack.id]) || units[248]
       }
     }
   }
 
   setStepDosage = () => {
+    // console.log('this.calcValues', this.calcValues);
     let vals = this.calcValues
     let weight = this.stores.actions.drugStructure.patient.weight || null
 
@@ -237,7 +239,7 @@ class Drugs {
       type: dosage.length > 1 ? 'multi' : 'single', // single, multi, liquid
       dosage,
       count: vals.count.value,
-      dosageUnit: (( vals.dosage.firstUnit && vals.dosage.firstUnit.id ) || ( vals.dosage.unit && vals.dosage.unit.id )) || null,
+      dosageUnit: (( vals.dosage.firstUnit && vals.dosage.firstUnit.id ) || ( vals.dosage.unit && vals.dosage.unit.id )) || 248,
       dayCount: 1,
       fullDosage: _.map( dosage, (dos) => dos * vals.count.value ),
       weightDosage: (weight ? _.map( dosage, (dos) => (dos * vals.count.value)/weight ) : [0]),
@@ -246,7 +248,7 @@ class Drugs {
     }
   }
 
-  getFromBase = ( unitId, value ) => {
+  getFromBase = ( unitId, value, double = 4 ) => {
     let { round } = this.stores.tools
     if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return [value]
     let unit = this.stores.tools.units[unitId]
@@ -254,15 +256,16 @@ class Drugs {
     //let dosage = value
 
     if(!_.isArray(value)) value = [value]
-    // console.log({ unit });
+    //console.log(1,{ value });
 
     unit.contains.forEach(( contain ) => {
       if(contain.action === 'division'){
-        value = _.map( value, (dos) => round(dos * contain.value) )
+        value = _.map( value, (dos) => round((dos * contain.value), double) )
       }else{
-        value = _.map( value, (dos) => round(dos / contain.value) )
+        value = _.map( value, (dos) => round((dos / contain.value), double) )
       }
     })
+    //console.log(2,{ value });
     return value || []
   }
 

@@ -129,8 +129,8 @@ class DozeTypes extends Component {
       //console.log({itemDosage});
       if(!itemDosage){
         arr.push({
-          dosage: { short: 'нет данных', full: 'Дозировка не указана', id: null },
-          pack: { short: '', full: '', id: null },
+          dosage: { short: 'нет данных', full: 'Дозировка не указана', id: 248 },
+          pack: { short: '', full: '', id: (item.pack && item.pack[0] && item.pack[0].dosage) ? item.pack[0].dosage.id_1 : null },
           type: 'simple',
           value: 0,
           obj: {
@@ -223,7 +223,7 @@ class DozeTypes extends Component {
     let { drug, form, methodform, names } = drugDosage
 
     return (
-      <List animated divided selection verticalAlign='middle' size='large' >
+      <List animated divided selection className='dozelist' verticalAlign='middle' size='large' >
         {this.dosages.map(( dose, i ) => {
 
           return(

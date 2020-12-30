@@ -5,7 +5,7 @@ import RouterLink from '../../router/a'
 
 import Dozes from '../Dozes'
 
-import Calculator from '../../components/Stepper/Calculator'
+import Calculator from '../../components/Stepper/Calculator/Liquid'
 
 import {
   Sidebar,
@@ -38,10 +38,9 @@ class Liquid extends Component {
 
   saveDoze = async () => {
     let {
-      drugs: { setDosageParams },
-      router: { location }
+      drugs: { setLiquidParams }
     } = this.props
-    await setDosageParams(location.pathname)
+    await setLiquidParams()
     this.props.router.push('/')
     // let current = drugsDosages.data.get(currDrug.key) || {};
     // drugsDosages.data.set( currDrug.key, _.extend(current, { ...current, url: location.pathname }) );
@@ -81,13 +80,12 @@ class Liquid extends Component {
           width='very wide'
           direction='right'
           animation='overlay'
-          visible={current.key}
-          vertical
+          visible={!!current.key}
           style={{ backgroundColor: '#FFFFFF' }}
         >
           {current.key && <Dozes />}
         </Sidebar>
-        <Sidebar.Pusher dimmed={current.key} className='pusherwrapper'>
+        <Sidebar.Pusher dimmed={!!current.key} className='pusherwrapper'>
           <div className='scrollwrapper bottomMenu'>
             <Calculator isLiquid/>
           </div>

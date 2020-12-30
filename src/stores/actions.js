@@ -38,6 +38,11 @@ class Actions {
   @observable makeLiquids = false
   @observable isLiquidsOk = false
 
+  @observable checkData = {
+    lpu: [],
+    doctor: []
+  }
+
   @observable doctor = {
     id: null,
     name: null
@@ -79,10 +84,15 @@ class Actions {
 
   @observable newPassForm = {
     email: "",
-    code: "",
-    password: "",
+    recoveryCode: "",
+    newPassword: "",
     key: ''
   }
+
+  @observable clinrecCheckerData = {
+
+  }
+  @observable clinrecCheckerStep = 1
 
   @observable stepsData = {
     key: null,
@@ -109,12 +119,14 @@ class Actions {
     weight: null,
     disease: [],
     co_disease: [],
+    lab_data: [],
     pregnancy: false,
     gestation: null,
     trimester: null,
     lactation: false,
     driving: false,
     alcohol: false,
+    masIndex: null,
     allergy: []
   }
 
@@ -143,12 +155,46 @@ class Actions {
   @observable calculatorForm = {
     dosage: [0],
     count: 1,
-    dosageUnit: null,
+    dosageUnit: 248,
     dayCount: 1,
     fullDosage: [0],
     weightDosage: [0],
     dayDosage: [0],
     dayWeightDosage: [0]
+  }
+
+  @observable liquidForm = {
+    name: "", // Название ДВ или ТН
+    group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
+    specials: null,
+    freq: null,
+    duration: null,
+    calc: {
+      dosage: [0],
+      count: 1,
+      dosageUnit: null,
+      dayCount: 1,
+      fullDosage: [0],
+      weightDosage: [0],
+      dayDosage: [0],
+      dayWeightDosage: [0],
+      durationCount: 0,
+      durationUnit: '75',
+      fullSpeed: [0],
+      weightSpeed: [0],
+      tintSpeed: [0],
+      liquidSpeed: [0]
+    },
+    schedule: {
+      dateStart: null,
+      dateFinish: null,
+      finishAlternate: null,
+      clarifications: null, //уточнения
+      interval: null,
+      once: null,
+      week: null,
+      calendar: null
+    }
   }
 
   @observable selectedDrug = null
@@ -207,9 +253,10 @@ class Actions {
 
     this.autologin()
     autorun(() => {
-      if(this.stepsData.value){
-        this.stores.dosages.setStepDosage()
-      }
+      // if(this.stepsData.dosage && this.stepsData.dosage[0] && this.stepsData.dosage[0].value_1){
+      //
+      //   this.stores.dosages.setStepDosage()
+      // }
     })
 
     autorun(() => {
@@ -252,17 +299,7 @@ class Actions {
     // console.log(d);
     this.height = h;
   }
-  setCurrentPage(page){
-    if(page){
-      this.currentPage = page
-      if(this.currentPage && _.keys(this.pages).length > 0){
-        this.stores.db.clearData()
-        // this.stores.db.getFilters()
-      }
 
-    }
-
-  }
 
   clearSteps(step){
     if( step === 1 ){
@@ -354,17 +391,23 @@ class Actions {
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
 
+    if(this.stores.router.values.protocol) {
+      this.stores.warnings.protocol(this.stores.router.values.protocol)
+      this.loading = false
+      return
+    }
+
 
     if(!this.authkey && this.stores.router.match.name !== 'auth') {
       this.loading = false
       this.stores.router.push('/login')
       return
     }
-    if(!this.authkey) {
+    if(!this.authkey || this.authkey == null || this.authkey == 'null') {
       this.loading = false
       return
     }
-
+    //// FIXME: for safari fucking shit
     return GET({
       path: `https://cs.socmedica.com/api/user/authCheck`, //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
       data: {
@@ -417,6 +460,15 @@ class Actions {
         // if( data && data.level == 'success' ){
           let { doc, id, lpu, patients, names } = data
           this.stores.patients.makeList({ patients, names })
+
+          lpu && lpu.forEach((item, i) => {
+            this.checkData.lpu.push({id: item, name: names[item]})
+          });
+          doc && doc.forEach((item, i) => {
+            this.checkData.doctor.push({id: item, name: names[item]})
+          });
+
+
           this.doctor = {
             id: (doc && doc[0]) || null,
             name: ((doc && doc[0]) && names[doc[0]]) || null

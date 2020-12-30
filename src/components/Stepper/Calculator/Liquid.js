@@ -1,0 +1,655 @@
+import React, { Component } from 'react';
+import { inject, observer } from 'mobx-react';
+
+import RouterLink from '../../../router/a'
+import {
+  List,
+  Icon,
+  Form,
+  Label,
+  Segment,
+  Input,
+  Button,
+  Dropdown,
+  Header,
+  TextArea,
+  Dimmer
+} from 'semantic-ui-react'
+
+import clarifications from '../../../constants/hardcode'
+
+
+import Schedule from './Schedule'
+import Drugs from './Drugs'
+
+import _ from 'lodash';
+
+@inject('db', 'actions', 'router', 'drugs', 'dosages', 'tools')
+@observer
+class LiquidCalculator extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      currUnit: null,
+      currDurationUnit: '75'
+    }
+  }
+  handleChangeUnit = (e, { name, value }) => {
+    if( !name && !value ){
+      let { name, value } = e.target
+    }
+    // console.log({ name, value });
+    this.setState({ [name]: value })
+    this.props.actions.liquidForm.calc.dosageUnit = value
+  }
+
+  // handleChange = (e, { name, value }) => {
+  //   let { getToBase, calcValues } = this.props.dosages
+  //   let { dosage: dos, count: cnt } = calcValues
+  //   let { currUnit } = this.state
+  //   let def = (dos.firstUnit && dos.firstUnit.id ) || (dos.unit && dos.unit.id)
+  //
+  //   if( !name && !value ){
+  //     let { name, value } = e.target
+  //   }
+  //   let weight = parseFloat(this.props.actions.drugStructure.patient.weight)
+  //   //console.log({name, value}, !!value);
+  //   //value = _.map( value, (dos) => dos.split(',').join('.') )
+  //   //if(!_.isArray(value)) value = [value]
+  //   if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
+  //     if( name == 'patient.weight' ){
+  //       this.props.actions.drugStructure.patient.weight = parseFloat(value)
+  //       weight = parseFloat(value)
+  //     }else{
+  //       this.props.actions.liquidForm.calc[name] = value
+  //     }
+  //     return
+  //   }
+  //   //value = parseFloat(eval(value))
+  //   if( name === 'specials' ){
+  //     this.props.actions.liquidForm.specials = value
+  //     return
+  //   }
+  //   //value = parseFloat(value)
+  //
+  //   if( name == 'patient.weight' ){
+  //     this.props.actions.drugStructure.patient.weight = parseFloat(value)
+  //     weight = parseFloat(value)
+  //   }else{
+  //     // this.props.actions.calculatorForm[name] = value
+  //   }
+  //
+  //
+  //   let {
+  //     calc: {
+  //       dosage,
+  //       count,
+  //       dosageUnit,
+  //       dayCount,
+  //       fullDosage,
+  //       weightDosage,
+  //       dayDosage,
+  //       dayWeightDosage,
+  //       durationCount,
+  //       durationUnit,
+  //       fullSpeed,
+  //       weightSpeed,
+  //       tintSpeed,
+  //       liquidSpeed
+  //     },
+  //     schedule: {
+  //       dateStart,
+  //       dateFinish,
+  //       finishAlternate,
+  //       clarifications, //уточнения
+  //       interval,
+  //       once,
+  //       week,
+  //       calendar
+  //     }
+  //   } = this.props.actions.liquidForm
+  //
+  //   // console.log(1, {count});
+  //   // console.log({
+  //   //   dosage,
+  //   //   count,
+  //   //   dayCount,
+  //   //   fullDosage,
+  //   //   weightDosage,
+  //   //   dayDosage,
+  //   //   dayWeightDosage
+  //   // });
+  //   switch (name) {
+  //     case 'dosage':
+  //       dosage = getToBase((currUnit || def), value.split(' + '))
+  //       fullDosage = getToBase((currUnit || def), value*count)
+  //       weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
+  //
+  //       break;
+  //     case 'count':
+  //       count = parseFloat(value.split(',').join('.'))
+  //       fullDosage = _.map( dosage, (dos) => { return parseFloat(value.split(',').join('.'))*dos } )
+  //       weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
+  //       break;
+  //     case 'patient.weight':
+  //       //fullDosage = _.map( dosage, (dos) => { return count*dos } )
+  //       weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => {
+  //         // console.log({dos,weight, res: dos/weight});
+  //         return dos/weight
+  //       } )
+  //       break;
+  //     case 'fullDosage':
+  //       fullDosage = getToBase((currUnit || def), value.split(' + '))
+  //       count = fullDosage/dosage
+  //       // console.log({weight,fullDosage});
+  //       // weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
+  //       break;
+  //     case 'weightDosage':
+  //       weightDosage = getToBase((currUnit || def), value.split(' + '))
+  //       fullDosage = _.map( weightDosage, (dos) => { return dos*weight } )
+  //       count = fullDosage/dosage
+  //       break;
+  //     default:
+  //
+  //   }
+  //
+  //   dayDosage = _.map( fullDosage, (dos) => { return dos*dayCount } )
+  //   dayWeightDosage = !weight ? [0] : _.map( weightDosage, (dos) => { return dos*dayCount } )
+  //
+  //   // this.props.actions.calculatorForm.dosage = dosage
+  //   // this.props.actions.calculatorForm.count = count
+  //   // this.props.actions.calculatorForm.fullDosage = fullDosage
+  //   // this.props.actions.calculatorForm.weightDosage = weightDosage
+  //   // this.props.actions.calculatorForm.dayDosage = dayDosage
+  //   // this.props.actions.calculatorForm.dayWeightDosage = dayWeightDosage
+  //   // console.log(2, {count});
+  //   Object.assign(this.props.actions.liquidForm.calc, {
+  //     dosage,
+  //     count,
+  //     dosageUnit,
+  //     dayCount,
+  //     fullDosage,
+  //     weightDosage,
+  //     dayDosage,
+  //     dayWeightDosage,
+  //     durationCount,
+  //     durationUnit,
+  //     fullSpeed,
+  //     weightSpeed,
+  //     tintSpeed,
+  //     liquidSpeed
+  //   });
+  //
+  //   setTimeout(() => {
+  //     // console.log({
+  //     //   dosage,
+  //     //   count,
+  //     //   dayCount,
+  //     //   fullDosage,
+  //     //   weightDosage,
+  //     //   dayDosage,
+  //     //   dayWeightDosage
+  //     // });
+  //     this.forceUpdate()
+  //   }, 300)
+  //
+  //   //console.log({ name, value });
+  // }
+
+  fieldRelations = {
+    dosage: {
+
+    },
+    count: {
+
+    },
+    dosageUnit: {
+
+    },
+    dayCount: {
+
+    },
+    fullDosage: {
+
+    },
+    weightDosage: {
+
+    },
+    dayDosage: {
+
+    },
+    dayWeightDosage: {
+
+    },
+    durationCount: {
+
+    },
+    durationUnit: {
+
+    },
+    fullSpeed: {
+
+    },
+    weightSpeed: {
+
+    },
+    tintSpeed: {
+
+    },
+    liquidSpeed: {
+
+    }
+  }
+
+  handleChangeDurationUnit = (e, { name, value }) => {
+    this.setState({ currDurationUnit: value })
+    this.props.actions.liquidForm.calc.durationUnit = value
+    this.props.drugs.recalcLiquidParams()
+  }
+
+  handleChange = (e, { name, value }) => {
+    let {
+      actions: {
+        liquidForm: {
+          calc: {
+            dosage,
+            count,
+            dosageUnit,
+            dayCount,
+            durationCount,
+            durationUnit
+          }
+        }
+      },
+      drugs: { recalcLiquidParams },
+      dosages: { getToBase, getFromBase }
+    } = this.props
+
+    if(['count', 'dayCount', 'durationCount'].includes(name)){
+      this.props.actions.liquidForm.calc[name] = parseFloat(value)
+    }else if(name === 'patient.weight'){
+      this.props.actions.drugStructure.patient.weight = parseFloat(value)
+    }else if(name === 'tintSpeed'){
+      this.props.actions.liquidForm.calc[name] = parseFloat(value)
+      this.props.actions.liquidForm.calc.count = getFromBase(168, getToBase( 799, value ))*durationCount
+    }else if(name === 'liquidSpeed'){
+      this.props.actions.liquidForm.calc[name] = parseFloat(value)
+      this.props.actions.liquidForm.calc.count = parseFloat(value*durationCount)
+    }
+
+    recalcLiquidParams()
+  }
+
+  setPreset = (e, {value}) => {
+    let { presets } = clarifications
+    let preset = _.find(presets, { 'id': value});
+    this.props.actions.liquidForm.calc.dayCount = preset.tpl[0].multiplicate
+    this.props.drugs.recalcLiquidParams()
+  }
+
+  renderPresets(){
+    let { presets } = clarifications
+    let { UIText, scheduleForm: { interval } } = this.props.actions
+    let arr = []
+    interval = interval || []
+    _.keys( presets ).forEach(( presetKey, i ) => {
+      let preset = presets[presetKey]
+      arr.push(
+        {
+          key: i,
+          text: UIText.freq[preset.id],
+          value: preset.id,
+          // onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
+          //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
+        }
+      )
+    })
+    return arr
+  }
+
+  get timeUnits(){
+    let {
+      tools: { units, unitarrs },
+      actions: {
+        liquidForm: {
+          calc: {
+            durationUnit
+          }
+        }
+      }
+    } = this.props
+    let { currDurationUnit } = this.state
+    let timeUnits = []
+    _.forEach(unitarrs[75], (unitkey, key) => {
+      let unit = units[unitkey]
+      if(unit.type === 'simple' || unit.type === 'base'){
+        timeUnits.push({
+          key: unitkey,
+          value: unitkey,
+          text: unit.shortname || unit.name
+        })
+      }
+    })
+    let currTimeUnitName = units[durationUnit || currDurationUnit].shortname || units[durationUnit || currDurationUnit].name
+    return { timeUnits, currTimeUnitName }
+  }
+
+  get weightUnits(){
+    let {
+      tools: { units, unitarrs },
+      actions: {
+        liquidForm: {
+          calc: {
+            dosageUnit
+          }
+        }
+      },
+      drugs: { calcLiquid },
+    } = this.props
+    let {
+      liqUnit
+    } = calcLiquid
+    let { currUnit } = this.state
+    let weightUnits = []
+    _.forEach(unitarrs[42], (unitkey, key) => {
+      let unit = units[unitkey]
+      if(unit.type === 'simple' || unit.type === 'base'){
+        weightUnits.push({
+          key: unitkey,
+          value: unitkey,
+          text: `${unit.shortname || unit.name}/${(liqUnit && (units[liqUnit].shortname || units[liqUnit].name) || '')}`
+        })
+      }
+    })
+    let currWeightUnitName = (dosageUnit || currUnit) ? (units[dosageUnit || currUnit].shortname || units[dosageUnit || currUnit].name) : ''
+    return { weightUnits, currWeightUnitName }
+  }
+  get valueUnits(){
+
+  }
+
+  render(){
+    let {
+      actions: {
+        drugStructure: {
+          patient: { weight },
+        },
+        liquidForm: {
+          name, // Название ДВ или ТН
+          group, // группа раствора (0 - нет раствора, больше 0 - раствор)
+          specials,
+          freq,
+          duration,
+          calc: {
+            dosage,
+            count,
+            dosageUnit,
+            dayCount,
+            fullDosage,
+            weightDosage,
+            dayDosage,
+            dayWeightDosage,
+            durationCount,
+            durationUnit,
+            fullSpeed,
+            weightSpeed,
+            tintSpeed,
+            liquidSpeed
+          },
+          schedule: {
+            dateStart,
+            dateFinish,
+            finishAlternate,
+            clarifications, //уточнения
+            interval,
+            once,
+            week,
+            calendar
+          }
+        }
+      },
+      drugs: { calcLiquid },
+      tools: { round, units, unitarrs },
+      dosages: { getFromBase },
+      router: { values },
+      isLiquid
+    } = this.props
+    let { timeUnits, currTimeUnitName } = this.timeUnits
+    let { weightUnits, currWeightUnitName } = this.weightUnits
+    let { currUnit, currDurationUnit } = this.state
+
+    let {
+      ready, liqUnit, weights: cWeights, counts: cCounts, weight: cWeight, count: calcCount, unit
+    } = calcLiquid
+
+    let liquid = values && values.liquid || null
+
+    let def = unit || '248'
+
+    let disableAll = !ready
+    let disableMulti = true
+
+    return (
+      <Segment basic>
+        {isLiquid && <div className='liquiddrugs' style={{ marginBottom: '15px'}}>
+          <Header>Составляющие раствора</Header>
+          <Drugs liquid={liquid} />
+        </div>}
+        <Dimmer.Dimmable as={'div'} dimmed={disableAll}>
+          <Form>
+            <Form.Group>
+              <Form.Field width={4}>
+                <label>Дозировка:</label>
+                <Input
+                  size='big'
+                  name='dosage'
+                  value={getFromBase((currUnit || unit), dosage).join(' + ') || ''}
+                  labelPosition='right'
+                  placeholder='500'
+                  onChange={this.handleChange}
+                >
+                  <input readonly="readonly" className='readonly' />
+                  <Label basic>
+                    <Dropdown name='currUnit' onChange={this.handleChangeUnit} options={weightUnits} value={currUnit || unit} />
+                  </Label>
+                </Input>
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>Кол-во доз:</label>
+                <Input
+                  disabled={disableAll}
+                  size='big'
+                  name='count'
+                  numeric
+                  value={count != null ? count : 0}
+                  label={{ basic: true, content: (liqUnit && (units[liqUnit].shortname || units[liqUnit].name) || '') }}
+                  labelPosition='right'
+                  placeholder='3'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>Разовая доза:</label>
+                <Input
+                  size='big'
+                  name='fullDosage'
+                  value={getFromBase((currUnit || def), fullDosage).join(' + ') || ''}
+                  label={{ basic: true, content: currWeightUnitName || 'мг' }}
+                  labelPosition='right'
+                  placeholder='500'
+                  onChange={this.handleChange}
+                >
+                  <input readonly="readonly" className='readonly' />
+                  <Label basic>{currWeightUnitName || 'мг'}</Label>
+                </Input>
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>На массу тела:</label>
+                <Input
+                  disabled={disableAll}
+                  size='big'
+                  name='patient.weight'
+                  value={weight || ''}
+                  label={{ basic: true, content: 'кг' }}
+                  labelPosition='right'
+                  placeholder='60.5'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field width={3}>
+                <label>На кг веса:</label>
+                <Input
+                  size='big'
+                  name='weightDosage'
+                  value={getFromBase((currUnit || def), weightDosage, 4).join(' + ') || ''}
+                  label={{ basic: true, content: `${currWeightUnitName || 'мг'}/кг` }}
+                  labelPosition='right'
+                  placeholder='0'
+                  onChange={this.handleChange}
+                >
+                  <input readonly="readonly" className='readonly' />
+                  <Label basic>{`${currWeightUnitName || 'мг'}/кг`}</Label>
+                </Input>
+              </Form.Field>
+            </Form.Group>
+            <Form.Group>
+              <Form.Field width={4}>
+                <label>Кратность приема:</label>
+                <Dropdown
+                  disabled={disableAll}
+                  selection
+                  defaultValue={freq || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
+                  className='input big'
+                  name={'dayCount'}
+                  placeholder={'Выбрать'}
+                  onChange={this.setPreset}
+                  options={this.renderPresets()}
+                />
+              </Form.Field>
+              <Form.Field width={4}>
+                <label>Суточная доза:</label>
+                <Input
+                  size='big'
+                  name='dayDosage'
+                  value={getFromBase((currUnit || def), dayDosage).join(' + ') || ''}
+                  label={{ basic: true, content: currWeightUnitName || 'мг' }}
+                  labelPosition='right'
+                  placeholder='500'
+                  onChange={this.handleChange}
+                >
+                  <input readonly="readonly" className='readonly' />
+                  <Label basic>{currWeightUnitName || 'мг'}</Label>
+                </Input>
+              </Form.Field>
+              <Form.Field width={4}>
+                <label>На кг веса в сутки:</label>
+                <Input
+                  size='big'
+                  name='dayWeightDosage'
+                  value={getFromBase((currUnit || def), dayWeightDosage).join(' + ') || ''}
+                  label={{ basic: true, content: `${currWeightUnitName || 'мг'}/кг/сут` }}
+                  labelPosition='right'
+                  placeholder='0'
+                  onChange={this.handleChange}
+                >
+                  <input readonly="readonly" className='readonly' />
+                  <Label basic>{`${currWeightUnitName || 'мг'}/кг`}</Label>
+                </Input>
+              </Form.Field>
+              <Form.Field width={4}>
+                <label>Длительность введения:</label>
+                <Input
+                  disabled={disableAll}
+                  size='big'
+                  name='durationCount'
+                  value={durationCount || 0}
+                  label={<Dropdown name='durationUnit' onChange={this.handleChangeDurationUnit} options={timeUnits} value={durationUnit || currDurationUnit} />}
+                  labelPosition='right'
+                  placeholder='500'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            </Form.Group>
+            <Form.Group>
+              <Form.Field width={4}>
+                <label>Скорость введения:</label>
+                <Input
+                  size='big'
+                  name='fullSpeed'
+                  value={getFromBase((currUnit || def), fullSpeed).join(' + ') || ''}
+                  label={{ basic: true, content: `${currWeightUnitName || 'мг'}/${currTimeUnitName}` }}
+                  labelPosition='right'
+                  placeholder='0'
+                  onChange={this.handleChange}
+                >
+                  <input readonly="readonly" className='readonly' />
+                  <Label basic>{`${currWeightUnitName || 'мг'}/${currTimeUnitName}`}</Label>
+                </Input>
+              </Form.Field>
+              <Form.Field width={4}>
+                <label>Скорость введения на кг:</label>
+                <Input
+                  size='big'
+                  name='weightSpeed'
+                  value={getFromBase((currUnit || def), weightSpeed).join(' + ') || ''}
+                  labelPosition='right'
+                  placeholder='0'
+                  onChange={this.handleChange}
+                >
+                  <input readonly="readonly" className='readonly' />
+                  <Label basic>{`${currWeightUnitName || 'мг'}/кг/${currTimeUnitName}`}</Label>
+                </Input>
+              </Form.Field>
+              <Form.Field width={4}>
+                <label>Скорость в каплях:</label>
+                <Input
+                  size='big'
+                  name='tintSpeed'
+                  value={tintSpeed || ''}
+                  label={{ basic: true, content: `кап/${currTimeUnitName}` }}
+                  labelPosition='right'
+                  placeholder='500'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field width={4}>
+                <label>Скорость в мл:</label>
+                <Input
+                  size='big'
+                  name='liquidSpeed'
+                  value={liquidSpeed || ''}
+                  label={{ basic: true, content: `мл/${currTimeUnitName}` }}
+                  labelPosition='right'
+                  placeholder='0'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            </Form.Group>
+          </Form>
+          {!disableAll && <Schedule />}
+          <Form>
+            <Form.Group>
+              <Form.Field width={16}>
+                <TextArea
+                  size='big'
+                  name='specials'
+                  value={specials || ''}
+                  placeholder='Особые указания'
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            </Form.Group>
+          </Form>
+          <Dimmer inverted active={disableAll}>
+            <Header as='h2' icon color='grey'>
+              <Icon name='external square alternate' />
+              Сначала укажите дозировку для всех составляющих раствора!
+            </Header>
+          </Dimmer>
+        </Dimmer.Dimmable>
+      </Segment>
+    )
+  }
+
+};
+export default LiquidCalculator

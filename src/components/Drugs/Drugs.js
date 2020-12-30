@@ -143,6 +143,13 @@ class Drugs extends Component {
     this.props.drugs.setGroup(key, group)
   }
 
+  getLiqParams = (id) => {
+    let {
+      drugs: { makeLiquids },
+    } = this.props
+    makeLiquids()
+  }
+
   removeLiquid = (drugs) => {
     let keys = []
     drugs.forEach((drug, i) => {
@@ -160,46 +167,22 @@ class Drugs extends Component {
   }
 
   render(){
-    // const { selectedDrug, selectedConflict } = this.state
     let {
       actions: {
         selectedDrug,
-        // selectedConflict,
-        // activeDrugs,
-        // activeConflicts
       },
-      drugs: { drug: drugs },
+      drugs: { drug: drugs, liquid: liquidList },
       warnings: { warning }, //warnings, warnGroups
       dosages: { dosage },
       isRecipe
     } = this.props
-    // let selectedWarnings = warning[selectedDrug]
-    // console.log('activeDrugs', activeDrugs);
 
     let {
       groups, grouped, iterator, canDrag
     } = this.drugsWithGroups
 
-
-
-    // let iterator = Array.from(drugs.values())
-    // iterator = _.orderBy(iterator, ['group'], ['desc']);
-    //
-    // // let c = 0
-    // let liquids = []
-    // let iteratorObj = _.groupBy(iterator, (x) => {
-    //   if(liquids.indexOf(x.group) === -1){
-    //     liquids.push(x.group)
-    //   }
-    //   return x.group
-    // })
-    //
-    // liquids.push((_.max(liquids) + 1));
-    //
-    // liquids = _.sortBy(liquids, [function(o) { return -o; }]);// _.reverse(_.sortedUniq(liquids));
-
     let warnDrugs = this.warnDrugs
-    // console.log('iterator', iterator);
+
     let colors = [
       '#F3F4F5',
       '#DFF0FF',
@@ -230,6 +213,7 @@ class Drugs extends Component {
           >
             <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
               {groups.map(( liquid, l ) => {
+                let current = liquidList.get(liquid)
                 if(liquid === 0){
                   return(
                     <Droppable isCombineEnabled droppableId={`drug_place_${liquid}`} type="DRUG"  key={`drug_place_${liquid}`}>
@@ -273,6 +257,7 @@ class Drugs extends Component {
                   return (
                     <Droppable droppableId={`drug_place_${liquid}`} type="DRUG"  key={`drug_place_${liquid}`}>
                       {(prov, snap) => {
+
                         return(
                           <div
                             className={`liquidcontainer${snap.isDraggingOver ? ' active' : ''}`}
@@ -286,7 +271,7 @@ class Drugs extends Component {
                             {(!grouped[liquid]) && <div className={'abstext'}>Перетащите сюда не менее двух составляющих для раствора</div>}
                             {grouped[liquid] && <div className={'text'}>
                               <Icon name='delete' className='right floated' onClick={() => this.removeLiquid(grouped[liquid])} />
-                              <RouterLink to={'/liquid/calc/'+liquid}><Icon name='lab' className='right floated'  /></RouterLink>
+                              {current &&<RouterLink disabled={!current} onClick={() => this.getLiqParams(liquid)} to={'/liquid/calc/'+liquid}><Icon name='lab' className='right floated'  /></RouterLink>}
                               Раствор {liquid}
                             </div>}
 

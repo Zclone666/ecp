@@ -39,10 +39,14 @@ class Dozes extends Component {
 
   saveDoze = async () => {
     let {
-      drugs: { setDosageParams },
-      router: { location }
+      drugs: { setDosageParams, getLiquidParams },
+      router: { values }
     } = this.props
-    await setDosageParams(location.pathname)
+    await setDosageParams()
+    if(values && values.liquid && parseInt(values.liquid) > 0){
+      await getLiquidParams()
+    }
+
     this.back()
     // let current = drugsDosages.data.get(currDrug.key) || {};
     // drugsDosages.data.set( currDrug.key, _.extend(current, { ...current, url: location.pathname }) );

@@ -22,10 +22,20 @@ a.underlined{
 	overflow-y: hidden !important;
 }
 
+.ui.input input.readonly{
+	background-color: #f5f5f0 !important;
+}
+
 .link{
   font-weight: normal;
   border-bottom: 1px dashed #262626;
   cursor: pointer;
+}
+.header .link{
+  font-weight: normal !important;
+	font-size: 0.6em !important;
+  border-bottom: 1px dashed #262626 !important;
+  cursor: pointer !important;
 }
 
 .toolbarSpacer{
@@ -60,6 +70,9 @@ a.underlined{
 }
 .nomargins{
   margin: 0 !important;
+}
+.noborder{
+  border: none !important;
 }
 
 .row_container{
@@ -295,6 +308,13 @@ body > #root > .ui.body{
 .ui.header.middle{
   padding: .45em 0 0;
 }
+
+.ui.stretched.header{
+	margin: 0 -1em;
+  padding: .5em 1em;
+  background: #eee;
+}
+
 .ui.header > span, .header > span{
   font-weight: normal !important;
   margin-right: 3px;
@@ -1160,6 +1180,23 @@ td > .collapsable ul li{
 }
 
 // start
+.ui.divided.list .list .item, .ui.divided.list .item, .ui.divided.list {
+	display: block !important;
+  height: 100%;
+	width: 100% !important;
+}
+.ui.divided.dozelist.list .list .item, .ui.divided.dozelist.list .item, .ui.divided.dozelist.list {
+	display: block !important;
+  height: auto !important;
+	width: 100% !important;
+}
+.ui.list.draginfo .item .icon{
+	padding: 3px 0 0 0 !important;
+}
+
+.ui.list .item .content:not(.feed) {
+  overflow: hidden !important;
+}
 
 .ui.divided.selection.list .list .item, .ui.divided.selection.list .item {
     margin: 0;
@@ -1180,95 +1217,95 @@ td > .collapsable ul li{
   border-top: none;
 }
 .ui.selection.list .list .item, .ui.selection.list .item {
-    cursor: pointer;
-    background: transparent;
-    padding: .5em;
-    margin: 0;
-    color: rgba(0,0,0,.4);
-    border-radius: .5em;
-    transition: color .1s ease,padding-left .1s ease,background-color .1s ease;
+  cursor: pointer;
+  background: transparent;
+  padding: .5em;
+  margin: 0;
+  color: rgba(0,0,0,.4);
+  border-radius: .5em;
+  transition: color .1s ease,padding-left .1s ease,background-color .1s ease;
 }
 .ui.list .list .item:last-child, .ui.list .item:last-child, ol.ui.list li:last-child, ul.ui.list li:last-child {
-    padding-bottom: 0;
+  padding-bottom: 0;
 }
 .ui.list .list .item, .ui.list .item, ol.ui.list li, ul.ui.list li {
-    display: list-item;
-    table-layout: fixed;
-    list-style-type: none;
-    list-style-position: outside;
-    padding: .21428571em 0;
-    line-height: 1.14285714em;
+  display: list-item;
+  table-layout: fixed;
+  list-style-type: none;
+  list-style-position: outside;
+  padding: .21428571em 0;
+  line-height: 1.14285714em;
 }
 
 .ui.list .item:after, .ui.list .list .item, ol.ui.list li:first-child:after, ul.ui.list li:first-child:after {
-    content: "";
-    display: block;
-    height: 0;
-    clear: both;
-    visibility: hidden;
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }
 
 .ui.list .list .item .icon+.content, .ui.list .list .item .image+.content, .ui.list .item .icon+.content, .ui.list .item .image+.content {
-    display: table-cell;
-    width: 100%;
-    padding: 0 0 0 .5em;
-    vertical-align: top;
+  display: table-cell;
+  width: 100%;
+  padding: 0 0 0 .5em;
+  vertical-align: top;
 }
 .ui.list .item .content {
-    position: relative;
-    overflow: visible;
-    display: table-cell;
+  position: relative;
+  overflow: visible;
+  display: table-cell;
 }
 
 .ui.list .list .item .content, .ui.list .item .content {
-    line-height: 1.14285714em;
+  line-height: 1.14285714em;
 }
 
 .ui.selection.list .list .item, .ui.selection.list .item {
-    cursor: pointer;
-    background: transparent;
-    padding: .5em;
-    margin: 0;
-    color: rgba(0,0,0,.4);
-    border-radius: .5em;
-    transition: color .1s ease,padding-left .1s ease,background-color .1s ease;
+  cursor: pointer;
+  background: transparent;
+  padding: .5em;
+  margin: 0;
+  color: rgba(0,0,0,.4);
+  border-radius: .5em;
+  transition: color .1s ease,padding-left .1s ease,background-color .1s ease;
 }
 .ui.list .list .item, .ui.list .item, ol.ui.list li, ul.ui.list li {
-    display: list-item;
-    table-layout: fixed;
-    list-style-type: none;
-    list-style-position: outside;
-    padding: .21428571em 0;
-    line-height: 1.14285714em;
+  display: list-item;
+  table-layout: fixed;
+  list-style-type: none;
+  list-style-position: outside;
+  padding: .21428571em 0;
+  line-height: 1.14285714em;
 }
 
 .ui.list .item .content {
-    position: relative;
-    overflow: visible;
-    display: table-cell;
+  position: relative;
+  overflow: visible;
+  display: table-cell;
 }
 
 .ui.list .list .item [class*="left floated"], .ui.list .item [class*="left floated"] {
-    float: left;
-    margin: 0 1em 0 0;
+  float: left;
+  margin: 0 1em 0 0;
 }
 .ui.list .list .item .content, .ui.list .item .content {
-    line-height: 1.14285714em;
+  line-height: 1.14285714em;
 }
 .ui.list .list .item a, .ui.list .item a {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .ui.list .item .icon.warning.circle {
-    text-shadow: 0.5px 0.5px 1px #bbb;
+  text-shadow: 0.5px 0.5px 1px #bbb;
 }
 .ui.list .list .item i.icon, .ui.list .item i.icon {
-    display: table-cell;
-    margin: 0;
-    padding-top: .07142857em;
-    padding-right: .28571429em;
-    vertical-align: top;
-    transition: color .1s ease;
+  display: table-cell;
+  margin: 0;
+  padding-top: .07142857em;
+  padding-right: .28571429em;
+  vertical-align: top;
+  transition: color .1s ease;
 }
 
 .ui.list .disabled.item{
@@ -1281,7 +1318,7 @@ td > .collapsable ul li{
 	position: relative;
 }
 
-.ui.list.drugslist .item .border{
+.ui.list.drugslist .item .border, .ui.list.draginfo .item .border{
 	transition: background-color .5s ease-in-out, opacity .3s ease-in-out, filter .3s ease-in-out;
 	position: absolute;
 	left: 0;
@@ -1317,6 +1354,11 @@ td > .collapsable ul li{
 	font-size: 1.1em;
 	line-height: 1.2em;
 }
+.ui.list.drugslist .item .summary .icon{
+	display: inline-block;
+  margin-left: 5px;
+}
+
 .ui.list.drugslist .item.selected .summary{
 	font-weight: bold;
 }
@@ -1354,7 +1396,7 @@ td > .collapsable ul li{
 	position: absolute;
 	margin-left: -5px;
 	text-align: right;
-	padding-left: 18px;
+	padding-left: 16px;
     margin-top: .2em;
 	width: 40px;
 	height: 23px;
@@ -1644,4 +1686,42 @@ td > .collapsable ul li{
   margin: 2px;
   float: left;
   background: rgba(0, 0, 0, 0.6);
+}
+
+.glowing {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+@keyframes glowing {
+  0% { color: rgba(0, 0, 0, 0.6); }
+  50% { color: rgba(100, 0, 0, 1); }
+  100% { color: rgba(0, 0, 0, 0.6); }
+}
+
+.glowing {
+  animation: glowing 1000ms infinite;
+}
+
+
+.ReactCollapse--collapse {
+  transition: height 300ms;
+}
+
+
+// clinrecs
+.clinrec{
+
+}
+.clinrec.ui.list .item{
+	border-top: none !important;
+	border-bottom: none !important;
+}
+.checkContainer{
+	padding-left: 25px;
+  position: relative;
+}
+.checkContainer .ui.checkbox{
+	position: absolute;
+  left: 2px;
+  top: 5px;
 }

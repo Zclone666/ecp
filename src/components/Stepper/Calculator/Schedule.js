@@ -30,7 +30,7 @@ class Schedule extends Component {
   constructor(props){
     super(props)
     this.state = {
-      
+
       timeFromStart: null
     }
   }
@@ -39,7 +39,7 @@ class Schedule extends Component {
       let { name, value } = e.target
     }
     // console.log('HERE');
-    console.log({ value });
+    // console.log({ name, value });
     if( name === 'dateStart' || name === 'dateFinish' ){
       this.setState({ timeFromStart: null })
       if(moment(value).format('x') !== 'Invalid date') this.props.actions.scheduleForm[name] = moment(value).format('x')
@@ -74,15 +74,15 @@ class Schedule extends Component {
     // this.setState({ [name]: value })
      // console.log({ name, value });
   }
-  setToday = () => {
-    this.props.actions.scheduleForm.dateStart = moment().format('x')
+  setTomorrow = () => {
+    this.props.actions.scheduleForm.dateStart = moment().add(1, 'd').format('x')
   }
   setDate = (tpl, id) => {
     let { UIText } = this.props.actions
     let { dateStart } = this.props.actions.scheduleForm
     this.setState({ timeFromStart: UIText.duration[id] })
     this.props.drugs.current.duration = id
-    this.props.actions.scheduleForm.dateFinish = moment(dateStart, 'x').add(tpl.x, tpl.timesx).format('x')
+    this.props.actions.scheduleForm.dateFinish = moment(dateStart, 'x').add(tpl.x, tpl.timesx).add(-1, 'd').format('x')
     this.props.actions.scheduleForm.finishAlternate = null
   }
   componentDidMount(){
@@ -102,6 +102,7 @@ class Schedule extends Component {
     } = this.props
 
     this.props.actions.scheduleForm.dateStart = dateStart || moment().format('x')
+    // console.log(this.props.actions.scheduleForm.dateStart);
   }
 
   renderDurations(){
@@ -156,7 +157,7 @@ class Schedule extends Component {
     dateStart = (dateStart && moment(dateStart, 'x').format('DD.MM.YYYY')) || ''
     dateFinish = (dateFinish && moment(dateFinish, 'x').format('DD.MM.YYYY')) || ''
     //
-    // console.log({_dateStart});
+    // console.log({dateStart});
     // let dateFinish = 0
     let sex = 'male'
     return (
@@ -164,13 +165,13 @@ class Schedule extends Component {
         <Form>
           <Form.Group>
             <Form.Field width={4}>
-              <label>Начало приема (<span className='link' onClick={this.setToday}>сегодня</span>):</label>
+              <label>Начало приема (<span className='link' onClick={this.setTomorrow}>завтра</span>):</label>
               <DatePickerInput
                 onChange={( value ) => this.handleChange(null, { value, name: 'dateStart' })}
                 name='dateStart'
                 value={dateStart}
                 showOnInputClick={true}
-                startMode='year'
+                startMode='day'
                 format='DD.MM.YYYY'
                 returnFormat='DD.MM.YYYY'
                 displayFormat='DD.MM.YYYY'
@@ -189,7 +190,7 @@ class Schedule extends Component {
                   name='dateFinish'
                   value={dateFinish}
                   showOnInputClick={true}
-                  startMode='year'
+                  startMode='day'
                   format='DD.MM.YYYY'
                   returnFormat='DD.MM.YYYY'
                   displayFormat='DD.MM.YYYY'
@@ -224,7 +225,7 @@ class Schedule extends Component {
 
           </Form.Group>
 
-          <Form.Group>
+          {false && <Form.Group>
             <Form.Field className='fluid'>
               <label>Условия приема</label>
               <Responsive as={Button.Group} fluid widths={3} minWidth={481}>
@@ -242,7 +243,7 @@ class Schedule extends Component {
                 {/*<Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>*/}
               </Responsive>
             </Form.Field>
-          </Form.Group>
+          </Form.Group>}
           {{
             'once': <div/>,
             'week': <Week />,

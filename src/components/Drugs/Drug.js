@@ -113,9 +113,7 @@ class Drug extends React.Component {
 
     let arr = []
 
-    // console.log({drug});
-
-    if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
+    if(calc && calc.fullDosage && helpers.dosage && helpers.dosage.id ){
       let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
       let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit]
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
@@ -148,42 +146,52 @@ class Drug extends React.Component {
       onRemove,
       canDrag
     } = this.props
-    //console.log('drug', drug);
+    drug = this.props.drugs.drug.get(drug.key)
     let selectedWarnings = warnIcons[selectedDrug]
-    let { key, name, level, tn, type, dosage, helpers } = drug
+    let { key, name, level, tn, type, dosage, helpers, specials } = drug
     let drugDosages = dose.get(key) || {}
     let hasWarnings = warning.size > 0
-    //console.log('drugDosages', drugDosages);
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
-    let url = drugDosages.url || '/concept/dozes'
-    let currWarning = active//activeDrugs.includes(drug.key) && (selectedWarnings && warnGroups[selectedWarnings[drug.key].group] || warnGroups[selectedConflict])
+    dosage = dosage || {}
+
+    let dosReady = !!drugDosages.names
+
+    let urlArr = ['/concept/dozes']
+    // console.log({drug});
+		if(helpers.way) urlArr.push(helpers.way)
+		if(helpers.step) urlArr.push(helpers.step)
+
+		let url = urlArr.join('/')
+
+    let currWarning = active
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
-    let maxItem = warnIcons[drug.key] //_.maxBy(_.toArray(warnings[drug.key]), function(o){ return o.value; });
+    let maxItem = warnIcons[drug.key]
     let className = selectedDrug === drug.key ? 'selected' : ''
     className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
 
     let hasBorder = selectedDrug === drug.key && maxItem
-    // const [{ opacity }, drag] = useDrag({
-    //   item: { name, type },
-    //   collect: (monitor) => ({
-    //     opacity: monitor.isDragging() ? 0.4 : 1,
-    //   }),
-    // })
-    // console.log({currWarning});
 
     let resultStyle = { ...(style || {}), ...(!canDrag ? { cursor: 'default' } : { cursor: 'move' }) }
 
     let rules = this.renderRules()
-    // console.log({style})
+
     return(
       <List.Item style={resultStyle} className={`${!hasWarnings ? 'nowarnings ' : ''}${className}`}>
 
         <List.Content floated='right'>
           <Responsive fireOnMount as={Button.Group} minWidth='481'>
-            <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
-              <Icon name='tint' />
-            </Button>
+            {dosReady &&
+              <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
+                <Icon name='tint' />
+              </Button>
+            }
+            {!dosReady &&
+              <Button disabled icon>
+                <Icon loading name='circle notch' />
+              </Button>
+            }
+
             <Button disabled={drug.group !== 0} icon as={RouterLink} to={`/analog/${drug.key}`} onClick={this.getAnalog}>
               <Icon name='font' />
             </Button>
@@ -233,6 +241,7 @@ class Drug extends React.Component {
             <Feed.Content>
               <Feed.Summary>
                 <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className='underlined'>{name}</RouterLink>{type === 'TN' && <span><sup>TM</sup></span>}
+                {specials && <Popup content={specials} trigger={<Icon name='file alternate' />} />}
                 <Feed.Date>
                   {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
                   {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
@@ -257,6 +266,7 @@ class Drug extends React.Component {
                   <Feed.Content>
                     <Feed.Summary>
                       <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
+                      {specials && <Popup content={specials} trigger={<Icon name='file alternate' />} />}
                     </Feed.Summary>
 
                     <Feed.Meta>
@@ -276,14 +286,24 @@ class Drug extends React.Component {
               }
             >
               <Dropdown.Menu>
-                <Dropdown.Item
-                  disabled={drug.group !== 0}
-                  icon='tint'
-                  as={RouterLink}
-                  to={url}
-                  onClick={this.getLF}
-                  text='Дозировка'
-                />
+                {dosReady &&
+                  <Dropdown.Item
+                    disabled={drug.group !== 0}
+                    icon='tint'
+                    as={RouterLink}
+                    to={url}
+                    onClick={this.getLF}
+                    text='Дозировка'
+                  />
+                }
+                {!dosReady &&
+                  <Dropdown.Item
+                    disabled
+                    icon={<Icon loading name='circle notch' />}
+                    text='Дозировка'
+                  />
+                }
+
                 <Dropdown.Item
                   disabled={drug.group !== 0}
                   icon='font'

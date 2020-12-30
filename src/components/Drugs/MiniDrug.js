@@ -46,7 +46,7 @@ class MiniDrug extends React.Component {
 	renderRules(){
     let {
       dosages: { getFromBase },
-      tools: { names, shortnames },
+      tools: { names, shortnames, round },
       drug: {
         freq,
         duration,
@@ -63,9 +63,9 @@ class MiniDrug extends React.Component {
     // console.log({drug});
 
     if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
-      let dosageValue = getFromBase(helpers.dosage.id, calc.fullDosage)
-      let dosageName = shortnames[helpers.dosage.id] || names[helpers.dosage.id]
-      arr.push(`${_.map(dosageValue, (dos) => parseFloat(dos)).join(' + ')} ${dosageName}`)
+      let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
+      let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit]
+      arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
     }
 
     if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
@@ -98,7 +98,15 @@ class MiniDrug extends React.Component {
 
 		let names = drugDosages.names || {}
 		let nameshort = drugDosages.nameshort || {}
-		let url = `/liquid/calc/${values.liquid}${(drugDosages.url && drugDosages.url.replace('/concept', '')) || '/dozes'}`
+		// liquid/calc/1/dozes/lf/4
+		// console.log({drug});
+		let urlArr = ['/liquid/calc',values.liquid,'dozes']
+
+		if(helpers.way) urlArr.push(helpers.way)
+		if(helpers.step) urlArr.push(helpers.step)
+
+		let url = urlArr.join('/')
+		// let url = `/liquid/calc/${values.liquid}${(drugDosages.url && drugDosages.url.replace('/concept', '')) || '/dozes'}`
 		let className = selectedDrug === drug.key ? 'selected' : ''
 		className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
 
@@ -109,7 +117,7 @@ class MiniDrug extends React.Component {
 			<List.Item style={resultStyle} className={`nowarnings ${className}`}>
 				<List.Content floated='right'>
 					<Button as={RouterLink} to={url} onClick={this.getLF} icon>
-						<Icon name='tint' />
+						<Icon className='glowing' name='tint' />
 					</Button>
 				</List.Content>
 				<div className='border' style={{ backgroundColor: 'transparent' }} />
@@ -143,16 +151,16 @@ class MiniDrug extends React.Component {
 		              <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
 	              </Feed.Summary>
 	              <Feed.Meta>
-		              {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-		              {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
-		              {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
-		              {(nameshort[dosage.method] || names[dosage.method]) && ', '}
-		              {rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
+									{dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
+									{(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
+									{(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
+									{(nameshort[dosage.method] || names[dosage.method]) && ', '}
+									{rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
 	              </Feed.Meta><br />
-	              {!rules.empty && <Feed.Meta>
-		              {(nameshort[dosage.method] || names[dosage.method]) || ''}, &nbsp;
-		              {rules.text}
-	              </Feed.Meta>}
+								{!rules.empty && <Feed.Meta>
+									{(nameshort[dosage.method] || names[dosage.method]) || ''}, &nbsp;
+									{rules.text}
+								</Feed.Meta>}
 
               </Feed.Content>
             </Feed.Event>

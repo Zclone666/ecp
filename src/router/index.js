@@ -28,16 +28,18 @@ export default class Router {
     this.onLocation(this.history.location);
 
     autorun(() => {
-      if (!this.match) this.push('/');
+      // if (!this.match) this.push('/');
     });
     autorun(() => {
       // console.log('ROUTER',this.values);
-      if(this.values && this.values.page) this.stores.actions.setCurrentPage(this.values.page)
+      // console.log(this.values.protocol);
+      if(this.values && this.values.protocol && typeof(this.values.protocol) !== 'undefined') this.stores.warnings.protocol(this.values.protocol)
+      // if(this.values && this.values.page) this.stores.actions.setCurrentPage(this.values.page)
     });
   }
 
   @action onLocation(location) {
-     // console.log("YES");
+    // console.log("YES");
     // let oldRoute = this.match;
     // let oldVals = this.values;
     let matchedRoute = this.mapper.map(location.pathname, this.options.routes);

@@ -14,7 +14,11 @@ const clarifications = {
     timeDinner: { id: "h6byVd0S+LVxd8+kMqJ3KA==" },
     timeEvening: { id: "0lDuva4iOJ0uHPQqBah+dQ==" },
   },
-
+  // type: "value"
+  // unit_1: "day"
+  // unit_2: null
+  // value_1: 2
+  // value_2: null
   //count day
   presets: {
     perDay1: { id: "CrjuCSzHZJ4I6PSMAXzTpw==", tpl: [{ type: 'count', x: 1, timesx: 'days', multiplicate: 1 }] },
