@@ -14,7 +14,7 @@ const colorPallette = [
   '#f42a03',
 ]
 
-class Drugs {
+class Dosages {
   @observable ready = false;
 
   @observable current = { //drugDosage
@@ -347,4 +347,4 @@ class Drugs {
   // }
 
 }
-export default Drugs;
+export default Dosages;

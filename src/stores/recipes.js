@@ -78,7 +78,7 @@ class Recipes {
       data,
       success: async data => {
         // console.log(data);
-        return data.Code
+        return data.code
       },
       fail: (alerts) => {
         this.stores.actions.loading = false
