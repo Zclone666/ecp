@@ -44,7 +44,7 @@ class Drugs {
     calc: {
       dosage: [0],
       count: 1,
-      dosageUnit: 248,
+      dosageUnit: '248',
       dayCount: 1,
       fullDosage: [0],
       weightDosage: [0],
@@ -489,7 +489,7 @@ class Drugs {
       calc: {
         dosage: [0],
         count: 0,
-        dosageUnit: 248,
+        dosageUnit: '248',
         dayCount: 1,
         fullDosage: [0],
         weightDosage: [0],
@@ -853,7 +853,7 @@ class Drugs {
       calc: {
         dosage: [0],
         count: 1,
-        dosageUnit: 248,
+        dosageUnit: '248',
         dayCount: 1,
         fullDosage: [0],
         weightDosage: [0],

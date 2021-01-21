@@ -14,7 +14,7 @@ const colorPallette = [
   '#f42a03',
 ]
 
-class Drugs {
+class Dosages {
   @observable ready = false;
 
   @observable current = { //drugDosage
@@ -239,7 +239,7 @@ class Drugs {
       type: dosage.length > 1 ? 'multi' : 'single', // single, multi, liquid
       dosage,
       count: vals.count.value,
-      dosageUnit: (( vals.dosage.firstUnit && vals.dosage.firstUnit.id ) || ( vals.dosage.unit && vals.dosage.unit.id )) || 248,
+      dosageUnit: (( vals.dosage.firstUnit && vals.dosage.firstUnit.id ) || ( vals.dosage.unit && vals.dosage.unit.id )) || '248',
       dayCount: 1,
       fullDosage: _.map( dosage, (dos) => dos * vals.count.value ),
       weightDosage: (weight ? _.map( dosage, (dos) => (dos * vals.count.value)/weight ) : [0]),
@@ -347,4 +347,4 @@ class Drugs {
   // }
 
 }
-export default Drugs;
+export default Dosages;
