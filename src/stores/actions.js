@@ -155,7 +155,7 @@ class Actions {
   @observable calculatorForm = {
     dosage: [0],
     count: 1,
-    dosageUnit: 248,
+    dosageUnit: '248',
     dayCount: 1,
     fullDosage: [0],
     weightDosage: [0],
