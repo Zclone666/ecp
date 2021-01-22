@@ -71,17 +71,18 @@ class Recipes {
   print = async () => {
     if(this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis()
 
-    this.stores.actions.loading = true
-    let { active_language } = this.stores.actions
-    await this.stores.db.clearData(false, true)
-    let data = await _.clone(this.stores.actions.drugStructure)
-    data.drugs = await Array.from(this.stores.drugs.drug.values())
+    // this.stores.actions.loading = true
+    // let { active_language } = this.stores.actions
+    // await this.stores.db.clearData(false, true)
+    // let data = await _.clone(this.stores.actions.drugStructure)
+    // data.drugs = await Array.from(this.stores.drugs.drug.values())
+    let data = {}
 
     data.service = "43"
     data.active_language = active_language
-    data.return_subjects = false
-    data.authkey = this.stores.actions.authkey
-    data.key = this.stores.actions.privateKey
+    // data.return_subjects = false
+    // data.authkey = this.stores.actions.authkey
+    data.key = this.code
     return POST({
       path: 'tools/PrintRecipe', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
