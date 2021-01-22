@@ -13,7 +13,7 @@ const colorPallette = [
   '#fc7301',
   '#f42a03',
 ]
-
+ 
 class Drugs {
   @observable ready = false;
   @observable searchRows = [];
