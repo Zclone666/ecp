@@ -13,7 +13,7 @@ const colorPallette = [
   '#fc7301',
   '#f42a03',
 ]
- 
+
 class Drugs {
   @observable ready = false;
   @observable searchRows = [];
@@ -312,7 +312,7 @@ class Drugs {
 
     let { freq, duration } = drug
     // console.log({ freq, duration });
-
+    let { specials } = currentDrug
     let {
       form,
       method,
@@ -335,8 +335,7 @@ class Drugs {
       interval,
       once,
       week,
-      calendar,
-      specials
+      calendar
     } = currentDrug.schedule
     let {
       dosage: dos,
@@ -382,10 +381,9 @@ class Drugs {
       interval,
       once,
       week,
-      calendar,
-      specials
+      calendar
     }
-
+    this.stores.actions.drugStructure.specials = specials
   }
 
   get calcLiquid(){

@@ -14,7 +14,6 @@ class Layout extends Component {
 
   render() {
     const { loading } = this.props.actions
-    console.log('Here 123', loading);
     return (
       <div className="ui body">
         <UserOnly>

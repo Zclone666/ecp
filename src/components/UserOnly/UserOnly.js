@@ -11,7 +11,6 @@ class UserOnly extends Component {
       actions: { authorized },
       router: { match }
     } = this.props;
-    console.log('UserOnly', authorized, match);
     return (
       authorized && match.name !== 'auth' ?
         children

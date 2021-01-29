@@ -150,8 +150,8 @@ class Recipe extends Component {
 
     doctor = doctor || doc.name
 
-    let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
-
+    // let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
+    let noEmail = false
     // console.log({ doctor, clinic, patient });
 
     return (

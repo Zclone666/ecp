@@ -275,6 +275,8 @@ class LiquidCalculator extends Component {
     }else if(name === 'liquidSpeed'){
       this.props.actions.liquidForm.calc[name] = parseFloat(value)
       this.props.actions.liquidForm.calc.count = parseFloat(value*durationCount)
+    }else if(name === 'specials'){
+      this.props.actions.liquidForm[name] = value
     }
 
     recalcLiquidParams()
