@@ -265,6 +265,7 @@ class Actions {
           this.loading = false
         }, 5000)
       }
+        console.log('Here', this.loading);
     });
     // autorun(() => {
     //   console.log(this.currentPage);
@@ -387,7 +388,7 @@ class Actions {
     this.getObject('elements')
     this.getObject('UIText')
 
-
+    console.log('here 1', this.loading);
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
 
@@ -396,6 +397,7 @@ class Actions {
       this.loading = false
       return
     }
+    console.log('here 2', this.loading);
 
 
     if(!this.authkey && this.stores.router.match.name !== 'auth') {
@@ -403,10 +405,13 @@ class Actions {
       this.stores.router.push('/login')
       return
     }
+    console.log('here 3', this.loading);
     if(!this.authkey || this.authkey == null || this.authkey == 'null') {
       this.loading = false
+      this.stores.router.push('/login')
       return
     }
+    console.log('here 4', this.loading);
     //// FIXME: for safari fucking shit
     return GET({
       path: `https://cs.socmedica.com/api/user/authCheck`, //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
@@ -423,6 +428,7 @@ class Actions {
 
         // this.stores.router.push('/')
         // this.stores.db.getFilters()
+        console.log('here 5', this.loading);
 
       },
       fail: async () => {

@@ -345,7 +345,15 @@ class Warnings {
         // }, 3000)
       },
       fail: (alerts) => {
-
+        this.stores.actions.loading = false
+        this.stores.actions.authorized = true
+        this.stores.actions.makeAlerts({ alerts:[{
+          title: "Ошибка!",
+          message: "Возникла ошибка запроса протокола.",
+          level: "error",
+          sticky: true
+        }]})
+        this.stores.router.push('/login')
       },
       always: (data) => {
 

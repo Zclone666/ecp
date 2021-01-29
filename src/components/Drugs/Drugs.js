@@ -315,11 +315,11 @@ class Drugs extends Component {
 
         }
         {isRecipe &&
-          <List divided selection verticalAlign='middle' size='big' className={isRecipe ? '' : 'drugslist'}>
+          <List divided selection verticalAlign='middle' size='big'>
             {iterator.map(( drug, i ) => {
+              // console.log({drug});
               return(
-                <RecipeDrug drug={drug} key={`drug_${i}`} />
-
+                <RecipeDrug drugKey={drug.key} key={`drug_${i}`} />
               )
             })}
           </List>
