@@ -6,6 +6,7 @@ import moment from 'moment'
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
+export const CHECK_REG_KEY ='340f725c9ccb9779'
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 class Actions {
 
@@ -64,7 +65,8 @@ class Actions {
     middleName: "",
     lpuName: '',
     department: '',
-    hidden: true
+    hidden: true,
+    isEmailReg: false
   }
 
   @observable confirmForm = {
@@ -587,6 +589,43 @@ class Actions {
       success: async (data) => {
         // console.log('SUCCESS', data);
         this.stores.router.push('/login')
+        // if (data.authkey) {
+        //   await localStorage.setItem('authkey', data.authkey);
+        //   this.authkey = data.authkey
+        // }
+      },
+      fail: alerts => {
+        this.loading = false
+        // console.log('FAIL', alerts);
+      },
+      always: (data) => {
+        this.makeAlerts(data)
+        // console.log('ALWAYS', data);
+      }
+    });
+  }
+  async checkUserUmkb() {
+    // this.signinForm.key = AUTH_SERVICE_KEY;
+    let dataSend = {
+      key: CHECK_REG_KEY,
+      email: this.signinForm.email
+    }
+    return POST({
+      path: `https://cs.socmedica.com/api/user/getUserInfoByEmail`,
+      data: dataSend,
+      success: async (data) => {
+        // console.log(data);
+        if( data && data.alerts && data.alerts[0].code == '200' ){
+
+          this.signinForm.isEmailReg = false
+          this.stores.router.push('/login')
+        }else{
+          this.signinForm.isEmailReg = true
+        }
+        // console.log('SUCCESS', data);
+        // this.loading = false
+        // this.signinForm.isEmailReg = true
+        // this.stores.router.push('/login')
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey

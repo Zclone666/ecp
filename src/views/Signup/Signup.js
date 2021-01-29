@@ -23,8 +23,15 @@ class Signup extends Component {
 
     this.props.actions.signin()
   }
+  handleCheck = async (e) => {
+    let { name, value } = e.target;
+    if( name == 'email' ){
+      this.props.actions.checkUserUmkb()
+    }
+  }
   handleChange = async (e) => {
     let { name, value } = e.target;
+
     if( name === 'confirm_password' ){
       await this.setState({ confirm_password: value })
     }else{
@@ -42,8 +49,9 @@ class Signup extends Component {
   }
 
   render () {
-    let { projectTitle, signinForm: { email, password, lastName, firstName, middleName, lpuName, department } } = this.props.actions
+    let { projectTitle, signinForm: { isEmailReg, email, password, lastName, firstName, middleName, lpuName, department } } = this.props.actions
     let { confirm_password, filled, checkPass } = this.state
+    let canInputPass = (email.length < 1 && isEmailReg)
     return (
       <div className='login-form height100perc'>
 
@@ -72,6 +80,7 @@ class Signup extends Component {
                       value={email}
                       iconPosition='left'
                       placeholder='E-mail'
+                      onBlur={this.handleCheck}
                       onChange={this.handleChange}
                     />
                     <Form.Input
@@ -134,6 +143,7 @@ class Signup extends Component {
                       size='large'
                       name="password"
                       fluid
+                      disabled={!canInputPass}
                       error={!this.state.checkPass}
                       icon='lock'
                       iconPosition='left'
@@ -146,6 +156,7 @@ class Signup extends Component {
                       size='large'
                       name="confirm_password"
                       fluid
+                      disabled={!canInputPass}
                       error={!this.state.checkPass}
                       icon='lock'
                       iconPosition='left'
