@@ -33,6 +33,7 @@ class Schedule extends Component {
 
       timeFromStart: null
     }
+    this.dateFinish = React.createRef()
   }
   handleChange = (e, { name, value }) => {
     if( !name && !value ){
@@ -186,6 +187,7 @@ class Schedule extends Component {
               <label>Окончание приема:</label>
               <Input action>
                 <DatePickerInput
+                  ref={this.dateFinish}
                   onChange={( value ) => this.handleChange(null, { value, name: 'dateFinish' })}
                   name='dateFinish'
                   value={dateFinish}
@@ -196,6 +198,9 @@ class Schedule extends Component {
                   displayFormat='DD.MM.YYYY'
                   validationFormat='DD.MM.YYYY'
                   onClear={this.onClear}
+                  onBlur={()=>{
+                    this.dateFinish.current.toggleDatePicker()
+                  }}
                   className='ui fluid big input '
                   placeholder='__.__.____'
                   locale='ru'
