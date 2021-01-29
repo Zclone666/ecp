@@ -143,9 +143,11 @@ class RecipeDrug extends React.Component {
       duration,
       calc,
       dosage,
-      helpers
+      helpers,
+      schedule
     } = drug
     // console.log({drug});
+    let { finishAlternate } = schedule || {}
 
     if(calc && calc.fullDosage && helpers.dosage && helpers.dosage.id ){
       let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
@@ -155,6 +157,7 @@ class RecipeDrug extends React.Component {
 
     if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
     if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+    if(finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate])
 
     return {
       empty: arr.length < 1,

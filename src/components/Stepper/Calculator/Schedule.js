@@ -51,6 +51,7 @@ class Schedule extends Component {
         case 'finishAlternate':
           this.props.actions.scheduleForm.finishAlternate = this.props.actions.scheduleForm.finishAlternate ? null : value
           this.setState({ timeFromStart: null })
+          this.props.drugs.current.duration = null
           this.props.actions.scheduleForm.dateFinish = null
           break;
         // case 'finishAlternate':

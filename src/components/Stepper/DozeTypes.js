@@ -176,6 +176,7 @@ class DozeTypes extends Component {
             arr.push({ ...currPack })
           })
         }else{
+          let pack = item.pack[0]
           if(_.isArray(itemDosage) && itemDosage.length > 1 ){
             currPack.dosage.full += _.map(itemDosage, 'value_1').join(' + ') + ' ' + names[itemDosage[0].id_1]
             currPack.dosage.short += _.map(itemDosage, 'value_1').join(' + ') + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
@@ -190,7 +191,7 @@ class DozeTypes extends Component {
           currPack.flag = !!(itemDosage[0] && itemDosage[0].id_2)
           currPack.obj = {
             dosages: itemDosage,
-            pack: null
+            pack: null//item.pack[0]
           }
           arr.push({ ...currPack })
         }

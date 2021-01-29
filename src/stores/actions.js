@@ -242,8 +242,7 @@ class Actions {
     active_language: "ru",
     liquids: [],
     drugs: [],
-    text: null,
-    specials: null
+    text: null
   }
 
 

@@ -105,11 +105,14 @@ class Drug extends React.Component {
         duration,
         calc,
         dosage,
-        helpers
+        helpers,
+        schedule
       },
       drug,
       actions: { UIText }
     } = this.props
+
+    let { finishAlternate } = schedule || {}
 
     let arr = []
 
@@ -121,6 +124,7 @@ class Drug extends React.Component {
 
     if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
     if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+    if(finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate])
 
     return {
       empty: arr.length < 1,
