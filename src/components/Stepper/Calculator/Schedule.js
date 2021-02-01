@@ -200,13 +200,17 @@ class Schedule extends Component {
                   validationFormat='DD.MM.YYYY'
                   onClear={this.onClear}
                   onBlur={()=>{
-                    this.dateFinish.current.toggleDatePicker()
+                    
+                    this.dateFinish.current.hide()
                   }}
                   className='ui fluid big input '
                   placeholder='__.__.____'
                   locale='ru'
                 />
                 <Dropdown
+                  onClick={() => {
+                    this.dateFinish.current.hide()
+                  }}
                   disabled={!dateStart || dateStart.length < 1}
                   className='button'
                   name={'durations'}
