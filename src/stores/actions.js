@@ -207,18 +207,12 @@ class Actions {
   @observable drugStructure = {
     key: "key",
     device_id: null,
-    clinic: {
-      key: null,
-      val: null,
-    },
-    department: {
-      key: null,
-      val: null
-    },
-    doctor: {
-      key: null,
-      val: null
-    },
+    clinic_key: null,
+    clinic_val: null,
+    department_key: null,
+    department_val: null,
+    doctor_key: null,
+    doctor_val: null,
     patient: {
       id: null,
       email: null,

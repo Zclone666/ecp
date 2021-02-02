@@ -87,6 +87,7 @@ class Patients {
           }
           this.stores.actions.drugStructure.patient = {
             id,
+            key: id,
             email,
             fio,
             miscode,
@@ -130,7 +131,7 @@ class Patients {
     if(patients && _.isArray(patients)){
       patients.forEach( async (patientId, i) => {
         let patient = this.getById(patientId)
-        let key = patient.key || (moment().format('x') + i).toString()
+        let key = patientId || (moment().format('x') + i).toString()
 
         // let current = await this.patient.get(key) || {}
         // let patient = await _.extend(current, { name: names[patientId], id: patientId, key });
