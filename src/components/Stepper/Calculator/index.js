@@ -165,7 +165,8 @@ class Calculator extends Component {
 
   setPreset = (e, {value}) => {
     let { presets } = clarifications
-    let preset = { tpl: value} //_.find(presets, { 'id': value});
+    let { freq } = this.props.tools.unitsSchedule
+    let preset = { tpl: freq[value]} //_.find(presets, { 'id': value});
     let {
       type,
       dosage,
@@ -177,7 +178,7 @@ class Calculator extends Component {
       dayDosage,
       dayWeightDosage
     } = this.props.actions.calculatorForm
-    this.props.drugs.current.freq = preset.id
+    this.props.drugs.current.freq = value
     this.props.actions.scheduleForm.interval = preset.tpl
 
     let unitCount = 1
@@ -217,7 +218,7 @@ class Calculator extends Component {
         {
           key: freqKey,
           text: freqKey,
-          value: freqItem,
+          value: freqKey,
           // onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
           //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
         }
@@ -245,14 +246,14 @@ class Calculator extends Component {
           dayWeightDosage
         },
       },
-      tools: { round, units },
+      tools: { round, units, unitsSchedule },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
       router: { values },
       drugs: { current },
       isLiquid
     } = this.props
     let { currUnit } = this.state
-
+    let freqFirst = _.keys(unitsSchedule.freq)[0]
     let weights = []
     let { dosage: dos, count: cnt } = calcValues
 
@@ -386,7 +387,7 @@ class Calculator extends Component {
                 <Dropdown
                   disabled={disableAll}
                   selection
-                  defaultValue={(current && current.freq) || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
+                  defaultValue={(current && current.freq) || null}
                   className='input big'
                   name={'dayCount'}
                   placeholder={'Выбрать'}

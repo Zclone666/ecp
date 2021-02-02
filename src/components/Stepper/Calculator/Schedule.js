@@ -200,7 +200,6 @@ class Schedule extends Component {
                   validationFormat='DD.MM.YYYY'
                   onClear={this.onClear}
                   onBlur={()=>{
-                    
                     this.dateFinish.current.hide()
                   }}
                   className='ui fluid big input '

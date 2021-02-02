@@ -122,7 +122,7 @@ class Drug extends React.Component {
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
     }
 
-    if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
+    if(freq) arr.push(freq)
     if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
     if(finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate])
 

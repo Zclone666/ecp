@@ -52,13 +52,15 @@ class MiniDrug extends React.Component {
         duration,
         calc,
         dosage,
-        helpers
+        helpers,
+				schedule
       },
       drug,
       actions: { UIText }
     } = this.props
 
     let arr = []
+		let { finishAlternate } = schedule || {}
 
     // console.log({drug});
 
@@ -68,8 +70,9 @@ class MiniDrug extends React.Component {
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
     }
 
-    if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
+    if(freq) arr.push(freq)
     if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+    if(finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate])
 
     return {
       empty: arr.length < 1,
