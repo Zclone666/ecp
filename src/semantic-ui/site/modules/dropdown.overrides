@@ -10,3 +10,14 @@
     min-width: 100%!important;
     width: auto!important;
 }
+@media only screen and (max-width: 767px){
+  .ui.selection.dropdown .menu {
+      max-height: 14.871429rem;
+  }
+}
+
+@media only screen and (min-width: 768px){
+  .ui.selection.dropdown .menu {
+      max-height: 14.871429rem;
+  }
+}
