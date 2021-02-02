@@ -271,9 +271,16 @@ class Dosages {
 
   getToBase = ( unitId, value ) => {
     if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return value
+    // console.log(typeof(value));
+    // value = value.replace(',', '.')
+    // if(value.split('.')[1] && value.split('.')[1] != ''){
+    //   console.log(value);
+    //   value = parseFloat(value)
+    // }
     let unit = this.stores.tools.units[unitId]
     if(!unit) return 0
     let dosage = value
+    // console.log(value/100);
 
     // console.log({ unit });
     unit.contains.forEach(( contain ) => {
@@ -283,6 +290,7 @@ class Dosages {
         dosage = dosage * contain.value
       }
     })
+    // console.log(dosage);
     return dosage
   }
 

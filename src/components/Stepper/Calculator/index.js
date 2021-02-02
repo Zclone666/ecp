@@ -54,6 +54,7 @@ class Calculator extends Component {
     //value = _.map( value, (dos) => dos.split(',').join('.') )
     //if(!_.isArray(value)) value = [value]
     //value = parseFloat(eval(value))
+    value = value.replace(',', '.')
     let double = false
     if( name === 'specials' ){
       this.props.actions.drugStructure.specials = value
@@ -68,11 +69,13 @@ class Calculator extends Component {
         this.props.actions.calculatorForm[name] = value
       }
       return
+    }else if( value != parseFloat(value) && !( value.split(' + ') && value.split(' + ').length > 1 ) ){
+      return
     }
     //value = parseFloat(value)
 
     if( name == 'patient.weight' && !double ){
-      value = value.replace(',', '.')
+
       this.props.actions.drugStructure.patient.weight = parseFloat(value)
       weight = parseFloat(value)
     }else{
