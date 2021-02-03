@@ -57,7 +57,7 @@ class PatientForm extends Component {
         this.props.actions.patientForm[name]=parseFloat(value)
       }
 
-      this.props.actions.patientForm.masIndex = this.props.actions.patientForm.weight/Math.pow((this.props.actions.patientForm.growth/100), 2)
+      this.props.actions.patientForm.masIndex = parseFloat((this.props.actions.patientForm.weight/Math.pow((this.props.actions.patientForm.growth/100), 2)).toFixed(2))
     }else{
       this.props.actions.patientForm[name] = value
     }
@@ -213,7 +213,7 @@ class PatientForm extends Component {
               />
             </Form.Field>
             <Form.Field width={2}>
-              <label>Индекс <i>m</i></label>
+              <label>ИМТ</label>
               <Input
                 size='big'
                 name='masIndex'
