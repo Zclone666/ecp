@@ -71,7 +71,8 @@ class MiniDrug extends React.Component {
     }
 
     if(freq) arr.push(freq)
-    if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+		if(duration) arr.push(duration)
+    // if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
     if(finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate])
 
     return {

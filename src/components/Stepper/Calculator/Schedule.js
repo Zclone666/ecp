@@ -49,6 +49,8 @@ class Schedule extends Component {
         this.props.actions.scheduleForm.dateFinish = null
         this.props.actions.scheduleForm.finishAlternate = null
       }
+      this.props.drugs.current.duration = moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true)
+      // console.log(moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true));
       // console.log({ value: moment(value).format('x') } );
     }else{
       switch (name) {
@@ -87,7 +89,7 @@ class Schedule extends Component {
     let { UIText } = this.props.actions
     let { dateStart } = this.props.actions.scheduleForm
     this.setState({ timeFromStart: UIText.duration[id] })
-    this.props.drugs.current.duration = id
+    this.props.drugs.current.duration = UIText.duration[id]
     this.props.actions.scheduleForm.dateFinish = moment(dateStart, 'x').add(tpl.x, tpl.timesx).add(-1, 'd').format('x')
     this.props.actions.scheduleForm.finishAlternate = null
   }
