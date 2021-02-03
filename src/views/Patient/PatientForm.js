@@ -55,6 +55,7 @@ class PatientForm extends Component {
     let veryOld = moment().diff(((birthdate && moment(birthdate, 'x')) || moment()), 'years') >= 60
 
     if( name === 'weight' || name === 'growth' ){
+      value = value.replace(',', '.')
       if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
         this.props.actions.patientForm[name]=value
       }else{
