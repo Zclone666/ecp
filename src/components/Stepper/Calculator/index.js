@@ -170,9 +170,9 @@ class Calculator extends Component {
   }
 
   setPreset = (e, {value}) => {
-    let { presets } = clarifications
+    let { getToBase, getFromBase, calcValues } = this.props.dosages
     let { freq } = this.props.tools.unitsSchedule
-    let preset = { tpl: freq[value]} //_.find(presets, { 'id': value});
+    let preset = { tpl: freq[value] } //_.find(presets, { 'id': value});
     let {
       type,
       dosage,
@@ -187,15 +187,19 @@ class Calculator extends Component {
     this.props.drugs.current.freq = value
     this.props.actions.scheduleForm.interval = preset.tpl
 
-    let unitCount = 1
+    let dayInMinutes = 1440
+
+    let unitCount = getToBase(preset.tpl[0].unit_1, preset.tpl[0].value_1)/dayInMinutes
+    // let unitCount = 1
+    // console.log({unitCount});
     if(preset.tpl[0].type == 'count'){
-      dayCount = preset.tpl[0].value_1
+      dayCount = unitCount
       dayDosage = _.map( (fullDosage || [0]), (dos) => { return preset.tpl[0].value_1 * dos } )
       dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return preset.tpl[0].value_1 * dos } )
     }else if(preset.tpl[0].type == 'every'){
-      dayCount = preset.tpl[0].value_1 / unitCount
-      dayDosage = _.map( (fullDosage || [0]), (dos) => { return (preset.tpl[0].value_1 * dos)/unitCount } )
-      dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return (preset.tpl[0].value_1 * dos)/unitCount } )
+      dayCount = 1/unitCount
+      dayDosage = _.map( (fullDosage || [0]), (dos) => { return dos/unitCount } )
+      dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return dos/unitCount } )
     }
 
     this.props.actions.calculatorForm = {
