@@ -45,6 +45,10 @@ class Schedule extends Component {
       this.setState({ timeFromStart: null })
       if(moment(value).format('x') !== 'Invalid date') this.props.actions.scheduleForm[name] = moment(value).format('x')
       if(name === 'dateFinish') this.props.actions.scheduleForm.finishAlternate = null
+      if(name === 'dateStart' && this.props.actions.scheduleForm.dateFinish < moment(value).format('x')){
+        this.props.actions.scheduleForm.dateFinish = null
+        this.props.actions.scheduleForm.finishAlternate = null
+      }
       // console.log({ value: moment(value).format('x') } );
     }else{
       switch (name) {
