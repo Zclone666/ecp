@@ -286,16 +286,20 @@ class LiquidCalculator extends Component {
       return
     }
 
+    let tmp = 0
+
     if(['count', 'dayCount', 'durationCount'].includes(name)){
       this.props.actions.liquidForm.calc[name] = parseFloat(value)
     }else if(name === 'patient.weight'){
       this.props.actions.drugStructure.patient.weight = parseFloat(value)
     }else if(name === 'tintSpeed'){
+      tmp = this.props.actions.liquidForm.calc[name]/parseFloat(value)
       this.props.actions.liquidForm.calc[name] = parseFloat(value)
-      this.props.actions.liquidForm.calc.count = getFromBase(168, getToBase( 799, value ))*durationCount
+      this.props.actions.liquidForm.calc.durationCount = parseFloat((tmp*durationCount).toFixed(4))
     }else if(name === 'liquidSpeed'){
+      tmp = this.props.actions.liquidForm.calc[name]/parseFloat(value)
       this.props.actions.liquidForm.calc[name] = parseFloat(value)
-      this.props.actions.liquidForm.calc.count = parseFloat(value*durationCount)
+      this.props.actions.liquidForm.calc.durationCount = parseFloat((tmp*durationCount).toFixed(4))
     }else if(name === 'specials'){
       // this.props.actions.liquidForm[name] = value
     }
