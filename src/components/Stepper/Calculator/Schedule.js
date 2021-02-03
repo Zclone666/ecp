@@ -194,12 +194,13 @@ class Schedule extends Component {
                   value={dateFinish}
                   showOnInputClick={true}
                   startMode='day'
+                  minDate={moment(dateStart, 'DD.MM.YYYY')}
                   format='DD.MM.YYYY'
                   returnFormat='DD.MM.YYYY'
                   displayFormat='DD.MM.YYYY'
                   validationFormat='DD.MM.YYYY'
                   onClear={this.onClear}
-                  
+
                   className='ui fluid big input '
                   placeholder='__.__.____'
                   locale='ru'
