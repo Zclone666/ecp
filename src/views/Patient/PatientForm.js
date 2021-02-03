@@ -469,7 +469,7 @@ class PatientForm extends Component {
                 Алкоголь
               </Button>
             </Form.Field>
-            {isWoman && <Form.Field>
+            {(isWoman && !veryOld) && <Form.Field>
               <Button
                 size='big'
                 disabled={!isWoman || veryOld}
@@ -589,7 +589,7 @@ class PatientForm extends Component {
                 Алкоголь
               </Button>
             </Form.Field>
-            {isWoman && <Form.Field>
+            {(isWoman && !veryOld) && <Form.Field>
               <Button
                 size='big'
                 disabled={!isWoman || veryOld}
