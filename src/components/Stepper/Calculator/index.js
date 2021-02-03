@@ -388,7 +388,7 @@ class Calculator extends Component {
               </Form.Field>
             </Form.Group>
             <Form.Group>
-              <Form.Field width={4}>
+              {!liquid && <Form.Field width={4}>
                 <label>Кратность приема:</label>
                 <Dropdown
                   disabled={disableAll}
@@ -400,7 +400,7 @@ class Calculator extends Component {
                   onChange={this.setPreset}
                   options={this.renderPresets()}
                 />
-              </Form.Field>
+              </Form.Field>}
               <Form.Field width={6}>
                 <label>Суточная доза:</label>
                 <Input
