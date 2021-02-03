@@ -49,6 +49,10 @@ class PatientForm extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
+    const {
+      birthdate
+    } = this.props.actions.patientForm
+    let veryOld = moment().diff(((birthdate && moment(birthdate, 'x')) || moment()), 'years') >= 60
 
     if( name === 'weight' || name === 'growth' ){
       if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
@@ -61,7 +65,7 @@ class PatientForm extends Component {
     }else{
       this.props.actions.patientForm[name] = value
     }
-    if( name === 'sex' && value !== 'woman' ){
+    if( (name === 'sex' && value !== 'woman') || veryOld ){
       this.props.actions.patientForm.pregnancy = false
       this.props.actions.patientForm.gestation = null
       this.props.actions.patientForm.trimester = null
