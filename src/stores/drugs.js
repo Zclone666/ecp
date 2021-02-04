@@ -498,7 +498,7 @@ class Drugs {
         durationUnit: '75',
         fullSpeed: [0],
         weightSpeed: [0],
-        tintSpeed: [0],
+        tintSpeed: 0,
         liquidSpeed: 0
       },
       schedule: {
@@ -726,8 +726,8 @@ class Drugs {
           durationUnit: '75',
           fullSpeed: [0], // fullDosage,
           weightSpeed: [0], // _.map( fullDosage, (dos) => { return patientWeight ? getToBase((unit || 248), dos)/patientWeight : 0 } ),
-          tintSpeed: [0], // getFromBase( 799, fullDosage ),
-          liquidSpeed:  [0], //calcCount
+          tintSpeed: 0, // getFromBase( 799, fullDosage ),
+          liquidSpeed:  0, //calcCount
         },
         schedule: {
           dateStart: null,
