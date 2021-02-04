@@ -85,7 +85,7 @@ class Schedule extends Component {
      // console.log({ name, value });
   }
   setTomorrow = () => {
-    this.props.actions.scheduleForm.dateStart = moment().add(1, 'd').format('x')
+    this.handleChange( null, { name: 'dateStart', value: moment().add(1, 'd') } )
   }
   setDate = (tpl, id) => {
     let { UIText } = this.props.actions
