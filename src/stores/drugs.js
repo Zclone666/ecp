@@ -40,6 +40,7 @@ class Drugs {
       method: null,
       pack: {},
       dosage: {},
+      value: null
     },
     calc: {
       dosage: [0],
