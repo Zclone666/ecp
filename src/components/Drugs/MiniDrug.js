@@ -48,8 +48,10 @@ class MiniDrug extends React.Component {
       dosages: { getFromBase },
       tools: { names, shortnames, round },
       drug: {
-        freq,
+				freq,
+        freq_id,
         duration,
+        duration_id,
         calc,
         dosage,
         helpers,
@@ -70,8 +72,16 @@ class MiniDrug extends React.Component {
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
     }
 
-    if(freq) arr.push(freq)
-		if(duration) arr.push(duration)
+		if(freq_id && UIText.freq[freq_id]){
+      arr.push(UIText.freq[freq_id])
+    }else if(freq){
+      arr.push(freq)
+    }
+    if(duration_id && UIText.duration[duration_id]){
+      arr.push(UIText.duration[duration_id])
+    }else if(duration){
+      arr.push(duration)
+    }
     // if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
     if(finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate])
 

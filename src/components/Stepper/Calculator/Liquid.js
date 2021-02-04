@@ -18,6 +18,7 @@ import {
 
 import clarifications from '../../../constants/hardcode'
 
+import { checkDouble, clearDouble } from '../../../lib/helpers'
 
 import Schedule from './Schedule'
 import Drugs from './Drugs'
@@ -265,7 +266,7 @@ class LiquidCalculator extends Component {
       dosages: { getToBase, getFromBase }
     } = this.props
 
-    value = value.replace(',', '.')
+    value = clearDouble(value)
     let double = false
 
     if( name === 'specials' ){
@@ -273,7 +274,7 @@ class LiquidCalculator extends Component {
       return
     }
 
-    if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' || value === ',' || value.split(',')[1] === '' ) {
+    if( !checkDouble(value) ) {
       double = true
       if( name == 'patient.weight' ){
         this.props.actions.drugStructure.patient.weight = value
@@ -316,7 +317,8 @@ class LiquidCalculator extends Component {
     } = this.props.actions.liquidForm.calc
     let { freq } = this.props.tools.unitsSchedule
     let preset = { tpl: freq[value] }
-    this.props.actions.liquidForm.frec = value
+    this.props.drugs.current.freq = value
+    this.props.drugs.current.freq_id = preset.tpl[0].id
     this.props.actions.liquidForm.calc.dayCount = preset.tpl[0].multiplicate
     this.props.actions.liquidForm.schedule.interval = preset.tpl
 

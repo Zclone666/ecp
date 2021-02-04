@@ -17,6 +17,7 @@ import {
 
 import clarifications from '../../../constants/hardcode'
 
+import { checkDouble, clearDouble } from '../../../lib/helpers'
 
 import Schedule from './Schedule'
 import Drugs from './Drugs'
@@ -54,13 +55,13 @@ class Calculator extends Component {
     //value = _.map( value, (dos) => dos.split(',').join('.') )
     //if(!_.isArray(value)) value = [value]
     //value = parseFloat(eval(value))
-    value = value.replace(',', '.')
+    value = clearDouble(value)
     let double = false
     if( name === 'specials' ){
       this.props.actions.drugStructure.specials = value
       return
     }
-    if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' || value === ',' || value.split(',')[1] === '' ) {
+    if( !checkDouble(value) ) {
       double = true
       if( name == 'patient.weight' ){
         this.props.actions.drugStructure.patient.weight = value
@@ -185,6 +186,7 @@ class Calculator extends Component {
       dayWeightDosage
     } = this.props.actions.calculatorForm
     this.props.drugs.current.freq = value
+    this.props.drugs.current.freq_id = preset.tpl[0].id
     this.props.actions.scheduleForm.interval = preset.tpl
 
     let dayInMinutes = 1440

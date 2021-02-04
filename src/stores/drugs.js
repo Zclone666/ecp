@@ -33,7 +33,9 @@ class Drugs {
     text: null,
     specials: null,
     freq: null,
+    freq_id: null,
     duration: null,
+    duration_id: null,
     solute: false,
     dosage: { // дозировка
       form: null,
@@ -214,10 +216,12 @@ class Drugs {
     let { calcValues, getFromBase } = this.stores.dosages
     let def = (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id ) || (calcValues.dosage.unit && calcValues.dosage.unit.id)
 
-    let { freq, duration } = drug
+    let { freq, freq_id, duration, duration_id } = drug
     // console.log({ freq, duration });
     currentDrug.freq = freq || null
+    currentDrug.freq_id = freq_id || null
     currentDrug.duration = duration || null
+    currentDrug.duration_id = duration_id || null
     currentDrug.specials = this.stores.actions.drugStructure.specials
 
     let {
@@ -311,7 +315,12 @@ class Drugs {
     let currentDrug = await this.drug.get(drug.key) || {};
     let currentDosages = await this.stores.dosages.dosage.get(drug.key) || {};
 
-    let { freq, duration } = drug
+    let { freq, freq_id, duration, duration_id } = drug
+    // console.log({ freq, duration });
+    // currentDrug.freq = freq || null
+    // currentDrug.freq_id = freq_id || null
+    // currentDrug.duration = duration || null
+    // currentDrug.duration_id = duration_id || null
     // console.log({ freq, duration });
     let { specials } = currentDrug
     let {
@@ -484,7 +493,9 @@ class Drugs {
       group: item, // группа раствора (0 - нет раствора, больше 0 - раствор)
       specials: null,
       freq: null,
+      freq_id: null,
       duration: null,
+      duration_id: null,
       calc: {
         dosage: [0],
         count: 0,
@@ -532,7 +543,9 @@ class Drugs {
       group, // группа раствора (0 - нет раствора, больше 0 - раствор)
       specials,
       freq,
+      freq_id,
       duration,
+      duration_id,
       calc: {
         dosage,
         count,
@@ -566,7 +579,9 @@ class Drugs {
       group,
       specials,
       freq,
+      freq_id,
       duration,
+      duration_id,
       calc: {
         dosage,
         count,
@@ -698,7 +713,9 @@ class Drugs {
       group,
       specials,
       freq,
-      duration
+      freq_id,
+      duration,
+      duration_id
     } = current
     // console.log('HERE 1');
     if(flag){
@@ -712,7 +729,9 @@ class Drugs {
         group, // группа раствора (0 - нет раствора, больше 0 - раствор)
         specials,
         freq,
+        freq_id,
         duration,
+        duration_id,
         calc: {
           dosage: dosage,
           count: calcCount,
@@ -792,7 +811,9 @@ class Drugs {
         group, // группа раствора (0 - нет раствора, больше 0 - раствор)
         specials,
         freq,
+        freq_id,
         duration,
+        duration_id,
         calc: {
           dosage,
           count,
@@ -840,7 +861,9 @@ class Drugs {
       text: null,
       specials: null,
       freq: null,
+      freq_id: null,
       duration: null,
+      duration_id: null,
       solute: false,
       dosage: { // дозировка
         form: null,
