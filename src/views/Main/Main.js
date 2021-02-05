@@ -211,7 +211,7 @@ class Main extends Component {
                     />
                   </Modal.Actions>
                 </Modal>
-                : ( !listChanged ?
+                : ( listChanged ?
                   <Menu.Item onClick={() => this.saveList()}>
                     Назначить
                   </Menu.Item>

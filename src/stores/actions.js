@@ -39,6 +39,8 @@ class Actions {
   @observable makeLiquids = false
   @observable isLiquidsOk = false
 
+  @observable protocol = null
+
   @observable checkData = {
     lpu: [],
     doctor: []
@@ -234,7 +236,7 @@ class Actions {
     doctor_id: null,
     doctor_code: null,
     doctor_name: null,
-    
+
     patient: {
       id: null,
       email: null,

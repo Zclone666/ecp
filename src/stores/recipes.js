@@ -126,12 +126,15 @@ class Recipes {
       data,
       success: async data => {
         this.stores.drugs.listChanged = false
-        if(data && data.Code){
-          this.code = data.Code
-          return data.Code
-        }else{
-          return false
+        if(data.protocol){
+          this.stores.actions.protocol = data.protocol
         }
+        // if(data && data.Code){
+        //   this.code = data.Code
+        //   return data.Code
+        // }else{
+        //   return false
+        // }
         this.stores.actions.loading = false
       },
       fail: (alerts) => {
