@@ -113,11 +113,13 @@ class Recipe extends Component {
     }else if( name === 'doctor' ){
       // let { doctor_key } = this.props.actions.drugStructure
       let newDoc = _.find(checkData.doctor, { 'id': value });
-      this.props.actions.drugStructure.doctor_key = newDoc.id
+      this.props.actions.drugStructure.doctor_id = newDoc.id
+      this.props.actions.drugStructure.doctor_name = newDoc.name
     }else if( name === 'clinic' ){
       // let { clinic } = this.props.actions.drugStructure
       let newLpu = _.find(checkData.lpu, { 'id': value });
-      this.props.actions.drugStructure.clinic_key = newLpu.id
+      this.props.actions.drugStructure.clinic_id = newLpu.id
+      this.props.actions.drugStructure.clinic_name = newLpu.name
     }else if( name === 'email' ){
       this.props.actions.drugStructure.patient.email = value
     }else{
@@ -133,8 +135,8 @@ class Recipe extends Component {
     let {
       actions: {
         drugStructure: {
-          doctor_key: doctor,
-          clinic_key: clinic,
+          doctor_id: doctor,
+          clinic_id: clinic,
           patient
         },
         doctor: doc,

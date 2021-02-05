@@ -204,15 +204,37 @@ class Actions {
   @observable activeDrugs = []
   @observable activeConflicts = []
 
+  // clinic_id: null,
+  // clinic_code: null,
+  // clinic_name: null,
+  // dep_id: null,
+  // dep_code: null,
+  // dep_name: null,
+  // doctor_id: null,
+  // doctor_code: null,
+  // doctor_name: null,
+
+  // clinic_key: null, //clinic_id clinic_code clinic_name
+  // clinic_val: null,
+  // department_key: null, //dep_id dep_code dep_name
+  // department_val: null,
+  // doctor_key: null, //doctor_id doctor_code doctor_name
+  // doctor_val: null,
+
   @observable drugStructure = {
     key: "key",
     device_id: null,
-    clinic_key: null,
-    clinic_val: null,
-    department_key: null,
-    department_val: null,
-    doctor_key: null,
-    doctor_val: null,
+
+    clinic_id: null,
+    clinic_code: null,
+    clinic_name: null,
+    dep_id: null,
+    dep_code: null,
+    dep_name: null,
+    doctor_id: null,
+    doctor_code: null,
+    doctor_name: null,
+    
     patient: {
       id: null,
       email: null,
