@@ -24,6 +24,13 @@ import Calendar from './Calendar';
 
 import clarifications from '../../../constants/hardcode'
 
+function declension(forms, val) {
+  const cases = [ 2, 0, 1, 1, 1, 2 ];
+  return forms[(val % 100 > 4 && val % 100 < 20) ? 2 : cases[(val % 10 < 5) ? val % 10 : 5]];
+}
+
+const ref_days = [ 'день', 'дня', 'дней' ]
+
 @inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class Schedule extends Component {
@@ -49,7 +56,8 @@ class Schedule extends Component {
         this.props.actions.scheduleForm.dateFinish = null
         this.props.actions.scheduleForm.finishAlternate = null
       }
-      this.props.drugs.current.duration = moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true)
+      let duration_num = moment(this.props.actions.scheduleForm.dateFinish, 'x').diff(moment(this.props.actions.scheduleForm.dateStart, 'x'), 'days')
+      this.props.drugs.current.duration = duration_num + ' ' + declension(ref_days, duration_num);
       this.props.drugs.current.duration_id = null
       // console.log(moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true));
       // console.log({ value: moment(value).format('x') } );
