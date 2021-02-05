@@ -44,23 +44,23 @@ class RecipeDrug extends React.Component {
   }
   handleChange = (e) => {
     let { value } = e.target
-    if( this.state.from !== 'text' ){
-      this.setState({ from: 'text' }, () => {
-        this.setState({ text: value }, () => {
-
-        })
-
-      })
-    }else{
+    // if( this.state.from !== 'text' ){
+    //   this.setState({ from: 'text' }, () => {
+    //     this.setState({ text: value }, () => {
+    //
+    //     })
+    //
+    //   })
+    // }else{
       this.setState({ text: value }, () => {
 
       })
-    }
+    // }
 
   }
-  undo = () => {
-    this.setState({ from: 'dosage', text: null })
-  }
+  // undo = () => {
+  //   this.setState({ from: 'dosage', text: null })
+  // }
 
   getLF = () => {
     let {
@@ -91,9 +91,9 @@ class RecipeDrug extends React.Component {
     } = this.props
     // console.log(drug);
     let drug = drugs.drug.get(key) || {}
-    this.setState({ edit: !this.state.edit })
-    let currDrug = drugs.drug.get(key)
-    drugs.drug.set(key, _.extend(currDrug, {text: this.state.text}))
+    this.setState({ edit: !this.state.edit, text: drug.specials })
+    // let currDrug = drugs.drug.get(key)
+    drugs.drug.set( key, _.extend( drug, { specials: this.state.text } ))
   }
 
   getMNN = () => {
@@ -226,10 +226,10 @@ class RecipeDrug extends React.Component {
     } = this.props
     let { inputValue } = this
     let current = drug.get(key)
-    if(inputValue == this.state.text || this.state.edit) return
-    this.setState({ text: inputValue }, () => {
-      let currDrug = drug.get(current.key)
-      drug.set(current.key, _.extend(currDrug, {text: this.state.text}))
+    if(current.specials == this.state.text || this.state.edit) return
+    this.setState({ text: current.specials }, () => {
+      // let currDrug = drug.get(current.key)
+      drug.set(current.key, _.extend(current, { specials: this.state.text }))
     })
 
   }
@@ -254,7 +254,7 @@ class RecipeDrug extends React.Component {
     // let selectedWarnings = warnIcons[selectedDrug]
     let drugDosages = dose.get(key) || {}
     let drug = drugs.drug.get(key) || {}
-    let { name, level, tn, type, dosage, schedule, helpers } = drug
+    let { name, level, tn, type, dosage, schedule, helpers, specials } = drug
 
     let names = drugDosages.names || {}
 
@@ -278,9 +278,9 @@ class RecipeDrug extends React.Component {
       <List.Item>
         <List.Content floated='right'>
           <Button.Group color='blue'>
-            <Button title='отменить изменения предписания' icon onClick={this.undo} icon disabled={from === 'dosage'}>
+            {false && <Button title='отменить изменения предписания' icon onClick={this.undo} icon disabled={from === 'dosage'}>
               <Icon name='undo' />
-            </Button>
+            </Button>}
             <Button icon onClick={this.edit}>
               <Icon name={edit ? 'check' : 'edit'} />
             </Button>
@@ -298,7 +298,10 @@ class RecipeDrug extends React.Component {
               {(helpers && helpers.mnn) && <label><span className='link' onClick={this.getMNN}>Вернуть</span></label>}
             </List.Header>
             <List.Description>
-              { !edit && inputValue }
+              { inputValue }
+            </List.Description>
+            <List.Description>
+              { !edit && specials }
             </List.Description>
           </List.Content>
         </List.Content>
@@ -308,7 +311,7 @@ class RecipeDrug extends React.Component {
               ref={this.textRef}
               fluid
               name='text'
-              value={inputValue || ''}
+              value={text || ''}
               placeholder='Особые указания'
               onChange={this.handleChange}
             />

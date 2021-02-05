@@ -20,6 +20,8 @@ class Drugs {
 
   @observable searchReady = true;
 
+  @observable listChanged = true;
+
   @observable selectedRows = [];
 
   @observable current = {
@@ -304,6 +306,7 @@ class Drugs {
     }
     await this.drug.set( drug.key, currentDrug );
 
+    this.listChanged = true
     await this.stores.dosages.dosage.set( drug.key, currentDosages );
     this.stores.db.clearData()
   }
@@ -394,6 +397,7 @@ class Drugs {
       calendar
     }
     this.stores.actions.drugStructure.specials = specials
+    this.listChanged = true
   }
 
   get calcLiquid(){
@@ -459,7 +463,7 @@ class Drugs {
     // console.log({
     //   weight, count, weights, counts, ready, unit, liqUnit, liquidUnits, dryUnits, id
 		// });
-
+    this.listChanged = true
 		return {
       weight, count, weights, counts, ready, unit, liqUnit, liquidUnits, dryUnits, id
 		}
@@ -475,6 +479,7 @@ class Drugs {
     arr.forEach((item, i) => {
       this.makeLiquid(item)
     });
+    this.listChanged = true
 
   }
   removeLiquids = async (arr) => {
@@ -483,6 +488,7 @@ class Drugs {
     arr.forEach((item, i) => {
       this.liquid.remove( item );
     });
+    this.listChanged = true
   }
 
   makeLiquid = async (item) => {
@@ -609,6 +615,7 @@ class Drugs {
         calendar
       }
     } ) );
+    this.listChanged = true
     // console.log(this.liquid.get(id));
   }
 
@@ -658,6 +665,7 @@ class Drugs {
       tintSpeed,
       liquidSpeed
     }
+    this.listChanged = true
     // console.log({
     //   dosage,
     //   count,
@@ -844,7 +852,7 @@ class Drugs {
       if(this.stores.actions.drugStructure.patient.weight && parseFloat(this.stores.actions.drugStructure.patient.weight) > 0) this.recalcLiquidParams()
     }
     // this.liquid.set( group, _.extend(current, liquid) );
-
+    this.listChanged = true
     return true
   }
 
@@ -917,7 +925,7 @@ class Drugs {
     if(!flag){
       await this.stores.db.clearData(false, true)
     }
-
+    this.listChanged = true
     return true
   }
   async unselectDrug(row){
@@ -926,6 +934,7 @@ class Drugs {
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true)
     this.checkLiquidsOk()
+    this.listChanged = true
     return true
   }
 

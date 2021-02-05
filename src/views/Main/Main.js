@@ -27,7 +27,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions', 'drugs', 'warnings', 'dosages', 'diseases', 'clinrecs')
+@inject('router', 'recipes', 'db', 'actions', 'drugs', 'warnings', 'dosages', 'diseases', 'clinrecs')
 @observer
 class Main extends Component {
   constructor(props){
@@ -105,6 +105,9 @@ class Main extends Component {
     this.setOpen(false)
     this.props.router.push('/recipe/new')
   }
+  saveList = () => {
+    this.props.recipes.saveList()
+  }
 
   componentDidMount(){
     setTimeout(() => {
@@ -118,7 +121,7 @@ class Main extends Component {
     const { open, openCautions, searchQuery, selectedDrug, selectedConflict } = this.state
     let { currentPage, height, active_language, makeLiquids, isLiquidsOk } = this.props.actions
     let {
-      drugs: { searchReady, searchRows, selectedRows, drug }, //drugs, drugsDosages, currDrug, setDosageParams
+      drugs: { searchReady, searchRows, selectedRows, drug, listChanged }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
       warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
       actions: { patientForm: { disease, co_disease }, clinrecCheckerStep }
@@ -208,10 +211,16 @@ class Main extends Component {
                     />
                   </Modal.Actions>
                 </Modal>
-                :
-                <Menu.Item onClick={() => this.goRecipe()}>
-                  Выписать
-                </Menu.Item>
+                : ( !listChanged ?
+                  <Menu.Item onClick={() => this.saveList()}>
+                    Назначить
+                  </Menu.Item>
+                  :
+                  <Menu.Item onClick={() => this.goRecipe()}>
+                    Выписать
+                  </Menu.Item>
+                )
+
               }
 
 
