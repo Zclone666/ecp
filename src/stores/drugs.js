@@ -463,7 +463,7 @@ class Drugs {
     // console.log({
     //   weight, count, weights, counts, ready, unit, liqUnit, liquidUnits, dryUnits, id
 		// });
-    this.listChanged = true
+    // this.listChanged = true
 		return {
       weight, count, weights, counts, ready, unit, liqUnit, liquidUnits, dryUnits, id
 		}
