@@ -7,6 +7,7 @@ import Spinner from '../../components/Spinner'
 import BirthDate from '../../components/BirthDate'
 import Search from '../../components/Search'
 
+import { checkDouble, clearDouble } from '../../lib/helpers'
 
 import {
   Sidebar,
@@ -55,8 +56,8 @@ class PatientForm extends Component {
     let veryOld = moment().diff(((birthdate && moment(birthdate, 'x')) || moment()), 'years') >= 60
 
     if( name === 'weight' || name === 'growth' ){
-      value = value.replace(',', '.')
-      if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
+      value = clearDouble(value)
+      if( !checkDouble(value) ) {
         this.props.actions.patientForm[name]=value
       }else{
         this.props.actions.patientForm[name]=parseFloat(value)
