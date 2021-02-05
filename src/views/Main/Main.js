@@ -259,7 +259,7 @@ class Main extends Component {
               <Icon name='clipboard list' />
               История назначений
             </Menu.Item>
-            <Dropdown item text={(active_language == 'ru' ? <>Русский <Flag name='ru' /></> : <>English <Flag name='gb' /></>)}>
+            <Dropdown disabled item text={(active_language == 'ru' ? <>Русский <Flag name='ru' /></> : <>English <Flag name='gb' /></>)}>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => this.changeLang('en')}><Flag name='gb' />English</Dropdown.Item>
                 <Dropdown.Item onClick={() => this.changeLang('ru')}><Flag name='ru' />Русский</Dropdown.Item>
