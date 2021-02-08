@@ -532,7 +532,12 @@ class Actions {
       fail: alerts => {
         console.log('FAIL', alerts);
         alerts.forEach((alert) => {
-          if(alert.code != 200) this.logout()
+          if(alert.code != 200) {
+            setTimeout(() => {
+              this.logout()
+            }, 3000)
+
+          }
         })
       },
       always: (data) => {
