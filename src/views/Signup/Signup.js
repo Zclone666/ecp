@@ -51,7 +51,8 @@ class Signup extends Component {
   render () {
     let { projectTitle, signinForm: { isEmailReg, email, password, lastName, firstName, middleName, lpuName, department } } = this.props.actions
     let { confirm_password, filled, checkPass } = this.state
-    let canInputPass = (email.length < 1 && isEmailReg)
+    let canInputPass = (email.length > 1 && isEmailReg)
+    // console.log({isEmailReg, email});
     return (
       <div className='login-form height100perc'>
 

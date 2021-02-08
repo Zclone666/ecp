@@ -632,7 +632,7 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/getUserInfoByEmail`,
       data: dataSend,
       success: async (data) => {
-        // console.log(data);
+         console.log(data);
         if( data && data.alerts && data.alerts[0].code == '200' ){
 
           this.signinForm.isEmailReg = false
@@ -651,6 +651,7 @@ class Actions {
       },
       fail: alerts => {
         this.loading = false
+        this.signinForm.isEmailReg = true
         // console.log('FAIL', alerts);
       },
       always: (data) => {
