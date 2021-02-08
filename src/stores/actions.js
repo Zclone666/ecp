@@ -394,6 +394,15 @@ class Actions {
     return text
   }
 
+  get isPrescriptFilled(){
+    let {
+      patient,
+      doctor_id,
+      clinic_id
+    } = this.drugStructure
+    return ( patient.id && doctor_id && clinic_id )
+  }
+
   async autologin(){
 
     this.drugStructure.active_language = this.active_language = await localStorage.getItem('lang') || null;

@@ -168,7 +168,7 @@ class Recipe extends Component {
 
         <div className='scrollwrapper'>
           <Segment basic>
-            <Form>
+            {false && <Form>
               <Form.Field>
                 <label>Врач</label>
                 <Dropdown
@@ -260,7 +260,7 @@ class Recipe extends Component {
                   onChange={this.handleChange}
                 />
               </Form.Field>
-            </Form>
+            </Form>}
             <Drugs isRecipe={true} />
           </Segment>
         </div>

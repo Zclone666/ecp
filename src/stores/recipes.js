@@ -135,13 +135,28 @@ class Recipes {
         // }else{
         //   return false
         // }
+        this.stores.actions.makeAlerts({ alerts:[{
+          title: "Сохранено.",
+          message: "Протокол сохранен успешно. Теперь вы можете выписать рецепт.",
+          level: "success",
+          sticky: false
+        }]})
         this.stores.actions.loading = false
+        this.stores.router.push('/')
+        // setTimeout(() => {
+        //   this.stores.router.push('/recipe/new')
+        // }, 700)
       },
       fail: (alerts) => {
         this.stores.actions.loading = false
+        this.stores.router.push('/')
+        setTimeout(() => {
+          this.stores.router.push('/recipe/new')
+        }, 700)
       },
       always: (data) => {
         this.stores.actions.makeAlerts(data)
+
       }
     });
   }

@@ -9,6 +9,7 @@ import Dozes from '../Dozes'
 import Patient from '../Patient'
 import Warning from '../Warning'
 import Recipe from '../Recipe'
+import Prescript from '../Prescript'
 import Analog from '../Analog'
 import DrugInfo from '../DrugInfo'
 import Liquid from '../Liquid'
@@ -57,15 +58,16 @@ class Page extends Component {
     let name = (this.props.router && this.props.router.match && this.props.router.match.name) || 'none'
     return (
       {
-        'concept': <Dozes />,
-        'patient': <Patient />,
-        'warning': <Warning />,
-        'recipe' : <Recipe />,
-        'analog' : <Analog />,
-        'druginfo' : <DrugInfo />,
-        'liquid' : <Liquid />,
-        'clinrec' : <Clinrecs />,
-        'none'   : <div />
+        'concept'  :  <Dozes />,
+        'patient'  :  <Patient />,
+        'warning'  :  <Warning />,
+        'recipe'   :  <Recipe />,
+        'prescript':  <Prescript />,
+        'analog'   :  <Analog />,
+        'druginfo' :  <DrugInfo />,
+        'liquid'   :  <Liquid />,
+        'clinrec'  :  <Clinrecs />,
+        'none'     :  <div />
       }[name] || null
     );
   }

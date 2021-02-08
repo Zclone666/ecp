@@ -106,7 +106,14 @@ class Main extends Component {
     this.props.router.push('/recipe/new')
   }
   saveList = () => {
-    this.props.recipes.saveList()
+    let { isPrescriptFilled } = this.props.actions
+    if( isPrescriptFilled ){
+      this.props.recipes.saveList()
+    }else{
+      // this.props.recipes.saveList()
+      this.props.router.push('/prescript/fill')
+    }
+
   }
 
   componentDidMount(){
@@ -124,7 +131,7 @@ class Main extends Component {
       drugs: { searchReady, searchRows, selectedRows, drug, listChanged }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
       warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
-      actions: { patientForm: { disease, co_disease }, clinrecCheckerStep }
+      actions: { patientForm: { disease, co_disease }, clinrecCheckerStep, isPrescriptFilled }
     } = this.props
     let selectedWarnings = warning[selectedDrug]
     let showPage = !!(this.props.router.values && this.props.router.values.page)
