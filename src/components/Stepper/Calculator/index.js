@@ -56,6 +56,7 @@ class Calculator extends Component {
     //if(!_.isArray(value)) value = [value]
     //value = parseFloat(eval(value))
     value = clearDouble(value)
+    // console.log(value);
     let double = false
     if( name === 'specials' ){
       this.props.actions.drugStructure.specials = value
@@ -67,6 +68,7 @@ class Calculator extends Component {
         this.props.actions.drugStructure.patient.weight = value
         // weight = parseFloat(value)
       }else{
+      // console.log(value);
         this.props.actions.calculatorForm[name] = value
       }
       return
@@ -97,6 +99,7 @@ class Calculator extends Component {
 
     switch (name) {
       case 'dosage':
+
         dosage = [getToBase((currUnit || def), value.split(' + '))]
         fullDosage = [getToBase((currUnit || def), value*count)]
         weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
@@ -316,7 +319,7 @@ class Calculator extends Component {
     //   dayDosage,
     //   dayWeightDosage
     // });
-    // console.log({dosageUnit});
+    // console.log({dosage: getFromBase((currUnit || def), dosage).join(' + ')});
     return (
       <Segment basic>
         {isLiquid && <div className='liquiddrugs' style={{ marginBottom: '15px'}}>
@@ -332,7 +335,7 @@ class Calculator extends Component {
                   disabled={disableAll || disableMulti}
                   size='big'
                   name='dosage'
-                  value={getFromBase((currUnit || def), dosage).join(' + ') || ''}
+                  value={getFromBase((currUnit || def), dosage, 4, 'dosage').join(' + ') || ''}
                   label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} options={weights} value={currUnit || def} />}
                   labelPosition='right'
                   placeholder='500'

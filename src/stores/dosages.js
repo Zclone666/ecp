@@ -2,6 +2,8 @@ import { observable, action, autorun, computed } from 'mobx';
 import { GET, POST, PUT } from '../lib/connect'
 import moment from 'moment'
 
+import { checkDouble, clearDouble } from '../lib/helpers'
+
 import _ from 'lodash';
 
 const colorPallette = [
@@ -248,24 +250,37 @@ class Dosages {
     }
   }
 
-  getFromBase = ( unitId, value, double = 4 ) => {
+  getFromBase = ( unitId, value, double = 4, name=null ) => {
     let { round } = this.stores.tools
-    if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return [value]
+    // console.log(0,{ value });
+
+
+
     let unit = this.stores.tools.units[unitId]
     if(!unit) return [0]
     //let dosage = value
 
     if(!_.isArray(value)) value = [value]
-    //console.log(1,{ value });
+    let checked = false
+    // if( name == 'dosage' ) console.log(0, value );
+    // if( name == 'dosage' ){
+      value.forEach((item, i) => {
+        if( !checkDouble(item, false) ) checked = true
+      });
+      // console.log({ checked });
+    // }
+    if( checked ) return value
+    // if( name == 'dosage' ) console.log(1, value );
 
     unit.contains.forEach(( contain ) => {
+      // console.log({ contain });
       if(contain.action === 'division'){
         value = _.map( value, (dos) => round((dos * contain.value), double) )
       }else{
         value = _.map( value, (dos) => round((dos / contain.value), double) )
       }
     })
-    //console.log(2,{ value });
+    // if( name == 'dosage' ) console.log(2, value );
     return value || []
   }
 
