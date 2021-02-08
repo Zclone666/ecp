@@ -34,11 +34,11 @@ class Patients {
       id,
       active_language
     }
-
+    await this.stores.db.clearData(true)
     // data.authkey = this.stores.actions.authkey
     // data.key = this.stores.actions.privateKey
     return POST({
-        path: `tools/PatientGet`,
+        path: `prescript/Actual`,
         data,
         success: async data => {
           // console.log('DATA', data);
@@ -61,8 +61,10 @@ class Patients {
             pregnancy,
             sex,
             trimester,
-            weight
+            weight,
+
           } = data.patient
+          let { drugs } = data
           co_disease = co_disease || []
           this.stores.actions.patientForm = {
             id,
@@ -116,7 +118,12 @@ class Patients {
             name,
           }
 
+          drugs.forEach((drug, i) => {
+            this.stores.drugs.selectFromSearch( drug )
+          });
           return data.patient || {}
+
+
         },
         fail: (alerts) => {
 
