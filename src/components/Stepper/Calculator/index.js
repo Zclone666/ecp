@@ -335,7 +335,7 @@ class Calculator extends Component {
                   disabled={disableAll || disableMulti}
                   size='big'
                   name='dosage'
-                  value={getFromBase((currUnit || def), dosage, 4, 'dosage').join(' + ') || ''}
+                  value={getFromBase((currUnit || def), dosage).join(' + ') || ''}
                   label={<Dropdown name='currUnit' onChange={this.handleChangeUnit} options={weights} value={currUnit || def} />}
                   labelPosition='right'
                   placeholder='500'

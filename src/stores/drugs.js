@@ -151,6 +151,9 @@ class Drugs {
             this[`${saveTo}Rows`] = observable([])
             this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
             this.searchReady = true
+          }else if(data.concepts && data.concepts.length == 0 && _.isArray(data.concepts)){
+            this[`${saveTo}Rows`] = observable([])
+            this.searchReady = true
           }
         },
         fail: (alerts) => {

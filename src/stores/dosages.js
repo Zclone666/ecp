@@ -264,9 +264,9 @@ class Dosages {
     let checked = false
     // if( name == 'dosage' ) console.log(0, value );
     // if( name == 'dosage' ){
-      value.forEach((item, i) => {
-        if( !checkDouble(item, false) ) checked = true
-      });
+    value.forEach((item, i) => {
+      if( !checkDouble(item, false) ) checked = true
+    });
       // console.log({ checked });
     // }
     if( checked ) return value

@@ -296,6 +296,7 @@ class Main extends Component {
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
                       leading: true,
                     })}
+                    noResultsMessage='Ничего не найдено.'
                     results={searchRows}
                     value={searchQuery}
                     resultRenderer={this.resultRenderer}
