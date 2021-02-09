@@ -113,6 +113,11 @@ class Recipes {
       let { helpers, ...drug } = drugFull
       data.drugs.push(drug)
     });
+    data.deletedDrugs=[]
+    this.stores.drugs.deletedRows.forEach((drugFull, i) => {
+      let { helpers, ...drug } = drugFull
+      data.deletedDrugs.push(drug)
+    });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull
       if(liquid.group != 0){
@@ -132,6 +137,12 @@ class Recipes {
         this.stores.drugs.listChanged = false
         if(data.protocol){
           this.stores.actions.protocol = data.protocol
+          this.stores.drugs.drug.forEach(async (drug, i) => {
+            await this.stores.drugs.drug.set( drug.key,  _.extend(drug, { edit: false }) )
+          });
+          this.stores.drugs.liquid.forEach(async (liquid, i) => {
+            await this.stores.drugs.liquid.set( liquid.key,  _.extend(liquid, { edit: false }) )
+          });
         }
         // if(data && data.Code){
         //   this.code = data.Code

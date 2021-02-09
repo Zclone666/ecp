@@ -18,6 +18,8 @@ class Drugs {
   @observable ready = false;
   @observable searchRows = [];
 
+  @observable deletedRows = [];
+
   @observable searchReady = true;
 
   @observable listChanged = true;
@@ -33,6 +35,7 @@ class Drugs {
     type: null,
     group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
     text: null,
+    edit: true,
     specials: null,
     freq: null,
     freq_id: null,
@@ -228,6 +231,8 @@ class Drugs {
     let def = (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id ) || (calcValues.dosage.unit && calcValues.dosage.unit.id)
 
     let { freq, freq_id, duration, duration_id } = drug
+
+    currentDrug.edit = true
     // console.log({ freq, duration });
     currentDrug.freq = freq || null
     currentDrug.freq_id = freq_id || null
@@ -558,6 +563,7 @@ class Drugs {
       group, // группа раствора (0 - нет раствора, больше 0 - раствор)
       specials,
       freq,
+      edit,
       freq_id,
       duration,
       duration_id,
@@ -589,11 +595,14 @@ class Drugs {
       }
     } = this.stores.actions.liquidForm
 
+    edit = true
+
     this.liquid.set( id, _.extend(current, {
       name,
       group,
       specials,
       freq,
+      edit,
       freq_id,
       duration,
       duration_id,
@@ -874,6 +883,7 @@ class Drugs {
       //tn: false, // ДВ или ТН
       fpid: null, //
       type: null,
+      edit: true,
       group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
       text: null,
       specials: null,
@@ -938,6 +948,9 @@ class Drugs {
     return true
   }
   async unselectDrug(row){
+    if(row.proto){
+      this.deletedRows.push(row)
+    }
     this.drug.delete(row.key)
     this.stores.dosages.dosage.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);

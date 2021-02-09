@@ -65,7 +65,7 @@ class Patients {
             weight,
 
           } = data.patient
-          let { drugs } = data
+          let { drugs, liquids } = data
           co_disease = co_disease || []
           this.stores.actions.patientForm = {
             id,
@@ -122,6 +122,14 @@ class Patients {
           drugs.forEach(async (drug, i) => {
             await this.stores.drugs.selectFromSearch( drug )
           });
+          liquids.forEach(async (liquid, i) => {
+            await this.stores.drugs.liquid.set( liquid.group, liquid )
+            // setTimeout(() => {
+            //   this.stores.drugs.getLiquidParams(liquid.key)
+            // }, 500)
+
+          });
+          this.stores.actions.makeLiquids = false
           return data.patient || {}
 
 
