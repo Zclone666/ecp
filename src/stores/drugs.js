@@ -85,7 +85,13 @@ class Drugs {
 
 
   }
-
+  async clearProto(){
+    this.drug.forEach(( drugObj, key ) => {
+      if(drugObj.proto){
+        this.unselectDrug(key)
+      }
+    })
+  }
   async setGroup(keys, group){
     if(!_.isArray(keys)) {
       keys = [keys]

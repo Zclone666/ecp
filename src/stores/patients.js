@@ -34,7 +34,8 @@ class Patients {
       id,
       active_language
     }
-    await this.stores.db.clearData(true)
+    await this.stores.db.clearData(false, true)
+    await this.stores.drugs.clearProto()
     // data.authkey = this.stores.actions.authkey
     // data.key = this.stores.actions.privateKey
     return POST({
@@ -121,6 +122,114 @@ class Patients {
           drugs.forEach(async (drug, i) => {
             await this.stores.drugs.selectFromSearch( drug )
           });
+          return data.patient || {}
+
+
+        },
+        fail: (alerts) => {
+
+        },
+        always: (data) => {
+
+        }
+    });
+  }
+
+  async getPatient(id){
+    let { active_language } = this.stores.actions
+    let data = {
+      key: this.stores.actions.privateKey,
+      authkey: this.stores.actions.authkey,
+      id,
+      active_language
+    }
+    await this.stores.db.clearData(true)
+    // data.authkey = this.stores.actions.authkey
+    // data.key = this.stores.actions.privateKey
+    return POST({
+        path: `tools/PatientGet`,
+        data,
+        success: async data => {
+          // console.log('DATA', data);
+          let {
+            allergy,
+            birthdate,
+            disease,
+            disease2,
+            co_disease,
+            driving,
+            email,
+            fio,
+            gestation,
+            growth,
+            id,
+            lactation,
+            miscode,
+            misid,
+            name,
+            pregnancy,
+            sex,
+            trimester,
+            weight,
+
+          } = data.patient
+          // let { drugs } = data
+          co_disease = co_disease || []
+          this.stores.actions.patientForm = {
+            id,
+            email,
+            fio,
+            miscode,
+            misid,
+            name,
+            allergy,
+            birthdate,
+            disease,
+            disease2,
+            co_disease,
+            driving,
+            gestation,
+            growth,
+            lactation,
+            pregnancy,
+            sex,
+            trimester,
+            weight
+          }
+          this.stores.actions.drugStructure.patient = {
+            id,
+            key: id,
+            email,
+            fio,
+            miscode,
+            misid,
+            name,
+            allergy,
+            birthdate,
+            disease,
+            disease2,
+            co_disease,
+            driving,
+            gestation,
+            growth,
+            lactation,
+            pregnancy,
+            sex,
+            trimester,
+            weight
+          }
+          this.stores.actions.patientPassport = {
+            id,
+            email,
+            fio,
+            miscode,
+            misid,
+            name,
+          }
+
+          // drugs.forEach(async (drug, i) => {
+          //   await this.stores.drugs.selectFromSearch( drug )
+          // });
           return data.patient || {}
 
 

@@ -186,42 +186,43 @@ class Main extends Component {
               <Menu.Item onClick={this.getInfoPrep}>
                 Проверить
               </Menu.Item>
-              {cautionsTitle ?
-                <Modal
-                  onClose={() => this.setOpen(false)}
-                  onOpen={() => this.setOpen(true)}
-                  open={openCautions}
-                  trigger={<Menu.Item>
-                    Выписать
-                  </Menu.Item>}
-                >
-                  <Modal.Header>{cautionsTitle}</Modal.Header>
-                  <Modal.Content>
-                    {cautions.length > 0 && cautions.map((item, i) => {
-                      return(
-                        <Message negative>
-                          <Message.Header>{item}</Message.Header>
-                        </Message>
-                      )
-                    })}
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button color='black' onClick={() => this.setOpen(false)}>
-                      Отмена
-                    </Button>
-                    <Button
-                      content="Продолжить"
-                      labelPosition='right'
-                      icon='checkmark'
-                      onClick={() => this.goRecipe()}
-                      positive
-                    />
-                  </Modal.Actions>
-                </Modal>
-                : ( listChanged ?
+              {( listChanged ?
+                (cautionsTitle ?
+                  <Modal
+                    onClose={() => this.setOpen(false)}
+                    onOpen={() => this.setOpen(true)}
+                    open={openCautions}
+                    trigger={<Menu.Item>
+                      Назначить
+                    </Menu.Item>}
+                  >
+                    <Modal.Header>{cautionsTitle}</Modal.Header>
+                    <Modal.Content>
+                      {cautions.length > 0 && cautions.map((item, i) => {
+                        return(
+                          <Message negative>
+                            <Message.Header>{item}</Message.Header>
+                          </Message>
+                        )
+                      })}
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button color='black' onClick={() => this.setOpen(false)}>
+                        Отмена
+                      </Button>
+                      <Button
+                        content="Продолжить"
+                        labelPosition='right'
+                        icon='checkmark'
+                        onClick={() => this.saveList()}
+                        positive
+                      />
+                    </Modal.Actions>
+                  </Modal>
+                  :
                   <Menu.Item onClick={() => this.saveList()}>
                     Назначить
-                  </Menu.Item>
+                  </Menu.Item>)
                   :
                   <Menu.Item onClick={() => this.goRecipe()}>
                     Выписать
