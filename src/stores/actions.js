@@ -400,7 +400,7 @@ class Actions {
       doctor_id,
       clinic_id
     } = this.drugStructure
-    return ( patient.id && doctor_id && clinic_id )
+    return ( (patient.key || patient.id) && doctor_id && clinic_id )
   }
 
   async autologin(){

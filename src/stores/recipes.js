@@ -40,7 +40,9 @@ class Recipes {
     });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull
-      data.liquids.push(liquid)
+      if(liquid.group != 0){
+        data.liquids.push(liquid)
+      }
     });
 
     data.service = "43"
@@ -113,7 +115,9 @@ class Recipes {
     });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull
-      data.liquids.push(liquid)
+      if(liquid.group != 0){
+        data.liquids.push(liquid)
+      }
     });
 
     data.service = "43"

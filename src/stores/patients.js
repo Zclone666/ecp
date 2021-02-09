@@ -118,8 +118,8 @@ class Patients {
             name,
           }
 
-          drugs.forEach((drug, i) => {
-            this.stores.drugs.selectFromSearch( drug )
+          drugs.forEach(async (drug, i) => {
+            await this.stores.drugs.selectFromSearch( drug )
           });
           return data.patient || {}
 

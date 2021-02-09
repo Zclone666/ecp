@@ -102,7 +102,9 @@ class Warnings {
     });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull
-      data.liquids.push(liquid)
+      if(liquid.group != 0){
+        data.liquids.push(liquid)
+      }
     });
 
 
