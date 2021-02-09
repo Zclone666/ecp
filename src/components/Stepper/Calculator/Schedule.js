@@ -57,6 +57,7 @@ class Schedule extends Component {
         this.props.actions.scheduleForm.finishAlternate = null
       }
       let duration_num = moment(this.props.actions.scheduleForm.dateFinish, 'x').diff(moment(this.props.actions.scheduleForm.dateStart, 'x'), 'days')
+      duration_num = (duration_num == 0) ? 1 : duration_num
       this.props.drugs.current.duration = duration_num + ' ' + declension(ref_days, duration_num);
       this.props.drugs.current.duration_id = null
       // console.log(moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true));
