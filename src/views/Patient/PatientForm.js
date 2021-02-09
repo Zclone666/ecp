@@ -227,7 +227,7 @@ class PatientForm extends Component {
                 readonly="readonly"
                 value={masIndex || ''}
               >
-                <input readonly="readonly" className='readonly' />
+                <input readOnly="readonly" className='readonly' />
               </Input>
             </Form.Field>
           </Form.Group>

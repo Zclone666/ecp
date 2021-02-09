@@ -118,13 +118,31 @@ class Dosages {
     });
   }
 
+  async checkDosage(id){
+    let flag = null
+    console.log('here');
+    console.log(this.dosage.keys());
+    await this.dosage.forEach((dose, i) => {
+      console.log(dose.drug.id, id);
+      if( dose.drug && dose.drug.id === id ) flag = dose
+    });
+    return flag
+  }
+
   async get(drug_obj, flag = false){
     let currentDosages = await this.dosage.get(drug_obj.key);
     let { active_language } = this.stores.actions
+    // let isDos = await this.checkDosage(drug_obj.id)
+    //
+    // console.log(!!currentDosages);
+    // currentDosages = (!!currentDosages && currentDosages) || await this.checkDosage(drug_obj.id)
+    // console.log(currentDosages);
+
     if(currentDosages && !flag) {
       await this.stores.drugs.getDosageParams()
       return
     }
+
     let data = {
       drug: drug_obj,
       active_language
