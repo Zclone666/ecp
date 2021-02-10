@@ -118,6 +118,11 @@ class Recipes {
       let { helpers, ...drug } = drugFull
       data.deletedDrugs.push(drug)
     });
+    data.deletedLiquids=[]
+    this.stores.drugs.deletedLiquids.forEach((drugFull, i) => {
+      let { helpers, ...drug } = drugFull
+      data.deletedLiquids.push(drug)
+    });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull
       if(liquid.group != 0){
@@ -150,12 +155,12 @@ class Recipes {
         // }else{
         //   return false
         // }
-        this.stores.actions.makeAlerts({ alerts:[{
-          title: "Сохранено.",
-          message: "Протокол сохранен успешно. Теперь вы можете выписать рецепт.",
-          level: "success",
-          sticky: false
-        }]})
+        // this.stores.actions.makeAlerts({ alerts:[{
+        //   title: "Сохранено.",
+        //   message: "Протокол сохранен успешно. Теперь вы можете выписать рецепт.",
+        //   level: "success",
+        //   sticky: false
+        // }]})
         this.stores.actions.loading = false
         this.stores.router.push('/')
         // setTimeout(() => {

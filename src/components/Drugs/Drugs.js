@@ -155,6 +155,7 @@ class Drugs extends Component {
     drugs.forEach((drug, i) => {
       keys.push(drug.key)
     })
+    
     this.props.drugs.setGroup(keys, 0)
   }
 

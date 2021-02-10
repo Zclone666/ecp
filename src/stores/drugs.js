@@ -19,6 +19,7 @@ class Drugs {
   @observable searchRows = [];
 
   @observable deletedRows = [];
+  @observable deletedLiquids = [];
 
   @observable searchReady = true;
 
@@ -83,7 +84,7 @@ class Drugs {
     this.liquid = observable.map({}, 'liquid')
 
     autorun(() => {
-
+      // console.log(Array.from(this.liquid.values()));
     });
 
 
@@ -99,11 +100,20 @@ class Drugs {
     if(!_.isArray(keys)) {
       keys = [keys]
     }
-    keys.forEach(async (key, i) => {
+    let currGroup = null
+    await keys.forEach(async (key, i) => {
       let drug = await this.drug.get(key)
+      currGroup = drug.group
+      // console.log({ currGroup });
       drug.group = group
       this.drug.set(key, drug)
     })
+    // console.log({ currGroup });
+    let currLiquid = this.liquid.get( currGroup ) || {}
+    if(currLiquid.proto){
+      this.deletedLiquids.push(currLiquid)
+    }
+    this.liquid.delete( currGroup )
     this.stores.actions.makeLiquids = true
     setTimeout(() => {
       this.checkLiquidsOk()
