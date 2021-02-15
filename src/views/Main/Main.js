@@ -155,7 +155,7 @@ class Main extends Component {
                 Данные пациента
               </Menu.Item>
             </Responsive>
-            {isDisease && <Responsive as={RouterLink} to={`/clinrec/checker/${clinrecCheckerStep}`} onClick={this.getClinrec} fireOnMount minWidth='481'>
+            {(isDisease && false) && <Responsive as={RouterLink} to={`/clinrec/checker/${clinrecCheckerStep}`} onClick={this.getClinrec} fireOnMount minWidth='481'>
               <Menu.Item>
                 <Icon name='clipboard list' />
                 Клинреки
@@ -255,7 +255,11 @@ class Main extends Component {
           </Sidebar>
 
           <Sidebar style={{ paddingTop: '3.6em' }} animation='overlay' onClick={() => this.handleSidebar('close')} onHide={() => this.handleSidebar('close')} visible={open} as={Menu} vertical size='huge'>
-            <Menu.Item as={RouterLink} to='/patient/list'>
+            {false && <Menu.Item as={RouterLink} to='/patient/list'>
+              <Icon name='address book' />
+              Пациенты
+            </Menu.Item>}
+            <Menu.Item disabled>
               <Icon name='address book' />
               Пациенты
             </Menu.Item>
