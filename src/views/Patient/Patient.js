@@ -247,7 +247,7 @@ class Patient extends Component {
             <Menu.Item onClick={() => this.saveForm(false)}>
               Применить
             </Menu.Item>
-            <Menu.Item onClick={this.newPatient}>
+            <Menu.Item disabled onClick={this.newPatient}>
               Сохранить
             </Menu.Item>
           </Menu>
