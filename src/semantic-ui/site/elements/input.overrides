@@ -1,3 +1,9 @@
 /*******************************
          Site Overrides
 *******************************/
+.ui.disabled.input, .ui.input:not(.disabled) input[disabled] {
+    opacity: 1;
+}
+.ui.disabled.input input, .ui.input:not(.disabled) input[disabled] {
+    opacity: 0.45;
+}

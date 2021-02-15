@@ -27,7 +27,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions', 'drugs', 'warnings', 'dosages', 'diseases', 'clinrecs')
+@inject('router', 'recipes', 'db', 'actions', 'drugs', 'warnings', 'dosages', 'diseases', 'clinrecs')
 @observer
 class Main extends Component {
   constructor(props){
@@ -105,6 +105,16 @@ class Main extends Component {
     this.setOpen(false)
     this.props.router.push('/recipe/new')
   }
+  saveList = () => {
+    let { isPrescriptFilled } = this.props.actions
+    if( isPrescriptFilled ){
+      this.props.recipes.saveList()
+    }else{
+      // this.props.recipes.saveList()
+      this.props.router.push('/prescript/fill')
+    }
+
+  }
 
   componentDidMount(){
     setTimeout(() => {
@@ -118,10 +128,10 @@ class Main extends Component {
     const { open, openCautions, searchQuery, selectedDrug, selectedConflict } = this.state
     let { currentPage, height, active_language, makeLiquids, isLiquidsOk } = this.props.actions
     let {
-      drugs: { searchReady, searchRows, selectedRows, drug }, //drugs, drugsDosages, currDrug, setDosageParams
+      drugs: { searchReady, searchRows, selectedRows, drug, listChanged }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
       warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
-      actions: { patientForm: { disease, co_disease }, clinrecCheckerStep }
+      actions: { patientForm: { disease, co_disease }, clinrecCheckerStep, isPrescriptFilled }
     } = this.props
     let selectedWarnings = warning[selectedDrug]
     let showPage = !!(this.props.router.values && this.props.router.values.page)
@@ -176,42 +186,49 @@ class Main extends Component {
               <Menu.Item onClick={this.getInfoPrep}>
                 Проверить
               </Menu.Item>
-              {cautionsTitle ?
-                <Modal
-                  onClose={() => this.setOpen(false)}
-                  onOpen={() => this.setOpen(true)}
-                  open={openCautions}
-                  trigger={<Menu.Item>
+              {( listChanged ?
+                ((cautionsTitle && false) ?
+                  <Modal
+                    onClose={() => this.setOpen(false)}
+                    onOpen={() => this.setOpen(true)}
+                    open={openCautions}
+                    trigger={<Menu.Item>
+                      Назначить
+                    </Menu.Item>}
+                  >
+                    <Modal.Header>{cautionsTitle}</Modal.Header>
+                    <Modal.Content>
+                      {cautions.length > 0 && cautions.map((item, i) => {
+                        return(
+                          <Message negative>
+                            <Message.Header>{item}</Message.Header>
+                          </Message>
+                        )
+                      })}
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button color='black' onClick={() => this.setOpen(false)}>
+                        Отмена
+                      </Button>
+                      <Button
+                        content="Продолжить"
+                        labelPosition='right'
+                        icon='checkmark'
+                        onClick={() => this.saveList()}
+                        positive
+                      />
+                    </Modal.Actions>
+                  </Modal>
+                  :
+                  <Menu.Item disabled onClick={() => this.saveList()}>
+                    Назначить
+                  </Menu.Item>)
+                  :
+                  <Menu.Item onClick={() => this.goRecipe()}>
                     Выписать
-                  </Menu.Item>}
-                >
-                  <Modal.Header>{cautionsTitle}</Modal.Header>
-                  <Modal.Content>
-                    {cautions.length > 0 && cautions.map((item, i) => {
-                      return(
-                        <Message negative>
-                          <Message.Header>{item}</Message.Header>
-                        </Message>
-                      )
-                    })}
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button color='black' onClick={() => this.setOpen(false)}>
-                      Отмена
-                    </Button>
-                    <Button
-                      content="Продолжить"
-                      labelPosition='right'
-                      icon='checkmark'
-                      onClick={() => this.goRecipe()}
-                      positive
-                    />
-                  </Modal.Actions>
-                </Modal>
-                :
-                <Menu.Item onClick={() => this.goRecipe()}>
-                  Выписать
-                </Menu.Item>
+                  </Menu.Item>
+                )
+
               }
 
 
@@ -250,7 +267,7 @@ class Main extends Component {
               <Icon name='clipboard list' />
               История назначений
             </Menu.Item>
-            <Dropdown item text={(active_language == 'ru' ? <>Русский <Flag name='ru' /></> : <>English <Flag name='gb' /></>)}>
+            <Dropdown disabled item text={(active_language == 'ru' ? <>Русский <Flag name='ru' /></> : <>English <Flag name='gb' /></>)}>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={() => this.changeLang('en')}><Flag name='gb' />English</Dropdown.Item>
                 <Dropdown.Item onClick={() => this.changeLang('ru')}><Flag name='ru' />Русский</Dropdown.Item>
@@ -287,6 +304,7 @@ class Main extends Component {
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
                       leading: true,
                     })}
+                    noResultsMessage='Ничего не найдено.'
                     results={searchRows}
                     value={searchQuery}
                     resultRenderer={this.resultRenderer}

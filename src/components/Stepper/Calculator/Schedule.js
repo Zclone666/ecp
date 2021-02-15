@@ -24,6 +24,13 @@ import Calendar from './Calendar';
 
 import clarifications from '../../../constants/hardcode'
 
+function declension(forms, val) {
+  const cases = [ 2, 0, 1, 1, 1, 2 ];
+  return forms[(val % 100 > 4 && val % 100 < 20) ? 2 : cases[(val % 10 < 5) ? val % 10 : 5]];
+}
+
+const ref_days = [ 'день', 'дня', 'дней' ]
+
 @inject('db', 'actions', 'router', 'drugs', 'dosages')
 @observer
 class Schedule extends Component {
@@ -33,6 +40,7 @@ class Schedule extends Component {
 
       timeFromStart: null
     }
+    this.dateFinish = React.createRef()
   }
   handleChange = (e, { name, value }) => {
     if( !name && !value ){
@@ -44,12 +52,23 @@ class Schedule extends Component {
       this.setState({ timeFromStart: null })
       if(moment(value).format('x') !== 'Invalid date') this.props.actions.scheduleForm[name] = moment(value).format('x')
       if(name === 'dateFinish') this.props.actions.scheduleForm.finishAlternate = null
+      if(name === 'dateStart' && this.props.actions.scheduleForm.dateFinish < moment(value).format('x')){
+        this.props.actions.scheduleForm.dateFinish = null
+        this.props.actions.scheduleForm.finishAlternate = null
+      }
+      let duration_num = moment(this.props.actions.scheduleForm.dateFinish, 'x').diff(moment(this.props.actions.scheduleForm.dateStart, 'x'), 'days')
+      duration_num = (duration_num == 0) ? 1 : duration_num
+      this.props.drugs.current.duration = duration_num + ' ' + declension(ref_days, duration_num);
+      this.props.drugs.current.duration_id = null
+      // console.log(moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true));
       // console.log({ value: moment(value).format('x') } );
     }else{
       switch (name) {
         case 'finishAlternate':
           this.props.actions.scheduleForm.finishAlternate = this.props.actions.scheduleForm.finishAlternate ? null : value
           this.setState({ timeFromStart: null })
+          this.props.drugs.current.duration = null
+          this.props.drugs.current.duration_id = null
           this.props.actions.scheduleForm.dateFinish = null
           break;
         // case 'finishAlternate':
@@ -75,13 +94,14 @@ class Schedule extends Component {
      // console.log({ name, value });
   }
   setTomorrow = () => {
-    this.props.actions.scheduleForm.dateStart = moment().add(1, 'd').format('x')
+    this.handleChange( null, { name: 'dateStart', value: moment().add(1, 'd') } )
   }
   setDate = (tpl, id) => {
     let { UIText } = this.props.actions
     let { dateStart } = this.props.actions.scheduleForm
     this.setState({ timeFromStart: UIText.duration[id] })
-    this.props.drugs.current.duration = id
+    this.props.drugs.current.duration = UIText.duration[id]
+    this.props.drugs.current.duration_id = id
     this.props.actions.scheduleForm.dateFinish = moment(dateStart, 'x').add(tpl.x, tpl.timesx).add(-1, 'd').format('x')
     this.props.actions.scheduleForm.finishAlternate = null
   }
@@ -186,21 +206,27 @@ class Schedule extends Component {
               <label>Окончание приема:</label>
               <Input action>
                 <DatePickerInput
+                  ref={this.dateFinish}
                   onChange={( value ) => this.handleChange(null, { value, name: 'dateFinish' })}
                   name='dateFinish'
                   value={dateFinish}
                   showOnInputClick={true}
                   startMode='day'
+                  minDate={moment(dateStart, 'DD.MM.YYYY')}
                   format='DD.MM.YYYY'
                   returnFormat='DD.MM.YYYY'
                   displayFormat='DD.MM.YYYY'
                   validationFormat='DD.MM.YYYY'
                   onClear={this.onClear}
+
                   className='ui fluid big input '
                   placeholder='__.__.____'
                   locale='ru'
                 />
                 <Dropdown
+                  onClick={() => {
+                    this.dateFinish.current.hide()
+                  }}
                   disabled={!dateStart || dateStart.length < 1}
                   className='button'
                   name={'durations'}

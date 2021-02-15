@@ -17,6 +17,7 @@ import {
 
 import clarifications from '../../../constants/hardcode'
 
+import { checkDouble, clearDouble } from '../../../lib/helpers'
 
 import Schedule from './Schedule'
 import Drugs from './Drugs'
@@ -53,23 +54,31 @@ class Calculator extends Component {
     //console.log({name, value}, !!value);
     //value = _.map( value, (dos) => dos.split(',').join('.') )
     //if(!_.isArray(value)) value = [value]
-    if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
-      if( name == 'patient.weight' ){
-        this.props.actions.drugStructure.patient.weight = parseFloat(value)
-        weight = parseFloat(value)
-      }else{
-        this.props.actions.calculatorForm[name] = value
-      }
-      return
-    }
     //value = parseFloat(eval(value))
+    value = clearDouble(value)
+    // console.log(value);
+    let double = false
     if( name === 'specials' ){
       this.props.actions.drugStructure.specials = value
       return
     }
+    if( !checkDouble(value) ) {
+      double = true
+      if( name == 'patient.weight' ){
+        this.props.actions.drugStructure.patient.weight = value
+        // weight = parseFloat(value)
+      }else{
+      // console.log(value);
+        this.props.actions.calculatorForm[name] = value
+      }
+      return
+    }else if( value != parseFloat(value) && !( value.split(' + ') && value.split(' + ').length > 1 ) ){
+      return
+    }
     //value = parseFloat(value)
 
-    if( name == 'patient.weight' ){
+    if( name == 'patient.weight' && !double ){
+
       this.props.actions.drugStructure.patient.weight = parseFloat(value)
       weight = parseFloat(value)
     }else{
@@ -90,6 +99,7 @@ class Calculator extends Component {
 
     switch (name) {
       case 'dosage':
+
         dosage = [getToBase((currUnit || def), value.split(' + '))]
         fullDosage = [getToBase((currUnit || def), value*count)]
         weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
@@ -164,8 +174,9 @@ class Calculator extends Component {
   }
 
   setPreset = (e, {value}) => {
-    let { presets } = clarifications
-    let preset = _.find(presets, { 'id': value});
+    let { getToBase, getFromBase, calcValues } = this.props.dosages
+    let { freq } = this.props.tools.unitsSchedule
+    let preset = { tpl: freq[value] } //_.find(presets, { 'id': value});
     let {
       type,
       dosage,
@@ -177,13 +188,24 @@ class Calculator extends Component {
       dayDosage,
       dayWeightDosage
     } = this.props.actions.calculatorForm
-    this.props.drugs.current.freq = preset.id
+    this.props.drugs.current.freq = value
+    this.props.drugs.current.freq_id = preset.tpl[0].id
     this.props.actions.scheduleForm.interval = preset.tpl
-    // console.log({value});
 
-    dayCount = preset.tpl[0].multiplicate
-    dayDosage = _.map( (fullDosage || [0]), (dos) => { return preset.tpl[0].multiplicate * dos } )
-    dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return preset.tpl[0].multiplicate * dos } )
+    let dayInMinutes = 1440
+
+    let unitCount = getToBase(preset.tpl[0].unit_1, preset.tpl[0].value_1)/dayInMinutes
+    // let unitCount = 1
+    // console.log({unitCount});
+    if(preset.tpl[0].type == 'count'){
+      dayCount = unitCount
+      dayDosage = _.map( (fullDosage || [0]), (dos) => { return preset.tpl[0].value_1 * dos } )
+      dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return preset.tpl[0].value_1 * dos } )
+    }else if(preset.tpl[0].type == 'every'){
+      dayCount = 1/unitCount
+      dayDosage = _.map( (fullDosage || [0]), (dos) => { return dos/unitCount } )
+      dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return dos/unitCount } )
+    }
 
     this.props.actions.calculatorForm = {
       type,
@@ -200,17 +222,18 @@ class Calculator extends Component {
   }
 
   renderPresets(){
-    let { presets } = clarifications
-    let { UIText, scheduleForm: { interval } } = this.props.actions
+    // let { presets } = clarifications
+    // let { UIText, scheduleForm: { interval } } = this.props.actions
+    let { freq } = this.props.tools.unitsSchedule
     let arr = []
-    interval = interval || []
-    _.keys( presets ).forEach(( presetKey, i ) => {
-      let preset = presets[presetKey]
+    // interval = interval || []
+    _.keys( freq ).forEach(( freqKey, i ) => {
+      let freqItem = freq[freqKey]
       arr.push(
         {
-          key: i,
-          text: UIText.freq[preset.id],
-          value: preset.id,
+          key: freqKey,
+          text: freqKey,
+          value: freqKey,
           // onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
           //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
         }
@@ -238,14 +261,14 @@ class Calculator extends Component {
           dayWeightDosage
         },
       },
-      tools: { round, units },
+      tools: { round, units, unitsSchedule },
       dosages: { current: { drug, form, methodform, names }, calcValues, getFromBase },
       router: { values },
       drugs: { current },
       isLiquid
     } = this.props
     let { currUnit } = this.state
-
+    let freqFirst = _.keys(unitsSchedule.freq)[0]
     let weights = []
     let { dosage: dos, count: cnt } = calcValues
 
@@ -296,7 +319,7 @@ class Calculator extends Component {
     //   dayDosage,
     //   dayWeightDosage
     // });
-    // console.log({dosageUnit});
+    // console.log({dosage: getFromBase((currUnit || def), dosage).join(' + ')});
     return (
       <Segment basic>
         {isLiquid && <div className='liquiddrugs' style={{ marginBottom: '15px'}}>
@@ -374,19 +397,19 @@ class Calculator extends Component {
               </Form.Field>
             </Form.Group>
             <Form.Group>
-              <Form.Field width={4}>
+              {!liquid && <Form.Field width={4}>
                 <label>Кратность приема:</label>
                 <Dropdown
                   disabled={disableAll}
                   selection
-                  defaultValue={(current && current.freq) || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
+                  defaultValue={(current && current.freq) || null}
                   className='input big'
                   name={'dayCount'}
                   placeholder={'Выбрать'}
                   onChange={this.setPreset}
                   options={this.renderPresets()}
                 />
-              </Form.Field>
+              </Form.Field>}
               <Form.Field width={6}>
                 <label>Суточная доза:</label>
                 <Input

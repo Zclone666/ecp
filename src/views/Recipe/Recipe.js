@@ -111,13 +111,15 @@ class Recipe extends Component {
       curr = curr || {}
       this.props.actions.drugStructure.patient = _.extend(patient, { id: curr.id || null, key: value, name: curr.name || null, email: curr.email || null, fio: curr.fio || null })
     }else if( name === 'doctor' ){
-      let { doctor } = this.props.actions.drugStructure
+      // let { doctor_key } = this.props.actions.drugStructure
       let newDoc = _.find(checkData.doctor, { 'id': value });
-      this.props.actions.drugStructure.doctor = _.extend(doctor, {key: newDoc.id, val: newDoc.name})
+      this.props.actions.drugStructure.doctor_id = newDoc.id
+      this.props.actions.drugStructure.doctor_name = newDoc.name
     }else if( name === 'clinic' ){
-      let { clinic } = this.props.actions.drugStructure
+      // let { clinic } = this.props.actions.drugStructure
       let newLpu = _.find(checkData.lpu, { 'id': value });
-      this.props.actions.drugStructure.clinic = _.extend(clinic, {key: newLpu.id, val: newLpu.name})
+      this.props.actions.drugStructure.clinic_id = newLpu.id
+      this.props.actions.drugStructure.clinic_name = newLpu.name
     }else if( name === 'email' ){
       this.props.actions.drugStructure.patient.email = value
     }else{
@@ -133,12 +135,8 @@ class Recipe extends Component {
     let {
       actions: {
         drugStructure: {
-          doctor: {
-            key: doctor
-          },
-          clinic: {
-            key: clinic
-          },
+          doctor_id: doctor,
+          clinic_id: clinic,
           patient
         },
         doctor: doc,
@@ -150,8 +148,8 @@ class Recipe extends Component {
 
     doctor = doctor || doc.name
 
-    let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
-
+    // let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
+    let noEmail = false
     // console.log({ doctor, clinic, patient });
 
     return (
@@ -170,7 +168,7 @@ class Recipe extends Component {
 
         <div className='scrollwrapper'>
           <Segment basic>
-            <Form>
+            {false && <Form>
               <Form.Field>
                 <label>Врач</label>
                 <Dropdown
@@ -262,7 +260,7 @@ class Recipe extends Component {
                   onChange={this.handleChange}
                 />
               </Form.Field>
-            </Form>
+            </Form>}
             <Drugs isRecipe={true} />
           </Segment>
         </div>

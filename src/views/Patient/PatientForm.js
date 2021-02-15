@@ -7,6 +7,7 @@ import Spinner from '../../components/Spinner'
 import BirthDate from '../../components/BirthDate'
 import Search from '../../components/Search'
 
+import { checkDouble, clearDouble } from '../../lib/helpers'
 
 import {
   Sidebar,
@@ -49,19 +50,24 @@ class PatientForm extends Component {
     if( !name && !value ){
       let { name, value } = e.target
     }
+    const {
+      birthdate
+    } = this.props.actions.patientForm
+    let veryOld = moment().diff(((birthdate && moment(birthdate, 'x')) || moment()), 'years') >= 60
 
     if( name === 'weight' || name === 'growth' ){
-      if( value === '' || value === 0 || value === '0' || value === '.' || value.split('.')[1] === '' ) {
+      value = clearDouble(value)
+      if( !checkDouble(value) ) {
         this.props.actions.patientForm[name]=value
       }else{
         this.props.actions.patientForm[name]=parseFloat(value)
       }
 
-      this.props.actions.patientForm.masIndex = this.props.actions.patientForm.weight/Math.pow((this.props.actions.patientForm.growth/100), 2)
+      this.props.actions.patientForm.masIndex = parseFloat((this.props.actions.patientForm.weight/Math.pow((this.props.actions.patientForm.growth/100), 2)).toFixed(2))
     }else{
       this.props.actions.patientForm[name] = value
     }
-    if( name === 'sex' && value !== 'woman' ){
+    if( (name === 'sex' && value !== 'woman') || veryOld ){
       this.props.actions.patientForm.pregnancy = false
       this.props.actions.patientForm.gestation = null
       this.props.actions.patientForm.trimester = null
@@ -213,7 +219,7 @@ class PatientForm extends Component {
               />
             </Form.Field>
             <Form.Field width={2}>
-              <label>Индекс <i>m</i></label>
+              <label>ИМТ</label>
               <Input
                 size='big'
                 name='masIndex'
@@ -221,7 +227,7 @@ class PatientForm extends Component {
                 readonly="readonly"
                 value={masIndex || ''}
               >
-                <input readonly="readonly" className='readonly' />
+                <input readOnly="readonly" className='readonly' />
               </Input>
             </Form.Field>
           </Form.Group>
@@ -469,7 +475,7 @@ class PatientForm extends Component {
                 Алкоголь
               </Button>
             </Form.Field>
-            {isWoman && <Form.Field>
+            {(isWoman && !veryOld) && <Form.Field>
               <Button
                 size='big'
                 disabled={!isWoman || veryOld}
@@ -589,7 +595,7 @@ class PatientForm extends Component {
                 Алкоголь
               </Button>
             </Form.Field>
-            {isWoman && <Form.Field>
+            {(isWoman && !veryOld) && <Form.Field>
               <Button
                 size='big'
                 disabled={!isWoman || veryOld}

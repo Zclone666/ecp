@@ -2,6 +2,8 @@ import { observable, action, autorun, computed } from 'mobx';
 import { GET, POST, PUT } from '../lib/connect'
 import moment from 'moment'
 
+import { checkDouble, clearDouble } from '../lib/helpers'
+
 import _ from 'lodash';
 
 const colorPallette = [
@@ -116,13 +118,31 @@ class Dosages {
     });
   }
 
+  async checkDosage(id){
+    let flag = null
+    console.log('here');
+    console.log(this.dosage.keys());
+    await this.dosage.forEach((dose, i) => {
+      console.log(dose.drug.id, id);
+      if( dose.drug && dose.drug.id === id ) flag = dose
+    });
+    return flag
+  }
+
   async get(drug_obj, flag = false){
     let currentDosages = await this.dosage.get(drug_obj.key);
     let { active_language } = this.stores.actions
+    // let isDos = await this.checkDosage(drug_obj.id)
+    //
+    // console.log(!!currentDosages);
+    // currentDosages = (!!currentDosages && currentDosages) || await this.checkDosage(drug_obj.id)
+    // console.log(currentDosages);
+
     if(currentDosages && !flag) {
       await this.stores.drugs.getDosageParams()
       return
     }
+
     let data = {
       drug: drug_obj,
       active_language
@@ -248,32 +268,52 @@ class Dosages {
     }
   }
 
-  getFromBase = ( unitId, value, double = 4 ) => {
+  getFromBase = ( unitId, value, double = 4, name=null ) => {
     let { round } = this.stores.tools
-    if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return [value]
+    // console.log(0,{ value });
+
+
+
     let unit = this.stores.tools.units[unitId]
     if(!unit) return [0]
     //let dosage = value
 
     if(!_.isArray(value)) value = [value]
-    //console.log(1,{ value });
+    let checked = false
+    // if( name == 'dosage' ) console.log(0, value );
+    // if( name == 'dosage' ){
+    value.forEach((item, i) => {
+      if( !checkDouble(item, false) ) checked = true
+    });
+      // console.log({ checked });
+    // }
+    if( checked ) return value
+    // if( name == 'dosage' ) console.log(1, value );
 
     unit.contains.forEach(( contain ) => {
+      // console.log({ contain });
       if(contain.action === 'division'){
         value = _.map( value, (dos) => round((dos * contain.value), double) )
       }else{
         value = _.map( value, (dos) => round((dos / contain.value), double) )
       }
     })
-    //console.log(2,{ value });
+    // if( name == 'dosage' ) console.log(2, value );
     return value || []
   }
 
   getToBase = ( unitId, value ) => {
     if( value === '' || value === 0 || value === '0' || value === '.' || (value.split && (value.split(',')[1] === '' || value.split('.')[1] === '')) ) return value
+    // console.log(typeof(value));
+    // value = value.replace(',', '.')
+    // if(value.split('.')[1] && value.split('.')[1] != ''){
+    //   console.log(value);
+    //   value = parseFloat(value)
+    // }
     let unit = this.stores.tools.units[unitId]
     if(!unit) return 0
     let dosage = value
+    // console.log(value/100);
 
     // console.log({ unit });
     unit.contains.forEach(( contain ) => {
@@ -283,6 +323,7 @@ class Dosages {
         dosage = dosage * contain.value
       }
     })
+    // console.log(dosage);
     return dosage
   }
 

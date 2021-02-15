@@ -132,7 +132,7 @@ class DozeTypes extends Component {
           dosage: { short: 'нет данных', full: 'Дозировка не указана', id: 248 },
           pack: { short: '', full: '', id: (item.pack && item.pack[0] && item.pack[0].dosage) ? item.pack[0].dosage.id_1 : null },
           type: 'simple',
-          value: 0,
+          value: [0],
           obj: {
             dosages: null,
             pack: null,
@@ -143,7 +143,7 @@ class DozeTypes extends Component {
           dosage: { short: '', full: '', id: itemDosage[0].id_1 },
           pack: { short: '', full: '', id: item.pack[0].dosage ? item.pack[0].dosage.id_1 : null },
           type: 'simple',
-          value: 0,
+          value: [0],
           flag: false
         }
         if(form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0 ){
@@ -153,7 +153,7 @@ class DozeTypes extends Component {
               dosage: { short: '', full: '', id: itemDosage[0].id_1 },
               pack: { short: '', full: '', id: pack.dosage.id_1 },
               type: 'simple',
-              value: 0,
+              value: [0],
               flag: !!(itemDosage[0] && itemDosage[0].id_2),
               obj: {
                 dosages: itemDosage,
@@ -176,6 +176,7 @@ class DozeTypes extends Component {
             arr.push({ ...currPack })
           })
         }else{
+          let pack = item.pack[0]
           if(_.isArray(itemDosage) && itemDosage.length > 1 ){
             currPack.dosage.full += _.map(itemDosage, 'value_1').join(' + ') + ' ' + names[itemDosage[0].id_1]
             currPack.dosage.short += _.map(itemDosage, 'value_1').join(' + ') + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
@@ -190,7 +191,7 @@ class DozeTypes extends Component {
           currPack.flag = !!(itemDosage[0] && itemDosage[0].id_2)
           currPack.obj = {
             dosages: itemDosage,
-            pack: null
+            pack: null//item.pack[0]
           }
           arr.push({ ...currPack })
         }

@@ -18,6 +18,7 @@ import {
 
 import clarifications from '../../../constants/hardcode'
 
+import { checkDouble, clearDouble } from '../../../lib/helpers'
 
 import Schedule from './Schedule'
 import Drugs from './Drugs'
@@ -265,40 +266,94 @@ class LiquidCalculator extends Component {
       dosages: { getToBase, getFromBase }
     } = this.props
 
+    value = clearDouble(value)
+    let double = false
+
+    if( name === 'specials' ){
+      this.props.actions.liquidForm[name] = value
+      return
+    }
+
+    if( !checkDouble(value) ) {
+      double = true
+      if( name == 'patient.weight' ){
+        this.props.actions.drugStructure.patient.weight = value
+        // weight = parseFloat(value)
+      }else{
+        this.props.actions.liquidForm.calc[name] = value
+      }
+      return
+    }else if( value != parseFloat(value) && !( value.split(' + ') && value.split(' + ').length > 1 ) ){
+      return
+    }
+
+    let tmp = 0
+
     if(['count', 'dayCount', 'durationCount'].includes(name)){
       this.props.actions.liquidForm.calc[name] = parseFloat(value)
     }else if(name === 'patient.weight'){
       this.props.actions.drugStructure.patient.weight = parseFloat(value)
     }else if(name === 'tintSpeed'){
+      tmp = this.props.actions.liquidForm.calc[name]/parseFloat(value)
       this.props.actions.liquidForm.calc[name] = parseFloat(value)
-      this.props.actions.liquidForm.calc.count = getFromBase(168, getToBase( 799, value ))*durationCount
+      this.props.actions.liquidForm.calc.durationCount = parseFloat((tmp*durationCount).toFixed(4))
     }else if(name === 'liquidSpeed'){
+      tmp = this.props.actions.liquidForm.calc[name]/parseFloat(value)
       this.props.actions.liquidForm.calc[name] = parseFloat(value)
-      this.props.actions.liquidForm.calc.count = parseFloat(value*durationCount)
+      this.props.actions.liquidForm.calc.durationCount = parseFloat((tmp*durationCount).toFixed(4))
+    }else if(name === 'specials'){
+      // this.props.actions.liquidForm[name] = value
     }
 
     recalcLiquidParams()
   }
 
   setPreset = (e, {value}) => {
-    let { presets } = clarifications
-    let preset = _.find(presets, { 'id': value});
+    let { getToBase, getFromBase, calcValues } = this.props.dosages
+    let {
+      dayCount,
+      dayDosage,
+      dayWeightDosage
+    } = this.props.actions.liquidForm.calc
+    let { freq } = this.props.tools.unitsSchedule
+    let preset = { tpl: freq[value] }
+    this.props.drugs.current.freq = value
+    this.props.drugs.current.freq_id = preset.tpl[0].id
     this.props.actions.liquidForm.calc.dayCount = preset.tpl[0].multiplicate
+    this.props.actions.liquidForm.schedule.interval = preset.tpl
+
+    let dayInMinutes = 1440
+
+    let unitCount = getToBase(preset.tpl[0].unit_1, preset.tpl[0].value_1)/dayInMinutes
+
+    if(preset.tpl[0].type == 'count'){
+      dayCount = unitCount
+      // dayDosage = _.map( (fullDosage || [0]), (dos) => { return preset.tpl[0].value_1 * dos } )
+      // dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return preset.tpl[0].value_1 * dos } )
+    }else if(preset.tpl[0].type == 'every'){
+      dayCount = 1/unitCount
+      // dayDosage = _.map( (fullDosage || [0]), (dos) => { return dos/unitCount } )
+      // dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return dos/unitCount } )
+    }
+
+    this.props.actions.liquidForm.calc.dayCount = dayCount
+    // this.props.actions.liquidForm.calc.dayDosage = dayDosage
+    // this.props.actions.liquidForm.calc.dayWeightDosage = dayWeightDosage
+
     this.props.drugs.recalcLiquidParams()
   }
 
   renderPresets(){
-    let { presets } = clarifications
-    let { UIText, scheduleForm: { interval } } = this.props.actions
+    let { freq } = this.props.tools.unitsSchedule
     let arr = []
-    interval = interval || []
-    _.keys( presets ).forEach(( presetKey, i ) => {
-      let preset = presets[presetKey]
+    // interval = interval || []
+    _.keys( freq ).forEach(( freqKey, i ) => {
+      let freqItem = freq[freqKey]
       arr.push(
         {
-          key: i,
-          text: UIText.freq[preset.id],
-          value: preset.id,
+          key: freqKey,
+          text: freqKey,
+          value: freqKey,
           // onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
           //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)
         }
@@ -518,7 +573,7 @@ class LiquidCalculator extends Component {
                 <Dropdown
                   disabled={disableAll}
                   selection
-                  defaultValue={freq || 'CrjuCSzHZJ4I6PSMAXzTpw=='}
+                  defaultValue={freq || null}
                   className='input big'
                   name={'dayCount'}
                   placeholder={'Выбрать'}

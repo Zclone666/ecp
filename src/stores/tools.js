@@ -16,14 +16,16 @@ class Tools {
   @observable unitsPharm = {};
   @observable unitsPrimary = {};
   @observable unitsComplex = {};
-  @observable unitsSchedule = {};
+  @observable unitsSchedule = {
+    freq: {},
+    duration: {}
+  };
 
 
 
   constructor({ stores }) {
     this.stores = stores;
     this.router = stores.router;
-
     autorun(() => {
 
     });
@@ -47,7 +49,8 @@ class Tools {
 
 
           // kostyl
-          if(units[250]){
+          // if(units[99])
+          if(units[250 || units[99]]){
             names[99] = 'процент'
             nameshort[99] = '%'
             unitpharm.push(99)
@@ -126,8 +129,9 @@ class Tools {
       data,
       success: async data => {
         // console.log('DATA', data);
-        let { freq } = data
+        let { freq, duration } = data
         this.unitsSchedule.freq = freq
+        this.unitsSchedule.duration = duration
       },
       fail: (alerts) => {
 

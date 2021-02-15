@@ -6,6 +6,7 @@ import moment from 'moment'
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
+export const CHECK_REG_KEY ='340f725c9ccb9779'
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 class Actions {
 
@@ -38,6 +39,8 @@ class Actions {
   @observable makeLiquids = false
   @observable isLiquidsOk = false
 
+  @observable protocol = null
+
   @observable checkData = {
     lpu: [],
     doctor: []
@@ -64,7 +67,8 @@ class Actions {
     middleName: "",
     lpuName: '',
     department: '',
-    hidden: true
+    hidden: true,
+    isEmailReg: false
   }
 
   @observable confirmForm = {
@@ -202,21 +206,37 @@ class Actions {
   @observable activeDrugs = []
   @observable activeConflicts = []
 
+  // clinic_id: null,
+  // clinic_code: null,
+  // clinic_name: null,
+  // dep_id: null,
+  // dep_code: null,
+  // dep_name: null,
+  // doctor_id: null,
+  // doctor_code: null,
+  // doctor_name: null,
+
+  // clinic_key: null, //clinic_id clinic_code clinic_name
+  // clinic_val: null,
+  // department_key: null, //dep_id dep_code dep_name
+  // department_val: null,
+  // doctor_key: null, //doctor_id doctor_code doctor_name
+  // doctor_val: null,
+
   @observable drugStructure = {
     key: "key",
     device_id: null,
-    clinic: {
-      key: null,
-      val: null,
-    },
-    department: {
-      key: null,
-      val: null
-    },
-    doctor: {
-      key: null,
-      val: null
-    },
+
+    clinic_id: null,
+    clinic_code: null,
+    clinic_name: null,
+    dep_id: null,
+    dep_code: null,
+    dep_name: null,
+    doctor_id: null,
+    doctor_code: null,
+    doctor_name: null,
+
     patient: {
       id: null,
       email: null,
@@ -242,8 +262,7 @@ class Actions {
     active_language: "ru",
     liquids: [],
     drugs: [],
-    text: null,
-    specials: null
+    text: null
   }
 
 
@@ -375,6 +394,15 @@ class Actions {
     return text
   }
 
+  get isPrescriptFilled(){
+    let {
+      patient,
+      doctor_id,
+      clinic_id
+    } = this.drugStructure
+    return ( (patient.key || patient.id) && doctor_id && clinic_id )
+  }
+
   async autologin(){
 
     this.drugStructure.active_language = this.active_language = await localStorage.getItem('lang') || null;
@@ -386,7 +414,6 @@ class Actions {
     this.getObject('buttonTexts')
     this.getObject('elements')
     this.getObject('UIText')
-
 
     this.loading = true
     this.authkey = await localStorage.getItem('authkey') || '';
@@ -405,6 +432,7 @@ class Actions {
     }
     if(!this.authkey || this.authkey == null || this.authkey == 'null') {
       this.loading = false
+      this.stores.router.push('/login')
       return
     }
     //// FIXME: for safari fucking shit
@@ -513,7 +541,12 @@ class Actions {
       fail: alerts => {
         console.log('FAIL', alerts);
         alerts.forEach((alert) => {
-          if(alert.code != 200) this.logout()
+          if(alert.code != 200) {
+            setTimeout(() => {
+              this.logout()
+            }, 3000)
+
+          }
         })
       },
       always: (data) => {
@@ -595,6 +628,44 @@ class Actions {
       },
       fail: alerts => {
         this.loading = false
+        // console.log('FAIL', alerts);
+      },
+      always: (data) => {
+        this.makeAlerts(data)
+        // console.log('ALWAYS', data);
+      }
+    });
+  }
+  async checkUserUmkb() {
+    // this.signinForm.key = AUTH_SERVICE_KEY;
+    let dataSend = {
+      key: CHECK_REG_KEY,
+      email: this.signinForm.email
+    }
+    return POST({
+      path: `https://cs.socmedica.com/api/user/getUserInfoByEmail`,
+      data: dataSend,
+      success: async (data) => {
+         console.log(data);
+        if( data && data.alerts && data.alerts[0].code == '200' ){
+
+          this.signinForm.isEmailReg = false
+          this.stores.router.push('/login')
+        }else{
+          this.signinForm.isEmailReg = true
+        }
+        // console.log('SUCCESS', data);
+        // this.loading = false
+        // this.signinForm.isEmailReg = true
+        // this.stores.router.push('/login')
+        // if (data.authkey) {
+        //   await localStorage.setItem('authkey', data.authkey);
+        //   this.authkey = data.authkey
+        // }
+      },
+      fail: alerts => {
+        this.loading = false
+        this.signinForm.isEmailReg = true
         // console.log('FAIL', alerts);
       },
       always: (data) => {

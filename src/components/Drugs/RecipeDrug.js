@@ -28,56 +28,91 @@ class RecipeDrug extends React.Component {
       text: null,
       from: 'dosage'
     }
+    this.textRef = React.createRef()
   }
+  handleKeyDown = (e) => {
+    e.preventDefault();
+    let start = e.target.selectionStart;
+    let end = e.target.selectionEnd;
+    setTimeout(
+      () => {
+        this.textRef.current.selectionStart = this.textRef.current.selectionEnd = start
+      },
+      300
+    );
 
+  }
   handleChange = (e) => {
     let { value } = e.target
-    this.setState({ from: 'text' }, () => {
-      this.setState({ text: value })
+    // if( this.state.from !== 'text' ){
+    //   this.setState({ from: 'text' }, () => {
+    //     this.setState({ text: value }, () => {
+    //
+    //     })
+    //
+    //   })
+    // }else{
+      this.setState({ text: value }, () => {
 
-    })
+      })
+    // }
+
   }
-  undo = () => {
-    this.setState({ from: 'dosage', text: null })
-  }
+  // undo = () => {
+  //   this.setState({ from: 'dosage', text: null })
+  // }
 
   getLF = () => {
-    let { drug } = this.props
+    let {
+      drugKey: key,
+      drugs
+    } = this.props
+    // console.log(drug);
+    let drug = drugs.drug.get(key) || {}
     this.props.dosages.get(drug)
     //this.props.db.GetDuration(drug)
     this.props.drugs.current = { ...drug }
     // this.props.router.push('/concepts/dozes')
   }
   unselectDrug = () => {
-    let { drug } = this.props
+    let {
+      drugKey: key,
+      drugs
+    } = this.props
+    // console.log(drug);
+    let drug = drugs.drug.get(key) || {}
     this.props.drugs.unselectDrug(drug)
   }
 
   edit = () => {
     let {
-      drugs: { drug }, //drugs, drugsDosages, currDrug, setDosageParams
-      drug: current,
+      drugKey: key,
+      drugs
     } = this.props
-    this.setState({ edit: !this.state.edit })
-    let currDrug = drug.get(current.key)
-    drug.set(current.key, _.extend(currDrug, {text: this.state.text}))
+    // console.log(drug);
+    let drug = drugs.drug.get(key) || {}
+    this.setState({ edit: !this.state.edit, text: drug.specials })
+    // let currDrug = drugs.drug.get(key)
+    drugs.drug.set( key, _.extend( drug, { specials: this.state.text } ))
   }
 
   getMNN = () => {
     let {
-      drug: {
-        fpid,
-        group,
-        id,
-        key,
-        level,
-        main,
-        name,
-        namesearch,
-        type
-      }
+      drugKey: key,
+      drugs
     } = this.props
     // console.log(drug);
+    let drug = drugs.drug.get(key) || {}
+    let {
+      fpid,
+      group,
+      id,
+      level,
+      main,
+      name,
+      namesearch,
+      type
+    } = drug
     this.props.drugs.MNNfromTN({
       fpid,
       group,
@@ -95,29 +130,45 @@ class RecipeDrug extends React.Component {
     let {
       dosages: { getFromBase },
       tools: { names, shortnames, round },
-      drug: {
-        freq,
-        duration,
-        calc,
-        dosage,
-        helpers
-      },
-      drug,
+      drugs,
+      drugKey: key,
       actions: { UIText }
     } = this.props
 
     let arr = []
 
+    let drug = drugs.drug.get(key) || {}
+    let {
+      freq,
+      freq_id,
+      duration,
+      duration_id,
+      calc,
+      dosage,
+      helpers,
+      schedule
+    } = drug
     // console.log({drug});
+    let { finishAlternate } = schedule || {}
 
-    if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
+    if(calc && calc.fullDosage && helpers.dosage && helpers.dosage.id ){
       let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
       let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit]
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
     }
 
-    if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
-    if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+    if(freq_id && UIText.freq[freq_id]){
+      arr.push(UIText.freq[freq_id])
+    }else if(freq){
+      arr.push(freq)
+    }
+    if(duration_id && UIText.duration[duration_id]){
+      arr.push(UIText.duration[duration_id])
+    }else if(duration){
+      arr.push(duration)
+    }
+    // if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+    if(finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate])
 
     return {
       empty: arr.length < 1,
@@ -136,25 +187,26 @@ class RecipeDrug extends React.Component {
       // drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage: dose },
       // db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
-      drug,
+      drugKey: key,
+      drugs,
       active
     } = this.props
 
     let { edit, text, from } = this.state
 
-    // let selectedWarnings = warnIcons[selectedDrug]
-    let { key, name, level, tn, type, dosage, schedule, helpers } = drug
     let drugDosages = dose.get(key) || {}
+    let drug = drugs.drug.get(key) || {}
+    let { name, level, tn, type, dosage, schedule, helpers } = drug || {}
 
     let names = drugDosages.names || {}
 
     let descArr = []
     let rules = this.renderRules()
 
-    if(dosage.form) descArr.push(names[dosage.form])
-    if(helpers.dosage && helpers.dosage.short) descArr.push(helpers.dosage.short)
-    if(helpers.pack && helpers.pack.short) descArr.push(helpers.pack.short)
-    if(dosage.method) descArr.push(names[dosage.method])
+    if(dosage && dosage.form) descArr.push(names[dosage.form])
+    if(helpers && helpers.dosage && helpers.dosage.short) descArr.push(helpers.dosage.short)
+    if(helpers && helpers.pack && helpers.pack.short) descArr.push(helpers.pack.short)
+    if(dosage && dosage.method) descArr.push(names[dosage.method])
     if(schedule && schedule.specials) descArr.push(schedule.specials)
     if(!rules.empty){ descArr.push(rules.text) }
 
@@ -170,14 +222,14 @@ class RecipeDrug extends React.Component {
   componentDidUpdate(prevProps, prevState){
     let {
       drugs: { drug }, //drugs, drugsDosages, currDrug, setDosageParams
-      drug: current,
+      drugKey: key,
     } = this.props
     let { inputValue } = this
-
-    if(inputValue == this.state.text || this.state.edit) return
-    this.setState({ text: inputValue }, () => {
-      let currDrug = drug.get(current.key)
-      drug.set(current.key, _.extend(currDrug, {text: this.state.text}))
+    let current = drug.get(key)
+    if(current.specials == this.state.text || this.state.edit) return
+    this.setState({ text: current.specials }, () => {
+      // let currDrug = drug.get(current.key)
+      drug.set(current.key, _.extend(current, { specials: this.state.text }))
     })
 
   }
@@ -191,15 +243,18 @@ class RecipeDrug extends React.Component {
         activeConflicts
       },
       dosages: { dosage: dose },
-      drug,
+      drugKey: key,
+      drugs,
       active
     } = this.props
 
     let { edit, text, from } = this.state
 
+    // console.log({key});
     // let selectedWarnings = warnIcons[selectedDrug]
-    let { key, name, level, tn, type, dosage, schedule, helpers } = drug
     let drugDosages = dose.get(key) || {}
+    let drug = drugs.drug.get(key) || {}
+    let { name, level, tn, type, dosage, schedule, helpers, specials } = drug
 
     let names = drugDosages.names || {}
 
@@ -223,9 +278,9 @@ class RecipeDrug extends React.Component {
       <List.Item>
         <List.Content floated='right'>
           <Button.Group color='blue'>
-            <Button title='отменить изменения предписания' icon onClick={this.undo} icon disabled={from === 'dosage'}>
+            {false && <Button title='отменить изменения предписания' icon onClick={this.undo} icon disabled={from === 'dosage'}>
               <Icon name='undo' />
-            </Button>
+            </Button>}
             <Button icon onClick={this.edit}>
               <Icon name={edit ? 'check' : 'edit'} />
             </Button>
@@ -239,20 +294,24 @@ class RecipeDrug extends React.Component {
           <List.Content>
             <List.Header>
               <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}{' '}
-              {!helpers.mnn && <label><span className='link' onClick={this.getMNN}>Заменить на МНН</span></label>}
-              {helpers.mnn && <label><span className='link' onClick={this.getMNN}>Вернуть</span></label>}
+              {!(helpers && helpers.mnn) && <label><span className='link' onClick={this.getMNN}>Заменить на МНН</span></label>}
+              {(helpers && helpers.mnn) && <label><span className='link' onClick={this.getMNN}>Вернуть</span></label>}
             </List.Header>
             <List.Description>
-              { !edit && inputValue }
+              { inputValue }
+            </List.Description>
+            <List.Description>
+              { !edit && specials }
             </List.Description>
           </List.Content>
         </List.Content>
         {edit &&
           <Form fluid>
             <TextArea
+              ref={this.textRef}
               fluid
               name='text'
-              value={inputValue || ''}
+              value={text || ''}
               placeholder='Особые указания'
               onChange={this.handleChange}
             />

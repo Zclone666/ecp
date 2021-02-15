@@ -41,7 +41,13 @@ class WarningTab extends Component {
       if(item.type === 'drug'){
         return drug.get(item.drugkey)
       }else if(['allergy', 'disease'].includes(item.type)){
-        return _.find(patientForm[item.type], { key: item.drugkey });
+        if(item.type === 'disease'){
+          let result = null
+          result = _.find(patientForm[item.type], { key: item.drugkey });
+          return result || _.find(patientForm['co_'+item.type], { key: item.drugkey });
+        }else{
+          return _.find(patientForm[item.type], { key: item.drugkey });
+        }
       }else{
         return { name: info.names[item.drugkey] }
       }

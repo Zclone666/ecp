@@ -18,7 +18,12 @@ class Drugs {
   @observable ready = false;
   @observable searchRows = [];
 
+  @observable deletedRows = [];
+  @observable deletedLiquids = [];
+
   @observable searchReady = true;
+
+  @observable listChanged = true;
 
   @observable selectedRows = [];
 
@@ -31,15 +36,19 @@ class Drugs {
     type: null,
     group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
     text: null,
+    edit: true,
     specials: null,
     freq: null,
+    freq_id: null,
     duration: null,
+    duration_id: null,
     solute: false,
     dosage: { // дозировка
       form: null,
       method: null,
       pack: {},
       dosage: {},
+      value: null
     },
     calc: {
       dosage: [0],
@@ -75,21 +84,36 @@ class Drugs {
     this.liquid = observable.map({}, 'liquid')
 
     autorun(() => {
-
+      // console.log(Array.from(this.liquid.values()));
     });
 
 
   }
-
+  async clearProto(){
+    this.drug.forEach(( drugObj, key ) => {
+      if(drugObj.proto){
+        this.unselectDrug(key)
+      }
+    })
+  }
   async setGroup(keys, group){
     if(!_.isArray(keys)) {
       keys = [keys]
     }
-    keys.forEach(async (key, i) => {
+    let currGroup = null
+    await keys.forEach(async (key, i) => {
       let drug = await this.drug.get(key)
+      currGroup = drug.group
+      // console.log({ currGroup });
       drug.group = group
       this.drug.set(key, drug)
     })
+    // console.log({ currGroup });
+    let currLiquid = this.liquid.get( currGroup ) || {}
+    if(currLiquid.proto){
+      this.deletedLiquids.push(currLiquid)
+    }
+    this.liquid.delete( currGroup )
     this.stores.actions.makeLiquids = true
     setTimeout(() => {
       this.checkLiquidsOk()
@@ -145,6 +169,9 @@ class Drugs {
             })
             this[`${saveTo}Rows`] = observable([])
             this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
+            this.searchReady = true
+          }else if(data.concepts && data.concepts.length == 0 && _.isArray(data.concepts)){
+            this[`${saveTo}Rows`] = observable([])
             this.searchReady = true
           }
         },
@@ -213,10 +240,14 @@ class Drugs {
     let { calcValues, getFromBase } = this.stores.dosages
     let def = (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id ) || (calcValues.dosage.unit && calcValues.dosage.unit.id)
 
-    let { freq, duration } = drug
+    let { freq, freq_id, duration, duration_id } = drug
+
+    currentDrug.edit = true
     // console.log({ freq, duration });
     currentDrug.freq = freq || null
+    currentDrug.freq_id = freq_id || null
     currentDrug.duration = duration || null
+    currentDrug.duration_id = duration_id || null
     currentDrug.specials = this.stores.actions.drugStructure.specials
 
     let {
@@ -299,6 +330,7 @@ class Drugs {
     }
     await this.drug.set( drug.key, currentDrug );
 
+    this.listChanged = true
     await this.stores.dosages.dosage.set( drug.key, currentDosages );
     this.stores.db.clearData()
   }
@@ -310,9 +342,14 @@ class Drugs {
     let currentDrug = await this.drug.get(drug.key) || {};
     let currentDosages = await this.stores.dosages.dosage.get(drug.key) || {};
 
-    let { freq, duration } = drug
+    let { freq, freq_id, duration, duration_id } = drug
     // console.log({ freq, duration });
-
+    // currentDrug.freq = freq || null
+    // currentDrug.freq_id = freq_id || null
+    // currentDrug.duration = duration || null
+    // currentDrug.duration_id = duration_id || null
+    // console.log({ freq, duration });
+    let { specials } = currentDrug
     let {
       form,
       method,
@@ -335,8 +372,7 @@ class Drugs {
       interval,
       once,
       week,
-      calendar,
-      specials
+      calendar
     } = currentDrug.schedule
     let {
       dosage: dos,
@@ -382,10 +418,10 @@ class Drugs {
       interval,
       once,
       week,
-      calendar,
-      specials
+      calendar
     }
-
+    this.stores.actions.drugStructure.specials = specials
+    this.listChanged = true
   }
 
   get calcLiquid(){
@@ -451,7 +487,7 @@ class Drugs {
     // console.log({
     //   weight, count, weights, counts, ready, unit, liqUnit, liquidUnits, dryUnits, id
 		// });
-
+    // this.listChanged = true
 		return {
       weight, count, weights, counts, ready, unit, liqUnit, liquidUnits, dryUnits, id
 		}
@@ -467,6 +503,7 @@ class Drugs {
     arr.forEach((item, i) => {
       this.makeLiquid(item)
     });
+    this.listChanged = true
 
   }
   removeLiquids = async (arr) => {
@@ -475,6 +512,7 @@ class Drugs {
     arr.forEach((item, i) => {
       this.liquid.remove( item );
     });
+    this.listChanged = true
   }
 
   makeLiquid = async (item) => {
@@ -485,7 +523,9 @@ class Drugs {
       group: item, // группа раствора (0 - нет раствора, больше 0 - раствор)
       specials: null,
       freq: null,
+      freq_id: null,
       duration: null,
+      duration_id: null,
       calc: {
         dosage: [0],
         count: 0,
@@ -499,7 +539,7 @@ class Drugs {
         durationUnit: '75',
         fullSpeed: [0],
         weightSpeed: [0],
-        tintSpeed: [0],
+        tintSpeed: 0,
         liquidSpeed: 0
       },
       schedule: {
@@ -533,7 +573,10 @@ class Drugs {
       group, // группа раствора (0 - нет раствора, больше 0 - раствор)
       specials,
       freq,
+      edit,
+      freq_id,
       duration,
+      duration_id,
       calc: {
         dosage,
         count,
@@ -562,12 +605,17 @@ class Drugs {
       }
     } = this.stores.actions.liquidForm
 
+    edit = true
+
     this.liquid.set( id, _.extend(current, {
       name,
       group,
       specials,
       freq,
+      edit,
+      freq_id,
       duration,
+      duration_id,
       calc: {
         dosage,
         count,
@@ -595,6 +643,7 @@ class Drugs {
         calendar
       }
     } ) );
+    this.listChanged = true
     // console.log(this.liquid.get(id));
   }
 
@@ -644,6 +693,7 @@ class Drugs {
       tintSpeed,
       liquidSpeed
     }
+    this.listChanged = true
     // console.log({
     //   dosage,
     //   count,
@@ -699,7 +749,9 @@ class Drugs {
       group,
       specials,
       freq,
-      duration
+      freq_id,
+      duration,
+      duration_id
     } = current
     // console.log('HERE 1');
     if(flag){
@@ -713,7 +765,9 @@ class Drugs {
         group, // группа раствора (0 - нет раствора, больше 0 - раствор)
         specials,
         freq,
+        freq_id,
         duration,
+        duration_id,
         calc: {
           dosage: dosage,
           count: calcCount,
@@ -727,8 +781,8 @@ class Drugs {
           durationUnit: '75',
           fullSpeed: [0], // fullDosage,
           weightSpeed: [0], // _.map( fullDosage, (dos) => { return patientWeight ? getToBase((unit || 248), dos)/patientWeight : 0 } ),
-          tintSpeed: [0], // getFromBase( 799, fullDosage ),
-          liquidSpeed:  [0], //calcCount
+          tintSpeed: 0, // getFromBase( 799, fullDosage ),
+          liquidSpeed:  0, //calcCount
         },
         schedule: {
           dateStart: null,
@@ -793,7 +847,9 @@ class Drugs {
         group, // группа раствора (0 - нет раствора, больше 0 - раствор)
         specials,
         freq,
+        freq_id,
         duration,
+        duration_id,
         calc: {
           dosage,
           count,
@@ -824,7 +880,7 @@ class Drugs {
       if(this.stores.actions.drugStructure.patient.weight && parseFloat(this.stores.actions.drugStructure.patient.weight) > 0) this.recalcLiquidParams()
     }
     // this.liquid.set( group, _.extend(current, liquid) );
-
+    this.listChanged = true
     return true
   }
 
@@ -837,11 +893,14 @@ class Drugs {
       //tn: false, // ДВ или ТН
       fpid: null, //
       type: null,
+      edit: true,
       group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
       text: null,
       specials: null,
       freq: null,
+      freq_id: null,
       duration: null,
+      duration_id: null,
       solute: false,
       dosage: { // дозировка
         form: null,
@@ -895,15 +954,19 @@ class Drugs {
     if(!flag){
       await this.stores.db.clearData(false, true)
     }
-
+    this.listChanged = true
     return true
   }
   async unselectDrug(row){
+    if(row.proto){
+      this.deletedRows.push(row)
+    }
     this.drug.delete(row.key)
     this.stores.dosages.dosage.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true)
     this.checkLiquidsOk()
+    this.listChanged = true
     return true
   }
 

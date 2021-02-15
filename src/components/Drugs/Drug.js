@@ -102,14 +102,19 @@ class Drug extends React.Component {
       tools: { names, shortnames, round },
       drug: {
         freq,
+        freq_id,
         duration,
+        duration_id,
         calc,
         dosage,
-        helpers
+        helpers,
+        schedule
       },
       drug,
       actions: { UIText }
     } = this.props
+
+    let { finishAlternate } = schedule || {}
 
     let arr = []
 
@@ -119,8 +124,21 @@ class Drug extends React.Component {
       arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
     }
 
-    if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
-    if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+    // if(freq) arr.push(freq)
+
+    // if(duration) arr.push(duration)
+    // if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
+    if(freq_id && UIText.freq[freq_id]){
+      arr.push(UIText.freq[freq_id])
+    }else if(freq){
+      arr.push(freq)
+    }
+    if(duration_id && UIText.duration[duration_id]){
+      arr.push(UIText.duration[duration_id])
+    }else if(duration){
+      arr.push(duration)
+    }
+    if(finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate])
 
     return {
       empty: arr.length < 1,
