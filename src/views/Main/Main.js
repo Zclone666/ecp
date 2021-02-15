@@ -187,7 +187,7 @@ class Main extends Component {
                 Проверить
               </Menu.Item>
               {( listChanged ?
-                (cautionsTitle ?
+                ((cautionsTitle && false) ?
                   <Modal
                     onClose={() => this.setOpen(false)}
                     onOpen={() => this.setOpen(true)}
@@ -220,7 +220,7 @@ class Main extends Component {
                     </Modal.Actions>
                   </Modal>
                   :
-                  <Menu.Item onClick={() => this.saveList()}>
+                  <Menu.Item disabled onClick={() => this.saveList()}>
                     Назначить
                   </Menu.Item>)
                   :

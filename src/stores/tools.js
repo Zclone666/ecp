@@ -26,7 +26,6 @@ class Tools {
   constructor({ stores }) {
     this.stores = stores;
     this.router = stores.router;
-
     autorun(() => {
 
     });
