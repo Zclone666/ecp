@@ -61,6 +61,7 @@ class MiniDrug extends React.Component {
       actions: { UIText }
     } = this.props
 
+		helpers = helpers || {}
     let arr = []
 		let { finishAlternate } = schedule || {}
 
@@ -115,6 +116,7 @@ class MiniDrug extends React.Component {
 		// liquid/calc/1/dozes/lf/4
 		// console.log({drug});
 		let urlArr = ['/liquid/calc',values.liquid,'dozes']
+    helpers = helpers || {}
 
 		if(helpers.way) urlArr.push(helpers.way)
 		if(helpers.step) urlArr.push(helpers.step)

@@ -113,7 +113,7 @@ class Drug extends React.Component {
       drug,
       actions: { UIText }
     } = this.props
-
+    helpers = helpers || {}
     let { finishAlternate } = schedule || {}
 
     let arr = []
@@ -174,6 +174,7 @@ class Drug extends React.Component {
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
     dosage = dosage || {}
+    helpers = helpers || {}
 
     let dosReady = !!drugDosages.names
 
