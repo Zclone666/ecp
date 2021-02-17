@@ -116,7 +116,7 @@ class Dosages {
             let val = dosage[0].value_2 ? dosage[0].value_1/dosage[0].value_2 : dosage[0].value_1
             currPack.dosage.full += val + ' ' + names[dosage[0].id_1]
             currPack.dosage.small += val + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
-            currPack.value = val
+            currPack.value = [val]
           }
           currPack.pack.full += names[packname] + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
           currPack.pack.small += (nameshort[packname] || names[packname]) + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')

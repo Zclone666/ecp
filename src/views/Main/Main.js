@@ -131,13 +131,17 @@ class Main extends Component {
       drugs: { searchReady, searchRows, selectedRows, drug, listChanged }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
       warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
-      actions: { patientForm: { disease, co_disease }, clinrecCheckerStep, isPrescriptFilled }
+      actions: { patientForm: { disease, co_disease }, clinrecCheckerStep, isPrescriptFilled, patientPassport }
     } = this.props
     let selectedWarnings = warning[selectedDrug]
     let showPage = !!(this.props.router.values && this.props.router.values.page)
     // console.log('router', this.props.router);
     // let showPage2 = true
-
+    const {
+      id: patientId,
+      email,
+      fio
+    } = patientPassport
     let isDisease = disease.length > 0 || co_disease.length > 0
     return (
       <>
@@ -151,8 +155,8 @@ class Main extends Component {
           <Menu.Menu position='right'>
             <Responsive as={RouterLink} to='/patient/info' fireOnMount minWidth='481'>
               <Menu.Item>
-                <Icon name='bed' />
-                Данные пациента
+                <Icon name='bed' color={patientId ? 'black' : 'grey'} />
+                {( fio && fio.length > 2 ) ? fio : 'Пациент не выбран'}
               </Menu.Item>
             </Responsive>
             {isDisease && <Responsive as={RouterLink} to={`/clinrec/checker/${clinrecCheckerStep}`} onClick={this.getClinrec} fireOnMount minWidth='481'>
