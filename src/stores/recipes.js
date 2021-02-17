@@ -111,22 +111,22 @@ class Recipes {
     let liquidsFull = Array.from(this.stores.drugs.liquid.values())
     drugsFull.forEach((drugFull, i) => {
       let { helpers, ...drug } = drugFull
-      data.drugs.push(drug)
+      data.drugs.push(drugFull)
     });
     data.deletedDrugs=[]
     this.stores.drugs.deletedRows.forEach((drugFull, i) => {
       let { helpers, ...drug } = drugFull
-      data.deletedDrugs.push(drug)
+      data.deletedDrugs.push(drugFull)
     });
     data.deletedLiquids=[]
     this.stores.drugs.deletedLiquids.forEach((drugFull, i) => {
       let { helpers, ...drug } = drugFull
-      data.deletedLiquids.push(drug)
+      data.deletedLiquids.push(drugFull)
     });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull
       if(liquid.group != 0){
-        data.liquids.push(liquid)
+        data.liquids.push(liquidFull)
       }
     });
 

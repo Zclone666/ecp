@@ -7,17 +7,17 @@ import { Stepper } from '../../components/Clinrecs'
 
 
 import {
-  Sidebar,
+  // Sidebar,
   Menu,
-  Icon,
+  // Icon,
   // Search,
-  Segment,
-  Message,
-  List,
-  Feed,
-  Button,
-  Responsive,
-  Grid
+  // Segment,
+  // Message,
+  // List,
+  // Feed,
+  // Button,
+  // Responsive,
+  // Grid
 } from 'semantic-ui-react'
 
 import _ from 'lodash';
@@ -56,7 +56,7 @@ class Clinrecs extends Component {
 
   componentDidMount(){
     let {
-      clinrecs: { checker },
+      // clinrecs: { checker },
       actions: { clinrecCheckerStep }
     } = this.props
     let step = clinrecCheckerStep > 1 ? parseInt(clinrecCheckerStep)-1 : 1
@@ -99,9 +99,9 @@ class Clinrecs extends Component {
 
   render() {
     let {
-      router: { values },
+      // router: { values },
       clinrecs: { checker },
-      actions: { clinrecCheckerStep, clinrecCheckerData }
+      actions: { clinrecCheckerStep }
     } = this.props
     let { hasForward, hasBackward } = this.state
     let currPage = checker[_.keys(checker)[clinrecCheckerStep-1]] || {}

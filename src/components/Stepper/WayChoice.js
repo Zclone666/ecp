@@ -10,7 +10,7 @@ import {
   Segment
 } from 'semantic-ui-react'
 
-import _ from 'lodash';
+// import _ from 'lodash';
 
 @inject('db', 'actions', 'drugs', 'warnings', 'router')
 @observer
@@ -35,10 +35,10 @@ class WayChoice extends Component {
     } = this.props
     let url = !values.liquid ? '/concept/dozes' : `/liquid/calc/${values.liquid}/dozes`
     let { viewType } = this.state
-    
+
     return (
       <Responsive className='h100' as={Grid} fireOnMount columns='equal' onUpdate={this.handleOnUpdate}>
-        {viewType == 'columns' ?
+        {viewType === 'columns' ?
           <Grid.Row stretched>
             <Grid.Column width={8}>
               <Segment basic>

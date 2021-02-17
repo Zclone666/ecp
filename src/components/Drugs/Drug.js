@@ -157,15 +157,17 @@ class Drug extends React.Component {
       drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage: dose },
       warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
-      drug,
+      drug: ldrug,
       active,
       style,
       minus,
       onRemove,
       canDrag
     } = this.props
-    drug = this.props.drugs.drug.get(drug.key)
+    // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
+    let drug = this.props.drugs.drug.get(ldrug.key) || {}
     let selectedWarnings = warnIcons[selectedDrug]
+    // console.log({ drug });
     let { key, name, level, tn, type, dosage, helpers, specials } = drug
     let drugDosages = dose.get(key) || {}
     let hasWarnings = warning.size > 0
@@ -262,8 +264,8 @@ class Drug extends React.Component {
                 {specials && <Popup content={specials} trigger={<Icon name='file alternate' />} />}
                 <Feed.Date>
                   {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-                  {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
-                  {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
+                  {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) && ', '}
+                  {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ''}
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta>
@@ -289,8 +291,8 @@ class Drug extends React.Component {
 
                     <Feed.Meta>
                       {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-                      {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
-                      {(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
+                      {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) && ', '}
+                      {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ''}
                       {(nameshort[dosage.method] || names[dosage.method]) && ', '}
                       {rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
                     </Feed.Meta><br />

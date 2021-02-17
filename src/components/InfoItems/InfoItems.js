@@ -7,12 +7,12 @@ import { Collapse } from 'react-collapse';
 import {
   // Menu,
   List,
-  Transition,
-  Button,
+  // Transition,
+  // Button,
   Icon,
   Segment,
-  Label,
-  Table,
+  // Label,
+  // Table,
   Dimmer,
   Header,
   Feed
@@ -119,10 +119,10 @@ class InfoItems extends Component {
   render(){
     let {
       druginfo: { ready },
-      router
+      // router
     } = this.props
     let { opened } = this.state
-    let drugKey = router.values && router.values.page
+    // let drugKey = router.values && router.values.page
     let { calc, instr } = this.items
     // console.log({ calc, instr });
     return (

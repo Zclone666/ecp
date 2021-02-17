@@ -120,6 +120,17 @@ class Patients {
           }
 
           drugs.forEach(async (drug, i) => {
+            // drug.helpers = {
+            //   dosage: { small: '', full: '', id: null },
+            //   pack: { small: '', full: '', id: null },
+            //   type: 'simple',
+            //   url: '',
+            //   key: null,
+            //   way: 'lf',
+            //   step: 4,
+            //   mnn: false,
+            //   drugCache: null
+            // }
             await this.stores.drugs.selectFromSearch( drug )
           });
           liquids.forEach(async (liquid, i) => {

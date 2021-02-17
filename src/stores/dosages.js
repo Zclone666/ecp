@@ -41,8 +41,41 @@ class Dosages {
 
   }
 
+  async calcDrug( key ){
+    // here!
+    // let currPack = {
+    //   dosage: { small: '', full: '', id: dosage[0].id_1 },
+    //   pack: { small: '', full: '', id: pack.id_1 },
+    //   type: 'simple',
+    //   value: 0,
+    //   flag: false,
+    //   obj: {
+    //     dosages: dosage,
+    //     pack: {
+    //       dosage: pack,
+    //       id: packname
+    //     },
+    //   }
+    // }
+    // if(_.isArray(dosage) && dosage.length > 1 ){
+    //   currPack.dosage.full += _.map(dosage, 'value_1').join(' + ') + ' ' + names[dosage[0].id_1]
+    //   currPack.dosage.small += _.map(dosage, 'value_1').join(' + ') + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
+    //   currPack.type = 'multi'
+    //   currPack.value = Array.from(_.map(dosage, 'value_1'))
+    // }else if(_.isArray(dosage) && dosage.length === 1 ){
+    //   let val = dosage[0].value_2 ? dosage[0].value_1/dosage[0].value_2 : dosage[0].value_1
+    //   currPack.dosage.full += val + ' ' + names[dosage[0].id_1]
+    //   currPack.dosage.small += val + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
+    //   currPack.value = val
+    // }
+    // currPack.pack.full += names[packname] + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
+    // currPack.pack.small += (nameshort[packname] || names[packname]) + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
+    // // REFACTORING
+    // let { obj, value, ...helpers } = currPack
+  }
+
   //getLF
-  async getFp(drug_obj){
+  async getFp( drug_obj ){
     let { active_language } = this.stores.actions
     let data = {
       drug: drug_obj,
@@ -61,8 +94,8 @@ class Dosages {
           await this.stores.tools.setNames(name, shortname)
           dosage = _.isArray(dosage) ? dosage : [dosage]
           let currPack = {
-            dosage: { short: '', full: '', id: dosage[0].id_1 },
-            pack: { short: '', full: '', id: pack.id_1 },
+            dosage: { small: '', full: '', id: dosage[0].id_1 },
+            pack: { small: '', full: '', id: pack.id_1 },
             type: 'simple',
             value: 0,
             flag: false,
@@ -76,17 +109,17 @@ class Dosages {
           }
           if(_.isArray(dosage) && dosage.length > 1 ){
             currPack.dosage.full += _.map(dosage, 'value_1').join(' + ') + ' ' + names[dosage[0].id_1]
-            currPack.dosage.short += _.map(dosage, 'value_1').join(' + ') + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
+            currPack.dosage.small += _.map(dosage, 'value_1').join(' + ') + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
             currPack.type = 'multi'
             currPack.value = Array.from(_.map(dosage, 'value_1'))
           }else if(_.isArray(dosage) && dosage.length === 1 ){
             let val = dosage[0].value_2 ? dosage[0].value_1/dosage[0].value_2 : dosage[0].value_1
             currPack.dosage.full += val + ' ' + names[dosage[0].id_1]
-            currPack.dosage.short += val + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
+            currPack.dosage.small += val + ' ' + (nameshort[dosage[0].id_1] || names[dosage[0].id_1])
             currPack.value = val
           }
           currPack.pack.full += names[packname] + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
-          currPack.pack.short += (nameshort[packname] || names[packname]) + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
+          currPack.pack.small += (nameshort[packname] || names[packname]) + (pack && (', ' + pack.value_1 + ' ' + (nameshort[pack.id_1] || names[pack.id_1])) || '')
           // REFACTORING
           let { obj, value, ...helpers } = currPack
           //let { dosages, pack } = obj
@@ -164,12 +197,13 @@ class Dosages {
             }
           })
 
-          let drugObj = this.stores.drugs.drug.get(drug.key) || {};
+          let drugObj = await this.stores.drugs.drug.get(drug.key) || {};
+          console.log({ drugObj });
           drugObj.solute = solute
           this.stores.drugs.drug.set( drug.key, drugObj )
 
           await this.stores.tools.setNames(names, nameshort)
-          let current = this.dosage.get(drug.key) || {};
+          let current = await this.dosage.get(drug.key) || {};
           await this.dosage.set( drug.key, _.extend(current, { solute, drug, form, methodform, names, nameshort, units }) );
           if(units && units.length > 0) await this.stores.tools.getUnitsPharm(units)
           if(drug_obj.fpid) this.getFp(drug_obj)
@@ -183,7 +217,110 @@ class Dosages {
     });
   }
 
+  get currDosagesArr(){
+    let {
+      actions: {
+        selectedDrug,
+        selectedConflict,
+        activeDrugs,
+        activeConflicts,
+        stepsData
+      },
+      drugs: { current }
+    } = this.stores
 
+    let { dosage } = this
+
+    let drugDosage = dosage.get(current.key)
+    let { drug, form, methodform, names, nameshort } = drugDosage
+
+    let arr = []
+
+    form[stepsData.form] && form[stepsData.form].dosage.forEach((item, i) => {
+      let itemDosage = null
+      if(_.isArray(item.dosage) && item.dosage.length > 0) itemDosage = item.dosage
+      if(_.isObject(item.dosage) && !(_.isArray(item.dosage))) itemDosage = [item.dosage]
+
+      // if(form[stepsData.form].solute){
+      //
+      // }
+      //console.log({item});
+      //console.log({itemDosage});
+      if(!itemDosage){
+        arr.push({
+          dosage: { small: 'нет данных', full: 'Дозировка не указана', id: 248 },
+          pack: { small: '', full: '', id: (item.pack && item.pack[0] && item.pack[0].dosage) ? item.pack[0].dosage.id_1 : null },
+          type: 'simple',
+          value: [0],
+          obj: {
+            dosages: null,
+            pack: null,
+          }
+        })
+      }else{
+        let currPack = {
+          dosage: { small: '', full: '', id: itemDosage[0].id_1 },
+          pack: { small: '', full: '', id: item.pack[0].dosage ? item.pack[0].dosage.id_1 : null },
+          type: 'simple',
+          value: [0],
+          flag: false
+        }
+        if(form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0 ){
+          item.pack.forEach((pack, x) => {
+            if(!pack.dosage) pack.dosage = {}
+            currPack = {
+              dosage: { small: '', full: '', id: itemDosage[0].id_1 },
+              pack: { small: '', full: '', id: pack.dosage.id_1 },
+              type: 'simple',
+              value: [0],
+              flag: !!(itemDosage[0] && itemDosage[0].id_2),
+              obj: {
+                dosages: itemDosage,
+                pack: pack,
+              }
+            }
+            if(_.isArray(itemDosage) && itemDosage.length > 1 ){
+              currPack.dosage.full += _.map(itemDosage, 'value_1').join(' + ') + ' ' + names[itemDosage[0].id_1]
+              currPack.dosage.small += _.map(itemDosage, 'value_1').join(' + ') + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
+              currPack.type = 'multi'
+              currPack.value = Array.from(_.map(itemDosage, 'value_1'))
+            }else if(_.isArray(itemDosage) && itemDosage.length === 1 ){
+              let val = itemDosage[0].value_2 ? itemDosage[0].value_1/itemDosage[0].value_2 : itemDosage[0].value_1
+              currPack.dosage.full += val + ' ' + names[itemDosage[0].id_1]
+              currPack.dosage.small += val + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
+              currPack.value = [val]
+            }
+            currPack.pack.full += (names[pack.id] || '') + (pack.dosage && (', ' + (pack.dosage.value_1 || '') + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || '')) || '')
+            currPack.pack.small += (nameshort[pack.id] || names[pack.id] || '') + (pack.dosage && (', ' + (pack.dosage.value_1 || '') + ' ' + (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || '')) || '')
+            arr.push({ ...currPack })
+          })
+        }else{
+          let pack = item.pack[0]
+          if(_.isArray(itemDosage) && itemDosage.length > 1 ){
+            currPack.dosage.full += _.map(itemDosage, 'value_1').join(' + ') + ' ' + names[itemDosage[0].id_1]
+            currPack.dosage.small += _.map(itemDosage, 'value_1').join(' + ') + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
+            currPack.type = 'multi'
+            currPack.value = Array.from(_.map(itemDosage, 'value_1'))
+          }else if(_.isArray(itemDosage) && itemDosage.length === 1 ){
+            let val = itemDosage[0].value_2 ? itemDosage[0].value_1/itemDosage[0].value_2 : itemDosage[0].value_1
+            currPack.dosage.full += val + ' ' + names[itemDosage[0].id_1]
+            currPack.dosage.small += val + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
+            currPack.value = [val]
+          }
+          currPack.flag = !!(itemDosage[0] && itemDosage[0].id_2)
+          currPack.obj = {
+            dosages: itemDosage,
+            pack: null//item.pack[0]
+          }
+          arr.push({ ...currPack })
+        }
+      }
+
+
+    })
+    return arr
+
+  }
 
   get calcValues(){
     let drug = this.stores.drugs.current

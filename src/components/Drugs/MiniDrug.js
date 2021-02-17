@@ -142,8 +142,8 @@ class MiniDrug extends React.Component {
 								<span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
 								<Feed.Date>
 									{dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-									{(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
-									{(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
+									{(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) && ', '}
+									{(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ''}
 								</Feed.Date>
 							</Feed.Summary>
 							<Feed.Meta>
@@ -166,8 +166,8 @@ class MiniDrug extends React.Component {
 	              </Feed.Summary>
 	              <Feed.Meta>
 									{dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-									{(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) && ', '}
-									{(helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || ''}
+									{(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) && ', '}
+									{(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ''}
 									{(nameshort[dosage.method] || names[dosage.method]) && ', '}
 									{rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
 	              </Feed.Meta><br />

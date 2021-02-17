@@ -349,6 +349,7 @@ class Drugs {
     // currentDrug.duration = duration || null
     // currentDrug.duration_id = duration_id || null
     // console.log({ freq, duration });
+    // console.log({ currentDrug });
     let { specials } = currentDrug
     let {
       form,
@@ -885,6 +886,7 @@ class Drugs {
   }
 
   selectFromSearch = async (row, flag = false) => {
+    // console.log({ row });
     let drug = {
       //key: moment().format('x').toString(), // уникальный ключ
       id:"", // айди ДВ или ТН
@@ -946,9 +948,12 @@ class Drugs {
     drug = _.extend(drug, row);
     // console.log(row.key);
     drug.key = (row.key && row.key.substring(0, 7) !== 'concept') ? row.key : moment().format('x').toString()
-    let current = await this.drug.get(drug.key) || {};
-    await this.drug.set( drug.key, _.extend(current, drug) );
-    // console.log({current, drug});
+    // let current = await this.drug.get(drug.key) || {};
+    // current = await _.extend(current, drug)
+    let current = await _.cloneDeep(drug)
+    // console.log({ current });
+    await this.drug.set( drug.key, current );
+    // console.log({current: _.extend(current, drug)});
     await this.stores.dosages.get(drug)
 
     if(!flag){
@@ -961,8 +966,8 @@ class Drugs {
     if(row.proto){
       this.deletedRows.push(row)
     }
-    this.drug.delete(row.key)
-    this.stores.dosages.dosage.delete(row.key)
+    await this.drug.delete(row.key)
+    await this.stores.dosages.dosage.delete(row.key)
     this.selectedRows = await _.xorWith(this.selectedRows, [row], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true)
     this.checkLiquidsOk()
