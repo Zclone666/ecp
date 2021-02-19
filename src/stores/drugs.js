@@ -51,6 +51,7 @@ class Drugs {
       value: null
     },
     calc: {
+      dosageBaseUnit: '248',
       dosage: [0],
       count: 1,
       dosageUnit: '248',
@@ -530,6 +531,7 @@ class Drugs {
       duration: null,
       duration_id: null,
       calc: {
+        dosageBaseUnit: '248',
         dosage: [0],
         count: 0,
         dosageUnit: '248',
@@ -581,6 +583,7 @@ class Drugs {
       duration,
       duration_id,
       calc: {
+        dosageBaseUnit,
         dosage,
         count,
         dosageUnit,
@@ -620,6 +623,7 @@ class Drugs {
       duration,
       duration_id,
       calc: {
+        dosageBaseUnit,
         dosage,
         count,
         dosageUnit,
@@ -772,6 +776,7 @@ class Drugs {
         duration,
         duration_id,
         calc: {
+          dosageBaseUnit: '248',
           dosage: dosage,
           count: calcCount,
           dosageUnit: unit,
@@ -819,6 +824,7 @@ class Drugs {
       // console.log('HERE 3');
       let {
         calc: {
+          dosageBaseUnit,
           dosage,
           count,
           dosageUnit,
@@ -854,6 +860,7 @@ class Drugs {
         duration,
         duration_id,
         calc: {
+          dosageBaseUnit,
           dosage,
           count,
           dosageUnit,
@@ -914,6 +921,7 @@ class Drugs {
         value: null
       },
       calc: {
+        dosageBaseUnit: '248',
         dosage: [0],
         count: 1,
         dosageUnit: '248',
@@ -952,14 +960,16 @@ class Drugs {
     drug.key = (row.key && row.key.substring(0, 7) !== 'concept') ? row.key : moment().format('x').toString()
     // let current = await this.drug.get(drug.key) || {};
     // current = await _.extend(current, drug)
+    // console.log(drug.key);
     let current = await _.cloneDeep(drug)
     // console.log({ current });
-    let final = _.extend(drug, row);
-    await this.drug.set( final.key, final );
-    _.extend(this.current, final);
+    // let final = _.extend(drug, row);
+    await this.drug.set( drug.key, drug );
+    // console.log(Array.from(this.drug.values()));
+    _.extend(this.current, drug);
     // this.current = final
     // console.log({current: _.extend(current, drug)});
-    await this.stores.dosages.get(final)
+    await this.stores.dosages.get(drug)
 
     if(!flag){
       await this.stores.db.clearData(false, true)
