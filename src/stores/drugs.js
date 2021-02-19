@@ -468,17 +468,19 @@ class Drugs {
           }else if(liquidUnits.includes(drug.calc.dosageUnit)){
 
           }
+          if(drug.dosage && drug.dosage.pack && drug.dosage.pack.dosage){
+            if(dryUnits.includes(drug.dosage.pack.dosage.id_1)){
 
-          if(dryUnits.includes(drug.dosage.pack.dosage.id_1)){
-
-          }else if(liquidUnits.includes(drug.dosage.pack.dosage.id_1)){
-            counts[drug.key] = {
-              count: drug.calc.count,
-              unit: drug.dosage.pack.dosage.id_1
+            }else if(liquidUnits.includes(drug.dosage.pack.dosage.id_1)){
+              counts[drug.key] = {
+                count: drug.calc.count,
+                unit: drug.dosage.pack.dosage.id_1
+              }
+              count+=drug.calc.count
+              liqUnit = liqUnit || drug.dosage.pack.dosage.id_1
             }
-            count+=drug.calc.count
-            liqUnit = liqUnit || drug.dosage.pack.dosage.id_1
           }
+
 
         }else{
           ready = false
