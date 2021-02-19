@@ -40,7 +40,7 @@ class LF extends Component {
     let currStep = parseInt(values.step || 0)
     //console.log('currDrug', currDrug);
 
-    let drugDosage = dosage.get(current.key) || {}
+    let drugDosage = dosage.get(current.id) || {}
     //console.log('drugDosage', drugDosage);
     let { drug, form, methodform, names } = drugDosage
 
