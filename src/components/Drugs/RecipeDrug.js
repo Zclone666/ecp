@@ -194,8 +194,9 @@ class RecipeDrug extends React.Component {
 
     let { edit, text, from } = this.state
 
-    let drugDosages = dose.get(key) || {}
     let drug = drugs.drug.get(key) || {}
+
+    let drugDosages = dose.get(drug.id) || {}
     let { name, level, tn, type, dosage, schedule, helpers } = drug || {}
 
     let names = drugDosages.names || {}
@@ -252,8 +253,8 @@ class RecipeDrug extends React.Component {
 
     // console.log({key});
     // let selectedWarnings = warnIcons[selectedDrug]
-    let drugDosages = dose.get(key) || {}
     let drug = drugs.drug.get(key) || {}
+    let drugDosages = dose.get(drug.id) || {}
     let { name, level, tn, type, dosage, schedule, helpers, specials } = drug
 
     let names = drugDosages.names || {}

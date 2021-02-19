@@ -39,7 +39,7 @@ class MethodsLF extends Component {
 
     let currStep = parseInt(values.step || 0)
 
-    let drugDosage = dosage.get(current.key)
+    let drugDosage = dosage.get(current.id)
     let { drug, form, methodform, names } = drugDosage
 
     let iterator = (stepsData.way === 'lf' && stepsData.form) ? (form[stepsData.form] && form[stepsData.form].method || []) : _.keys(methodform)

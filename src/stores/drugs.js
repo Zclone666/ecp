@@ -235,7 +235,7 @@ class Drugs {
 
     let drug = this.current
     let currentDrug = this.drug.get(drug.key) || {};
-    let currentDosages = this.stores.dosages.dosage.get(drug.key) || {};
+    let currentDosages = this.stores.dosages.dosage.get(drug.id) || {};
 
     let { calcValues, getFromBase } = this.stores.dosages
     let def = (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id ) || (calcValues.dosage.unit && calcValues.dosage.unit.id)
@@ -340,7 +340,7 @@ class Drugs {
 
     let drug = this.current
     let currentDrug = await this.drug.get(drug.key) || {};
-    let currentDosages = await this.stores.dosages.dosage.get(drug.key) || {};
+    let currentDosages = await this.stores.dosages.dosage.get(drug.id) || {};
 
     let { freq, freq_id, duration, duration_id } = drug
     // console.log({ freq, duration });
@@ -952,9 +952,12 @@ class Drugs {
     // current = await _.extend(current, drug)
     let current = await _.cloneDeep(drug)
     // console.log({ current });
-    await this.drug.set( drug.key, current );
+    let final = _.extend(drug, row);
+    await this.drug.set( final.key, final );
+    _.extend(this.current, final);
+    // this.current = final
     // console.log({current: _.extend(current, drug)});
-    await this.stores.dosages.get(drug)
+    await this.stores.dosages.get(final)
 
     if(!flag){
       await this.stores.db.clearData(false, true)

@@ -109,7 +109,7 @@ class MiniDrug extends React.Component {
 		} = this.props
 
 		let { key, name, type, dosage, helpers } = drug
-		let drugDosages = dose.get(key) || {}
+		let drugDosages = dose.get(drug.id) || {}
 
 		let names = drugDosages.names || {}
 		let nameshort = drugDosages.nameshort || {}

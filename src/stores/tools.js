@@ -7,6 +7,8 @@ import _ from 'lodash';
 class Tools {
   @observable ready = false;
 
+  @observable loadingCounter = 0;
+
   @observable names = {}
   @observable shortnames = {}
 
@@ -70,6 +72,42 @@ class Tools {
 
         }
     });
+  }
+
+  // async stepByStepLoading(){
+  //   var currentCount = 0;
+  //
+  //   console.log('here 1');
+  //   return async ( fn, arr ) => {
+  //     let len = arr.length || 0
+  //     console.log('here 2');
+  //     await fn(arr[currentCount])
+  //     console.log('here 3');
+  //     if(currentCount >= len){
+  //       console.log('here 4');
+  //       return true
+  //     }
+  //     currentCount++;
+  //     console.log('here 5');
+  //     return this.stepByStepLoading( fn, arr )
+  //   };
+  // }
+
+
+  async stepByStepLoading( fn, arr ){
+    if( this.loadingCounter < arr.length ){
+      await fn(arr[this.loadingCounter])
+      this.loadingCounter++
+      return this.stepByStepLoading( fn, arr )
+    }else{
+      this.loadingCounter = 0
+      return true
+    }
+    // return this.stepByStepLoading( fn, arr )
+  }
+
+  timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
   async getUnitsPrimary(){
     let { active_language } = this.stores.actions

@@ -88,7 +88,7 @@ class Dosages {
         data,
         success: async data => {
           // console.log('DATA', data);
-          let drugDosage = this.dosage.get(drug_obj.key)
+          let drugDosage = this.dosage.get(drug_obj.id)
           let { names, nameshort } = drugDosage
           let { dosage, fp, lf, method, methodform, name, shortname, pack, packname } = data
           await this.stores.tools.setNames(name, shortname)
@@ -135,8 +135,21 @@ class Dosages {
             value,
             helpers
           }
+          // this.stores.actions.calculatorForm = {
+          //   dosage: [0],
+          //   count: 1,
+          //   dosageUnit: '248',
+          //   dayCount: 1,
+          //   fullDosage: this.getToBase(pack.id_1, pack.value_1*currPack.value),
+          //   weightDosage: [0],
+          //   dayDosage: [0],
+          //   dayWeightDosage: [0]
+          // }
+          // console.log(helpers);
 
           this.stores.drugs.current = drug_obj
+
+          await this.setStepDosage()
 
           await this.stores.drugs.setDosageParams(`/concept/dozes/lf/4`)
 
@@ -163,17 +176,17 @@ class Dosages {
   }
 
   async get(drug_obj, flag = false){
-    let currentDosages = await this.dosage.get(drug_obj.key);
+    let currentDosages = await this.dosage.get(drug_obj.id);
     let { active_language } = this.stores.actions
     // let isDos = await this.checkDosage(drug_obj.id)
     //
     // console.log(!!currentDosages);
     // currentDosages = (!!currentDosages && currentDosages) || await this.checkDosage(drug_obj.id)
-    // console.log(currentDosages);
+    console.log(currentDosages);
 
     if(currentDosages && !flag) {
       await this.stores.drugs.getDosageParams()
-      return
+      return true
     }
 
     let data = {
@@ -198,15 +211,20 @@ class Dosages {
           })
 
           let drugObj = await this.stores.drugs.drug.get(drug.key) || {};
-          console.log({ drugObj });
+          // console.log({ drugObj });
           drugObj.solute = solute
           this.stores.drugs.drug.set( drug.key, drugObj )
 
           await this.stores.tools.setNames(names, nameshort)
-          let current = await this.dosage.get(drug.key) || {};
-          await this.dosage.set( drug.key, _.extend(current, { solute, drug, form, methodform, names, nameshort, units }) );
+          let current = await this.dosage.get(drug.id) || {};
+
+          this.current = _.extend(current, { solute, drug, form, methodform, names, nameshort, units })
+
+          await this.dosage.set( drug.id, this.current );
           if(units && units.length > 0) await this.stores.tools.getUnitsPharm(units)
-          if(drug_obj.fpid) this.getFp(drug_obj)
+
+          if(drug_obj.fpid && !drug_obj.proto) this.getFp(drug_obj)
+          return this.stores.tools.timeout(500)
         },
         fail: (alerts) => {
 
@@ -231,7 +249,7 @@ class Dosages {
 
     let { dosage } = this
 
-    let drugDosage = dosage.get(current.key)
+    let drugDosage = dosage.get(current.id)
     let { drug, form, methodform, names, nameshort } = drugDosage
 
     let arr = []
@@ -296,18 +314,18 @@ class Dosages {
           })
         }else{
           let pack = item.pack[0]
-          if(_.isArray(itemDosage) && itemDosage.length > 1 ){
+          if( _.isArray(itemDosage) && itemDosage.length > 1 ){
             currPack.dosage.full += _.map(itemDosage, 'value_1').join(' + ') + ' ' + names[itemDosage[0].id_1]
             currPack.dosage.small += _.map(itemDosage, 'value_1').join(' + ') + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
             currPack.type = 'multi'
             currPack.value = Array.from(_.map(itemDosage, 'value_1'))
-          }else if(_.isArray(itemDosage) && itemDosage.length === 1 ){
+          }else if( _.isArray(itemDosage) && itemDosage.length === 1 ){
             let val = itemDosage[0].value_2 ? itemDosage[0].value_1/itemDosage[0].value_2 : itemDosage[0].value_1
             currPack.dosage.full += val + ' ' + names[itemDosage[0].id_1]
             currPack.dosage.small += val + ' ' + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1])
             currPack.value = [val]
           }
-          currPack.flag = !!(itemDosage[0] && itemDosage[0].id_2)
+          currPack.flag = !!( itemDosage[0] && itemDosage[0].id_2 )
           currPack.obj = {
             dosages: itemDosage,
             pack: null//item.pack[0]

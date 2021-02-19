@@ -37,8 +37,10 @@ class PatientsList extends Component {
     this.props.router.push('/')
   };
   chose = async (id) => {
-    await this.props.patients.request(id)
+    // this.props.actions.loading = true
+    this.props.patients.request(id)
     this.props.router.push('/patient/info')
+    // this.props.actions.loading = false
   }
   get list(){
     let arr = []

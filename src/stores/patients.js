@@ -27,6 +27,7 @@ class Patients {
 
   }
   async request(id){
+    this.stores.actions.loading = true
     let { active_language } = this.stores.actions
     let data = {
       key: this.stores.actions.privateKey,
@@ -118,21 +119,23 @@ class Patients {
             misid,
             name,
           }
+          await this.stores.tools.stepByStepLoading( this.stores.drugs.selectFromSearch, drugs )
+          // drugs.forEach(async (drug, i) => {
+          //   // drug.helpers = {
+          //   //   dosage: { small: '', full: '', id: null },
+          //   //   pack: { small: '', full: '', id: null },
+          //   //   type: 'simple',
+          //   //   url: '',
+          //   //   key: null,
+          //   //   way: 'lf',
+          //   //   step: 4,
+          //   //   mnn: false,
+          //   //   drugCache: null
+          //   // }
+          //   await this.stores.drugs.selectFromSearch( drug )
+          // });
+          // let l = liquids.length
 
-          drugs.forEach(async (drug, i) => {
-            // drug.helpers = {
-            //   dosage: { small: '', full: '', id: null },
-            //   pack: { small: '', full: '', id: null },
-            //   type: 'simple',
-            //   url: '',
-            //   key: null,
-            //   way: 'lf',
-            //   step: 4,
-            //   mnn: false,
-            //   drugCache: null
-            // }
-            await this.stores.drugs.selectFromSearch( drug )
-          });
           liquids.forEach(async (liquid, i) => {
             await this.stores.drugs.liquid.set( liquid.group, liquid )
             // setTimeout(() => {
@@ -141,6 +144,9 @@ class Patients {
 
           });
           this.stores.actions.makeLiquids = false
+
+          this.stores.actions.loading = false
+
           return data.patient || {}
 
 

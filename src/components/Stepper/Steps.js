@@ -61,7 +61,7 @@ class Steps extends Component {
     } = this.props
     let way = values.way || 'lf'
 
-    let drugsDosage = dosage.get(current.key)
+    let drugsDosage = dosage.get(current.id)
     // console.log({ drugsDosage });
     let { names, nameshort } = drugsDosage
 

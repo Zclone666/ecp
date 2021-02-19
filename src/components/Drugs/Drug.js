@@ -169,7 +169,7 @@ class Drug extends React.Component {
     let selectedWarnings = warnIcons[selectedDrug]
     // console.log({ drug });
     let { key, name, level, tn, type, dosage, helpers, specials } = drug
-    let drugDosages = dose.get(key) || {}
+    let drugDosages = dose.get(drug.id) || {}
     let hasWarnings = warning.size > 0
     let names = drugDosages.names || {}
     let nameshort = drugDosages.nameshort || {}
