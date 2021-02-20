@@ -526,6 +526,7 @@ class Drugs {
       name: "", // Название ДВ или ТН
       group: item, // группа раствора (0 - нет раствора, больше 0 - раствор)
       specials: null,
+      edit: true,
       freq: null,
       freq_id: null,
       duration: null,

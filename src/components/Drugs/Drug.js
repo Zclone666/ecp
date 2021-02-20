@@ -188,8 +188,10 @@ class Drug extends React.Component {
     let currWarning = active
     let hasWarning = warnIcons[drug.key] && !_.isEmpty(warnIcons[drug.key])
     let maxItem = warnIcons[drug.key]
+
     let className = selectedDrug === drug.key ? 'selected' : ''
     className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
+    className += drug.proto ? '' : ' noproto'
 
     let hasBorder = selectedDrug === drug.key && maxItem
 

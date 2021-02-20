@@ -155,7 +155,7 @@ class Main extends Component {
           <Menu.Menu position='right'>
             <Responsive as={RouterLink} to='/patient/info' fireOnMount minWidth='481'>
               <Menu.Item>
-                <Icon name='bed' color={patientId ? 'black' : 'grey'} />
+                <Icon name={'bed' + (patientId ? '' : ' glowing')} />
                 {( fio && fio.length > 2 ) ? fio : 'Пациент не выбран'}
               </Menu.Item>
             </Responsive>
