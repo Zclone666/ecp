@@ -6,4 +6,4 @@ variables:
 include: 
   - project: 'root/template-gitlab'
     ref: master
-    file: '/template-frontend-gitlab-ci.yml'
+    file: '/service-frontend-gitlab-ci.yml'
