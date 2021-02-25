@@ -191,7 +191,7 @@ class Drug extends React.Component {
 
     let className = selectedDrug === drug.key ? 'selected' : ''
     className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
-    className += drug.proto ? '' : ' noproto'
+    className += (drug.proto && !drug.edit) ? '' : ' noproto' // edited or new drugs
 
     let hasBorder = selectedDrug === drug.key && maxItem
 

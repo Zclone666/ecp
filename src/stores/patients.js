@@ -119,30 +119,20 @@ class Patients {
             misid,
             name,
           }
-          await this.stores.tools.stepByStepLoading( this.stores.drugs.selectFromSearch, drugs )
-          // drugs.forEach(async (drug, i) => {
-          //   // drug.helpers = {
-          //   //   dosage: { small: '', full: '', id: null },
-          //   //   pack: { small: '', full: '', id: null },
-          //   //   type: 'simple',
-          //   //   url: '',
-          //   //   key: null,
-          //   //   way: 'lf',
-          //   //   step: 4,
-          //   //   mnn: false,
-          //   //   drugCache: null
-          //   // }
-          //   await this.stores.drugs.selectFromSearch( drug )
-          // });
-          // let l = liquids.length
-
           liquids.forEach(async (liquid, i) => {
-            await this.stores.drugs.liquid.set( liquid.group, liquid )
-            // setTimeout(() => {
-            //   this.stores.drugs.getLiquidParams(liquid.key)
-            // }, 500)
-
+            if( liquid.group != null ){
+              await this.stores.drugs.liquid.set( liquid.group, liquid )
+            }else{
+              this.stores.drugs.deletedLiquids.push(liquid)
+            }
           });
+
+          drugs.forEach(async (drug, i) => {
+            await this.stores.drugs.selectFromSearch( drug, false, false )
+          });
+
+          await this.stores.tools.stepByStepLoading( this.stores.dosages.get, drugs )
+
           this.stores.actions.makeLiquids = false
 
           this.stores.actions.loading = false
@@ -282,9 +272,11 @@ class Patients {
       this.ready = true
     }
   }
+
   get arr(){
     return Array.from(this.patient.values())
   }
+
   getById(id){
     let res = {}
     Array.from(this.patient.values()).forEach((item, i) => {
@@ -328,6 +320,7 @@ class Patients {
         }
     });
   }
+
   async save(){
     let { active_language } = this.stores.actions
     let data = {

@@ -27,7 +27,6 @@ class Drugs extends Component {
   constructor(props){
     super(props)
 
-
     this.state = {
 
     }
@@ -155,7 +154,7 @@ class Drugs extends Component {
     drugs.forEach((drug, i) => {
       keys.push(drug.key)
     })
-    
+
     this.props.drugs.setGroup(keys, 0)
   }
 
@@ -171,8 +170,9 @@ class Drugs extends Component {
     let {
       actions: {
         selectedDrug,
+        makeLiquids
       },
-      drugs: { drug: drugs, liquid: liquidList },
+      drugs: { drug: drugs, liquid: liquidList, checkLiquids },
       warnings: { warning }, //warnings, warnGroups
       dosages: { dosage },
       isRecipe
@@ -272,7 +272,7 @@ class Drugs extends Component {
                             {(!grouped[liquid]) && <div className={'abstext'}>Перетащите сюда не менее двух составляющих для раствора</div>}
                             {grouped[liquid] && <div className={'text'}>
                               <Icon name='delete' className='right floated' onClick={() => this.removeLiquid(grouped[liquid])} />
-                              {current &&<RouterLink disabled={!current} onClick={() => this.getLiqParams(liquid)} to={'/liquid/calc/'+liquid}><Icon name='lab' className='right floated'  /></RouterLink>}
+                              {(current && checkLiquids && !makeLiquids) && <RouterLink disabled={!current} onClick={() => this.getLiqParams(liquid)} to={'/liquid/calc/'+liquid}><Icon name='lab' className='right floated'  /></RouterLink>}
                               Раствор {liquid}
                             </div>}
 

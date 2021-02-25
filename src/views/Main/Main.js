@@ -130,7 +130,7 @@ class Main extends Component {
     const { open, openCautions, searchQuery, selectedDrug, selectedConflict } = this.state
     let { currentPage, height, active_language, makeLiquids, isLiquidsOk } = this.props.actions
     let {
-      drugs: { searchReady, searchRows, selectedRows, drug, listChanged }, //drugs, drugsDosages, currDrug, setDosageParams
+      drugs: { searchReady, searchRows, selectedRows, drug, listChanged, checkLiquids }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
       warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
       actions: { patientForm: { disease, co_disease }, clinrecCheckerStep, isPrescriptFilled, patientPassport }
@@ -184,7 +184,7 @@ class Main extends Component {
 
         <Sidebar.Pushable>
 
-          {(!makeLiquids && drug.size > 0) &&
+          {(!(makeLiquids || !checkLiquids) && drug.size > 0) &&
             <Menu className="bottom fixed menu three item huge main">
               <Menu.Item onClick={this.handleResetAll}>
                 Сбросить
@@ -240,7 +240,7 @@ class Main extends Component {
 
             </Menu>
           }
-          {makeLiquids &&
+          {(makeLiquids || !checkLiquids) &&
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item onClick={this.resetLiquids}>
                 Сбросить растворы

@@ -175,14 +175,11 @@ class Dosages {
     return flag
   }
 
-  async get(drug_obj, flag = false){
+  get = async (drug_obj, flag = false) => {
+    // console.log(drug_obj);
     let currentDosages = await this.dosage.get(drug_obj.id);
     let { active_language } = this.stores.actions
-    // let isDos = await this.checkDosage(drug_obj.id)
-    //
-    // console.log(!!currentDosages);
-    // currentDosages = (!!currentDosages && currentDosages) || await this.checkDosage(drug_obj.id)
-    // console.log(currentDosages);
+    // console.log('HERE, ' + drug_obj.key);
 
     if(currentDosages && !flag) {
       await this.stores.drugs.getDosageParams()
@@ -224,7 +221,7 @@ class Dosages {
           if(units && units.length > 0) await this.stores.tools.getUnitsPharm(units)
 
           if(drug_obj.fpid && !drug_obj.proto) this.getFp(drug_obj)
-          return this.stores.tools.timeout(500)
+          return this.stores.tools.timeout(50)
         },
         fail: (alerts) => {
 
