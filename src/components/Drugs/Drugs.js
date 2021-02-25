@@ -203,6 +203,7 @@ class Drugs extends Component {
       '#D9E778',
       '#FF851B'
     ]
+    console.log({ drugs: Array.from(drugs.values()), liquids: Array.from(liquidList.values()) });
     return (
       <>
         {!isRecipe &&

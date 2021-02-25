@@ -320,6 +320,7 @@ class Drugs {
   // liquids and groups
   getNewLiquid = () => {
     return _.cloneDeep(LiquidScheme)
+
   }
 
   setCurrentLiquid = async ({ liquid, key }) => {
@@ -357,9 +358,12 @@ class Drugs {
       this.drug.set(key, drug)
     })
 
-    let currLiquid = this.liquid.get( currGroup ) || {}
+    let currLiquid = await this.liquid.get( currGroup ) || {}
 
-    currLiquid.edit = true
+    if(currLiquid.key){
+      currLiquid.edit = true
+      await this.liquid.set( currGroup, currLiquid )
+    }
 
     if( group == 0 ){
       if(currLiquid.proto){
@@ -487,21 +491,6 @@ class Drugs {
 		}
   }
 
-  makeLiquids = async () => {
-    let arr = []
-    this.drug.forEach((drug, key) => {
-      if(arr.indexOf(drug.group) === -1){
-        arr.push(drug.group)
-      }
-    });
-    arr.forEach((item, i) => {
-      this.makeLiquid(item)
-    });
-    this.listChanged = true
-
-
-  }
-
   removeLiquids = async (arr) => {
     if(!arr) return
     if(!Array.isArray(arr)) arr = [arr]
@@ -515,9 +504,26 @@ class Drugs {
     this.listChanged = true
   }
 
+  makeLiquids = async () => {
+    let arr = []
+    this.drug.forEach((drug, key) => {
+      if(arr.indexOf(drug.group) === -1 && drug.group != 0){
+        arr.push(drug.group)
+      }
+    });
+    arr.forEach((item, i) => {
+      this.makeLiquid(item)
+    });
+    this.listChanged = true
+  }
+
   makeLiquid = async (item) => {
+    // console.log({item});
     let current = this.liquid.get(item) || {};
-    if(current.group && current.group !== 0) return
+    // console.log({ current });
+    if( current.group && current.group !== 0 ) return
+    current.group = item
+    // if( current.group == null ) { this.removeLiquids([item]); return }
     let liquid = this.getNewLiquid()
     await this.liquid.set( item, _.assignIn(liquid, current) );
     await this.getLiquidParams(item)
