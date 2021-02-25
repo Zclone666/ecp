@@ -413,7 +413,7 @@ class Drugs {
       dayWeightDosage
     }
     this.stores.actions.scheduleForm = {
-      dateStart: dateStart || moment().format('x'),
+      dateStart: dateStart || moment(moment().format('DD.MM.YYYY'), 'DD.MM.YYYY').format('x'),
       dateFinish,
       finishAlternate,
       clarifications, //уточнения

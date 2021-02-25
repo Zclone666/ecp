@@ -109,9 +109,11 @@ class Main extends Component {
     let { isPrescriptFilled } = this.props.actions
     if( isPrescriptFilled ){
       this.props.recipes.saveList()
+      this.setOpen(false)
     }else{
       // this.props.recipes.saveList()
       this.props.router.push('/prescript/fill')
+      this.setOpen(false)
     }
 
   }
