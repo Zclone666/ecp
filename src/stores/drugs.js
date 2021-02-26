@@ -531,12 +531,12 @@ class Drugs {
   }
 
   makeLiquid = async (item) => {
-    // console.log({item});
     let current = this.liquid.get(item) || {};
-    // console.log({ current });
+
+    current.edit = true
     if( current.group && current.group !== 0 ) return
     current.group = item
-    // if( current.group == null ) { this.removeLiquids([item]); return }
+
     let liquid = this.getNewLiquid()
     await this.liquid.set( item, _.assignIn(liquid, current) );
     await this.getLiquidParams(item)
@@ -592,6 +592,7 @@ class Drugs {
     } = this.stores.actions.liquidForm
 
     edit = true
+    current.edit = true
 
     this.liquid.set( id, _.assignIn(current, {
       name,

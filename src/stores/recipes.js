@@ -142,11 +142,13 @@ class Recipes {
         this.stores.drugs.listChanged = false
         if(data.protocol){
           this.stores.actions.protocol = data.protocol
-          this.stores.drugs.drug.forEach(async (drug, i) => {
-            await this.stores.drugs.drug.set( drug.key,  _.extend(drug, { edit: false }) )
+          this.stores.drugs.drug.forEach( (drug, i) => {
+            drug.edit = false
+            // await this.stores.drugs.drug.set( drug.key,  _.extend(drug, { edit: false }) )
           });
-          this.stores.drugs.liquid.forEach(async (liquid, i) => {
-            await this.stores.drugs.liquid.set( liquid.key,  _.extend(liquid, { edit: false }) )
+          this.stores.drugs.liquid.forEach( (liquid, i) => {
+            liquid.edit = false
+            // await this.stores.drugs.liquid.set( liquid.key,  _.extend(liquid, { edit: false }) )
           });
         }
         // if(data && data.Code){
