@@ -237,7 +237,7 @@ class Drugs {
     if(currentDosages.form){
       await _.forEach(currentDosages.form, ( item ) => {
         if(item.solute) {
-          console.log('HERE');
+          // console.log('HERE');
           currentDosages.solute = true
           currentDrug.solute = true
         }
