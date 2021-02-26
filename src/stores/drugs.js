@@ -237,13 +237,11 @@ class Drugs {
     if(currentDosages.form){
       await _.forEach(currentDosages.form, ( item ) => {
         if(item.solute) {
-          // console.log('HERE');
           currentDosages.solute = true
           currentDrug.solute = true
         }
       })
     }
-    // this.stores.dosages.dosage.set(drug.id, currentDosages)
 
     let { freq, freq_id, duration, duration_id } = drug
 
@@ -365,7 +363,10 @@ class Drugs {
     })
 
     await this.drug.forEach(async (drug, key) => {
-      if(drug.group == group){
+      if(drug.group == group && group !== 0){
+        drug.edit = true
+      }
+      if(drug.group == currGroup && group == 0){
         drug.edit = true
       }
     })
@@ -374,7 +375,7 @@ class Drugs {
 
     if(currLiquid.key){
       currLiquid.edit = true
-      await this.liquid.set( currGroup, currLiquid )
+      // await this.liquid.set( currGroup, currLiquid )
     }
 
     if( group == 0 ){

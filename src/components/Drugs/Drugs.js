@@ -259,7 +259,7 @@ class Drugs extends Component {
                   return (
                     <Droppable droppableId={`drug_place_${liquid}`} type="DRUG"  key={`drug_place_${liquid}`}>
                       {(prov, snap) => {
-
+                        let liqObj = liquidList.get(liquid) || {}
                         return(
                           <div
                             className={`liquidcontainer${snap.isDraggingOver ? ' active' : ''}`}
@@ -271,7 +271,7 @@ class Drugs extends Component {
                             {...prov.droppableProps}
                           >
                             {(!grouped[liquid]) && <div className={'abstext'}>Перетащите сюда не менее двух составляющих для раствора</div>}
-                            {grouped[liquid] && <div className={'text'}>
+                            {grouped[liquid] && <div className={'text'} style={{ color: liqObj.edit ? '#072c71' : 'inherit' }}>
                               <Icon name='delete' className='right floated' onClick={() => this.removeLiquid(grouped[liquid])} />
                               {(current && checkLiquids && !makeLiquids) && <RouterLink disabled={!current} onClick={() => this.getLiqParams(liquid)} to={'/liquid/calc/'+liquid}><Icon name='lab' className='right floated'  /></RouterLink>}
                               Раствор {liquid}
