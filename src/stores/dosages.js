@@ -182,7 +182,7 @@ class Dosages {
     // console.log('HERE, ' + drug_obj.key);
 
     if(currentDosages && !flag) {
-      await this.stores.drugs.getDosageParams()
+      // await this.stores.drugs.getDosageParams()
       return true
     }
 

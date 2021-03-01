@@ -246,7 +246,7 @@ class Drugs {
     let { freq, freq_id, duration, duration_id } = drug
 
     let { specials } = currentDrug
-
+    // console.log({currentDrug});
     let {
       form,
       method,

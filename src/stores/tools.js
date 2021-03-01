@@ -97,6 +97,7 @@ class Tools {
   async stepByStepLoading( fn, arr ){
     if( this.loadingCounter < arr.length ){
       this.loading = true
+      // console.log(arr[this.loadingCounter]);
       await fn(arr[this.loadingCounter])
       this.loadingCounter++
       return this.stepByStepLoading( fn, arr )
