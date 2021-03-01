@@ -324,7 +324,6 @@ class Drugs {
   // liquids and groups
   getNewLiquid = () => {
     return _.cloneDeep(LiquidScheme)
-
   }
 
   setCurrentLiquid = async ({ liquid, key }) => {
@@ -913,7 +912,7 @@ class Drugs {
 
     await this.drug.set( drug.key, drug );
 
-    _.assignIn(this.current, drug);
+    // _.assignIn(this.current, drug);
 
     if(getDosages){
       await this.stores.dosages.get(drug)
