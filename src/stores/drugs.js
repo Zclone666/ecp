@@ -6,15 +6,7 @@ import _ from "lodash";
 
 import { DrugScheme, LiquidScheme } from "../schemes";
 
-const colorPallette = [
-  "#007b2b",
-  "#b0d512",
-  "#03529b",
-  "#fff42b",
-  "#ffca2f",
-  "#fc7301",
-  "#f42a03",
-];
+const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#fc7301", "#f42a03"];
 
 class Drugs {
   @observable ready = false;
@@ -88,6 +80,7 @@ class Drugs {
     if (current.helpers.mnn) {
       current = _.assignIn(current, current.helpers.drugCache);
       current.helpers.mnn = false;
+      current.recipenameid = null;
       current.helpers.drugCache = null;
     } else {
       return POST({
@@ -96,6 +89,7 @@ class Drugs {
         success: async (data) => {
           current = _.assignIn(current, data.mnn);
           current.helpers.mnn = true;
+          current.recipenameid = data.mnn.id;
           current.helpers.drugCache = _.cloneDeep(drug);
           this.stores.drugs.drug.set(drug.key, current);
           // console.log('DATA', data);
@@ -163,21 +157,10 @@ class Drugs {
       calendar,
     } = scheduleData;
 
-    let {
-      dosage: dos,
-      count,
-      dayCount,
-      dosageUnit,
-      fullDosage,
-      weightDosage,
-      dayDosage,
-      dayWeightDosage,
-    } = calcData;
+    let { dosage: dos, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage } = calcData;
 
     currentDrug.solute =
-      currentDosages.form && currentDosages.form[form]
-        ? currentDosages.form[form].solute
-        : currentDrug.solute;
+      currentDosages.form && currentDosages.form[form] ? currentDosages.form[form].solute : currentDrug.solute;
     // console.log({dosageUnit, fullDosage})
     // console.log({currentDrug})
     currentDrug.dosage = {
@@ -291,9 +274,7 @@ class Drugs {
       dayWeightDosage,
     };
     this.stores.actions.scheduleForm = {
-      dateStart:
-        dateStart ||
-        moment(moment().format("DD.MM.YYYY"), "DD.MM.YYYY").format("x"),
+      dateStart: dateStart || moment(moment().format("DD.MM.YYYY"), "DD.MM.YYYY").format("x"),
       dateFinish,
       finishAlternate,
       clarifications, //уточнения
@@ -652,14 +633,7 @@ class Drugs {
     id = parseInt(id);
 
     let patientWeight = this.stores.actions.drugStructure.patient.weight;
-    let {
-      dosage,
-      count,
-      dosageUnit,
-      dayCount,
-      durationCount,
-      durationUnit,
-    } = this.stores.actions.liquidForm.calc;
+    let { dosage, count, dosageUnit, dayCount, durationCount, durationUnit } = this.stores.actions.liquidForm.calc;
     //.reduce((a, b) => a + b)
     let fullDosage = _.map(dosage, (dos) => {
       return dos * count;
@@ -718,14 +692,7 @@ class Drugs {
 
     let flag = false; //if dosages changed set true
 
-    let {
-      ready,
-      weights,
-      counts,
-      weight,
-      count: calcCount,
-      unit,
-    } = this.calcLiquid;
+    let { ready, weights, counts, weight, count: calcCount, unit } = this.calcLiquid;
 
     let arr = [];
     this.drug.forEach((drug, key) => {
@@ -735,11 +702,7 @@ class Drugs {
     });
 
     if (current.calc.dosage && current.calc.dosage[0] === 0) flag = true;
-    if (
-      weight.length != current.calc.dosage.length ||
-      calcCount != current.calc.count
-    )
-      flag = true;
+    if (weight.length != current.calc.dosage.length || calcCount != current.calc.count) flag = true;
     if (!_.isEqual(_.keys(weights), arr)) flag = true;
     if (!_.isEqual(weight, current.calc.dosage)) flag = true;
     if (!ready) return;
@@ -747,16 +710,7 @@ class Drugs {
     // console.log('HEREs');
 
     //
-    let {
-      name,
-      group,
-      specials,
-      freq,
-      edit,
-      freq_id,
-      duration,
-      duration_id,
-    } = current;
+    let { name, group, specials, freq, edit, freq_id, duration, duration_id } = current;
     // console.log('HERE 1');
     if (flag) {
       let patientWeight = this.stores.actions.drugStructure.patient.weight;
@@ -913,27 +867,15 @@ class Drugs {
       path: `search/Drugs`,
       data,
       success: async (data) => {
-        if (
-          data.concepts &&
-          data.concepts.length > 0 &&
-          _.isArray(data.concepts)
-        ) {
+        if (data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
           await data.concepts.forEach((concept, i) => {
             data.concepts[i].key = "concept" + i;
             data.concepts[i].title = data.concepts[i].name;
           });
           this[`${saveTo}Rows`] = observable([]);
-          this[`${saveTo}Rows`] = await _.unionWith(
-            data.concepts,
-            this[`${saveTo}Rows`],
-            (a, b) => a.id === b.id
-          );
+          this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
           this.searchReady = true;
-        } else if (
-          data.concepts &&
-          data.concepts.length == 0 &&
-          _.isArray(data.concepts)
-        ) {
+        } else if (data.concepts && data.concepts.length == 0 && _.isArray(data.concepts)) {
           this[`${saveTo}Rows`] = observable([]);
           this.searchReady = true;
         }
@@ -956,10 +898,7 @@ class Drugs {
     if (!concept.schedule) concept.schedule = drug.schedule;
     drug = _.assignIn(drug, concept);
 
-    drug.key =
-      concept.key && concept.key.substring(0, 7) !== "concept"
-        ? concept.key
-        : moment().format("x").toString();
+    drug.key = concept.key && concept.key.substring(0, 7) !== "concept" ? concept.key : moment().format("x").toString();
 
     await this.drug.set(drug.key, drug);
 
@@ -986,11 +925,7 @@ class Drugs {
     }
     await this.drug.delete(drug.key);
     // await this.stores.dosages.dosage.delete(drug.key)
-    this.selectedRows = await _.xorWith(
-      this.selectedRows,
-      [drug],
-      (a, b) => a.id === b.id
-    );
+    this.selectedRows = await _.xorWith(this.selectedRows, [drug], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true);
     this.checkLiquidsOk();
     this.listChanged = true;

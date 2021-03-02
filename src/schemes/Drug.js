@@ -1,6 +1,6 @@
 export default {
   key: null, // уникальный ключ
-  id:"", // айди ДВ или ТН
+  id: "", // айди ДВ или ТН
   name: "", // Название ДВ или ТН
   level: 0, //
   fpid: null, //
@@ -13,24 +13,26 @@ export default {
   freq_id: null,
   duration: null,
   duration_id: null,
+  recipenameid: null,
   solute: false,
-  dosage: { // дозировка
+  dosage: {
+    // дозировка
     form: null,
     method: null,
     pack: {},
     dosage: [],
-    value: null
+    value: null,
   },
   calc: {
-    dosageBaseUnit: '248',
+    dosageBaseUnit: "248",
     dosage: [0],
     count: 1,
-    dosageUnit: '248',
+    dosageUnit: "248",
     dayCount: 1,
     fullDosage: [0],
     weightDosage: [0],
     dayDosage: [0],
-    dayWeightDosage: [0]
+    dayWeightDosage: [0],
   },
   schedule: {
     dateStart: null,
@@ -40,16 +42,16 @@ export default {
     interval: null,
     once: null,
     week: null,
-    calendar: null
+    calendar: null,
   },
   helpers: {
     dosage: {},
     pack: {},
-    url: '',
+    url: "",
     key: null,
     way: null,
     step: null,
     mnn: false,
-    drugCache: null
-  }
-}
+    drugCache: null,
+  },
+};
