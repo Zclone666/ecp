@@ -30,12 +30,12 @@ class Recipes {
     let liquidsFull = Array.from(this.stores.drugs.liquid.values());
     drugsFull.forEach((drugFull, i) => {
       let { helpers, ...drug } = drugFull;
-      data.drugs.push(drug);
+      data.drugs.push(drugFull);
     });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull;
       if (liquid.group != 0) {
-        data.liquids.push(liquid);
+        data.liquids.push(liquidFull);
       }
     });
 
