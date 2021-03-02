@@ -21,7 +21,7 @@ import {
 
 import _ from "lodash";
 
-@inject("db", "actions", "drugs", "dosages", "warnings")
+@inject("db", "actions", "drugs", "dosages", "warnings", "tools")
 @observer
 class Drugs extends Component {
   constructor(props) {
@@ -51,10 +51,7 @@ class Drugs extends Component {
           // console.log({ arr });
           arr.forEach((item, x) => {
             // console.log({ item });
-            if (
-              !drugsObj[item.drugkey] ||
-              drugsObj[item.drugkey].group < warn.group
-            ) {
+            if (!drugsObj[item.drugkey] || drugsObj[item.drugkey].group < warn.group) {
               drugsObj[item.drugkey] = {
                 value: warn.value,
                 group: warn.group,
@@ -70,18 +67,12 @@ class Drugs extends Component {
           // && warn.type === 'interdrug' ){
           let arr =
             _.filter(warn.subjects, (o) => {
-              return (
-                o.drugkey !== selectedDrug &&
-                !o.hidekeys.includes(currDrug.drugkey)
-              );
+              return o.drugkey !== selectedDrug && !o.hidekeys.includes(currDrug.drugkey);
             }) || [];
           // console.log({ arr });
           arr.forEach((item, x) => {
             // console.log({ item });
-            if (
-              !drugsObj[item.drugkey] ||
-              drugsObj[item.drugkey].group < warn.group
-            ) {
+            if (!drugsObj[item.drugkey] || drugsObj[item.drugkey].group < warn.group) {
               drugsObj[item.drugkey] = {
                 value: warn.value,
                 group: warn.group,
@@ -119,9 +110,7 @@ class Drugs extends Component {
         groups.push(drug.group);
       }
       iterator.push(drug);
-      grouped[drug.group] = grouped[drug.group]
-        ? [...grouped[drug.group], drug]
-        : [drug];
+      grouped[drug.group] = grouped[drug.group] ? [...grouped[drug.group], drug] : [drug];
     });
 
     if (hasSolute > 1) groups.push(_.max(groups) + 1);
@@ -152,19 +141,19 @@ class Drugs extends Component {
   onDragEnd = (result) => {
     // console.log('onDragEnd', result);
     if (!result.destination || !result.destination.droppableId) return;
-    let group = parseInt(
-      _.replace(result.destination.droppableId, "drug_place_", "")
-    );
+    let group = parseInt(_.replace(result.destination.droppableId, "drug_place_", ""));
     let key = [result.draggableId];
 
     this.props.drugs.setGroup(key, group);
   };
 
-  getLiqParams = (id) => {
+  getLiqParams = async (id) => {
     let {
-      drugs: { makeLiquids },
+      drugs: { makeLiquids, getLiquidParams },
     } = this.props;
-    makeLiquids();
+    await makeLiquids();
+    // await this.props.tools.timeout(500);
+    await getLiquidParams(id);
   };
 
   removeLiquid = (drugs) => {
@@ -197,25 +186,9 @@ class Drugs extends Component {
 
     let warnDrugs = this.warnDrugs;
 
-    let colors = [
-      "#F3F4F5",
-      "#DFF0FF",
-      "#FBFDEF",
-      "#F6E7FF",
-      "#E1F7F7",
-      "#FBFDEF",
-      "#FFEDDE",
-    ];
+    let colors = ["#F3F4F5", "#DFF0FF", "#FBFDEF", "#F6E7FF", "#E1F7F7", "#FBFDEF", "#FFEDDE"];
 
-    let borderColors = [
-      "#DCDDDE",
-      "#54C8FF",
-      "#FFE21F",
-      "#DC73FF",
-      "#6DFFFF",
-      "#D9E778",
-      "#FF851B",
-    ];
+    let borderColors = ["#DCDDDE", "#54C8FF", "#FFE21F", "#DC73FF", "#6DFFFF", "#D9E778", "#FF851B"];
     // console.log({ drugs: Array.from(drugs.values()), liquids: Array.from(liquidList.values()) });
     return (
       <>
@@ -226,13 +199,7 @@ class Drugs extends Component {
             onDragUpdate={this.onDragUpdate}
             onDragEnd={this.onDragEnd}
           >
-            <List
-              divided
-              selection
-              verticalAlign="middle"
-              size="big"
-              className={isRecipe ? "" : "drugslist"}
-            >
+            <List divided selection verticalAlign="middle" size="big" className={isRecipe ? "" : "drugslist"}>
               {groups.map((liquid, l) => {
                 let current = liquidList.get(liquid);
                 if (liquid === 0) {
@@ -248,9 +215,7 @@ class Drugs extends Component {
                           <div
                             ref={prov.innerRef}
                             style={{
-                              backgroundColor: snap.isDraggingOver
-                                ? colors[liquid]
-                                : "",
+                              backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
                               borderColor: borderColors[liquid],
                             }}
                             {...prov.droppableProps}
@@ -271,9 +236,7 @@ class Drugs extends Component {
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
-                                      className={
-                                        snapshot.isDragging ? "dragging" : ""
-                                      }
+                                      className={snapshot.isDragging ? "dragging" : ""}
                                     >
                                       <Drug
                                         canDrag={!(!drug.solute || !canDrag)}
@@ -294,34 +257,21 @@ class Drugs extends Component {
                   );
                 } else {
                   return (
-                    <Droppable
-                      droppableId={`drug_place_${liquid}`}
-                      type="DRUG"
-                      key={`drug_place_${liquid}`}
-                    >
+                    <Droppable droppableId={`drug_place_${liquid}`} type="DRUG" key={`drug_place_${liquid}`}>
                       {(prov, snap) => {
                         let liqObj = liquidList.get(liquid) || {};
                         return (
                           <div
-                            className={`liquidcontainer${
-                              snap.isDraggingOver ? " active" : ""
-                            }`}
+                            className={`liquidcontainer${snap.isDraggingOver ? " active" : ""}`}
                             ref={prov.innerRef}
                             style={{
-                              backgroundColor: snap.isDraggingOver
-                                ? colors[liquid]
-                                : "",
-                              borderColor: grouped[liquid]
-                                ? borderColors[liquid]
-                                : borderColors[0],
+                              backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
+                              borderColor: grouped[liquid] ? borderColors[liquid] : borderColors[0],
                             }}
                             {...prov.droppableProps}
                           >
                             {!grouped[liquid] && (
-                              <div className={"abstext"}>
-                                Перетащите сюда не менее двух составляющих для
-                                раствора
-                              </div>
+                              <div className={"abstext"}>Перетащите сюда не менее двух составляющих для раствора</div>
                             )}
                             {grouped[liquid] && (
                               <div
@@ -333,9 +283,7 @@ class Drugs extends Component {
                                 <Icon
                                   name="delete"
                                   className="right floated"
-                                  onClick={() =>
-                                    this.removeLiquid(grouped[liquid])
-                                  }
+                                  onClick={() => this.removeLiquid(grouped[liquid])}
                                 />
                                 {current && checkLiquids && !makeLiquids && (
                                   <RouterLink
@@ -343,10 +291,7 @@ class Drugs extends Component {
                                     onClick={() => this.getLiqParams(liquid)}
                                     to={"/liquid/calc/" + liquid}
                                   >
-                                    <Icon
-                                      name="lab"
-                                      className="right floated"
-                                    />
+                                    <Icon name="lab" className="right floated" />
                                   </RouterLink>
                                 )}
                                 Раствор {liquid}
@@ -356,37 +301,23 @@ class Drugs extends Component {
                             {grouped[liquid] &&
                               grouped[liquid].map((drug, i) => {
                                 return (
-                                  <Draggable
-                                    isDragDisabled
-                                    draggableId={drug.key}
-                                    index={i}
-                                    key={`drug_${drug.key}`}
-                                  >
+                                  <Draggable isDragDisabled draggableId={drug.key} index={i} key={`drug_${drug.key}`}>
                                     {(provided, snapshot) => (
                                       <div
                                         ref={provided.innerRef}
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}
-                                        className={
-                                          snapshot.isDragging ? "dragging" : ""
-                                        }
+                                        className={snapshot.isDragging ? "dragging" : ""}
                                       >
                                         <Drug
                                           style={{
-                                            backgroundColor: snap.isDraggingOver
-                                              ? colors[liquid]
-                                              : "",
+                                            backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
                                           }}
                                           active={warnDrugs[drug.key] || false}
                                           drug={drug}
                                           key={`drug_${i}`}
                                           minus={true}
-                                          onRemove={() =>
-                                            this.onRemove(
-                                              drug.key,
-                                              grouped[liquid]
-                                            )
-                                          }
+                                          onRemove={() => this.onRemove(drug.key, grouped[liquid])}
                                         />
                                       </div>
                                     )}
@@ -394,12 +325,9 @@ class Drugs extends Component {
                                 );
                               })}
                             {prov.placeholder}
-                            {grouped[liquid] &&
-                              grouped[liquid].length === 1 && (
-                                <div className={"bottomtext"}>
-                                  Добавьте еще хотя бы один элемент
-                                </div>
-                              )}
+                            {grouped[liquid] && grouped[liquid].length === 1 && (
+                              <div className={"bottomtext"}>Добавьте еще хотя бы один элемент</div>
+                            )}
                           </div>
                         );
                       }}

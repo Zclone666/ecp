@@ -36,10 +36,13 @@ class Drugs {
     });
   }
   //drug
-  setCurrent = async ({ drug, key }) => {
-    await _.assignIn(this.current, DrugScheme);
+  setCurrent = async ({ drug, key, id }) => {
+    let drugTpl = this.getNew();
+    drugTpl.key = key;
+    drugTpl.id = id;
+    await _.assignIn(this.current, drugTpl);
     if (!drug && !!key) drug = await this.drug.get(key);
-    _.assignIn(this.current, drug);
+    await _.assignIn(this.current, drugTpl, drug);
   };
 
   unsetCurrent = () => {
@@ -494,9 +497,9 @@ class Drugs {
       }
     });
 
-    _.forEach(obj, (counter, key) => {
+    _.forEach(obj, async (counter, key) => {
       if (counter > 1 && counter != 0 && key != 0) {
-        this.makeLiquid(key);
+        await this.makeLiquid(key);
       } else {
         let maybeLiquid = this.liquid.get(key);
         if (maybeLiquid) {
@@ -535,6 +538,10 @@ class Drugs {
     id = id || (route && route.liquid) || null;
     if (!id) return;
     id = parseInt(id);
+    this.drug.forEach((drug, i) => {
+      if (drug.group == id) drug.edit = true;
+    });
+
     let current = (await this.liquid.get(id)) || {};
     let {
       name, // Название ДВ или ТН

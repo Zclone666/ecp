@@ -27,9 +27,10 @@ class Drug extends React.Component {
       router: { location },
       drug,
     } = this.props;
-    this.props.drugs.current = { ...drug };
-    // await getDosageParams(location.pathname)
-    await this.props.dosages.get(drug);
+    await this.props.drugs.setCurrent({ key: drug.key, id: drug.id });
+    // this.props.drugs.current = { ...drug };
+    await this.props.drugs.getDosageParams();
+    // await this.props.dosages.get(drug);
     //this.props.db.GetDuration(drug)
 
     // this.props.router.push('/concepts/dozes')
