@@ -1,9 +1,8 @@
-import { observable, action, autorun, computed } from 'mobx';
-import { GET, POST, PUT } from '../lib/connect'
-import moment from 'moment'
+import { observable, action, autorun, computed } from "mobx";
+import { GET, POST, PUT } from "../lib/connect";
+import moment from "moment";
 
-import _ from 'lodash';
-
+import _ from "lodash";
 
 class Recipes {
   @observable ready = false;
@@ -14,143 +13,156 @@ class Recipes {
     this.router = stores.router;
 
     this.recipe = {
-      data: observable.map({}, 'recipe'),
-      ready: observable.box(true)
-    }
+      data: observable.map({}, "recipe"),
+      ready: observable.box(true),
+    };
 
-
-    autorun(() => {
-
-    });
-
-
+    autorun(() => {});
   }
   save = async () => {
-    if(this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis()
+    if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
-    this.stores.actions.loading = true
-    let { active_language } = this.stores.actions
-    await this.stores.db.clearData(false, true)
-    let data = await _.cloneDeep(this.stores.actions.drugStructure)
-    let drugsFull = Array.from(this.stores.drugs.drug.values())
-    let liquidsFull = Array.from(this.stores.drugs.liquid.values())
+    this.stores.actions.loading = true;
+    let { active_language } = this.stores.actions;
+    await this.stores.db.clearData(false, true);
+    let data = await _.cloneDeep(this.stores.actions.drugStructure);
+    let drugsFull = Array.from(this.stores.drugs.drug.values());
+    let liquidsFull = Array.from(this.stores.drugs.liquid.values());
     drugsFull.forEach((drugFull, i) => {
-      let { helpers, ...drug } = drugFull
-      data.drugs.push(drug)
+      let { helpers, ...drug } = drugFull;
+      data.drugs.push(drug);
     });
     liquidsFull.forEach((liquidFull, i) => {
-      let { helpers, ...liquid } = liquidFull
-      if(liquid.group != 0){
-        data.liquids.push(liquid)
+      let { helpers, ...liquid } = liquidFull;
+      if (liquid.group != 0) {
+        data.liquids.push(liquid);
       }
     });
 
-    data.service = "43"
-    data.active_language = active_language
-    data.return_subjects = false
-    data.authkey = this.stores.actions.authkey
-    data.key = this.stores.actions.privateKey
+    data.service = "43";
+    data.active_language = active_language;
+    data.return_subjects = false;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
     return POST({
-      path: 'tools/SaveRecipe', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
-      success: async data => {
-        if(data && data.Code){
-          this.code = data.Code
-          return data.Code
-        }else{
-          return false
+      success: async (data) => {
+        if (data && data.code) {
+          this.code = data.code;
+          return data.code;
+        } else {
+          return false;
         }
-        this.stores.actions.loading = false
+        this.stores.actions.loading = false;
       },
       fail: (alerts) => {
-        this.stores.actions.loading = false
+        this.stores.actions.loading = false;
       },
       always: (data) => {
-        this.stores.actions.makeAlerts(data)
-      }
+        this.stores.actions.makeAlerts(data);
+      },
     });
-  }
+  };
   print = async () => {
-    if(this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis()
+    if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
     // this.stores.actions.loading = true
-    let { active_language } = this.stores.actions
+    let { active_language } = this.stores.actions;
     // await this.stores.db.clearData(false, true)
     // let data = await _.clone(this.stores.actions.drugStructure)
     // data.drugs = await Array.from(this.stores.drugs.drug.values())
-    let data = {}
+    let data = {};
 
-    data.service = "43"
-    data.active_language = active_language
+    data.service = "43";
+    data.active_language = active_language;
     // data.return_subjects = false
     // data.authkey = this.stores.actions.authkey
-    data.key = this.code
+    data.key = this.code;
     return POST({
-      path: 'tools/PrintRecipe', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: "tools/PrintRecipe", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
-      success: async data => {
+      success: async (data) => {
         // console.log(data);
-        return data.code
+        return data.code;
       },
       fail: (alerts) => {
-        this.stores.actions.loading = false
+        this.stores.actions.loading = false;
       },
       always: (data) => {
-        this.stores.actions.makeAlerts(data)
-      }
+        this.stores.actions.makeAlerts(data);
+      },
     });
-  }
+  };
   saveList = async () => {
-    if(this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis()
+    if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
-    this.stores.actions.loading = true
-    let { active_language } = this.stores.actions
-    await this.stores.db.clearData(false, true)
-    let data = await _.cloneDeep(this.stores.actions.drugStructure)
-    let drugsFull = Array.from(this.stores.drugs.drug.values())
-    let liquidsFull = Array.from(this.stores.drugs.liquid.values())
+    this.stores.actions.loading = true;
+    let { active_language } = this.stores.actions;
+    await this.stores.db.clearData(false, true);
+    let data = await _.cloneDeep(this.stores.actions.drugStructure);
+    let drugsFull = Array.from(this.stores.drugs.drug.values());
+    let liquidsFull = Array.from(this.stores.drugs.liquid.values());
     drugsFull.forEach((drugFull, i) => {
-      let { helpers, ...drug } = drugFull
-      data.drugs.push(drugFull)
+      let { helpers, ...drug } = drugFull;
+      data.drugs.push(drugFull);
     });
-    data.deletedDrugs=[]
+    data.deletedDrugs = [];
     this.stores.drugs.deletedRows.forEach((drugFull, i) => {
-      let { helpers, ...drug } = drugFull
-      data.deletedDrugs.push(drugFull)
+      let { helpers, ...drug } = drugFull;
+      data.deletedDrugs.push(drugFull);
     });
-    data.deletedLiquids=[]
+    data.deletedLiquids = [];
     this.stores.drugs.deletedLiquids.forEach((drugFull, i) => {
-      let { helpers, ...drug } = drugFull
-      data.deletedLiquids.push(drugFull)
+      let { helpers, ...drug } = drugFull;
+      data.deletedLiquids.push(drugFull);
     });
     liquidsFull.forEach((liquidFull, i) => {
-      let { helpers, ...liquid } = liquidFull
-      if(liquid.group != 0){
-        data.liquids.push(liquidFull)
+      let { helpers, ...liquid } = liquidFull;
+      if (liquid.group != 0) {
+        data.liquids.push(liquidFull);
       }
     });
 
-    data.service = "43"
-    data.active_language = active_language
-    data.return_subjects = false
-    data.authkey = this.stores.actions.authkey
-    data.key = this.stores.actions.privateKey
+    data.service = "43";
+    data.active_language = active_language;
+    data.return_subjects = false;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
     return POST({
-      path: 'prescript/New', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: "prescript/New", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
-      success: async data => {
-        this.stores.drugs.listChanged = false
-        if(data.protocol){
-          this.stores.actions.protocol = data.protocol
-          this.stores.drugs.drug.forEach( (drug, i) => {
-            drug.edit = false
-            // await this.stores.drugs.drug.set( drug.key,  _.extend(drug, { edit: false }) )
-          });
-          this.stores.drugs.liquid.forEach( (liquid, i) => {
-            liquid.edit = false
-            // await this.stores.drugs.liquid.set( liquid.key,  _.extend(liquid, { edit: false }) )
+      success: async (data) => {
+        // misproto: "CiEIrJS7mv8uEhg2MDNlNDk2YzgwN2Q2NmUzZTM0MmIzYjI="
+        // newdrugs: [,…]
+        // newliquids: [,…]
+        // proto: "603e496c807d66e3e342b3b2"
+        // proto_date: "2021_03"
+
+        let { misproto, newdrugs, newliquids, proto, proto_date } = data;
+
+        this.stores.drugs.listChanged = false;
+        if (newdrugs && newdrugs.length > 0) {
+          newdrugs.forEach(async (drug, i) => {
+            await this.stores.drugs.drug.set(drug.proto_key, drug);
           });
         }
+        if (newliquids && newliquids.length > 0) {
+          newliquids.forEach(async (liquid, i) => {
+            await this.stores.drugs.liquid.set(liquid.group, liquid);
+          });
+        }
+        // if (data.protocol) {
+        //   this.stores.actions.protocol = data.protocol;
+        //   this.stores.drugs.drug.forEach((drug, i) => {
+        //     drug.edit = false;
+        //     // await this.stores.drugs.drug.set( drug.key,  _.extend(drug, { edit: false }) )
+        //   });
+        //   this.stores.drugs.liquid.forEach((liquid, i) => {
+        //     liquid.edit = false;
+        //     // await this.stores.drugs.liquid.set( liquid.key,  _.extend(liquid, { edit: false }) )
+        //   });
+        // }
         // if(data && data.Code){
         //   this.code = data.Code
         //   return data.Code
@@ -163,55 +175,53 @@ class Recipes {
         //   level: "success",
         //   sticky: false
         // }]})
-        this.stores.actions.loading = false
-        this.stores.router.push('/')
+        this.stores.actions.loading = false;
+        this.stores.router.push("/");
+        setTimeout(() => {
+          this.stores.router.push("/recipe/new");
+        }, 700);
+      },
+      fail: (alerts) => {
+        this.stores.actions.loading = false;
+        this.stores.router.push("/");
         // setTimeout(() => {
         //   this.stores.router.push('/recipe/new')
         // }, 700)
       },
-      fail: (alerts) => {
-        this.stores.actions.loading = false
-        this.stores.router.push('/')
-        setTimeout(() => {
-          this.stores.router.push('/recipe/new')
-        }, 700)
-      },
       always: (data) => {
-        this.stores.actions.makeAlerts(data)
-
-      }
+        this.stores.actions.makeAlerts(data);
+      },
     });
-  }
+  };
   print = async () => {
-    if(this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis()
+    if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
     // this.stores.actions.loading = true
-    let { active_language } = this.stores.actions
+    let { active_language } = this.stores.actions;
     // await this.stores.db.clearData(false, true)
     // let data = await _.clone(this.stores.actions.drugStructure)
     // data.drugs = await Array.from(this.stores.drugs.drug.values())
-    let data = {}
+    let data = {};
 
-    data.service = "43"
-    data.active_language = active_language
+    data.service = "43";
+    data.active_language = active_language;
     // data.return_subjects = false
     // data.authkey = this.stores.actions.authkey
-    data.key = this.code
+    data.key = this.code;
     return POST({
-      path: 'tools/PrintRecipe', //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: "tools/PrintRecipe", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
-      success: async data => {
+      success: async (data) => {
         // console.log(data);
-        return data.code
+        return data.code;
       },
       fail: (alerts) => {
-        this.stores.actions.loading = false
+        this.stores.actions.loading = false;
       },
       always: (data) => {
-        this.stores.actions.makeAlerts(data)
-      }
+        this.stores.actions.makeAlerts(data);
+      },
     });
-  }
-
+  };
 }
 export default Recipes;

@@ -130,6 +130,8 @@ class Patients {
 
         this.stores.actions.loading = false;
 
+        // this.stores.drugs.listChanged = false;
+
         return data.patient || {};
       },
       fail: (alerts) => {},
