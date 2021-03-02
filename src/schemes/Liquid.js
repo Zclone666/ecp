@@ -7,22 +7,28 @@ export default {
   freq_id: null,
   duration: null,
   duration_id: null,
+  pdate: null,
+  pkey: null,
+  pproto: null,
+  proto: null,
+  proto_date: null,
+  proto_key: null,
   calc: {
-    dosageBaseUnit: '248',
+    dosageBaseUnit: "248",
     dosage: [0],
     count: 0,
-    dosageUnit: '248',
+    dosageUnit: "248",
     dayCount: 1,
     fullDosage: [0],
     weightDosage: [0],
     dayDosage: [0],
     dayWeightDosage: [0],
     durationCount: 1,
-    durationUnit: '75',
+    durationUnit: "75",
     fullSpeed: [0],
     weightSpeed: [0],
     tintSpeed: 0,
-    liquidSpeed: 0
+    liquidSpeed: 0,
   },
   schedule: {
     dateStart: null,
@@ -32,6 +38,6 @@ export default {
     interval: null,
     once: null,
     week: null,
-    calendar: null
-  }
-}
+    calendar: null,
+  },
+};
