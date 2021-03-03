@@ -62,6 +62,20 @@ class Drugs {
     return _.cloneDeep(DrugScheme);
   };
 
+  setBaseDosages = async (key) => {
+    let drug = await this.drug.get(key);
+    // console.log({ key, drug });
+    if (!drug || !drug.calc || !drug.calc.dosageUnit) return;
+    let { units } = this.stores.tools;
+    let count = (drug.helpers.pack && units[drug.helpers.pack.id]) || units[248];
+    // console.log({ count });
+    let dosageBaseUnit = this.stores.tools.getBaseUnit(drug.calc.dosageUnit);
+    let countBaseUnit = this.stores.tools.getBaseUnit(count.id);
+    // console.log({ dosageBaseUnit, countBaseUnit });
+    drug.calc.dosageBaseUnit = dosageBaseUnit;
+    drug.calc.countBaseUnit = countBaseUnit;
+  };
+
   // service functions
   async clearProto() {
     this.drug.forEach((drugObj, key) => {
@@ -201,10 +215,11 @@ class Drugs {
       dayDosage,
       dayWeightDosage,
     };
-    await this.drug.set(drug.key, currentDrug);
+    // await this.drug.set(drug.key, currentDrug);
 
     this.listChanged = true;
     await this.stores.dosages.dosage.set(drug.key, currentDosages);
+    this.setBaseDosages(drug.key);
     this.stores.db.clearData();
   };
 

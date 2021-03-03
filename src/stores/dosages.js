@@ -153,10 +153,10 @@ class Dosages {
 
   async checkDosage(id) {
     let flag = null;
-    console.log("here");
-    console.log(this.dosage.keys());
+    // console.log("here");
+    // console.log(this.dosage.keys());
     await this.dosage.forEach((dose, i) => {
-      console.log(dose.drug.id, id);
+      // console.log(dose.drug.id, id);
       if (dose.drug && dose.drug.id === id) flag = dose;
     });
     return flag;
@@ -186,6 +186,7 @@ class Dosages {
 
     if (currentDosages && !flag) {
       await this.isSolute(drug_obj.key);
+      await this.stores.drugs.setBaseDosages(drug_obj.key);
       // await this.stores.drugs.getDosageParams()
       return true;
     }
@@ -225,6 +226,9 @@ class Dosages {
         if (units && units.length > 0) await this.stores.tools.getUnitsPharm(units);
 
         if (drug_obj.fpid && !drug_obj.proto) this.getFp(drug_obj);
+
+        await this.stores.drugs.setBaseDosages(drug_obj.key);
+
         return this.stores.tools.timeout(50);
       },
       fail: (alerts) => {},
@@ -506,65 +510,5 @@ class Dosages {
     // console.log(dosage);
     return dosage;
   };
-
-  // setDosageParams = async (url) => {
-  //   let drugData = this.stores.actions.stepsData
-  //
-  //   let drug = this.current
-  //   let currentDrug = await this.drug.get(drug.key) || {};
-  //   let currentDosages = await this.dosage.get(drug.key) || {};
-  //
-  //   let {
-  //     key,
-  //     way,
-  //     step,
-  //     form,
-  //     method,
-  //     pack,
-  //     dosage
-  //   } = drugData
-  //
-  //   currentDrug.dosage = {
-  //     key,
-  //     way,
-  //     step,
-  //     form,
-  //     method,
-  //     pack,
-  //     dosage
-  //   }
-  //   await this.drug.set( drug.key, currentDrug );
-  //
-  //   await this.dosage.set( drug.key, _.extend(currentDosages, { url }) );
-  //   this.clearData()
-  // }
-  // getDosageParams = async () => {
-  //   let drugData = this.stores.actions.stepsData
-  //
-  //   let drug = this.current
-  //   let currentDrug = await this.drug.get(drug.key) || {};
-  //   let currentDosages = await this.dosage.get(drug.key) || {};
-  //
-  //   let {
-  //     key,
-  //     way,
-  //     step,
-  //     form,
-  //     method,
-  //     pack,
-  //     dosage
-  //   } = current.dosage
-  //
-  //   this.stores.actions.stepsData = {
-  //     key,
-  //     way,
-  //     step,
-  //     form,
-  //     method,
-  //     pack,
-  //     dosage
-  //   }
-  //
-  // }
 }
 export default Dosages;

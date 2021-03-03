@@ -25,6 +25,7 @@ export default {
   },
   calc: {
     dosageBaseUnit: "248",
+    countBaseUnit: null,
     dosage: [0],
     count: 1,
     dosageUnit: "248",
