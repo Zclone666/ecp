@@ -162,6 +162,22 @@ class Dosages {
     return flag;
   }
 
+  isSolute = async (key) => {
+    let drug = await this.stores.drugs.drug.get(key);
+    let dosages = await this.dosage.get(drug.id);
+    if (!dosages) return;
+    let { form } = dosages;
+    if (!form) return;
+
+    let solute = false;
+    await _.forEach(form, (item) => {
+      if (item.solute) {
+        solute = true;
+      }
+    });
+    drug.solute = solute;
+  };
+
   get = async (drug_obj, flag = false) => {
     // console.log(drug_obj);
     let currentDosages = await this.dosage.get(drug_obj.id);
@@ -169,6 +185,7 @@ class Dosages {
     // console.log('HERE, ' + drug_obj.key);
 
     if (currentDosages && !flag) {
+      await this.isSolute(drug_obj.key);
       // await this.stores.drugs.getDosageParams()
       return true;
     }
@@ -228,7 +245,7 @@ class Dosages {
     //   console.log({ item, i });
     // });
 
-    console.log({ current, drugDosage });
+    // console.log({ current, drugDosage });
     if (!drugDosage) return [];
     let { drug, form, methodform, names, nameshort } = drugDosage;
 
