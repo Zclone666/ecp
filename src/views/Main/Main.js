@@ -14,7 +14,7 @@ import {
   Sidebar,
   Menu,
   Icon,
-  // Search,
+  Form,
   Segment,
   Message,
   Dropdown,
@@ -39,6 +39,7 @@ class Main extends Component {
 
       isLoading: false,
       searchQuery: "",
+      clinic: null,
     };
     this.contextRef = createRef();
   }
@@ -71,6 +72,18 @@ class Main extends Component {
 
   handleResetAll = () => {
     if (window.confirm("Сбросить все?")) this.props.db.clearData(true);
+  };
+
+  handleChangeClinic = (e, { name, value }) => {
+    this.setState({ clinic: value });
+  };
+
+  choseClinic = () => {
+    let { checkData } = this.props.actions;
+    let { clinic } = this.state;
+    let newLpu = _.find(checkData.lpu, { id: clinic });
+    this.props.actions.drugStructure.clinic_id = newLpu.id;
+    this.props.actions.drugStructure.clinic_name = newLpu.name;
   };
 
   changeLang = (lang) => {
@@ -129,7 +142,7 @@ class Main extends Component {
   }
 
   render() {
-    const { open, openCautions, searchQuery, selectedDrug, selectedConflict } = this.state;
+    const { open, openCautions, searchQuery, selectedDrug, selectedConflict, clinic } = this.state;
     let { currentPage, height, active_language, makeLiquids, isLiquidsOk } = this.props.actions;
     let {
       drugs: { searchReady, searchRows, selectedRows, drug, deletedLiquids, deletedRows, listChanged, checkLiquids }, //drugs, drugsDosages, currDrug, setDosageParams
@@ -140,6 +153,8 @@ class Main extends Component {
         clinrecCheckerStep,
         isPrescriptFilled,
         patientPassport,
+        drugStructure,
+        checkData,
       },
     } = this.props;
     let selectedWarnings = warning[selectedDrug];
@@ -242,6 +257,43 @@ class Main extends Component {
               )}
             </Menu>
           )}
+
+          <Modal open={!drugStructure.clinic_id}>
+            <Modal.Header>Выберите клинику</Modal.Header>
+            <Modal.Content>
+              <Form>
+                <Form.Field>
+                  <Dropdown
+                    options={checkData.lpu.map((item) => {
+                      return {
+                        key: item.id,
+                        text: item.name,
+                        value: item.id,
+                      };
+                    })}
+                    placeholder="Клиника"
+                    search
+                    name="clinic"
+                    selection
+                    fluid
+                    value={drugStructure.clinic_id || null}
+                    onChange={this.handleChangeClinic}
+                  />
+                </Form.Field>
+              </Form>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button
+                content="Выбрать"
+                labelPosition="right"
+                disabled={!clinic}
+                icon="checkmark"
+                onClick={() => this.choseClinic()}
+                positive
+              />
+            </Modal.Actions>
+          </Modal>
+
           {(makeLiquids || !checkLiquids) && (
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item onClick={this.resetLiquids}>Сбросить растворы</Menu.Item>
@@ -273,6 +325,10 @@ class Main extends Component {
             <Menu.Item as={RouterLink} to="/patient/list">
               <Icon name="address book" />
               Пациенты
+            </Menu.Item>
+            <Menu.Item as={RouterLink} to="/clinics/list">
+              <Icon name="hospital" />
+              Клиники
             </Menu.Item>
             <Menu.Item disabled>
               <Icon name="list ul" />

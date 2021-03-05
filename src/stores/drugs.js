@@ -9,6 +9,7 @@ import { DrugScheme, LiquidScheme } from "../schemes";
 const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#fc7301", "#f42a03"];
 
 class Drugs {
+  //start-decorators
   @observable ready = false;
   @observable searchRows = [];
 
@@ -23,6 +24,7 @@ class Drugs {
 
   @observable current = this.getNew();
   @observable currLiquid = this.getNewLiquid();
+  //end-decorators
 
   constructor({ stores }) {
     this.stores = stores;

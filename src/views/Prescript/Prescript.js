@@ -1,16 +1,16 @@
-import React, { Component, createRef } from 'react';
-import { observer, inject } from 'mobx-react';
+import React, { Component, createRef } from "react";
+import { observer, inject } from "mobx-react";
 
-import RouterLink from '../../router/a'
+import RouterLink from "../../router/a";
 
-import Spinner from '../../components/Spinner'
+import Spinner from "../../components/Spinner";
 
-import Drugs from '../../components/Drugs'
+import Drugs from "../../components/Drugs";
 
-import PatientPassport from '../Patient/PatientPassport'
+import PatientPassport from "../Patient/PatientPassport";
 
-import moment from 'moment'
-import _ from 'lodash'
+import moment from "moment";
+import _ from "lodash";
 
 import {
   // Sidebar,
@@ -29,51 +29,51 @@ import {
   Button,
   // Responsive,
   // Grid
-} from 'semantic-ui-react'
+} from "semantic-ui-react";
 
-@inject('router', 'db', 'actions', 'recipes', 'patients')
+@inject("router", "db", "actions", "recipes", "patients")
 @observer
 class Prescript extends Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       open: false,
       isFilled: false,
-      code: null
-    }
+      code: null,
+    };
     //this.contextRef = createRef()
   }
   setOpen = (open) => {
-    open = open || false
-    this.setState({ open })
-  }
+    open = open || false;
+    this.setState({ open });
+  };
   setOpenCode = (openCode) => {
-    openCode = openCode || false
+    openCode = openCode || false;
     this.setState({ openCode }, () => {
-      if(!openCode) this.props.router.push('/')
-    })
-  }
+      if (!openCode) this.props.router.push("/");
+    });
+  };
   save = async () => {
-    let code = await this.props.recipes.saveList()
+    let code = await this.props.recipes.saveList();
     // console.log({res});
     // if( !code ) return
     // this.setState({ code })
     // this.setOpenCode(true)
     // this.props.router.push('/')
-  }
+  };
 
   back = () => {
-    this.props.router.push('/')
-    this.props.recipes.code = null
+    this.props.router.push("/");
+    this.props.recipes.code = null;
   };
   savePatient = async () => {
-    let res = await this.props.patients.save()
+    let res = await this.props.patients.save();
 
-    if(res){
-      this.setOpen(false)
-      this.handleChange(null, { name: 'patient', value: res.key })
+    if (res) {
+      this.setOpen(false);
+      this.handleChange(null, { name: "patient", value: res.key });
     }
-  }
+  };
   // handleAddition = async (e, { name, value }) => {
   //   // console.log({ name, value });
   //   let key = moment().format('x').toString()
@@ -82,66 +82,62 @@ class Prescript extends Component {
   // }
 
   handleChange = async (e, { name, value }) => {
-    if( !name && !value ){
-      let { name, value } = e.target
+    if (!name && !value) {
+      let { name, value } = e.target;
     }
-    let {
-      checkData
-    } = this.props.actions
-    if( name === 'patient' ){
-      let { patient } = this.props.actions.drugStructure
-      let curr = await this.props.patients.patient.get(value)
-      if((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id)
-      curr = curr || {}
-      this.props.actions.drugStructure.patient = _.extend(patient, { id: curr.id || null, key: value, name: curr.name || null, email: curr.email || null, fio: curr.fio || null })
-    }else if( name === 'doctor' ){
+    let { checkData } = this.props.actions;
+    if (name === "patient") {
+      let { patient } = this.props.actions.drugStructure;
+      let curr = await this.props.patients.patient.get(value);
+      if ((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id);
+      curr = curr || {};
+      this.props.actions.drugStructure.patient = _.extend(patient, {
+        id: curr.id || null,
+        key: value,
+        name: curr.name || null,
+        email: curr.email || null,
+        fio: curr.fio || null,
+      });
+    } else if (name === "doctor") {
       // let { doctor_key } = this.props.actions.drugStructure
-      let newDoc = _.find(checkData.doctor, { 'id': value });
-      this.props.actions.drugStructure.doctor_id = newDoc.id
-      this.props.actions.drugStructure.doctor_name = newDoc.name
-    }else if( name === 'clinic' ){
+      let newDoc = _.find(checkData.doctor, { id: value });
+      this.props.actions.drugStructure.doctor_id = newDoc.id;
+      this.props.actions.drugStructure.doctor_name = newDoc.name;
+    } else if (name === "clinic") {
       // let { clinic } = this.props.actions.drugStructure
-      let newLpu = _.find(checkData.lpu, { 'id': value });
-      this.props.actions.drugStructure.clinic_id = newLpu.id
-      this.props.actions.drugStructure.clinic_name = newLpu.name
-    }else if( name === 'email' ){
-      this.props.actions.drugStructure.patient.email = value
-    }else{
-      this.props.actions.drugStructure[name].val = value
+      let newLpu = _.find(checkData.lpu, { id: value });
+      this.props.actions.drugStructure.clinic_id = newLpu.id;
+      this.props.actions.drugStructure.clinic_name = newLpu.name;
+    } else if (name === "email") {
+      this.props.actions.drugStructure.patient.email = value;
+    } else {
+      this.props.actions.drugStructure[name].val = value;
     }
-
-  }
-
+  };
 
   render() {
-    let {
-      open
-    } = this.state
+    let { open } = this.state;
     let {
       actions: {
-        drugStructure: {
-          doctor_id: doctor,
-          clinic_id: clinic,
-          patient
-        },
+        drugStructure: { doctor_name: doctor, clinic_id: clinic, patient },
         isPrescriptFilled,
         doctor: doc,
-        checkData
+        checkData,
       },
-      recipes: { code }
-    } = this.props
+      recipes: { code },
+    } = this.props;
     // let { patient: { id: patient } } = this.props.actions.drugStructure
 
-    doctor = doctor || doc.name
+    doctor = doctor || doc.name;
 
     // let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
-    let noEmail = false
+    let noEmail = false;
     // console.log({ doctor, clinic, patient });
 
     return (
       <>
         <Menu className="bottom fixed menu two item huge main">
-          <Menu.Item color='red' onClick={this.back}>
+          <Menu.Item color="red" onClick={this.back}>
             Назад
           </Menu.Item>
           <Menu.Item disabled={!isPrescriptFilled} onClick={this.save}>
@@ -149,26 +145,12 @@ class Prescript extends Component {
           </Menu.Item>
         </Menu>
 
-        <div className='scrollwrapper'>
+        <div className="scrollwrapper">
           <Segment basic>
             <Form>
               <Form.Field>
                 <label>Врач</label>
-                <Dropdown
-                  options={checkData.doctor.map((item) => {
-                    return {
-                      key: item.id, text: item.name, value: item.id
-                    }
-                  })}
-                  placeholder='Иван Иванов'
-                  search
-                  name='doctor'
-                  selection
-                  fluid
-
-                  value={doctor}
-                  onChange={this.handleChange}
-                />
+                <Input name="doctor" value={doctor} readOnly className="readonly" />
               </Form.Field>
 
               <Form.Group>
@@ -177,20 +159,20 @@ class Prescript extends Component {
                   <Dropdown
                     options={this.props.patients.arr.map((item) => {
                       return {
-                        key: item.key, text: item.name, value: item.key
-                      }
+                        key: item.key,
+                        text: item.name,
+                        value: item.key,
+                      };
                     })}
-                    placeholder='Иван Иванов'
+                    placeholder="Иван Иванов"
                     search
-                    name='patient'
+                    name="patient"
                     selection
                     fluid
-
                     value={patient.key}
                     onAddItem={this.handleAddition}
                     onChange={this.handleChange}
                   />
-
                 </Form.Field>
                 <Form.Field>
                   <label>&nbsp;</label>
@@ -203,42 +185,41 @@ class Prescript extends Component {
                     <Modal.Header>Создать пациента</Modal.Header>
                     <Modal.Content>
                       <PatientPassport />
-
                     </Modal.Content>
                     <Modal.Actions>
-                      <Button color='black' onClick={() => this.setOpen(false)}>
+                      <Button color="black" onClick={() => this.setOpen(false)}>
                         Отмена
                       </Button>
                       <Button
                         content="Создать"
-                        labelPosition='right'
-                        icon='checkmark'
+                        labelPosition="right"
+                        icon="checkmark"
                         onClick={() => this.savePatient()}
                         positive
                       />
                     </Modal.Actions>
                   </Modal>
-
                 </Form.Field>
               </Form.Group>
               <Form.Field error={patient.key && noEmail}>
                 <label>E-mail пациента</label>
-                <Input name='email' value={patient.email} onChange={this.handleChange} placeholder='some@email.ru' />
+                <Input name="email" value={patient.email} onChange={this.handleChange} placeholder="some@email.ru" />
               </Form.Field>
               <Form.Field>
                 <label>ЛПУ</label>
                 <Dropdown
                   options={checkData.lpu.map((item) => {
                     return {
-                      key: item.id, text: item.name, value: item.id
-                    }
+                      key: item.id,
+                      text: item.name,
+                      value: item.id,
+                    };
                   })}
-                  placeholder='Клиника'
+                  placeholder="Клиника"
                   search
-                  name='clinic'
+                  name="clinic"
                   selection
                   fluid
-
                   value={clinic}
                   onChange={this.handleChange}
                 />
@@ -247,10 +228,7 @@ class Prescript extends Component {
           </Segment>
         </div>
       </>
-
-
-
     );
   }
-};
-export default Prescript
+}
+export default Prescript;

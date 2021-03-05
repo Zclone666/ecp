@@ -34,6 +34,9 @@ export default {
   '/patient/:page':                           { section: 'main', name: 'patient',    render: <Main />       },
   '/patient/:page/:id':                       { section: 'main', name: 'patient',    render: <Main />       },
 
+  '/clinics/:page':                           { section: 'main', name: 'clinics',    render: <Main />       },
+  '/clinics/:page/:id':                       { section: 'main', name: 'clinics',    render: <Main />       },
+
   '/analog/:page':                            { section: 'main', name: 'analog',     render: <Main />       },
 
   '/druginfo/:page':                          { section: 'main', name: 'druginfo',   render: <Main />       },

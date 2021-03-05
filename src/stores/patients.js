@@ -268,6 +268,12 @@ class Patients {
   }
 
   async search(text, saveTo = "search") {
+    // {
+    //   "key":"",
+    //   "authkey":"ауткей",
+    //   "doctor_id":"MQLoOvfAe/jDj984HuPKXw==",
+    //   "text":"тут текст для поиска"
+    // }
     this.searchReady = false;
     let { active_language } = this.stores.actions;
     let data = {

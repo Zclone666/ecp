@@ -7,6 +7,8 @@ import _ from "lodash";
 class Recipes {
   @observable ready = false;
   @observable code = null;
+  @observable recipe_endtime = null;
+  @observable recipe_text = null;
 
   constructor({ stores }) {
     this.stores = stores;
@@ -44,16 +46,33 @@ class Recipes {
     data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+
+    data.recipe_endtime = this.recipe_endtime;
+    data.recipe_text = this.recipe_text;
+
     return POST({
       path: "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
       success: async (data) => {
         if (data && data.code) {
           this.code = data.code;
+
+          this.stores.actions.makeAlerts({
+            alerts: [
+              {
+                title: `Рецепт выписан!`,
+                message: `Теперь вы можете распечатать его, или отправить на почту.`,
+                level: "success",
+                sticky: false,
+              },
+            ],
+          });
+
           return data.code;
         } else {
           return false;
         }
+
         this.stores.actions.loading = false;
       },
       fail: (alerts) => {
@@ -76,11 +95,12 @@ class Recipes {
 
     data.service = "43";
     data.active_language = active_language;
-    // data.return_subjects = false
-    // data.authkey = this.stores.actions.authkey
-    data.key = this.code;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    data.recipe = this.code;
+    data.email = this.stores.actions.patientForm.email;
     return POST({
-      path: "tools/PrintRecipe", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: "prescript/recipePrint", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
       success: async (data) => {
         // console.log(data);
@@ -94,6 +114,48 @@ class Recipes {
       },
     });
   };
+
+  email = async () => {
+    if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
+
+    // this.stores.actions.loading = true
+    let { active_language } = this.stores.actions;
+    // await this.stores.db.clearData(false, true)
+    // let data = await _.clone(this.stores.actions.drugStructure)
+    // data.drugs = await Array.from(this.stores.drugs.drug.values())
+    let data = {};
+
+    data.service = "43";
+    data.active_language = active_language;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    data.recipe = this.code;
+    data.email = this.stores.actions.patientForm.email;
+    return POST({
+      path: "prescript/recipeMail", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      data,
+      success: async (data) => {
+        // console.log("OKAY");
+        this.stores.actions.makeAlerts({
+          alerts: [
+            {
+              title: `Готово!`,
+              message: `Рецепт отправлен на ${this.stores.actions.patientForm.email}`,
+              level: "success",
+              sticky: false,
+            },
+          ],
+        });
+      },
+      fail: (alerts) => {
+        this.stores.actions.loading = false;
+      },
+      always: (data) => {
+        this.stores.actions.makeAlerts(data);
+      },
+    });
+  };
+
   saveList = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -187,36 +249,6 @@ class Recipes {
         // setTimeout(() => {
         //   this.stores.router.push('/recipe/new')
         // }, 700)
-      },
-      always: (data) => {
-        this.stores.actions.makeAlerts(data);
-      },
-    });
-  };
-  print = async () => {
-    if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
-
-    // this.stores.actions.loading = true
-    let { active_language } = this.stores.actions;
-    // await this.stores.db.clearData(false, true)
-    // let data = await _.clone(this.stores.actions.drugStructure)
-    // data.drugs = await Array.from(this.stores.drugs.drug.values())
-    let data = {};
-
-    data.service = "43";
-    data.active_language = active_language;
-    // data.return_subjects = false
-    // data.authkey = this.stores.actions.authkey
-    data.key = this.code;
-    return POST({
-      path: "tools/PrintRecipe", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
-      data,
-      success: async (data) => {
-        // console.log(data);
-        return data.code;
-      },
-      fail: (alerts) => {
-        this.stores.actions.loading = false;
       },
       always: (data) => {
         this.stores.actions.makeAlerts(data);

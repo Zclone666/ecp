@@ -1,5 +1,5 @@
-import DrugScheme from './Drug'
-import LiquidScheme from './Liquid'
-// console.log({DrugScheme});
-// const schemes = { DrugScheme }
-export { DrugScheme, LiquidScheme }
+import DrugScheme from "./Drug";
+import LiquidScheme from "./Liquid";
+import PatientScheme from "./Patient";
+
+export { DrugScheme, LiquidScheme, PatientScheme };

@@ -42,7 +42,7 @@ class Actions {
 
   @observable checkData = {
     lpu: [],
-    doctor: [],
+    doctor: null,
   };
 
   @observable doctor = {
@@ -445,15 +445,60 @@ class Actions {
           lpu.forEach((item, i) => {
             this.checkData.lpu.push({ id: item, name: names[item] });
           });
-        doc &&
-          doc.forEach((item, i) => {
-            this.checkData.doctor.push({ id: item, name: names[item] });
-          });
+
+        if (lpu && lpu.length == 1) {
+          this.drugStructure.clinic_id = (lpu && lpu[0]) || null;
+          this.drugStructure.clinic_name = (lpu && lpu[0] && names[lpu[0]]) || null;
+          this.clinic = {
+            id: lpu[0],
+            name: names[lpu[0]],
+          };
+        } else {
+          this.clinic = {
+            id: null,
+            name: null,
+          };
+        }
+
+        this.checkData.doctor = (doc && doc[0]) || null;
+        // doc &&
+        //   doc.forEach((item, i) => {
+        //     this.checkData.doctor.push({ id: item, name: names[item] });
+        //   });
 
         this.doctor = {
           id: (doc && doc[0]) || null,
           name: (doc && doc[0] && names[doc[0]]) || null,
         };
+
+        this.drugStructure.doctor_id = (doc && doc[0]) || null;
+        this.drugStructure.doctor_name = (doc && doc[0] && names[doc[0]]) || null;
+
+        if (doc && doc[0]) {
+          this.makeAlerts({
+            alerts: [
+              {
+                title: `Здравствуйте, ${this.doctor.name}`,
+                message: "",
+                level: "info",
+                sticky: false,
+              },
+            ],
+          });
+        } else {
+          this.makeAlerts({
+            alerts: [
+              {
+                title: `Внимание! Врач не указан.`,
+                message: "Обратитесь к администратору.",
+                level: "warning",
+                sticky: false,
+              },
+            ],
+          });
+        }
+
+        // console.log(this.doctor);
 
         this.privateKey = this.loginForm.privateKey;
         this.stores.router.push("/");
