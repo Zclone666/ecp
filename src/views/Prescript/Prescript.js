@@ -87,11 +87,11 @@ class Prescript extends Component {
     }
     let { checkData } = this.props.actions;
     if (name === "patient") {
-      let { patient } = this.props.actions.drugStructure;
+      let patient = this.props.patients.current;
       let curr = await this.props.patients.patient.get(value);
       if ((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id);
       curr = curr || {};
-      this.props.actions.drugStructure.patient = _.extend(patient, {
+      this.props.patients.current = _.extend(patient, {
         id: curr.id || null,
         key: value,
         name: curr.name || null,
@@ -109,7 +109,7 @@ class Prescript extends Component {
       this.props.actions.drugStructure.clinic_id = newLpu.id;
       this.props.actions.drugStructure.clinic_name = newLpu.name;
     } else if (name === "email") {
-      this.props.actions.drugStructure.patient.email = value;
+      this.props.patients.current.email = value;
     } else {
       this.props.actions.drugStructure[name].val = value;
     }
@@ -119,18 +119,18 @@ class Prescript extends Component {
     let { open } = this.state;
     let {
       actions: {
-        drugStructure: { doctor_name: doctor, clinic_id: clinic, patient },
+        drugStructure: { doctor_name: doctor, clinic_id: clinic },
         isPrescriptFilled,
         doctor: doc,
         checkData,
       },
+      patients: { current: patient },
       recipes: { code },
     } = this.props;
-    // let { patient: { id: patient } } = this.props.actions.drugStructure
 
     doctor = doctor || doc.name;
 
-    // let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
+    // let noEmail = !(this.props.patients.current.email && this.props.patients.current.email.length > 0)
     let noEmail = false;
     // console.log({ doctor, clinic, patient });
 

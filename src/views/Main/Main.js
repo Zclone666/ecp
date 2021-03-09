@@ -27,7 +27,7 @@ import {
 
 import _ from "lodash";
 
-@inject("router", "recipes", "db", "actions", "drugs", "warnings", "dosages", "diseases", "clinrecs")
+@inject("router", "recipes", "db", "actions", "drugs", "warnings", "dosages", "diseases", "clinrecs", "patients")
 @observer
 class Main extends Component {
   constructor(props) {
@@ -82,8 +82,8 @@ class Main extends Component {
     let { checkData } = this.props.actions;
     let { clinic } = this.state;
     let newLpu = _.find(checkData.lpu, { id: clinic });
-    this.props.actions.drugStructure.clinic_id = newLpu.id;
-    this.props.actions.drugStructure.clinic_name = newLpu.name;
+    this.props.actions.clinic.id = this.props.actions.drugStructure.clinic_id = newLpu.id;
+    this.props.actions.clinic.name = this.props.actions.drugStructure.clinic_name = newLpu.name;
   };
 
   changeLang = (lang) => {
@@ -156,12 +156,13 @@ class Main extends Component {
         drugStructure,
         checkData,
       },
+      patients,
     } = this.props;
     let selectedWarnings = warning[selectedDrug];
     let showPage = !!(this.props.router.values && this.props.router.values.page);
     // console.log('router', this.props.router);
     // let showPage2 = true
-    const { id: patientId, email, fio } = patientPassport;
+    const { id: patientId, email, fio } = patients.current;
     let isDisease = disease.length > 0 || co_disease.length > 0;
     return (
       <>
@@ -173,7 +174,7 @@ class Main extends Component {
           <Menu.Menu position="right">
             <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth="481">
               <Menu.Item>
-                <Icon name={"bed" + (patientId ? "" : " glowing")} />
+                <Icon name={"bed"} className={patientId ? "" : " glowing"} />
                 {fio && fio.length > 2 ? fio : "Пациент не выбран"}
               </Menu.Item>
             </Responsive>
@@ -289,7 +290,7 @@ class Main extends Component {
                 disabled={!clinic}
                 icon="checkmark"
                 onClick={() => this.choseClinic()}
-                positive
+                primary
               />
             </Modal.Actions>
           </Modal>

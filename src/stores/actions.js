@@ -3,6 +3,8 @@ import { GET, POST, PUT, PROJECT_TITLE } from "../lib/connect";
 import _ from "lodash";
 import moment from "moment";
 
+import { StructureScheme } from "../schemes";
+
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
@@ -203,46 +205,47 @@ class Actions {
   @observable activeDrugs = [];
   @observable activeConflicts = [];
 
-  @observable drugStructure = {
-    key: "key",
-    device_id: null,
-
-    clinic_id: null,
-    clinic_code: null,
-    clinic_name: null,
-    dep_id: null,
-    dep_code: null,
-    dep_name: null,
-    doctor_id: null,
-    doctor_code: null,
-    doctor_name: null,
-
-    patient: {
-      id: null,
-      email: null,
-      fio: null,
-      miscode: null,
-      misid: null,
-      name: null,
-      birthdate: null,
-      sex: null,
-      growth: null,
-      weight: null,
-      disease: [],
-      co_disease: [],
-      pregnancy: false,
-      gestation: null,
-      trimester: null,
-      lactation: false,
-      driving: false,
-      alcohol: false,
-      allergy: [],
-    },
-    active_language: "ru",
-    liquids: [],
-    drugs: [],
-    text: null,
-  };
+  @observable drugStructure = _.cloneDeep(StructureScheme);
+  // {
+  //   key: "key",
+  //   device_id: null,
+  //
+  //   clinic_id: null,
+  //   clinic_code: null,
+  //   clinic_name: null,
+  //   dep_id: null,
+  //   dep_code: null,
+  //   dep_name: null,
+  //   doctor_id: null,
+  //   doctor_code: null,
+  //   doctor_name: null,
+  //
+  //   patient: {
+  //     id: null,
+  //     email: null,
+  //     fio: null,
+  //     miscode: null,
+  //     misid: null,
+  //     name: null,
+  //     birthdate: null,
+  //     sex: null,
+  //     growth: null,
+  //     weight: null,
+  //     disease: [],
+  //     co_disease: [],
+  //     pregnancy: false,
+  //     gestation: null,
+  //     trimester: null,
+  //     lactation: false,
+  //     driving: false,
+  //     alcohol: false,
+  //     allergy: [],
+  //   },
+  //   active_language: "ru",
+  //   liquids: [],
+  //   drugs: [],
+  //   text: null,
+  // };
 
   constructor({ stores }) {
     this.stores = stores;
@@ -262,19 +265,11 @@ class Actions {
         }, 5000);
       }
     });
-    // autorun(() => {
-    //   console.log(this.currentPage);
-    //   if(this.currentPage && _.keys(this.pages).length > 0){
-    //     this.stores.db.clearData()
-    //     this.stores.db.getFilters()
-    //   }
-    // });
-    // this.onResize()
-    // window.onresize = this.onResize
   }
   async setLang(lang) {
     if (lang !== this.active_language) {
-      this.drugStructure.active_language = this.active_language = lang;
+      // this.drugStructure.active_language =
+      this.active_language = lang;
       await localStorage.setItem("lang", lang);
       window.location.reload(false);
     }
@@ -306,14 +301,47 @@ class Actions {
     }
   }
 
+  get structure() {
+    let { patients, drugs } = this.stores;
+    let structure = _.cloneDeep(this.drugStructure);
+    structure.patient = patients.current;
+    structure.drugs = Array.from(this.stores.drugs.drug.values());
+    structure.liquids = Array.from(this.stores.drugs.liquid.values());
+    structure.deletedDrugs = _.cloneDeep(this.stores.drugs.deletedDrugs);
+    structure.deletedLiquids = _.cloneDeep(this.stores.drugs.deletedLiquids);
+    return structure;
+  }
+
+  @action async resetAll() {
+    let structure = await _.cloneDeep(StructureScheme);
+
+    structure.clinic_id = this.clinic.id;
+    structure.clinic_name = this.clinic.name;
+    structure.doctor_id = this.doctor.id;
+    structure.doctor_name = this.doctor.name;
+
+    this.drugStructure = structure;
+
+    await this.stores.db.clearData(true, true);
+  }
+
   @action async selectPatient(row, from) {
     row.key = moment().format("x").toString();
-    this.patientForm[from] = await _.unionWith(this.patientForm[from], [row], (a, b) => a.id === b.id);
+    this.stores.patients.current[from] = await _.unionWith(
+      this.stores.patients.current[from],
+      [row],
+      (a, b) => a.id === b.id
+    );
     this.stores.db.clearData();
     return true;
   }
+
   @action async unselectPatient(row, from) {
-    this.patientForm[from] = await _.xorWith(this.patientForm[from], [row], (a, b) => a.id === b.id);
+    this.stores.patients.current[from] = await _.xorWith(
+      this.stores.patients.current[from],
+      [row],
+      (a, b) => a.id === b.id
+    );
     this.stores.db.clearData();
     return true;
   }
@@ -354,14 +382,17 @@ class Actions {
   };
 
   get isPrescriptFilled() {
-    let { patient, doctor_id, clinic_id } = this.drugStructure;
+    let { doctor_id, clinic_id } = this.drugStructure;
+    let patient = this.stores.patients.current;
     return (patient.key || patient.id) && doctor_id && clinic_id;
   }
 
   async autologin() {
-    this.drugStructure.active_language = this.active_language = (await localStorage.getItem("lang")) || null;
+    // this.drugStructure.active_language =
+    this.active_language = (await localStorage.getItem("lang")) || null;
     if (!this.active_language) {
-      this.drugStructure.active_language = this.active_language = "ru";
+      // this.drugStructure.active_language =
+      this.active_language = "ru";
       await localStorage.setItem("lang", "ru");
     }
 

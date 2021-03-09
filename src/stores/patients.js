@@ -2,6 +2,8 @@ import { observable, action, autorun, computed } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
+import { PatientScheme } from "../schemes";
+
 import _ from "lodash";
 
 class Patients {
@@ -12,6 +14,8 @@ class Patients {
 
   @observable selectedRows = [];
 
+  @observable current = this.getNew();
+
   constructor({ stores }) {
     this.stores = stores;
     this.router = stores.router;
@@ -20,8 +24,77 @@ class Patients {
 
     autorun(() => {});
   }
+
+  setCurrent = async ({
+    id,
+    email,
+    fio,
+    miscode,
+    misid,
+    name,
+    birthdate,
+    sex,
+    growth,
+    weight,
+    disease,
+    co_disease,
+    labparams,
+    pregnancy,
+    gestation,
+    trimester,
+    lactation,
+    driving,
+    alcohol,
+    masIndex,
+    allergy,
+  }) => {
+    let patientTpl = this.getNew();
+
+    await _.assignIn(this.current, patientTpl, {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      birthdate,
+      sex,
+      growth,
+      weight,
+      disease,
+      co_disease,
+      labparams,
+      pregnancy,
+      gestation,
+      trimester,
+      lactation,
+      driving,
+      alcohol,
+      masIndex,
+      allergy,
+    });
+  };
+
+  unsetCurrent = () => {
+    _.assignIn(this.current, PatientScheme);
+  };
+
+  getCurrent = () => {
+    return _.cloneDeep(this.current);
+  };
+
+  getClone = async (key) => {
+    let patient = await this.patient.get(key);
+    return _.cloneDeep(patient);
+  };
+
+  getNew = () => {
+    return _.cloneDeep(PatientScheme);
+  };
+
   async request(id) {
     this.stores.actions.loading = true;
+    await this.stores.actions.resetAll();
     let { active_language } = this.stores.actions;
     let data = {
       key: this.stores.actions.privateKey,
@@ -31,13 +104,14 @@ class Patients {
     };
     await this.stores.db.clearData(false, true);
     await this.stores.drugs.clearProto();
-    // data.authkey = this.stores.actions.authkey
-    // data.key = this.stores.actions.privateKey
+
     return POST({
       path: `prescript/Actual`,
       data,
       success: async (data) => {
-        // console.log('DATA', data);
+        if (data.patient && data.patient.id) {
+          await this.setCurrent(data.patient);
+        }
         let {
           allergy,
           birthdate,
@@ -58,9 +132,9 @@ class Patients {
           sex,
           trimester,
           weight,
+          labparams,
         } = data.patient;
-        let { drugs, liquids } = data;
-        co_disease = co_disease || [];
+
         this.stores.actions.patientForm = {
           id,
           email,
@@ -72,6 +146,7 @@ class Patients {
           birthdate,
           disease,
           disease2,
+          labparams,
           co_disease,
           driving,
           gestation,
@@ -82,28 +157,28 @@ class Patients {
           trimester,
           weight,
         };
-        this.stores.actions.drugStructure.patient = {
-          id,
-          key: id,
-          email,
-          fio,
-          miscode,
-          misid,
-          name,
-          allergy,
-          birthdate,
-          disease,
-          disease2,
-          co_disease,
-          driving,
-          gestation,
-          growth,
-          lactation,
-          pregnancy,
-          sex,
-          trimester,
-          weight,
-        };
+        // this.stores.actions.drugStructure.patient = {
+        //   id,
+        //   key: id,
+        //   email,
+        //   fio,
+        //   miscode,
+        //   misid,
+        //   name,
+        //   allergy,
+        //   birthdate,
+        //   disease,
+        //   disease2,
+        //   co_disease,
+        //   driving,
+        //   gestation,
+        //   growth,
+        //   lactation,
+        //   pregnancy,
+        //   sex,
+        //   trimester,
+        //   weight,
+        // };
         this.stores.actions.patientPassport = {
           id,
           email,
@@ -112,6 +187,10 @@ class Patients {
           misid,
           name,
         };
+
+        let { drugs, liquids } = data;
+        co_disease = co_disease || [];
+
         liquids.forEach(async (liquid, i) => {
           if (liquid.group != null) {
             await this.stores.drugs.liquid.set(liquid.group, liquid);
@@ -199,28 +278,28 @@ class Patients {
           trimester,
           weight,
         };
-        this.stores.actions.drugStructure.patient = {
-          id,
-          key: id,
-          email,
-          fio,
-          miscode,
-          misid,
-          name,
-          allergy,
-          birthdate,
-          disease,
-          disease2,
-          co_disease,
-          driving,
-          gestation,
-          growth,
-          lactation,
-          pregnancy,
-          sex,
-          trimester,
-          weight,
-        };
+        // this.stores.actions.drugStructure.patient = {
+        //   id,
+        //   key: id,
+        //   email,
+        //   fio,
+        //   miscode,
+        //   misid,
+        //   name,
+        //   allergy,
+        //   birthdate,
+        //   disease,
+        //   disease2,
+        //   co_disease,
+        //   driving,
+        //   gestation,
+        //   growth,
+        //   lactation,
+        //   pregnancy,
+        //   sex,
+        //   trimester,
+        //   weight,
+        // };
         this.stores.actions.patientPassport = {
           id,
           email,
@@ -278,24 +357,31 @@ class Patients {
     let { active_language } = this.stores.actions;
     let data = {
       text,
+      doctor_id: (this.stores.actions.doctor && this.stores.actions.doctor.id) || null,
       // lib: '62, 52', //'61, 25' - заболевания
-      service: "43",
+      // service: "43",
       // chain: 0
       active_language,
     };
+
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+
+    this[`${saveTo}Rows`] = observable([]);
+
     return POST({
       path: `search/Patients`,
       data,
       success: async (data) => {
-        if (data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
-          await data.concepts.forEach((concept, i) => {
-            data.concepts[i].key = "concept" + i;
-            data.concepts[i].title = data.concepts[i].name;
+        if (data.patients && data.patients.length > 0 && _.isArray(data.patients)) {
+          await data.patients.forEach((concept, i) => {
+            data.patients[i].key = "concept" + i;
+            data.patients[i].title = data.patients[i].name;
           });
-          this[`${saveTo}Rows`] = observable([]);
-          this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
+
+          this[`${saveTo}Rows`] = await _.unionWith(data.patients, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
+          this.searchReady = true;
+        } else {
           this.searchReady = true;
         }
       },
@@ -317,10 +403,7 @@ class Patients {
       patient: {},
       active_language,
     };
-    let patient = await _.assignIn(
-      { ...this.stores.actions.drugStructure.patient },
-      { ...this.stores.actions.patientPassport }
-    );
+    let patient = await _.assignIn({ ...this.current }, { ...this.stores.actions.patientPassport });
     data.patient = patient;
     // data.authkey = this.stores.actions.authkey
     // data.key = this.stores.actions.privateKey

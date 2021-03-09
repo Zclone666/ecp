@@ -13,7 +13,7 @@ import Drugs from "./Drugs";
 
 import _ from "lodash";
 
-@inject("db", "actions", "router", "drugs", "dosages", "tools")
+@inject("db", "actions", "router", "drugs", "dosages", "tools", "patients")
 @observer
 class Calculator extends Component {
   constructor(props) {
@@ -40,7 +40,7 @@ class Calculator extends Component {
     if (!name && !value) {
       let { name, value } = e.target;
     }
-    let weight = parseFloat(this.props.actions.drugStructure.patient.weight);
+    let weight = parseFloat(this.props.patients.current.weight);
     //console.log({name, value}, !!value);
     //value = _.map( value, (dos) => dos.split(',').join('.') )
     //if(!_.isArray(value)) value = [value]
@@ -55,7 +55,7 @@ class Calculator extends Component {
     if (!checkDouble(value)) {
       double = true;
       if (name == "patient.weight") {
-        this.props.actions.drugStructure.patient.weight = value;
+        this.props.patients.current.weight = value;
         // weight = parseFloat(value)
       } else {
         // console.log(value);
@@ -68,7 +68,7 @@ class Calculator extends Component {
     //value = parseFloat(value)
 
     if (name == "patient.weight" && !double) {
-      this.props.actions.drugStructure.patient.weight = parseFloat(value);
+      this.props.patients.current.weight = parseFloat(value);
       weight = parseFloat(value);
     } else {
       // this.props.actions.calculatorForm[name] = value
@@ -254,10 +254,7 @@ class Calculator extends Component {
   render() {
     let {
       actions: {
-        drugStructure: {
-          patient: { weight },
-          specials,
-        },
+        drugStructure: { specials },
         calculatorForm: {
           type,
           dosage,
@@ -278,6 +275,9 @@ class Calculator extends Component {
       },
       router: { values },
       drugs: { current },
+      patients: {
+        current: { weight },
+      },
       isLiquid,
     } = this.props;
     let { currUnit } = this.state;

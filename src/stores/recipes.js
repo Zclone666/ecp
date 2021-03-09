@@ -21,6 +21,7 @@ class Recipes {
 
     autorun(() => {});
   }
+
   save = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -83,6 +84,7 @@ class Recipes {
       },
     });
   };
+
   print = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -162,29 +164,29 @@ class Recipes {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
     await this.stores.db.clearData(false, true);
-    let data = await _.cloneDeep(this.stores.actions.drugStructure);
-    let drugsFull = Array.from(this.stores.drugs.drug.values());
-    let liquidsFull = Array.from(this.stores.drugs.liquid.values());
-    drugsFull.forEach((drugFull, i) => {
-      let { helpers, ...drug } = drugFull;
-      data.drugs.push(drugFull);
-    });
-    data.deletedDrugs = [];
-    this.stores.drugs.deletedRows.forEach((drugFull, i) => {
-      let { helpers, ...drug } = drugFull;
-      data.deletedDrugs.push(drugFull);
-    });
-    data.deletedLiquids = [];
-    this.stores.drugs.deletedLiquids.forEach((drugFull, i) => {
-      let { helpers, ...drug } = drugFull;
-      data.deletedLiquids.push(drugFull);
-    });
-    liquidsFull.forEach((liquidFull, i) => {
-      let { helpers, ...liquid } = liquidFull;
-      if (liquid.group != 0) {
-        data.liquids.push(liquidFull);
-      }
-    });
+    let data = this.stores.actions.structure;
+    // let drugsFull = Array.from(this.stores.drugs.drug.values());
+    // let liquidsFull = Array.from(this.stores.drugs.liquid.values());
+    // drugsFull.forEach((drugFull, i) => {
+    //   let { helpers, ...drug } = drugFull;
+    //   data.drugs.push(drugFull);
+    // });
+    // data.deletedDrugs = [];
+    // this.stores.drugs.deletedRows.forEach((drugFull, i) => {
+    //   let { helpers, ...drug } = drugFull;
+    //   data.deletedDrugs.push(drugFull);
+    // });
+    // data.deletedLiquids = [];
+    // this.stores.drugs.deletedLiquids.forEach((drugFull, i) => {
+    //   let { helpers, ...drug } = drugFull;
+    //   data.deletedLiquids.push(drugFull);
+    // });
+    // liquidsFull.forEach((liquidFull, i) => {
+    //   let { helpers, ...liquid } = liquidFull;
+    //   if (liquid.group != 0) {
+    //     data.liquids.push(liquidFull);
+    //   }
+    // });
 
     data.service = "43";
     data.active_language = active_language;

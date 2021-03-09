@@ -108,51 +108,22 @@ class Recipe extends Component {
     let { checkData } = this.props.actions;
 
     this.props.recipes[name] = value;
-
-    // if (name === "patient") {
-    //   let { patient } = this.props.actions.drugStructure;
-    //   let curr = await this.props.patients.patient.get(value);
-    //   if ((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id);
-    //   curr = curr || {};
-    //   this.props.actions.drugStructure.patient = _.extend(patient, {
-    //     id: curr.id || null,
-    //     key: value,
-    //     name: curr.name || null,
-    //     email: curr.email || null,
-    //     fio: curr.fio || null,
-    //   });
-    // } else if (name === "doctor") {
-    //   // let { doctor_key } = this.props.actions.drugStructure
-    //   let newDoc = _.find(checkData.doctor, { id: value });
-    //   this.props.actions.drugStructure.doctor_id = newDoc.id;
-    //   this.props.actions.drugStructure.doctor_name = newDoc.name;
-    // } else if (name === "clinic") {
-    //   // let { clinic } = this.props.actions.drugStructure
-    //   let newLpu = _.find(checkData.lpu, { id: value });
-    //   this.props.actions.drugStructure.clinic_id = newLpu.id;
-    //   this.props.actions.drugStructure.clinic_name = newLpu.name;
-    // } else if (name === "email") {
-    //   this.props.actions.drugStructure.patient.email = value;
-    // } else {
-    //   this.props.actions.drugStructure[name].val = value;
-    // }
   };
 
   render() {
     let { open, openCode } = this.state;
     let {
       actions: {
-        drugStructure: { doctor_id: doctor, clinic_id: clinic, patient },
+        drugStructure: { doctor_id: doctor, clinic_id: clinic },
         doctor: doc,
         checkData,
       },
       recipes: { code, recipe_endtime, recipe_text },
+      patients: { current: patient },
     } = this.props;
-    // let { patient: { id: patient } } = this.props.actions.drugStructure
 
     doctor = doctor || doc.name;
 
-    // let noEmail = !(this.props.actions.drugStructure.patient.email && this.props.actions.drugStructure.patient.email.length > 0)
     let noEmail = false;
     // console.log({ doctor, clinic, patient });
 

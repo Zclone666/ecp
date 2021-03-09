@@ -49,20 +49,18 @@ class Clinics extends Component {
         <List divided relaxed verticalAlign="middle" size="large">
           {checkData.lpu.map((lpu, i) => {
             return (
-              <>
-                <List.Item key={"analog" + i} onClick={() => this.chose(lpu)}>
-                  <List.Content floated="right">
-                    <Button>Выбрать</Button>
-                  </List.Content>
-                  <List.Icon
-                    name={clinic_id == lpu.id ? "check square outline" : "square outline"}
-                    verticalAlign="middle"
-                  />
-                  <List.Content className="large">
-                    <List.Header>{lpu.name}</List.Header>
-                  </List.Content>
-                </List.Item>
-              </>
+              <List.Item key={"analog" + i} onClick={() => this.chose(lpu)}>
+                <List.Content floated="right">
+                  <Button>Выбрать</Button>
+                </List.Content>
+                <List.Icon
+                  name={clinic_id == lpu.id ? "check square outline" : "square outline"}
+                  verticalAlign="middle"
+                />
+                <List.Content className="large">
+                  <List.Header>{lpu.name}</List.Header>
+                </List.Content>
+              </List.Item>
             );
           })}
         </List>

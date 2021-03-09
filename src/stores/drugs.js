@@ -656,7 +656,7 @@ class Drugs {
     if (!id) return;
     id = parseInt(id);
 
-    let patientWeight = this.stores.actions.drugStructure.patient.weight;
+    let patientWeight = this.stores.patients.current.weight;
     let { dosage, count, dosageUnit, dayCount, durationCount, durationUnit } = this.stores.actions.liquidForm.calc;
     //.reduce((a, b) => a + b)
     let fullDosage = _.map(dosage, (dos) => {
@@ -737,7 +737,7 @@ class Drugs {
     let { name, group, specials, freq, edit, freq_id, duration, duration_id } = current;
     // console.log('HERE 1');
     if (flag) {
-      let patientWeight = this.stores.actions.drugStructure.patient.weight;
+      let patientWeight = this.stores.patients.current.weight;
       let dosage = _.map(weight, (dos) => {
         return dos / calcCount;
       });
@@ -863,10 +863,7 @@ class Drugs {
           calendar,
         },
       };
-      if (
-        this.stores.actions.drugStructure.patient.weight &&
-        parseFloat(this.stores.actions.drugStructure.patient.weight) > 0
-      )
+      if (this.stores.patients.current.weight && parseFloat(this.stores.patients.current.weight) > 0)
         this.recalcLiquidParams();
     }
     // this.liquid.set( group, _.assignIn(current, liquid) );

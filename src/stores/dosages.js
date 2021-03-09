@@ -261,11 +261,6 @@ class Dosages {
         if (_.isArray(item.dosage) && item.dosage.length > 0) itemDosage = item.dosage;
         if (_.isObject(item.dosage) && !_.isArray(item.dosage)) itemDosage = [item.dosage];
 
-        // if(form[stepsData.form].solute){
-        //
-        // }
-        //console.log({item});
-        //console.log({itemDosage});
         if (!itemDosage) {
           arr.push({
             dosage: { small: "нет данных", full: "Дозировка не указана", id: 248 },
@@ -404,7 +399,7 @@ class Dosages {
   setStepDosage = () => {
     // console.log('this.calcValues', this.calcValues);
     let vals = this.calcValues;
-    let weight = this.stores.actions.drugStructure.patient.weight || null;
+    let weight = this.stores.patients.current.weight || null;
 
     if (!vals.dosage.value) return;
 
