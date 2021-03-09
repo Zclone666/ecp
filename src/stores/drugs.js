@@ -34,6 +34,12 @@ class Drugs {
     this.liquid = observable.map({}, "liquid");
 
     autorun(() => {
+      // console.log({
+      //   drugs: Array.from(this.drug.values()),
+      //   liquids: Array.from(this.liquid.values()),
+      //   deletedRows: Array.from(this.deletedRows),
+      //   deletedLiquids: Array.from(this.deletedLiquids),
+      // });
       // console.log(Array.from(this.liquid.values()));
     });
   }
@@ -516,7 +522,9 @@ class Drugs {
 
     _.forEach(obj, async (counter, key) => {
       if (counter > 1 && counter != 0 && key != 0) {
-        await this.makeLiquid(key);
+        if (!this.liquid.get(key)) {
+          await this.makeLiquid(key);
+        }
       } else {
         let maybeLiquid = this.liquid.get(key);
         if (maybeLiquid) {

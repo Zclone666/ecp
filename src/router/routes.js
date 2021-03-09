@@ -31,6 +31,10 @@ export default {
 
   '/prescript/:page':                         { section: 'main', name: 'prescript',  render: <Main />       },
 
+  '/profile/':                                { section: 'main', name: 'profile',    render: <Main />       },
+  '/profile/:page':                           { section: 'main', name: 'profile',    render: <Main />       },
+
+
   '/patient/:page':                           { section: 'main', name: 'patient',    render: <Main />       },
   '/patient/:page/:id':                       { section: 'main', name: 'patient',    render: <Main />       },
 

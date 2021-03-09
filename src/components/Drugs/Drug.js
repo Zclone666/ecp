@@ -46,7 +46,8 @@ class Drug extends React.Component {
   };
 
   unselectDrug = () => {
-    let { drug } = this.props;
+    let { drug: drugObj } = this.props;
+    let drug = this.props.drugs.drug.get(drugObj.key);
     this.props.drugs.unselectDrug(drug);
   };
   selectDrug = (e, drugId) => {

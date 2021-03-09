@@ -3,7 +3,7 @@ import { GET, POST, PUT, PROJECT_TITLE } from "../lib/connect";
 import _ from "lodash";
 import moment from "moment";
 
-import { StructureScheme } from "../schemes";
+import { StructureScheme, ProfileScheme } from "../schemes";
 
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const RESET_PASS_KEY = "9152ea8756f8f2b3";
@@ -59,6 +59,8 @@ class Actions {
     remember: true,
     hidden: true,
   };
+
+  @observable profile = _.cloneDeep(ProfileScheme);
 
   @observable signinForm = {
     email: "",
@@ -307,7 +309,7 @@ class Actions {
     structure.patient = patients.current;
     structure.drugs = Array.from(this.stores.drugs.drug.values());
     structure.liquids = Array.from(this.stores.drugs.liquid.values());
-    structure.deletedDrugs = _.cloneDeep(this.stores.drugs.deletedDrugs);
+    structure.deletedDrugs = _.cloneDeep(this.stores.drugs.deletedRows);
     structure.deletedLiquids = _.cloneDeep(this.stores.drugs.deletedLiquids);
     return structure;
   }
@@ -576,6 +578,43 @@ class Actions {
             }, 3000);
           }
         });
+      },
+      always: (data) => {
+        this.loading = false;
+        this.makeAlerts(data);
+        // console.log('ALWAYS', data);
+      },
+    });
+  }
+  async getProfile() {
+    let data = {
+      // key: AUTH_SERVICE_KEY,
+      authkey: this.authkey,
+      active_language: this.active_language,
+    };
+
+    return POST({
+      path: `tools/DoctorGet`,
+      data,
+      success: async (data) => {
+        // console.log(data);
+        let { id, fio, firstname, lastname, patronymic, sex, snils, diploms, licenses, emails, phone } = data;
+        await _.assignIn(this.profile, {
+          id,
+          fio,
+          firstname,
+          lastname,
+          patronymic,
+          sex,
+          snils,
+          diploms,
+          licenses,
+          emails,
+          phone,
+        });
+      },
+      fail: (alerts) => {
+        console.log("FAIL", alerts);
       },
       always: (data) => {
         this.loading = false;

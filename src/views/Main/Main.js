@@ -58,8 +58,8 @@ class Main extends Component {
   };
 
   handleResultSelect = async (e, { result }) => {
-    await this.props.drugs.selectFromSearch(result);
     this.setState({ searchQuery: "" });
+    await this.props.drugs.selectFromSearch(result);
   };
 
   handleSearchChange = (e, { value }) => {
@@ -330,6 +330,10 @@ class Main extends Component {
             <Menu.Item as={RouterLink} to="/clinics/list">
               <Icon name="hospital" />
               Клиники
+            </Menu.Item>
+            <Menu.Item disabled as={RouterLink} to="/profile/show">
+              <Icon name="user md" />
+              Профиль
             </Menu.Item>
             <Menu.Item disabled>
               <Icon name="list ul" />

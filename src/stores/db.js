@@ -35,8 +35,6 @@ class DB {
       helpers: {},
     };
     this.stores.drugs.searchRows = observable([]);
-    this.stores.drugs.deletedRows = observable([]);
-    this.stores.drugs.deletedLiquids = observable([]);
 
     if (withWarnings) {
       this.stores.warnings.warning.clear();
@@ -50,6 +48,8 @@ class DB {
     }
 
     if (withSelects) {
+      this.stores.drugs.deletedRows = observable([]);
+      this.stores.drugs.deletedLiquids = observable([]);
       this.stores.drugs.selectedRows = observable([]);
       this.diseaseRows = observable([]);
       this.allergyRows = observable([]);

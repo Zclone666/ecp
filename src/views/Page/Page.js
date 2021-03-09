@@ -7,6 +7,7 @@ import Spinner from "../../components/Spinner";
 
 import Dozes from "../Dozes";
 import Patient from "../Patient";
+import Profile from "../Profile";
 import Clinics from "../Clinics";
 import Warning from "../Warning";
 import Recipe from "../Recipe";
@@ -59,6 +60,7 @@ class Page extends Component {
       {
         concept: <Dozes />,
         patient: <Patient />,
+        profile: <Profile />,
         clinics: <Clinics />,
         warning: <Warning />,
         recipe: <Recipe />,
