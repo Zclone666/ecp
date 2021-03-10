@@ -6,8 +6,11 @@ import _ from "lodash";
 
 class Tools {
   @observable ready = false;
+  @observable searchReady = true;
 
   @observable loadingCounter = 0;
+
+  @observable searchClinicRows = [];
 
   @observable names = {};
   @observable shortnames = {};
@@ -209,6 +212,53 @@ class Tools {
     // console.log(result);
     return result;
   };
+
+  async searchClinic(text) {
+    this.searchReady = false;
+    let { active_language } = this.stores.actions;
+    let data = {
+      text,
+      // lib: '62, 52', //'61, 25' - заболевания
+      // service: "43",
+      // chain: 0
+      active_language,
+      limit: 20,
+    };
+
+    // "key": "string",
+    // "text": "string",
+    // "lib": "string",
+    // "chain": 0,
+    // "security_key": "string",
+    // "authkey": "string",
+    // "limit": 0
+
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+
+    this.searchClinicRows = observable([]);
+
+    return POST({
+      path: `search/Clinics`,
+      data,
+      success: async (data) => {
+        // console.log(data);
+        if (data && data.concepts) {
+          data.concepts.forEach((item, i) => {
+            this.searchClinicRows.push(item);
+          });
+        }
+        this.searchReady = true;
+      },
+      fail: (alerts) => {
+        this.searchReady = true;
+        // console.log('fail', alerts);
+      },
+      always: (data) => {
+        // this.stores.actions.makeAlerts(data)
+      },
+    });
+  }
 
   async setNames(names, shortnames) {
     this.names = await _.extend(this.names, names);

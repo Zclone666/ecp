@@ -72,6 +72,7 @@ class Actions {
     department: "",
     hidden: true,
     isEmailReg: false,
+    relationCode: "",
   };
 
   @observable confirmForm = {

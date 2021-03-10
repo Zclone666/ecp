@@ -25,9 +25,19 @@ class Profile extends Component {
     };
     this.sliderRef = createRef();
   }
+
+  handleChange = (e, { name, value }) => {
+    this.props.actions.profile[name] = value;
+    if (["firstname", "lastname", "patronymic"].includes(name)) {
+      let { firstname, lastname, patronymic } = this.props.actions.profile;
+      this.props.actions.profile.fio = `${lastname || ""} ${firstname || ""} ${patronymic || ""}`;
+    }
+  };
+
   componentDidMount() {
     this.props.actions.getProfile();
   }
+
   render() {
     const {
       id,
@@ -42,6 +52,9 @@ class Profile extends Component {
       emails,
       phone,
     } = this.props.actions.profile;
+
+    let email = emails[0];
+
     const settings = {
       dots: false,
       infinite: false,
@@ -63,27 +76,119 @@ class Profile extends Component {
 
         <Slider ref={this.sliderRef} {...settings}>
           <div className="scrollwrapper bottomMenu">
-            <Form>
-              <Form.Group>
-                <Form.Field width={10}>
-                  <Header as="h2" content={fio} subheader={snils} />
-                </Form.Field>
-              </Form.Group>
-              <Divider horizontal fitted />
-              <Form.Group>
-                <Form.Field>
-                  <label>Пол</label>
-                  <Button.Group size="big">
-                    <Button primary={sex === "man"} onClick={this.handleChange} name="sex" value="man">
-                      Мужчина
-                    </Button>
-                    <Button primary={sex === "woman"} onClick={this.handleChange} name="sex" value="woman">
-                      Женщина
-                    </Button>
-                  </Button.Group>
-                </Form.Field>
-              </Form.Group>
-            </Form>
+            <Segment basic>
+              <Form>
+                <Form.Group>
+                  <Form.Field>
+                    <Header as="h2" content={fio} subheader={snils} />
+                  </Form.Field>
+                </Form.Group>
+                <Divider horizontal fitted />
+                <Form.Group widths={2}>
+                  <Form.Field>
+                    <label>Имя</label>
+                    <Input
+                      size="big"
+                      name="firstname"
+                      value={firstname || ""}
+                      placeholder="Иван"
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Фамилия</label>
+                    <Input
+                      size="big"
+                      name="lastname"
+                      value={lastname || ""}
+                      placeholder="Иванов"
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                </Form.Group>
+                <Form.Group widths={2}>
+                  <Form.Field>
+                    <label>Отчество</label>
+                    <Input
+                      size="big"
+                      name="patronymic"
+                      value={patronymic || ""}
+                      placeholder="Иванович"
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Пол</label>
+                    <Button.Group size="big" fluid>
+                      <Button primary={sex === "man"} onClick={this.handleChange} name="sex" value="man">
+                        Мужчина
+                      </Button>
+                      <Button primary={sex === "woman"} onClick={this.handleChange} name="sex" value="woman">
+                        Женщина
+                      </Button>
+                    </Button.Group>
+                  </Form.Field>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Field width={8}>
+                    <label>СНИЛС</label>
+                    <Input
+                      size="big"
+                      name="snils"
+                      value={snils || ""}
+                      placeholder="12345465"
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                  <Form.Field width={8}>
+                    <label>E-mail</label>
+                    <Input
+                      size="big"
+                      name="email"
+                      value={email || ""}
+                      placeholder="patient@example.ru"
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                </Form.Group>
+              </Form>
+              <Header as="h3" content="Дипломы" />
+              {diploms && (
+                <List divided relaxed verticalAlign="middle" size="large">
+                  {diploms.map((item, i) => {
+                    return (
+                      <List.Item key={"analog" + i} onClick={() => this.delete("diploms", i)}>
+                        <List.Content floated="right">
+                          <Button>Удалить</Button>
+                        </List.Content>
+                        <List.Icon name="id badge" verticalAlign="middle" />
+                        <List.Content className="large">
+                          <List.Header>{item}</List.Header>
+                        </List.Content>
+                      </List.Item>
+                    );
+                  })}
+                </List>
+              )}
+              <Header as="h3" content="Лицензии" />
+              {licenses && (
+                <List divided relaxed verticalAlign="middle" size="large">
+                  {licenses.map((item, i) => {
+                    return (
+                      <List.Item key={"analog" + i} onClick={() => this.delete("diploms", i)}>
+                        <List.Content floated="right">
+                          <Button>Удалить</Button>
+                        </List.Content>
+                        <List.Icon name="file alternate" verticalAlign="middle" />
+                        <List.Content className="large">
+                          <List.Header>{item}</List.Header>
+                        </List.Content>
+                      </List.Item>
+                    );
+                  })}
+                </List>
+              )}
+            </Segment>
           </div>
         </Slider>
       </div>
