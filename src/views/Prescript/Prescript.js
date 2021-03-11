@@ -134,6 +134,15 @@ class Prescript extends Component {
     this.setState({ [`search_clinic`]: result.description });
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    let { search_clinic } = this.state;
+    let { clinic_id, clinic_name } = this.props.actions.drugStructure;
+    console.log({ clinic_id, clinic_name });
+    if (!clinic_id && search_clinic == prevState.search_clinic && search_clinic != "") {
+      this.setState({ [`search_clinic`]: "" });
+    }
+  }
+
   get listSearch() {
     let arr = [];
     this.props.tools.searchClinicRows.forEach((item, i) => {
