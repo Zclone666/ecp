@@ -46,8 +46,8 @@ class Signup extends Component {
       this.props.actions.signinForm.email.length > 5 &&
       this.props.actions.signinForm.password &&
       this.props.actions.signinForm.password.length > 4 &&
-      this.props.actions.signinForm.relationCode &&
-      this.props.actions.signinForm.relationCode.length > 4 &&
+      this.props.actions.signinForm.clinicEncryptedId &&
+      this.props.actions.signinForm.clinicEncryptedId.length > 4 &&
       this.state.confirm_password &&
       this.state.confirm_password.length > 4;
     this.setState({ filled: filled });
@@ -61,13 +61,13 @@ class Signup extends Component {
     // console.log({ name, result });
     //let newName = name === 'co_disease' ? 'disease' : name
     // this.props.actions.signinForm.relationCode = result.id;
-    this.handleChange({ target: { name: "relationCode", value: result.id } });
+    this.handleChange({ target: { name: "clinicEncryptedId", value: result.id } });
     this.handleChange({ target: { name: "lpuName", value: result.description } });
     this.setState({ [`search_clinic`]: "" });
   };
 
   handleResultUnselect = () => {
-    this.props.actions.signinForm.relationCode = null;
+    this.props.actions.signinForm.clinicEncryptedId = null;
     this.props.actions.signinForm.lpuName = null;
     this.setState({ filled: false });
   };
@@ -100,7 +100,17 @@ class Signup extends Component {
   render() {
     let {
       projectTitle,
-      signinForm: { isEmailReg, email, password, lastName, firstName, middleName, lpuName, department, relationCode },
+      signinForm: {
+        isEmailReg,
+        email,
+        password,
+        lastName,
+        firstName,
+        middleName,
+        lpuName,
+        department,
+        clinicEncryptedId,
+      },
     } = this.props.actions;
     let { confirm_password, filled, checkPass, search_clinic } = this.state;
     let canInputPass = email.length > 1 && isEmailReg;
