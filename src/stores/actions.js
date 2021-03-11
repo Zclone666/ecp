@@ -413,6 +413,12 @@ class Actions {
       return;
     }
 
+    if (this.stores.router.values.code) {
+      // this.stores.warnings.protocol(this.stores.router.values.protocol);
+      this.loading = false;
+      return;
+    }
+
     if (!this.authkey && this.stores.router.match.name !== "auth") {
       this.loading = false;
       this.stores.router.push("/login");
