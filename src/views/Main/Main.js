@@ -259,7 +259,7 @@ class Main extends Component {
             </Menu>
           )}
 
-          <Modal open={!drugStructure.clinic_id}>
+          <Modal open={false && !drugStructure.clinic_id}>
             <Modal.Header>Выберите клинику</Modal.Header>
             <Modal.Content>
               <Form>
@@ -327,10 +327,12 @@ class Main extends Component {
               <Icon name="address book" />
               Пациенты
             </Menu.Item>
-            <Menu.Item as={RouterLink} to="/clinics/list">
-              <Icon name="hospital" />
-              Клиники
-            </Menu.Item>
+            {false && (
+              <Menu.Item as={RouterLink} to="/clinics/list">
+                <Icon name="hospital" />
+                Клиники
+              </Menu.Item>
+            )}
             <Menu.Item disabled as={RouterLink} to="/profile/show">
               <Icon name="user md" />
               Профиль

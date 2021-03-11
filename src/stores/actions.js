@@ -72,8 +72,8 @@ class Actions {
     department: "",
     hidden: true,
     isEmailReg: false,
-    relationCode: null,
-    clinicEncryptedId: "",
+    // relationCode: null,
+    // clinicEncryptedId: "",
   };
 
   @observable confirmForm = {

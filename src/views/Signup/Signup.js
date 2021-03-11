@@ -46,8 +46,8 @@ class Signup extends Component {
       this.props.actions.signinForm.email.length > 5 &&
       this.props.actions.signinForm.password &&
       this.props.actions.signinForm.password.length > 4 &&
-      this.props.actions.signinForm.clinicEncryptedId &&
-      this.props.actions.signinForm.clinicEncryptedId.length > 4 &&
+      // this.props.actions.signinForm.clinicEncryptedId &&
+      // this.props.actions.signinForm.clinicEncryptedId.length > 4 &&
       this.state.confirm_password &&
       this.state.confirm_password.length > 4;
     this.setState({ filled: filled });
@@ -175,39 +175,43 @@ class Signup extends Component {
                       onChange={this.handleChange}
                     />
                   </Form.Group>
-                  <Form.Group widths="equal">
-                    <Form.Field width={16}>
-                      <Search
-                        fluid
-                        size="big"
-                        name="clinic"
-                        placeholder="Введите наименование вашей клиники"
-                        loading={!searchReady}
-                        onResultSelect={this.handleResultSelect}
-                        onSearchChange={_.debounce(this.handleSearchChange, 500, {
-                          leading: true,
-                        })}
-                        results={this.listSearch}
-                        value={search_clinic}
-                        resultClassName="result-wrapper"
-                      />
-                    </Form.Field>
-                  </Form.Group>
-                  {lpuName && lpuName.length > 0 && (
+                  {false && (
+                    <Form.Group widths="equal">
+                      <Form.Field width={16}>
+                        <Search
+                          fluid
+                          size="big"
+                          name="clinic"
+                          placeholder="Введите наименование вашей клиники"
+                          loading={!searchReady}
+                          onResultSelect={this.handleResultSelect}
+                          onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                            leading: true,
+                          })}
+                          results={this.listSearch}
+                          value={search_clinic}
+                          resultClassName="result-wrapper"
+                        />
+                      </Form.Field>
+                    </Form.Group>
+                  )}
+                  {false && lpuName && lpuName.length > 0 && (
                     <Message onDismiss={this.handleResultUnselect} header="Выбрана клиника" content={lpuName} />
                   )}
-                  <Form.Group widths="equal">
-                    <Form.Input
-                      size="large"
-                      name="department"
-                      fluid
-                      icon="lab"
-                      value={department}
-                      iconPosition="left"
-                      placeholder="Отделение"
-                      onChange={this.handleChange}
-                    />
-                  </Form.Group>
+                  {false && (
+                    <Form.Group widths="equal">
+                      <Form.Input
+                        size="large"
+                        name="department"
+                        fluid
+                        icon="lab"
+                        value={department}
+                        iconPosition="left"
+                        placeholder="Отделение"
+                        onChange={this.handleChange}
+                      />
+                    </Form.Group>
+                  )}
                   <Form.Group widths="equal">
                     <Form.Input
                       size="large"

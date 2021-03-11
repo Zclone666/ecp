@@ -5,6 +5,8 @@ import RouterLink from "../../router/a";
 
 import Spinner from "../../components/Spinner";
 
+import Search from "../../components/Search";
+
 import Drugs from "../../components/Drugs";
 
 import PatientPassport from "../Patient/PatientPassport";
@@ -31,7 +33,7 @@ import {
   // Grid
 } from "semantic-ui-react";
 
-@inject("router", "db", "actions", "recipes", "patients")
+@inject("router", "db", "actions", "recipes", "patients", "tools")
 @observer
 class Prescript extends Component {
   constructor(props) {
@@ -40,6 +42,7 @@ class Prescript extends Component {
       open: false,
       isFilled: false,
       code: null,
+      search_clinic: "",
     };
     //this.contextRef = createRef()
   }
@@ -105,9 +108,9 @@ class Prescript extends Component {
       this.props.actions.drugStructure.doctor_name = newDoc.name;
     } else if (name === "clinic") {
       // let { clinic } = this.props.actions.drugStructure
-      let newLpu = _.find(checkData.lpu, { id: value });
-      this.props.actions.drugStructure.clinic_id = newLpu.id;
-      this.props.actions.drugStructure.clinic_name = newLpu.name;
+      // let newLpu = _.find(checkData.lpu, { id: value });
+      // this.props.actions.drugStructure.clinic_id = newLpu.id;
+      // this.props.actions.drugStructure.clinic_name = newLpu.name;
     } else if (name === "email") {
       this.props.patients.current.email = value;
     } else {
@@ -115,8 +118,41 @@ class Prescript extends Component {
     }
   };
 
+  handleSearchChange = (e, { name, value }) => {
+    this.setState({ [`search_clinic`]: value });
+    if (value.length > 1) {
+      this.props.tools.searchReady = false;
+      this.props.tools.searchClinic(value);
+    }
+  };
+
+  handleResultSelect = async (e, { name, result }) => {
+    this.props.actions.drugStructure.clinic_id = result.id;
+    this.props.actions.drugStructure.clinic_name = result.description;
+    // this.handleChange(null, { name: "clinic", value: result.id });
+    // this.handleChange({ target: { name: "lpuName", value: result.description } });
+    this.setState({ [`search_clinic`]: result.description });
+  };
+
+  get listSearch() {
+    let arr = [];
+    this.props.tools.searchClinicRows.forEach((item, i) => {
+      if (item.name) {
+        arr.push({
+          id: item.id,
+          key: i,
+          title: "",
+          // title: "Клиника", //item.name,
+          // price: moment(item.birthdate, "x").format("DD.MM.YYYY"),
+          description: item.name,
+        });
+      }
+    });
+    return arr;
+  }
+
   render() {
-    let { open } = this.state;
+    let { open, search_clinic } = this.state;
     let {
       actions: {
         drugStructure: { doctor_name: doctor, clinic_id: clinic },
@@ -126,6 +162,7 @@ class Prescript extends Component {
       },
       patients: { current: patient },
       recipes: { code },
+      tools: { searchReady, searchClinicRows },
     } = this.props;
 
     doctor = doctor || doc.name;
@@ -207,21 +244,19 @@ class Prescript extends Component {
               </Form.Field>
               <Form.Field>
                 <label>ЛПУ</label>
-                <Dropdown
-                  options={checkData.lpu.map((item) => {
-                    return {
-                      key: item.id,
-                      text: item.name,
-                      value: item.id,
-                    };
-                  })}
-                  placeholder="Клиника"
-                  search
-                  name="clinic"
-                  selection
+                <Search
                   fluid
-                  value={clinic}
-                  onChange={this.handleChange}
+                  size="big"
+                  name="clinic"
+                  placeholder="Введите наименование вашей клиники"
+                  loading={!searchReady}
+                  onResultSelect={this.handleResultSelect}
+                  onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                    leading: true,
+                  })}
+                  results={this.listSearch}
+                  value={search_clinic}
+                  resultClassName="result-wrapper"
                 />
               </Form.Field>
             </Form>
