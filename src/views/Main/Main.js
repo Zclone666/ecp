@@ -403,10 +403,12 @@ class Main extends Component {
                 Клиники
               </Menu.Item>
             )}
-            {false && (<Menu.Item disabled as={RouterLink} to="/profile/show">
-              <Icon name="user md" />
-              Профиль
-            </Menu.Item>}
+            {false && (
+              <Menu.Item disabled as={RouterLink} to="/profile/show">
+                <Icon name="user md" />
+                Профиль
+              </Menu.Item>
+            )}
             <Menu.Item disabled>
               <Icon name="list ul" />
               Текущие назначения
