@@ -659,10 +659,22 @@ class Actions {
           patronymic,
           sex,
           snils,
-          diploms,
-          licenses,
-          emails,
-          phone,
+          // diploms,
+          // licenses,
+          // emails,
+          // phone,
+        });
+        diploms.forEach((item, i) => {
+          this.profile.diploms.push(item);
+        });
+        licenses.forEach((item, i) => {
+          this.profile.licenses.push(item);
+        });
+        emails.forEach((item, i) => {
+          this.profile.emails.push(item);
+        });
+        phone.forEach((item, i) => {
+          this.profile.phone.push(item);
         });
       },
       fail: (alerts) => {
