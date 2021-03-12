@@ -92,15 +92,16 @@ class Prescript extends Component {
     if (name === "patient") {
       let patient = this.props.patients.current;
       let curr = await this.props.patients.patient.get(value);
-      if ((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id);
-      curr = curr || {};
-      this.props.patients.current = _.extend(patient, {
-        id: curr.id || null,
-        key: value,
-        name: curr.name || null,
-        email: curr.email || null,
-        fio: curr.fio || null,
-      });
+      if (curr.id) await this.props.patients.request(curr.id);
+      // if ((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id);
+      // curr = curr || {};
+      // this.props.patients.current = _.extend(patient, {
+      //   id: curr.id || null,
+      //   key: value,
+      //   name: curr.name || null,
+      //   email: curr.email || null,
+      //   fio: curr.fio || null,
+      // });
     } else if (name === "doctor") {
       // let { doctor_key } = this.props.actions.drugStructure
       let newDoc = _.find(checkData.doctor, { id: value });
@@ -129,6 +130,8 @@ class Prescript extends Component {
   handleResultSelect = async (e, { name, result }) => {
     this.props.actions.drugStructure.clinic_id = result.id;
     this.props.actions.drugStructure.clinic_name = result.description;
+    this.props.actions.clinic.id = result.id;
+    this.props.actions.clinic.name = result.description;
     // this.handleChange(null, { name: "clinic", value: result.id });
     // this.handleChange({ target: { name: "lpuName", value: result.description } });
     this.setState({ [`search_clinic`]: result.description });
@@ -137,8 +140,11 @@ class Prescript extends Component {
   componentDidUpdate(prevProps, prevState) {
     let { search_clinic } = this.state;
     let { clinic_id, clinic_name } = this.props.actions.drugStructure;
-    console.log({ clinic_id, clinic_name });
-    if (!clinic_id && search_clinic == prevState.search_clinic && search_clinic != "") {
+    console.log({
+      clinic_id: this.props.actions.drugStructure.clinic_id,
+      clinic_id2: prevProps.actions.drugStructure.clinic_id,
+    });
+    if (prevProps.actions.drugStructure.clinic_id && !clinic_id) {
       this.setState({ [`search_clinic`]: "" });
     }
   }
@@ -205,7 +211,7 @@ class Prescript extends Component {
                   <Dropdown
                     options={this.props.patients.arr.map((item) => {
                       return {
-                        key: item.key,
+                        key: item.id,
                         text: item.name,
                         value: item.key,
                       };
@@ -215,7 +221,7 @@ class Prescript extends Component {
                     name="patient"
                     selection
                     fluid
-                    value={patient.key}
+                    value={patient.id}
                     onAddItem={this.handleAddition}
                     onChange={this.handleChange}
                   />

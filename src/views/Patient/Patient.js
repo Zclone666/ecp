@@ -187,7 +187,7 @@ class Patient extends Component {
         {step === 0 && (
           <Menu className="bottom fixed menu two item huge main">
             <Menu.Item color="red" onClick={this.back}>
-              Отмена
+              Назад
             </Menu.Item>
             <Menu.Item as={RouterLink} to="/patient/new">
               Новый

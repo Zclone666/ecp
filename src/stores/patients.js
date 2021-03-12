@@ -49,7 +49,7 @@ class Patients {
     allergy,
   }) => {
     let patientTpl = this.getNew();
-
+    masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
     await _.assignIn(this.current, patientTpl, {
       id,
       email,
@@ -135,6 +135,8 @@ class Patients {
           labparams,
         } = data.patient;
 
+        let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
+
         this.stores.actions.patientForm = {
           id,
           email,
@@ -156,6 +158,7 @@ class Patients {
           sex,
           trimester,
           weight,
+          masIndex,
         };
         // this.stores.actions.drugStructure.patient = {
         //   id,

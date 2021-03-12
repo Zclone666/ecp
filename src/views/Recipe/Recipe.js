@@ -69,7 +69,7 @@ class Recipe extends Component {
 
     var pri = document.getElementById("ifmcontentstoprint").contentWindow;
     pri.document.open();
-    pri.document.write(code);
+    await pri.document.write(code);
     pri.document.close();
     pri.focus();
     pri.print();

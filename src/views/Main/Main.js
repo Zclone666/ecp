@@ -15,6 +15,8 @@ import {
   Menu,
   Icon,
   Form,
+  List,
+  Header,
   Segment,
   Message,
   Dropdown,
@@ -35,6 +37,7 @@ class Main extends Component {
     this.state = {
       open: false,
       openCautions: false,
+      openClearence: false,
       showPage: false,
 
       isLoading: false,
@@ -44,9 +47,9 @@ class Main extends Component {
     this.contextRef = createRef();
   }
 
-  setOpen = (openCautions) => {
-    openCautions = openCautions || false;
-    this.setState({ openCautions });
+  setOpen = (open, type) => {
+    open = open || false;
+    this.setState({ [type]: open });
   };
 
   logout = () => {
@@ -70,8 +73,17 @@ class Main extends Component {
     }
   };
 
-  handleResetAll = () => {
-    if (window.confirm("Сбросить все?")) this.props.db.clearData(true);
+  handleResetAll = (type) => {
+    this.props.actions.resetAll(type);
+    this.setOpen(false, "openClearence");
+    // if (window.confirm("Сбросить все?")) this.props.actions.resetAll();
+  };
+  returnDeleted = () => {
+    this.props.drugs.returnList();
+  };
+
+  clearDeleted = () => {
+    this.props.drugs.clearDeleted();
   };
 
   handleChangeClinic = (e, { name, value }) => {
@@ -118,18 +130,18 @@ class Main extends Component {
   };
 
   goRecipe = () => {
-    this.setOpen(false);
+    this.setOpen(false, "openCautions");
     this.props.router.push("/recipe/new");
   };
   saveList = () => {
     let { isPrescriptFilled } = this.props.actions;
     if (isPrescriptFilled) {
       this.props.recipes.saveList();
-      this.setOpen(false);
+      this.setOpen(false, "openCautions");
     } else {
       // this.props.recipes.saveList()
       this.props.router.push("/prescript/fill");
-      this.setOpen(false);
+      this.setOpen(false, "openCautions");
     }
   };
 
@@ -142,7 +154,7 @@ class Main extends Component {
   }
 
   render() {
-    const { open, openCautions, searchQuery, selectedDrug, selectedConflict, clinic } = this.state;
+    const { open, openCautions, openClearence, searchQuery, selectedDrug, selectedConflict, clinic } = this.state;
     let { currentPage, height, active_language, makeLiquids, isLiquidsOk } = this.props.actions;
     let {
       drugs: { searchReady, searchRows, selectedRows, drug, deletedLiquids, deletedRows, listChanged, checkLiquids }, //drugs, drugsDosages, currDrug, setDosageParams
@@ -164,6 +176,19 @@ class Main extends Component {
     // let showPage2 = true
     const { id: patientId, email, fio } = patients.current;
     let isDisease = disease.length > 0 || co_disease.length > 0;
+
+    // console.log({
+    //   makeLiquids,
+    //   checkLiquids,
+    //   "drug.size": drug.size,
+    //   "deletedRows.length": deletedRows.length,
+    //   "deletedLiquids.length": deletedLiquids.length,
+    // });
+
+    let showMainBottomMenu =
+      !(makeLiquids || !checkLiquids) && (drug.size > 0 || deletedRows.length > 0 || deletedLiquids.length > 0);
+    let showRevert = drug.size == 0 && deletedRows.length > 0;
+
     return (
       <>
         <Menu className={`ui top huge borderless tabular nomargin main menu fixed grey${showPage && " hidden"}`}>
@@ -214,15 +239,60 @@ class Main extends Component {
         </Menu>
 
         <Sidebar.Pushable>
-          {!(makeLiquids || !checkLiquids) && (drug.size > 0 || deletedRows.length > 0 || deletedLiquids.length > 0) && (
-            <Menu className="bottom fixed menu three item huge main">
-              <Menu.Item onClick={this.handleResetAll}>Сбросить</Menu.Item>
+          {deletedRows.length > 0 && (
+            <Menu secondary className={`bottom fixed`}>
+              <Menu.Item>Удалено строк: {deletedRows.length}</Menu.Item>
+              <Menu.Item onClick={this.returnDeleted}>
+                <Icon name="undo alternate" />
+                Вернуть
+              </Menu.Item>
+              <Menu.Item onClick={this.clearDeleted}>
+                <Icon name="delete" />
+                Удалить насовсем
+              </Menu.Item>
+            </Menu>
+          )}
+          {showMainBottomMenu && (
+            <Menu className={`bottom fixed menu three item huge main`}>
+              <Modal
+                onClose={() => this.setOpen(false, "openClearence")}
+                onOpen={() => this.setOpen(true, "openClearence")}
+                open={openClearence}
+                trigger={<Menu.Item>Сбросить</Menu.Item>}
+              >
+                <Modal.Header>{"Какие данные вы хотите очистить?"}</Modal.Header>
+                <Modal.Content>
+                  <Header as="h3" content="Можно очистить:" />
+                  <List>
+                    <List.Item>Только данные по пациенту, включая текущий лист назначений и анамнез</List.Item>
+                    <List.Item>Лист назначений полностью</List.Item>
+                    <List.Item>Все выбранные данные, включая клинику, пациента и лист назначений</List.Item>
+                  </List>
+                </Modal.Content>
+                <Modal.Actions>
+                  <Button content="Очистить все" onClick={() => this.handleResetAll("all")} negative />
+                  <Button
+                    content="Лист назначений"
+                    labelPosition="right"
+                    icon="list"
+                    onClick={() => this.handleResetAll("list")}
+                    color="black"
+                  />
+                  <Button
+                    content="Данные пациента"
+                    labelPosition="right"
+                    icon="user"
+                    onClick={() => this.handleResetAll("patient")}
+                    primary
+                  />
+                </Modal.Actions>
+              </Modal>
               <Menu.Item onClick={this.getInfoPrep}>Проверить</Menu.Item>
               {listChanged ? (
                 cautionsTitle ? (
                   <Modal
-                    onClose={() => this.setOpen(false)}
-                    onOpen={() => this.setOpen(true)}
+                    onClose={() => this.setOpen(false, "openCautions")}
+                    onOpen={() => this.setOpen(true, "openCautions")}
                     open={openCautions}
                     trigger={<Menu.Item>Назначить</Menu.Item>}
                   >

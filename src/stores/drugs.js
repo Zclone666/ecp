@@ -86,11 +86,47 @@ class Drugs {
 
   // service functions
   async clearProto() {
-    this.drug.forEach((drugObj, key) => {
+    await this.drug.forEach((drugObj, key) => {
       if (drugObj.proto) {
-        this.unselectDrug(key);
+        // console.log(drugObj);
+        this.unselectDrug(drugObj);
+        // this.listChanged = true;
+        // return true;
       }
     });
+  }
+  async clearList() {
+    await this.drug.forEach((drugObj, key) => {
+      // if (drugObj.proto) {
+      // console.log(drugObj);
+      this.unselectDrug(drugObj, false);
+      // this.listChanged = true;
+      // return true;
+      // }
+    });
+    this.stores.actions.makeLiquids = false;
+  }
+  async returnList() {
+    this.deletedLiquids.forEach(async (liquid, i) => {
+      if (liquid.group != null) {
+        await this.liquid.set(liquid.group, liquid);
+      } else {
+        this.deletedLiquids.push(liquid);
+      }
+    });
+
+    this.deletedRows.forEach(async (drug, i) => {
+      await this.selectFromSearch(drug, false, false);
+    });
+
+    await this.stores.tools.stepByStepLoading(this.stores.dosages.get, this.deletedRows);
+    this.deletedRows = observable([]);
+    this.deletedLiquids = observable([]);
+  }
+
+  async clearDeleted() {
+    this.deletedRows = observable([]);
+    this.deletedLiquids = observable([]);
   }
 
   async MNNfromTN(drug) {
@@ -944,8 +980,8 @@ class Drugs {
     return true;
   };
 
-  async unselectDrug(drug) {
-    if (drug.proto) {
+  async unselectDrug(drug, onlyProto = true) {
+    if (drug.proto || !onlyProto) {
       this.deletedRows.push(drug);
     }
     if (drug.group != 0) {

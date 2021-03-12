@@ -53,7 +53,7 @@ class DB {
       this.stores.drugs.selectedRows = observable([]);
       this.diseaseRows = observable([]);
       this.allergyRows = observable([]);
-      this.stores.dosages.dosage.clear();
+      // this.stores.dosages.dosage.clear();
       this.stores.drugs.drug.clear();
     }
   }

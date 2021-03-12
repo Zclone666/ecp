@@ -316,17 +316,61 @@ class Actions {
     return structure;
   }
 
-  @action async resetAll() {
+  @action async resetAll(flag = "patient") {
     let structure = await _.cloneDeep(StructureScheme);
 
-    structure.clinic_id = this.clinic.id;
-    structure.clinic_name = this.clinic.name;
-    structure.doctor_id = this.doctor.id;
-    structure.doctor_name = this.doctor.name;
+    switch (flag) {
+      case "patient":
+        this.stores.patients.unsetCurrent();
+        structure.clinic_id = this.clinic.id;
+        structure.clinic_name = this.clinic.name;
+        structure.doctor_id = this.doctor.id;
+        structure.doctor_name = this.doctor.name;
 
-    this.drugStructure = structure;
+        _.assignIn(this.drugStructure, structure);
 
-    await this.stores.db.clearData(true, true);
+        await this.stores.drugs.clearProto();
+        this.stores.drugs.deletedRows = observable([]);
+        this.stores.drugs.deletedLiquids = observable([]);
+        this.stores.drugs.selectedRows = observable([]);
+        break;
+      case "all":
+        this.stores.patients.unsetCurrent();
+        structure.doctor_id = this.doctor.id;
+        structure.doctor_name = this.doctor.name;
+        _.assignIn(this.drugStructure, structure);
+        this.clinic = observable({ id: null, name: null });
+        // this.doctor = observable({ id: null, name: null });
+        this.stores.db.clearData(true, true);
+        break;
+      case "list":
+        await this.stores.drugs.clearList();
+        // this.stores.drugs.deletedRows = observable([]);
+        // this.stores.drugs.deletedLiquids = observable([]);
+        // this.stores.drugs.selectedRows = observable([]);
+        // this.stores.drugs.drug.clear();
+        break;
+      default:
+    }
+
+    // if (flag == "patient") {
+    //   structure.clinic_id = this.clinic.id;
+    //   structure.clinic_name = this.clinic.name;
+    //   structure.doctor_id = this.doctor.id;
+    //   structure.doctor_name = this.doctor.name;
+    // }
+    //
+    // _.assignIn(this.drugStructure, structure);
+    // // this.drugStructure = structure;
+    //
+    // if (flag == "patient") {
+    //   await this.stores.drugs.clearProto();
+    //   this.stores.drugs.deletedRows = observable([]);
+    //   this.stores.drugs.deletedLiquids = observable([]);
+    //   this.stores.drugs.selectedRows = observable([]);
+    // } else {
+    //   await this.stores.db.clearData(true, true);
+    // }
   }
 
   @action async selectPatient(row, from) {
