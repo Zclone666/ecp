@@ -36,6 +36,7 @@ class Actions {
   @observable elements = {};
   @observable buttonTexts = {};
   @observable UIText = {};
+  @observable recipeData = {};
 
   @observable makeLiquids = false;
   @observable isLiquidsOk = false;
@@ -447,6 +448,7 @@ class Actions {
     this.getObject("buttonTexts");
     this.getObject("elements");
     this.getObject("UIText");
+    this.getObject("recipeData");
 
     this.loading = true;
     this.authkey = (await localStorage.getItem("authkey")) || "";
@@ -622,7 +624,9 @@ class Actions {
         // }
       },
       fail: (alerts) => {
+        // if (!alerts) return;
         console.log("FAIL", alerts);
+        if (!alerts.forEach) return;
         alerts.forEach((alert) => {
           if (alert.code != 200) {
             setTimeout(() => {
@@ -779,8 +783,9 @@ class Actions {
       success: async (data) => {
         console.log(data);
         if (data && data.alerts && data.alerts[0].code == "200") {
+          this.loginForm.email = _.cloneDeep(this.signinForm.email);
           this.signinForm.isEmailReg = false;
-          this.stores.router.push("/login");
+          // this.stores.router.push("/login");
         } else {
           this.signinForm.isEmailReg = true;
         }
@@ -799,7 +804,30 @@ class Actions {
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data);
+        if (data && data.alerts && data.alerts[0].code == "200") {
+          this.makeAlerts({
+            alerts: [
+              {
+                title: `Внимание!`,
+                message: "Вы уже зарегистрированы в системе! Перейдите на страницу авторизации.",
+                button: {
+                  text: "Перейти",
+                  action: () => {
+                    this.stores.router.push("/login");
+                    // this.loginForm.email = this.signinForm.email;
+                    this.signinForm.email = "";
+                  },
+                  closeByClick: true,
+                },
+                level: "warning",
+                sticky: true,
+              },
+            ],
+          });
+        } else {
+          this.makeAlerts(data);
+        }
+
         // console.log('ALWAYS', data);
       },
     });

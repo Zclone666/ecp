@@ -117,6 +117,7 @@ class Recipe extends Component {
         drugStructure: { doctor_id: doctor, clinic_id: clinic },
         doctor: doc,
         checkData,
+        recipeData,
       },
       recipes: { code, recipe_endtime, recipe_text },
       patients: { current: patient },
@@ -152,11 +153,11 @@ class Recipe extends Component {
                 <label>Время действия рецепта</label>
                 <Dropdown
                   size="big"
-                  options={[1, 3, 6, 12].map((item) => {
+                  options={recipeData.items.map((item) => {
                     return {
-                      key: item,
-                      text: `${item} месяца(-ев)`,
-                      value: item,
+                      key: item.id,
+                      text: item.name,
+                      value: item.value,
                     };
                   })}
                   placeholder="Выберите"

@@ -241,9 +241,9 @@ class Recipes {
         // }]})
         this.stores.actions.loading = false;
         this.stores.router.push("/");
-        setTimeout(() => {
-          this.stores.router.push("/recipe/new");
-        }, 700);
+        // setTimeout(() => {
+        //   this.stores.router.push("/recipe/new");
+        // }, 700);
       },
       fail: (alerts) => {
         this.stores.actions.loading = false;
