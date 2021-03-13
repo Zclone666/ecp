@@ -1,2 +1,2 @@
-import { SERVER } from './server'
-export default SERVER
+import { SERVER, TYPE } from "./server";
+export { SERVER, TYPE };

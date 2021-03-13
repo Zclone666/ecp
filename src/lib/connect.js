@@ -4,7 +4,7 @@
 // import moment from 'moment';
 import axios from "axios";
 
-import SERVER from "../constants";
+import { SERVER } from "../constants";
 
 export const PROJECT_TITLE = "ЭКФ";
 export const PRE_PATH = "";

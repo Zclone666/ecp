@@ -3,6 +3,8 @@ import { observer, inject } from "mobx-react";
 
 import RouterLink from "../../router/a";
 
+import { TYPE } from "../../constants";
+
 import Spinner from "../../components/Spinner";
 import Search from "../../components/Search";
 import Drugs from "../../components/Drugs";
@@ -28,6 +30,8 @@ import {
 } from "semantic-ui-react";
 
 import _ from "lodash";
+
+const ifFree = TYPE == "free";
 
 @inject("router", "recipes", "db", "actions", "drugs", "warnings", "dosages", "diseases", "clinrecs", "patients")
 @observer
@@ -289,7 +293,9 @@ class Main extends Component {
                   />
                 </Modal.Actions>
               </Modal>
-              <Menu.Item onClick={this.getInfoPrep}>Проверить</Menu.Item>
+              <Menu.Item disabled={ifFree} onClick={this.getInfoPrep}>
+                Проверить
+              </Menu.Item>
               {listChanged ? (
                 cautionsTitle ? (
                   <Modal
