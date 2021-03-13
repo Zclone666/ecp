@@ -1,24 +1,11 @@
 image: docker:stable
 variables:
     PROJECT: "ecp2front"
+    PROJECT_FREE: "ecp2frontfree"
     PORT: 9009
+    PORT_FREE: 9031
 
-#include: 
-#  - project: 'root/template-gitlab'
-#    ref: master
-#    file: '/service-frontend-gitlab-ci.yml'
-
-stages:
-  - doccom
-
-job doccom dev:
-  stage: doccom
-  environment: dev
-  tags: 
-  - service-dev
-  only: 
-  - dev
-  #before_script: 
-  #- cat /dev/null > src/constants/server.js | echo "export const SERVER = 'dev';" > src/constants/server.js
-  script: 
-  - docker-compose build
+include: 
+  - project: 'root/template-gitlab'
+    ref: master
+    file: '/service-frontend-free-gitlab-ci.yml'
