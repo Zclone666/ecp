@@ -1,7 +1,7 @@
 version: "3.9"
 services:
 	ecp:
-		image: ecp2front
+#		image: ecp2front
 		build: /
 		port: 9009:80
 #		command: cat /dev/null > src/constants/server.js | echo "export const SERVER = 'dev';" > src/constants/server.js
