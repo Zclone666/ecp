@@ -1,15 +1,16 @@
-import { observable, action, autorun } from 'mobx';
-import { GET, POST, PUT, PROJECT_TITLE } from '../lib/connect'
-import _ from 'lodash';
-import moment from 'moment'
+import { observable, action, autorun } from "mobx";
+import { GET, POST, PUT, PROJECT_TITLE } from "../lib/connect";
+import _ from "lodash";
+import moment from "moment";
+
+import { StructureScheme, ProfileScheme } from "../schemes";
 
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
-export const CHECK_REG_KEY ='340f725c9ccb9779'
+export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 class Actions {
-
   @observable view = false;
   @observable device = null;
   @observable mobilewarning = false;
@@ -23,41 +24,44 @@ class Actions {
   @observable authkey = null;
   @observable privateKey = null;
 
-  @observable active_language = 'ru';
+  @observable active_language = "ru";
 
-  @observable pages = {}
-  @observable currentPage = null
+  @observable pages = {};
+  @observable currentPage = null;
 
-  @observable filtersChanged = false
+  @observable filtersChanged = false;
 
   @observable alerts = {};
 
-  @observable elements = {}
-  @observable buttonTexts = {}
-  @observable UIText = {}
+  @observable elements = {};
+  @observable buttonTexts = {};
+  @observable UIText = {};
+  @observable recipeData = {};
 
-  @observable makeLiquids = false
-  @observable isLiquidsOk = false
+  @observable makeLiquids = false;
+  @observable isLiquidsOk = false;
 
-  @observable protocol = null
+  @observable protocol = null;
 
   @observable checkData = {
     lpu: [],
-    doctor: []
-  }
+    doctor: null,
+  };
 
   @observable doctor = {
     id: null,
-    name: null
-  }
+    name: null,
+  };
 
   @observable loginForm = {
-    email: '',
-    password: '',
-    privateKey: '',
+    email: "",
+    password: "",
+    privateKey: "",
     remember: true,
-    hidden: true
-  }
+    hidden: true,
+  };
+
+  @observable profile = _.cloneDeep(ProfileScheme);
 
   @observable signinForm = {
     email: "",
@@ -65,38 +69,38 @@ class Actions {
     lastName: "",
     firstName: "",
     middleName: "",
-    lpuName: '',
-    department: '',
+    lpuName: "",
+    department: "",
     hidden: true,
-    isEmailReg: false
-  }
+    isEmailReg: false,
+    // relationCode: null,
+    // clinicEncryptedId: "",
+  };
 
   @observable confirmForm = {
     email: "",
     code: "",
-    service: ''
-  }
+    service: "",
+  };
 
   @observable getConfirmForm = {
-    email: ""
-  }
+    email: "",
+  };
 
   @observable resetPassForm = {
     email: "",
-    key: ''
-  }
+    key: "",
+  };
 
   @observable newPassForm = {
     email: "",
     recoveryCode: "",
     newPassword: "",
-    key: ''
-  }
+    key: "",
+  };
 
-  @observable clinrecCheckerData = {
-
-  }
-  @observable clinrecCheckerStep = 1
+  @observable clinrecCheckerData = {};
+  @observable clinrecCheckerStep = 1;
 
   @observable stepsData = {
     key: null,
@@ -107,8 +111,8 @@ class Actions {
     pack: {},
     dosage: [],
     value: null,
-    helpers: {}
-  }
+    helpers: {},
+  };
 
   @observable patientForm = {
     id: null,
@@ -131,8 +135,8 @@ class Actions {
     driving: false,
     alcohol: false,
     masIndex: null,
-    allergy: []
-  }
+    allergy: [],
+  };
 
   @observable patientPassport = {
     id: null,
@@ -140,8 +144,8 @@ class Actions {
     email: null,
     miscode: null,
     misid: null,
-    fio: null
-  }
+    fio: null,
+  };
 
   @observable scheduleForm = {
     dateStart: null,
@@ -153,19 +157,19 @@ class Actions {
     week: null,
     calendar: null,
     specials: null,
-    format: 'interval'
-  }
+    format: "interval",
+  };
 
   @observable calculatorForm = {
     dosage: [0],
     count: 1,
-    dosageUnit: '248',
+    dosageUnit: "248",
     dayCount: 1,
     fullDosage: [0],
     weightDosage: [0],
     dayDosage: [0],
-    dayWeightDosage: [0]
-  }
+    dayWeightDosage: [0],
+  };
 
   @observable liquidForm = {
     name: "", // Название ДВ или ТН
@@ -183,11 +187,11 @@ class Actions {
       dayDosage: [0],
       dayWeightDosage: [0],
       durationCount: 0,
-      durationUnit: '75',
+      durationUnit: "75",
       fullSpeed: [0],
       weightSpeed: [0],
       tintSpeed: [0],
-      liquidSpeed: [0]
+      liquidSpeed: [0],
     },
     schedule: {
       dateStart: null,
@@ -197,325 +201,406 @@ class Actions {
       interval: null,
       once: null,
       week: null,
-      calendar: null
-    }
-  }
-
-  @observable selectedDrug = null
-  @observable selectedConflict = null
-  @observable activeDrugs = []
-  @observable activeConflicts = []
-
-  // clinic_id: null,
-  // clinic_code: null,
-  // clinic_name: null,
-  // dep_id: null,
-  // dep_code: null,
-  // dep_name: null,
-  // doctor_id: null,
-  // doctor_code: null,
-  // doctor_name: null,
-
-  // clinic_key: null, //clinic_id clinic_code clinic_name
-  // clinic_val: null,
-  // department_key: null, //dep_id dep_code dep_name
-  // department_val: null,
-  // doctor_key: null, //doctor_id doctor_code doctor_name
-  // doctor_val: null,
-
-  @observable drugStructure = {
-    key: "key",
-    device_id: null,
-
-    clinic_id: null,
-    clinic_code: null,
-    clinic_name: null,
-    dep_id: null,
-    dep_code: null,
-    dep_name: null,
-    doctor_id: null,
-    doctor_code: null,
-    doctor_name: null,
-
-    patient: {
-      id: null,
-      email: null,
-      fio: null,
-      miscode: null,
-      misid: null,
-      name: null,
-      birthdate: null,
-      sex: null,
-      growth: null,
-      weight: null,
-      disease: [],
-      co_disease: [],
-      pregnancy: false,
-      gestation: null,
-      trimester: null,
-      lactation: false,
-      driving: false,
-      alcohol: false,
-      allergy: []
+      calendar: null,
     },
-    // save_recipe: false,
-    active_language: "ru",
-    liquids: [],
-    drugs: [],
-    text: null
-  }
+  };
 
+  @observable selectedDrug = null;
+  @observable selectedConflict = null;
+  @observable activeDrugs = [];
+  @observable activeConflicts = [];
 
+  @observable drugStructure = _.cloneDeep(StructureScheme);
+  // {
+  //   key: "key",
+  //   device_id: null,
+  //
+  //   clinic_id: null,
+  //   clinic_code: null,
+  //   clinic_name: null,
+  //   dep_id: null,
+  //   dep_code: null,
+  //   dep_name: null,
+  //   doctor_id: null,
+  //   doctor_code: null,
+  //   doctor_name: null,
+  //
+  //   patient: {
+  //     id: null,
+  //     email: null,
+  //     fio: null,
+  //     miscode: null,
+  //     misid: null,
+  //     name: null,
+  //     birthdate: null,
+  //     sex: null,
+  //     growth: null,
+  //     weight: null,
+  //     disease: [],
+  //     co_disease: [],
+  //     pregnancy: false,
+  //     gestation: null,
+  //     trimester: null,
+  //     lactation: false,
+  //     driving: false,
+  //     alcohol: false,
+  //     allergy: [],
+  //   },
+  //   active_language: "ru",
+  //   liquids: [],
+  //   drugs: [],
+  //   text: null,
+  // };
 
   constructor({ stores }) {
     this.stores = stores;
 
-    this.autologin()
+    this.autologin();
     autorun(() => {
-      // if(this.stepsData.dosage && this.stepsData.dosage[0] && this.stepsData.dosage[0].value_1){
-      //
-      //   this.stores.dosages.setStepDosage()
-      // }
-    })
-
-    autorun(() => {
-      if(this.loading){
-        setTimeout(() => {
-          this.loading = false
-        }, 5000)
+      if (this.stepsData.dosage && this.stepsData.dosage.length > 0) {
+        // console.log({ stepsData: this.stepsData });
+        this.stores.drugs.setBaseDosages(this.stores.drugs.current.key);
       }
     });
-    // autorun(() => {
-    //   console.log(this.currentPage);
-    //   if(this.currentPage && _.keys(this.pages).length > 0){
-    //     this.stores.db.clearData()
-    //     this.stores.db.getFilters()
-    //   }
-    // });
-    // this.onResize()
-    // window.onresize = this.onResize
+
+    autorun(() => {
+      if (this.loading) {
+        setTimeout(() => {
+          this.loading = false;
+        }, 5000);
+      }
+    });
   }
-  async setLang(lang){
-    if(lang !== this.active_language){
-      this.drugStructure.active_language = this.active_language = lang
-      await localStorage.setItem('lang', lang)
+  async setLang(lang) {
+    if (lang !== this.active_language) {
+      // this.drugStructure.active_language =
+      this.active_language = lang;
+      await localStorage.setItem("lang", lang);
       window.location.reload(false);
     }
   }
-  onResize(){
+  onResize() {
     // console.log('resize');
     let h = window.innerHeight;
     let w = window.innerWidth;
-    let v = h > w ? 'portrait' : 'landscape';
-    let d = (w < 480 && v === 'portrait') || (w < 1024 && v === 'landscape') ?
-      'mobile' : (
-        (w < 1280 && v === 'portrait') || (w < 1280 && v === 'landscape') ?
-          'tablet' : 'pc'
-        );
-    this.mobilewarning = (d === 'mobile' || d === 'tablet');
+    let v = h > w ? "portrait" : "landscape";
+    let d =
+      (w < 480 && v === "portrait") || (w < 1024 && v === "landscape")
+        ? "mobile"
+        : (w < 1280 && v === "portrait") || (w < 1280 && v === "landscape")
+        ? "tablet"
+        : "pc";
+    this.mobilewarning = d === "mobile" || d === "tablet";
     this.view = v;
     this.device = d;
     // console.log(d);
     this.height = h;
   }
 
-
-  clearSteps(step){
-    if( step === 1 ){
-
+  makeAlerts(data) {
+    if (data.alerts && data.alerts.length > 0) {
+      data.alerts.forEach((item, i) => {
+        let key = Math.floor(Math.random() * 10000);
+        this.alerts[key] = item;
+      });
     }
-    if( step == 2 ){
+  }
 
+  get structure() {
+    let { patients, drugs } = this.stores;
+    let structure = _.cloneDeep(this.drugStructure);
+    structure.patient = patients.current;
+    structure.drugs = Array.from(this.stores.drugs.drug.values());
+    structure.liquids = Array.from(this.stores.drugs.liquid.values());
+    structure.deletedDrugs = _.cloneDeep(this.stores.drugs.deletedRows);
+    structure.deletedLiquids = _.cloneDeep(this.stores.drugs.deletedLiquids);
+    return structure;
+  }
+
+  @action async resetAll(flag = "patient") {
+    let structure = await _.cloneDeep(StructureScheme);
+
+    switch (flag) {
+      case "patient":
+        this.stores.patients.unsetCurrent();
+        structure.clinic_id = this.clinic.id;
+        structure.clinic_name = this.clinic.name;
+        structure.doctor_id = this.doctor.id;
+        structure.doctor_name = this.doctor.name;
+
+        _.assignIn(this.drugStructure, structure);
+
+        await this.stores.drugs.clearProto();
+        this.stores.drugs.deletedRows = observable([]);
+        this.stores.drugs.deletedLiquids = observable([]);
+        this.stores.drugs.selectedRows = observable([]);
+        break;
+      case "all":
+        this.stores.patients.unsetCurrent();
+        structure.doctor_id = this.doctor.id;
+        structure.doctor_name = this.doctor.name;
+        _.assignIn(this.drugStructure, structure);
+        this.clinic = observable({ id: null, name: null });
+        // this.doctor = observable({ id: null, name: null });
+        this.stores.db.clearData(true, true);
+        break;
+      case "list":
+        await this.stores.drugs.clearList();
+        // this.stores.drugs.deletedRows = observable([]);
+        // this.stores.drugs.deletedLiquids = observable([]);
+        // this.stores.drugs.selectedRows = observable([]);
+        // this.stores.drugs.drug.clear();
+        break;
+      default:
     }
-    // stepsData = {
-    //   way: null,
-    //   step: null,
-    //   lf: null,
-    //   dosage: null,
-    //   method: null,
+
+    // if (flag == "patient") {
+    //   structure.clinic_id = this.clinic.id;
+    //   structure.clinic_name = this.clinic.name;
+    //   structure.doctor_id = this.doctor.id;
+    //   structure.doctor_name = this.doctor.name;
+    // }
     //
+    // _.assignIn(this.drugStructure, structure);
+    // // this.drugStructure = structure;
+    //
+    // if (flag == "patient") {
+    //   await this.stores.drugs.clearProto();
+    //   this.stores.drugs.deletedRows = observable([]);
+    //   this.stores.drugs.deletedLiquids = observable([]);
+    //   this.stores.drugs.selectedRows = observable([]);
+    // } else {
+    //   await this.stores.db.clearData(true, true);
     // }
   }
 
-  makeAlerts(data){
-    if(data.alerts && data.alerts.length > 0){
-      data.alerts.forEach((item, i) => {
-        let key = Math.floor(Math.random() * 10000)
-        this.alerts[key] = item
-      })
-    }
-
+  @action async selectPatient(row, from) {
+    row.key = moment().format("x").toString();
+    this.stores.patients.current[from] = await _.unionWith(
+      this.stores.patients.current[from],
+      [row],
+      (a, b) => a.id === b.id
+    );
+    this.stores.db.clearData();
+    return true;
   }
 
-  @action async selectPatient(row, from){
-    row.key = moment().format('x').toString()
-    this.patientForm[from] = await _.unionWith(this.patientForm[from], [row], (a, b) => a.id === b.id);
-    this.stores.db.clearData()
-    return true
-  }
-  @action async unselectPatient(row, from){
-    this.patientForm[from] = await _.xorWith(this.patientForm[from], [row], (a, b) => a.id === b.id);
-    this.stores.db.clearData()
-    return true
+  @action async unselectPatient(row, from) {
+    this.stores.patients.current[from] = await _.xorWith(
+      this.stores.patients.current[from],
+      [row],
+      (a, b) => a.id === b.id
+    );
+    this.stores.db.clearData();
+    return true;
   }
 
   async getObject(name) {
-    let { active_language } = this
+    let { active_language } = this;
     return POST({
       path: `info/${name}`,
       data: {
-        active_language
+        active_language,
       },
       success: async (data) => {
-        let { alert, ...values } = data
+        let { alert, ...values } = data;
         //this[name]
         Object.assign(this[name], { ...values });
         // console.log(this[name]);
       },
-      fail: alerts => {
-        this.loading = false
+      fail: (alerts) => {
+        this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data)
+        this.makeAlerts(data);
         // console.log('ALWAYS', data);
-      }
+      },
     });
   }
 
   getElement = (name, value) => {
     // console.log({ el: this.elements, name, value});
-    let text = ''
-    this.elements[name].forEach(( item, i ) => {
-      if( (item.from < value && value <= item.to) || item.to === value ){
-        text = item.name
+    let text = "";
+    this.elements[name].forEach((item, i) => {
+      if ((item.from < value && value <= item.to) || item.to === value) {
+        text = item.name;
       }
-    })
-    return text
+    });
+    return text;
+  };
+
+  get isPrescriptFilled() {
+    let { doctor_id, clinic_id } = this.drugStructure;
+    let patient = this.stores.patients.current;
+    return (patient.key || patient.id) && doctor_id && clinic_id;
   }
 
-  get isPrescriptFilled(){
-    let {
-      patient,
-      doctor_id,
-      clinic_id
-    } = this.drugStructure
-    return ( (patient.key || patient.id) && doctor_id && clinic_id )
-  }
-
-  async autologin(){
-
-    this.drugStructure.active_language = this.active_language = await localStorage.getItem('lang') || null;
-    if(!this.active_language){
-      this.drugStructure.active_language = this.active_language = 'ru'
-      await localStorage.setItem('lang', 'ru')
+  async autologin() {
+    // this.drugStructure.active_language =
+    this.active_language = (await localStorage.getItem("lang")) || null;
+    if (!this.active_language) {
+      // this.drugStructure.active_language =
+      this.active_language = "ru";
+      await localStorage.setItem("lang", "ru");
     }
 
-    this.getObject('buttonTexts')
-    this.getObject('elements')
-    this.getObject('UIText')
+    this.getObject("buttonTexts");
+    this.getObject("elements");
+    this.getObject("UIText");
+    this.getObject("recipeData");
 
-    this.loading = true
-    this.authkey = await localStorage.getItem('authkey') || '';
+    this.loading = true;
+    this.authkey = (await localStorage.getItem("authkey")) || "";
 
-    if(this.stores.router.values.protocol) {
-      this.stores.warnings.protocol(this.stores.router.values.protocol)
-      this.loading = false
-      return
+    if (this.stores.router.values.protocol) {
+      this.stores.warnings.protocol(this.stores.router.values.protocol);
+      this.loading = false;
+      return;
     }
 
-
-    if(!this.authkey && this.stores.router.match.name !== 'auth') {
-      this.loading = false
-      this.stores.router.push('/login')
-      return
+    if (this.stores.router.values.code) {
+      // this.stores.warnings.protocol(this.stores.router.values.protocol);
+      this.loading = false;
+      return;
     }
-    if(!this.authkey || this.authkey == null || this.authkey == 'null') {
-      this.loading = false
-      this.stores.router.push('/login')
-      return
+
+    if (!this.authkey && this.stores.router.match.name !== "auth") {
+      this.loading = false;
+      this.stores.router.push("/login");
+      return;
+    }
+    if (!this.authkey || this.authkey == null || this.authkey == "null") {
+      this.loading = false;
+      this.stores.router.push("/login");
+      return;
     }
     //// FIXME: for safari fucking shit
     return GET({
       path: `https://cs.socmedica.com/api/user/authCheck`, //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
       data: {
         authkey: this.authkey,
-        key: AUTH_SERVICE_KEY
+        key: AUTH_SERVICE_KEY,
       },
-      success: async data => {
+      success: async (data) => {
         //console.log('logged', data);
-        this.loginForm.privateKey = this.privateKey = await localStorage.getItem('privateKey') || '';
-        this.login()
+        this.loginForm.privateKey = this.privateKey = (await localStorage.getItem("privateKey")) || "";
+        this.login();
         // this.authorized = true
         // this.loading = false
 
         // this.stores.router.push('/')
         // this.stores.db.getFilters()
-
       },
       fail: async () => {
         // console.log('FAIL');
         // if(this.stores.router && this.stores.router.route !== '/confirm'){
         //   this.stores.router.push('/login')
         // }
-        await localStorage.setItem('authkey', null);
-        this.stores.router.push('/login')
-        this.authorized = false
-        this.loading = false
+        await localStorage.setItem("authkey", null);
+        this.stores.router.push("/login");
+        this.authorized = false;
+        this.loading = false;
       },
       always: (data) => {
-        this.makeAlerts(data)
+        this.makeAlerts(data);
 
-        this.loading = false
-      }
+        this.loading = false;
+      },
     });
   }
 
   async login() {
     //this.loginForm.key = AUTH_SERVICE_KEY;
-    let { privateKey, remember } = this.loginForm
-    let { active_language } = this
+    let { privateKey, remember } = this.loginForm;
+    let { active_language } = this;
     let data = {
       //key: privateKey,
       authkey: this.authkey,
-      active_language
-    }
+      active_language,
+    };
     return POST({
       path: `auth/Check`,
       data,
       success: async (data) => {
         // console.log('SUCCESS', data);
         // if( data && data.level == 'success' ){
-          let { doc, id, lpu, patients, names } = data
-          this.stores.patients.makeList({ patients, names })
+        let { doc, id, lpu, patients, names } = data;
+        this.stores.patients.makeList({ patients, names });
 
-          lpu && lpu.forEach((item, i) => {
-            this.checkData.lpu.push({id: item, name: names[item]})
-          });
-          doc && doc.forEach((item, i) => {
-            this.checkData.doctor.push({id: item, name: names[item]})
+        lpu &&
+          lpu.forEach((item, i) => {
+            this.checkData.lpu.push({ id: item, name: names[item] });
           });
 
+        if (lpu && lpu.length == 1) {
+          this.drugStructure.clinic_id = (lpu && lpu[0]) || null;
+          this.drugStructure.clinic_name = (lpu && lpu[0] && names[lpu[0]]) || null;
+          this.clinic = {
+            id: lpu[0],
+            name: names[lpu[0]],
+          };
+        } else {
+          this.clinic = {
+            id: null,
+            name: null,
+          };
+        }
 
-          this.doctor = {
-            id: (doc && doc[0]) || null,
-            name: ((doc && doc[0]) && names[doc[0]]) || null
-          }
+        this.checkData.doctor = (doc && doc[0]) || null;
+        // doc &&
+        //   doc.forEach((item, i) => {
+        //     this.checkData.doctor.push({ id: item, name: names[item] });
+        //   });
 
-          this.privateKey = this.loginForm.privateKey
-          this.stores.router.push('/')
-          this.authorized = true
-          this.loading = false
-          //this.stores.db.getPages()
-          //this.stores.db.getFilters()
-          if(remember){
-            await localStorage.setItem('authkey', this.authkey);
-            await localStorage.setItem('privateKey', this.loginForm.privateKey);
-          }
-          this.stores.tools.getUnitsPrimary()
-          this.stores.tools.getUnitsPharm()
-          this.stores.tools.getUnitsSchedule()
-          // this.stores.patients.request()
+        this.doctor = {
+          id: (doc && doc[0]) || null,
+          name: (doc && doc[0] && names[doc[0]]) || null,
+        };
+
+        this.drugStructure.doctor_id = (doc && doc[0]) || null;
+        this.drugStructure.doctor_name = (doc && doc[0] && names[doc[0]]) || null;
+
+        if (doc && doc[0]) {
+          this.makeAlerts({
+            alerts: [
+              {
+                title: `Здравствуйте, ${this.doctor.name}`,
+                message: "",
+                level: "info",
+                sticky: false,
+              },
+            ],
+          });
+        } else {
+          this.makeAlerts({
+            alerts: [
+              {
+                title: `Внимание! Врач не указан.`,
+                message: "Обратитесь к администратору.",
+                level: "warning",
+                sticky: false,
+              },
+            ],
+          });
+        }
+
+        // console.log(this.doctor);
+
+        this.privateKey = this.loginForm.privateKey;
+        this.stores.router.push("/");
+        this.authorized = true;
+        this.loading = false;
+        //this.stores.db.getPages()
+        //this.stores.db.getFilters()
+        if (remember) {
+          await localStorage.setItem("authkey", this.authkey);
+          await localStorage.setItem("privateKey", this.loginForm.privateKey);
+        }
+        this.stores.tools.getUnitsPrimary();
+        this.stores.tools.getUnitsPharm();
+        this.stores.tools.getUnitsSchedule();
+        // this.stores.patients.request()
         // }else{
         //   this.makeAlerts({ alerts:[{
         //     title: "Неверный персональный ключ.",
@@ -538,54 +623,104 @@ class Actions {
         //   this.stores.db.getFilters()
         // }
       },
-      fail: alerts => {
-        console.log('FAIL', alerts);
+      fail: (alerts) => {
+        // if (!alerts) return;
+        console.log("FAIL", alerts);
+        if (!alerts.forEach) return;
         alerts.forEach((alert) => {
-          if(alert.code != 200) {
+          if (alert.code != 200) {
             setTimeout(() => {
-              this.logout()
-            }, 3000)
-
+              this.logout();
+            }, 3000);
           }
-        })
+        });
       },
       always: (data) => {
-        this.loading = false
-        this.makeAlerts(data)
+        this.loading = false;
+        this.makeAlerts(data);
         // console.log('ALWAYS', data);
-      }
+      },
+    });
+  }
+  async getProfile() {
+    let data = {
+      // key: AUTH_SERVICE_KEY,
+      authkey: this.authkey,
+      active_language: this.active_language,
+    };
+
+    return POST({
+      path: `tools/DoctorGet`,
+      data,
+      success: async (data) => {
+        // console.log(data);
+        let { id, fio, firstname, lastname, patronymic, sex, snils, diploms, licenses, emails, phone } = data;
+        await _.assignIn(this.profile, {
+          id,
+          fio,
+          firstname,
+          lastname,
+          patronymic,
+          sex,
+          snils,
+          // diploms,
+          // licenses,
+          // emails,
+          // phone,
+        });
+        diploms.forEach((item, i) => {
+          this.profile.diploms.push(item);
+        });
+        licenses.forEach((item, i) => {
+          this.profile.licenses.push(item);
+        });
+        emails.forEach((item, i) => {
+          this.profile.emails.push(item);
+        });
+        phone.forEach((item, i) => {
+          this.profile.phone.push(item);
+        });
+      },
+      fail: (alerts) => {
+        console.log("FAIL", alerts);
+      },
+      always: (data) => {
+        this.loading = false;
+        this.makeAlerts(data);
+        // console.log('ALWAYS', data);
+      },
     });
   }
   async fakelogin() {
     this.loginForm.key = AUTH_SERVICE_KEY;
-    let { privateKey, remember, ...data } = this.loginForm
+    let { privateKey, remember, ...data } = this.loginForm;
     // data.active_language = active_language
     return await POST({
       path: `https://cs.socmedica.com/api/user/authorization`,
       data,
       success: async (data) => {
-         // console.log('SUCCESS', data);
-         // this.makeAlerts({ alerts:[{
-         //   title: "Введите ключ.",
-         //   message: "Для входа в систему необходимо ввести ваш персональный ключ. Если у вас его нет, обратитесь к поставщику ПО.",
-         //   level: "info",
-         //   sticky: false
-         // }]})
-         if (data.authkey) {
-           // console.log('HERE');
-           // if(remember){
-           //   await localStorage.setItem('authkey', data.authkey);
-           //   await localStorage.setItem('privateKey', this.loginForm.privateKey);
-           // }
+        // console.log('SUCCESS', data);
+        // this.makeAlerts({ alerts:[{
+        //   title: "Введите ключ.",
+        //   message: "Для входа в систему необходимо ввести ваш персональный ключ. Если у вас его нет, обратитесь к поставщику ПО.",
+        //   level: "info",
+        //   sticky: false
+        // }]})
+        if (data.authkey) {
+          // console.log('HERE');
+          // if(remember){
+          //   await localStorage.setItem('authkey', data.authkey);
+          //   await localStorage.setItem('privateKey', this.loginForm.privateKey);
+          // }
 
-           this.privateKey = this.loginForm.privateKey
-           // this.stores.router.push('/')
-           this.authkey = data.authkey
-           // this.authorized = true
-           this.loading = false
-           return this.login()
-           // this.stores.db.getFilters()
-         }
+          this.privateKey = this.loginForm.privateKey;
+          // this.stores.router.push('/')
+          this.authkey = data.authkey;
+          // this.authorized = true
+          this.loading = false;
+          return this.login();
+          // this.stores.db.getFilters()
+        }
         // if (data.authkey) {
         //   if(remember){
         //     await localStorage.setItem('authkey', data.authkey);
@@ -599,17 +734,17 @@ class Actions {
         //   this.loading = false
         //   this.stores.db.getFilters()
         // }
-        return true
+        return true;
       },
-      fail: alerts => {
-        this.loading = false
-        return false
+      fail: (alerts) => {
+        this.loading = false;
+        return false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data)
+        this.makeAlerts(data);
         //console.log('ALWAYS', data);
-      }
+      },
     });
   }
   async signin() {
@@ -620,39 +755,39 @@ class Actions {
       data: this.signinForm,
       success: async (data) => {
         // console.log('SUCCESS', data);
-        this.stores.router.push('/login')
+        this.stores.router.push("/login");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey
         // }
       },
-      fail: alerts => {
-        this.loading = false
+      fail: (alerts) => {
+        this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data)
+        this.makeAlerts(data);
         // console.log('ALWAYS', data);
-      }
+      },
     });
   }
   async checkUserUmkb() {
     // this.signinForm.key = AUTH_SERVICE_KEY;
     let dataSend = {
       key: CHECK_REG_KEY,
-      email: this.signinForm.email
-    }
+      email: this.signinForm.email,
+    };
     return POST({
       path: `https://cs.socmedica.com/api/user/getUserInfoByEmail`,
       data: dataSend,
       success: async (data) => {
-         console.log(data);
-        if( data && data.alerts && data.alerts[0].code == '200' ){
-
-          this.signinForm.isEmailReg = false
-          this.stores.router.push('/login')
-        }else{
-          this.signinForm.isEmailReg = true
+        console.log(data);
+        if (data && data.alerts && data.alerts[0].code == "200") {
+          this.loginForm.email = _.cloneDeep(this.signinForm.email);
+          this.signinForm.isEmailReg = false;
+          // this.stores.router.push("/login");
+        } else {
+          this.signinForm.isEmailReg = true;
         }
         // console.log('SUCCESS', data);
         // this.loading = false
@@ -663,15 +798,38 @@ class Actions {
         //   this.authkey = data.authkey
         // }
       },
-      fail: alerts => {
-        this.loading = false
-        this.signinForm.isEmailReg = true
+      fail: (alerts) => {
+        this.loading = false;
+        this.signinForm.isEmailReg = true;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data)
+        if (data && data.alerts && data.alerts[0].code == "200") {
+          this.makeAlerts({
+            alerts: [
+              {
+                title: `Внимание!`,
+                message: "Вы уже зарегистрированы в системе! Перейдите на страницу авторизации.",
+                button: {
+                  text: "Перейти",
+                  action: () => {
+                    this.stores.router.push("/login");
+                    // this.loginForm.email = this.signinForm.email;
+                    this.signinForm.email = "";
+                  },
+                  closeByClick: true,
+                },
+                level: "warning",
+                sticky: true,
+              },
+            ],
+          });
+        } else {
+          this.makeAlerts(data);
+        }
+
         // console.log('ALWAYS', data);
-      }
+      },
     });
   }
 
@@ -681,21 +839,21 @@ class Actions {
       path: `https://cs.socmedica.com/api/registration/confirmemail`,
       data: this.confirmForm,
       success: async (data) => {
-        console.log('SUCCESS', data);
-        this.stores.router.push('/login')
+        console.log("SUCCESS", data);
+        this.stores.router.push("/login");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey
         // }
       },
-      fail: alerts => {
-        this.loading = false
+      fail: (alerts) => {
+        this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data)
+        this.makeAlerts(data);
         // console.log('ALWAYS', data);
-      }
+      },
     });
   }
 
@@ -704,21 +862,21 @@ class Actions {
       path: `https://cs.socmedica.com/api/registration/getconfirmemail`,
       data: this.getConfirmForm,
       success: async (data) => {
-        console.log('SUCCESS', data);
-        this.stores.router.push('/confirm')
+        console.log("SUCCESS", data);
+        this.stores.router.push("/confirm");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey
         // }
       },
-      fail: alerts => {
-        this.loading = false
+      fail: (alerts) => {
+        this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data)
+        this.makeAlerts(data);
         // console.log('ALWAYS', data);
-      }
+      },
     });
   }
 
@@ -728,21 +886,21 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/recovery`,
       data: this.resetPassForm,
       success: async (data) => {
-        console.log('SUCCESS', data);
-        this.stores.router.push('/newpass')
+        console.log("SUCCESS", data);
+        this.stores.router.push("/newpass");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey
         // }
       },
-      fail: alerts => {
-        this.loading = false
+      fail: (alerts) => {
+        this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data)
+        this.makeAlerts(data);
         // console.log('ALWAYS', data);
-      }
+      },
     });
   }
 
@@ -752,21 +910,21 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/resetPassword`,
       data: this.newPassForm,
       success: async (data) => {
-        console.log('SUCCESS', data);
-        this.stores.router.push('/login')
+        console.log("SUCCESS", data);
+        this.stores.router.push("/login");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey
         // }
       },
-      fail: alerts => {
-        this.loading = false
+      fail: (alerts) => {
+        this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        this.makeAlerts(data)
+        this.makeAlerts(data);
         // console.log('ALWAYS', data);
-      }
+      },
     });
   }
 
@@ -774,16 +932,16 @@ class Actions {
     return GET({
       path: `https://cs.socmedica.com/api/user/authexit`,
       data: {
-        authkey: localStorage.getItem('authkey')
+        authkey: localStorage.getItem("authkey"),
       },
       always: async (data) => {
-        this.makeAlerts(data)
-        await localStorage.setItem('authkey', '');
-        await localStorage.setItem('privateKey', '');
-        this.authkey = null
-        this.stores.router.push('/login')
+        this.makeAlerts(data);
+        await localStorage.setItem("authkey", "");
+        await localStorage.setItem("privateKey", "");
+        this.authkey = null;
+        this.stores.router.push("/login");
         window.location.reload(false);
-      }
+      },
     });
   }
 }

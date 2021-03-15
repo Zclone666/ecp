@@ -194,8 +194,9 @@ class RecipeDrug extends React.Component {
 
     let { edit, text, from } = this.state
 
-    let drugDosages = dose.get(key) || {}
     let drug = drugs.drug.get(key) || {}
+
+    let drugDosages = dose.get(drug.id) || {}
     let { name, level, tn, type, dosage, schedule, helpers } = drug || {}
 
     let names = drugDosages.names || {}
@@ -204,8 +205,8 @@ class RecipeDrug extends React.Component {
     let rules = this.renderRules()
 
     if(dosage && dosage.form) descArr.push(names[dosage.form])
-    if(helpers && helpers.dosage && helpers.dosage.short) descArr.push(helpers.dosage.short)
-    if(helpers && helpers.pack && helpers.pack.short) descArr.push(helpers.pack.short)
+    if(helpers && helpers.dosage && helpers.dosage.small) descArr.push(helpers.dosage.small)
+    if(helpers && helpers.pack && helpers.pack.small) descArr.push(helpers.pack.small)
     if(dosage && dosage.method) descArr.push(names[dosage.method])
     if(schedule && schedule.specials) descArr.push(schedule.specials)
     if(!rules.empty){ descArr.push(rules.text) }
@@ -252,8 +253,8 @@ class RecipeDrug extends React.Component {
 
     // console.log({key});
     // let selectedWarnings = warnIcons[selectedDrug]
-    let drugDosages = dose.get(key) || {}
     let drug = drugs.drug.get(key) || {}
+    let drugDosages = dose.get(drug.id) || {}
     let { name, level, tn, type, dosage, schedule, helpers, specials } = drug
 
     let names = drugDosages.names || {}
@@ -262,8 +263,8 @@ class RecipeDrug extends React.Component {
     // let rules = this.renderRules()
     //
     // if(dosage.form) descArr.push(names[dosage.form])
-    // if(helpers.dosage && helpers.dosage.short) descArr.push(helpers.dosage.short)
-    // if(helpers.pack && helpers.pack.short) descArr.push(helpers.pack.short)
+    // if(helpers.dosage && helpers.dosage.small) descArr.push(helpers.dosage.small)
+    // if(helpers.pack && helpers.pack.small) descArr.push(helpers.pack.small)
     // if(dosage.method) descArr.push(names[dosage.method])
     // if(schedule && schedule.specials) descArr.push(schedule.specials)
     // if(!rules.empty){ descArr.push(rules.text) }

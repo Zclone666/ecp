@@ -7,7 +7,7 @@ import {
   // Menu,
   List,
   Transition,
-  Button,
+  // Button,
   Icon,
   Segment,
   Label,
@@ -16,7 +16,7 @@ import {
   Header
 } from 'semantic-ui-react'
 
-import _ from 'lodash';
+// import _ from 'lodash';
 
 @inject('db', 'actions', 'analogs', 'router', 'drugs')
 @observer
@@ -44,6 +44,17 @@ class Analogs extends Component {
     } = this.props
     drug.fpid = id
     drug.key = null
+    drug.helpers = {
+      dosage: { short: '', full: '', id: null },
+      pack: { short: '', full: '', id: null },
+      type: 'simple',
+      url: '',
+      key: null,
+      way: 'lf',
+      step: 4,
+      mnn: false,
+      drugCache: null
+    }
     let drugKey = router.values && router.values.page
     await this.props.drugs.unselectDrug({ key: drugKey })
     await this.props.drugs.selectFromSearch( drug )
@@ -109,11 +120,11 @@ class Analogs extends Component {
               </>
             )
 
-          })}         
+          })}
         </List>
-        
+
       </Segment>)}
-      {(analogs.ready && analogObj.arr.length < 1) && 
+      {(analogs.ready && analogObj.arr.length < 1) &&
         <Dimmer.Dimmable as={Segment} basic dimmed={true} className='h100'>
           <Dimmer active={true} inverted>
             <Header as='h2' icon color='grey'>

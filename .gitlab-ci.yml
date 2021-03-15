@@ -1,9 +1,11 @@
 image: docker:stable
 variables:
     PROJECT: "ecp2front"
+    PROJECT_FREE: "ecp2frontfree"
     PORT: 9009
+    PORT_FREE: 9031
 
 include: 
   - project: 'root/template-gitlab'
     ref: master
-    file: '/template-frontend-gitlab-ci.yml'
+    file: '/service-frontend-free-gitlab-ci.yml'

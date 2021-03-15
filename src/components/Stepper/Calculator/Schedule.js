@@ -49,6 +49,10 @@ class Schedule extends Component {
     // console.log('HERE');
     // console.log({ name, value });
     if( name === 'dateStart' || name === 'dateFinish' ){
+      // console.log({value: value});
+      value = moment(moment(value).format('DD.MM.YYYY'), 'DD.MM.YYYY').format('x')
+      if( name === 'dateFinish' ) value = moment((parseInt(moment(value, 'x').add(1, 'd').format('x')) - 1), 'x');
+      // console.log({value: moment(value).format('x')});
       this.setState({ timeFromStart: null })
       if(moment(value).format('x') !== 'Invalid date') this.props.actions.scheduleForm[name] = moment(value).format('x')
       if(name === 'dateFinish') this.props.actions.scheduleForm.finishAlternate = null
@@ -94,7 +98,9 @@ class Schedule extends Component {
      // console.log({ name, value });
   }
   setTomorrow = () => {
-    this.handleChange( null, { name: 'dateStart', value: moment().add(1, 'd') } )
+    // let tomorrow =  moment(moment().format('DD.MM.YYYY'), 'DD.MM.YYYY').add(1, 'd')
+    // console.log({tomorrow: moment(tomorrow).format('DD.MM.YYYY')});
+    this.handleChange( null, { name: 'dateStart', value: moment(moment().format('DD.MM.YYYY'), 'DD.MM.YYYY').add(1, 'd') } )
   }
   setDate = (tpl, id) => {
     let { UIText } = this.props.actions
@@ -121,7 +127,7 @@ class Schedule extends Component {
       }
     } = this.props
 
-    this.props.actions.scheduleForm.dateStart = dateStart || moment().format('x')
+    this.props.actions.scheduleForm.dateStart = dateStart || moment(moment().format('DD.MM.YYYY'), 'DD.MM.YYYY').format('x')
     // console.log(this.props.actions.scheduleForm.dateStart);
   }
 
@@ -174,10 +180,11 @@ class Schedule extends Component {
     } = this.state
     // console.log({dateStart});
     //
+    // console.log({dateStart, dateFinish});
     dateStart = (dateStart && moment(dateStart, 'x').format('DD.MM.YYYY')) || ''
     dateFinish = (dateFinish && moment(dateFinish, 'x').format('DD.MM.YYYY')) || ''
     //
-    // console.log({dateStart});
+    // console.log({dateStart, dateFinish});
     // let dateFinish = 0
     let sex = 'male'
     return (
