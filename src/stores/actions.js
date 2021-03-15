@@ -329,6 +329,14 @@ class Actions {
         structure.doctor_name = this.doctor.name;
 
         _.assignIn(this.drugStructure, structure);
+        _.assignIn(this.patientPassport, {
+          id: null,
+          name: null,
+          email: null,
+          miscode: null,
+          misid: null,
+          fio: null,
+        });
 
         await this.stores.drugs.clearProto();
         this.stores.drugs.deletedRows = observable([]);
