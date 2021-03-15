@@ -90,6 +90,7 @@ class Prescript extends Component {
     }
     let { checkData } = this.props.actions;
     if (name === "patient") {
+      // console.log({ value });
       let patient = this.props.patients.current;
       let curr = await this.props.patients.patient.get(value);
       if (curr.id) await this.props.patients.request(curr.id);
@@ -140,10 +141,10 @@ class Prescript extends Component {
   componentDidUpdate(prevProps, prevState) {
     let { search_clinic } = this.state;
     let { clinic_id, clinic_name } = this.props.actions.drugStructure;
-    console.log({
-      clinic_id: this.props.actions.drugStructure.clinic_id,
-      clinic_id2: prevProps.actions.drugStructure.clinic_id,
-    });
+    // console.log({
+    //   clinic_id: this.props.actions.drugStructure.clinic_id,
+    //   clinic_id2: prevProps.actions.drugStructure.clinic_id,
+    // });
     if (prevProps.actions.drugStructure.clinic_id && !clinic_id) {
       this.setState({ [`search_clinic`]: "" });
     }

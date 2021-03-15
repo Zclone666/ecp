@@ -102,6 +102,7 @@ class Recipe extends Component {
   // }
 
   handleChange = async (e, { name, value }) => {
+    // if (name === "patient") console.log({ value });
     if (!name && !value) {
       let { name, value } = e.target;
     }
@@ -214,7 +215,7 @@ class Recipe extends Component {
                         };
                       })}
                       placeholder="Иван Иванов"
-                      search
+                      search={false}
                       name="patient"
                       selection
                       fluid

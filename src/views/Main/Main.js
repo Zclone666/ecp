@@ -261,6 +261,7 @@ class Main extends Component {
           {showMainBottomMenu && (
             <Menu className={`bottom fixed menu three item huge main`}>
               <Modal
+                closeIcon
                 onClose={() => this.setOpen(false, "openClearence")}
                 onOpen={() => this.setOpen(true, "openClearence")}
                 open={openClearence}

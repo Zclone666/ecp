@@ -338,7 +338,16 @@ class Patients {
   }
 
   get arr() {
-    return Array.from(this.patient.values());
+    let arr = [
+      {
+        id: null,
+        name: null,
+        key: null,
+      },
+    ];
+    arr = arr.concat(Array.from(this.patient.values()));
+
+    return arr;
   }
 
   getById(id) {
