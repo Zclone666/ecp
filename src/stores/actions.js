@@ -389,6 +389,7 @@ class Actions {
       [row],
       (a, b) => a.id === b.id
     );
+    this.patientForm[from] = _.cloneDeep(this.stores.patients.current[from]);
     this.stores.db.clearData();
     return true;
   }
