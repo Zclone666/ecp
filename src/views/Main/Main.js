@@ -181,7 +181,7 @@ class Main extends Component {
     const { id: patientId, email, fio } = patients.current;
     let isDisease = disease.length > 0 || co_disease.length > 0;
 
-    isDisease = false; // выключить клинреки
+    // isDisease = false; // выключить клинреки
 
     // console.log({
     //   makeLiquids,
