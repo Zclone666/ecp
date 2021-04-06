@@ -241,7 +241,7 @@ class Signup extends Component {
                     />
                   </Form.Group>
                   <Message className="squared" size="tiny" hidden={!!this.state.filled && !!this.state.checkPass}>
-                    Пароль должен содержаь не менее пяти символов
+                    Пароль должен содержаь не менее шести символов
                   </Message>
                   <Button
                     disabled={!(this.state.filled && this.state.checkPass)}
