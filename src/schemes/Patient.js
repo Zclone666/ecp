@@ -22,4 +22,5 @@ export default {
   lactation: false,
   driving: false,
   alcohol: false,
+  mutations: [],
 };

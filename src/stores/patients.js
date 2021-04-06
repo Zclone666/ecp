@@ -47,6 +47,7 @@ class Patients {
     alcohol,
     masIndex,
     allergy,
+    mutations,
   }) => {
     let patientTpl = this.getNew();
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -72,6 +73,7 @@ class Patients {
       alcohol,
       masIndex,
       allergy,
+      mutations,
     });
   };
 
