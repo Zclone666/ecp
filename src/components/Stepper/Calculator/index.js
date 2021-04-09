@@ -86,7 +86,7 @@ class Calculator extends Component {
       dayWeightDosage,
     } = this.props.actions.calculatorForm;
 
-    console.log({ dosage, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage });
+    // console.log({ dosage, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage });
 
     switch (name) {
       case "dosage":
