@@ -634,7 +634,7 @@ class Actions {
       },
       fail: (alerts) => {
         // if (!alerts) return;
-        console.log("FAIL", alerts);
+        // console.log("FAIL", alerts);
         if (!alerts.forEach) return;
         alerts.forEach((alert) => {
           if (alert.code != 200) {
@@ -691,7 +691,7 @@ class Actions {
         });
       },
       fail: (alerts) => {
-        console.log("FAIL", alerts);
+        // console.log("FAIL", alerts);
       },
       always: (data) => {
         this.loading = false;
