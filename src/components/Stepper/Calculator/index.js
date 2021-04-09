@@ -32,6 +32,7 @@ class Calculator extends Component {
   };
 
   handleChange = (e, { name, value }) => {
+    // console.log({ name, value });
     let { getToBase, calcValues } = this.props.dosages;
     let { dosage: dos, count: cnt } = calcValues;
     let { currUnit } = this.state;
@@ -85,6 +86,8 @@ class Calculator extends Component {
       dayWeightDosage,
     } = this.props.actions.calculatorForm;
 
+    console.log({ dosage, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage });
+
     switch (name) {
       case "dosage":
         dosage = [getToBase(currUnit || def, value.split(" + "))];
@@ -119,8 +122,9 @@ class Calculator extends Component {
             });
         break;
       case "fullDosage":
-        fullDosage = getToBase(currUnit || def, value.split(" + "));
-        count = fullDosage / dosage;
+        fullDosage = [];
+        fullDosage.push(getToBase(currUnit || def, value.split(" + ")));
+        count = fullDosage[0] / dosage;
         // console.log({weight,fullDosage});
         // weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
         break;

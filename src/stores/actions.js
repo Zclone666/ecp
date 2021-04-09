@@ -790,7 +790,7 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/getUserInfoByEmail`,
       data: dataSend,
       success: async (data) => {
-        console.log(data);
+        // console.log(data);
         if (data && data.alerts && data.alerts[0].code == "200") {
           this.loginForm.email = _.cloneDeep(this.signinForm.email);
           this.signinForm.isEmailReg = false;

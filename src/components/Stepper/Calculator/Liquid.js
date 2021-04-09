@@ -270,7 +270,6 @@ class LiquidCalculator extends Component {
 
     let disableAll = !ready;
     let disableMulti = true;
-
     return (
       <Segment basic>
         {isLiquid && (
@@ -338,7 +337,7 @@ class LiquidCalculator extends Component {
                   disabled={disableAll}
                   size="big"
                   name="patient.weight"
-                  value={weight || ""}
+                  value={weight?.weight || ""}
                   label={{ basic: true, content: "кг" }}
                   labelPosition="right"
                   placeholder="60.5"
