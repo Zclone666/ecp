@@ -47,6 +47,7 @@ class Patients {
     alcohol,
     masIndex,
     allergy,
+    mutations,
   }) => {
     let patientTpl = this.getNew();
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -72,6 +73,7 @@ class Patients {
       alcohol,
       masIndex,
       allergy,
+      mutations,
     });
   };
 
@@ -133,6 +135,8 @@ class Patients {
           trimester,
           weight,
           labparams,
+          mutations,
+          alcohol,
         } = data.patient;
 
         let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -159,7 +163,32 @@ class Patients {
           trimester,
           weight,
           masIndex,
+          mutations,
         };
+
+        Object.assign(this.stores.actions.drugStructure.patient, {
+          id,
+          email,
+          fio,
+          miscode,
+          misid,
+          name,
+          birthdate,
+          sex,
+          growth,
+          weight,
+          disease,
+          co_disease,
+          pregnancy,
+          gestation,
+          trimester,
+          lactation,
+          driving,
+          alcohol,
+          allergy,
+          mutations,
+          labparams,
+        });
         // this.stores.actions.drugStructure.patient = {
         //   id,
         //   key: id,
@@ -257,6 +286,7 @@ class Patients {
           sex,
           trimester,
           weight,
+          mutations,
         } = data.patient;
         // let { drugs } = data
         co_disease = co_disease || [];
@@ -280,6 +310,7 @@ class Patients {
           sex,
           trimester,
           weight,
+          mutations,
         };
         // this.stores.actions.drugStructure.patient = {
         //   id,
@@ -338,7 +369,16 @@ class Patients {
   }
 
   get arr() {
-    return Array.from(this.patient.values());
+    let arr = [
+      {
+        id: null,
+        name: null,
+        key: null,
+      },
+    ];
+    arr = arr.concat(Array.from(this.patient.values()));
+
+    return arr;
   }
 
   getById(id) {

@@ -329,6 +329,14 @@ class Actions {
         structure.doctor_name = this.doctor.name;
 
         _.assignIn(this.drugStructure, structure);
+        _.assignIn(this.patientPassport, {
+          id: null,
+          name: null,
+          email: null,
+          miscode: null,
+          misid: null,
+          fio: null,
+        });
 
         await this.stores.drugs.clearProto();
         this.stores.drugs.deletedRows = observable([]);
@@ -381,6 +389,7 @@ class Actions {
       [row],
       (a, b) => a.id === b.id
     );
+    this.patientForm[from] = _.cloneDeep(this.stores.patients.current[from]);
     this.stores.db.clearData();
     return true;
   }
@@ -625,7 +634,7 @@ class Actions {
       },
       fail: (alerts) => {
         // if (!alerts) return;
-        console.log("FAIL", alerts);
+        // console.log("FAIL", alerts);
         if (!alerts.forEach) return;
         alerts.forEach((alert) => {
           if (alert.code != 200) {
@@ -682,7 +691,7 @@ class Actions {
         });
       },
       fail: (alerts) => {
-        console.log("FAIL", alerts);
+        // console.log("FAIL", alerts);
       },
       always: (data) => {
         this.loading = false;
@@ -781,7 +790,7 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/getUserInfoByEmail`,
       data: dataSend,
       success: async (data) => {
-        console.log(data);
+        // console.log(data);
         if (data && data.alerts && data.alerts[0].code == "200") {
           this.loginForm.email = _.cloneDeep(this.signinForm.email);
           this.signinForm.isEmailReg = false;

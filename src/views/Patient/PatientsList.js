@@ -75,7 +75,7 @@ class PatientsList extends Component {
         arr.push({
           id: item.id,
           title: item.name,
-          price: moment(item.birthdate, "x").format("DD.MM.YYYY"),
+          price: item.birthdate ? moment(item.birthdate, "x").format("DD.MM.YYYY") : "",
           description: item.email,
         });
       }

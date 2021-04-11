@@ -93,6 +93,7 @@ class Patient extends Component {
       driving,
       alcohol,
       allergy,
+      mutations,
     } = this.props.patients.current;
     if (shownPage === "info") {
       Object.assign(this.props.actions.drugStructure.patient, {
@@ -116,6 +117,7 @@ class Patient extends Component {
         driving,
         alcohol,
         allergy,
+        mutations,
       });
     }
     this.props.db.clearData(false, true);
@@ -189,7 +191,7 @@ class Patient extends Component {
             <Menu.Item color="red" onClick={this.back}>
               Назад
             </Menu.Item>
-            <Menu.Item as={RouterLink} to="/patient/new">
+            <Menu.Item as={RouterLink} to="/patient/new" onClick={() => this.clearPatient()}>
               Новый
             </Menu.Item>
           </Menu>

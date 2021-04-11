@@ -49,6 +49,9 @@ class Main extends Component {
       clinic: null,
     };
     this.contextRef = createRef();
+    this.debouncedSearch = _.debounce(this.callSearchFunction, 500, {
+      leading: true,
+    });
   }
 
   setOpen = (open, type) => {
@@ -69,11 +72,15 @@ class Main extends Component {
     await this.props.drugs.selectFromSearch(result);
   };
 
+  callSearchFunction = (value) => {
+    this.props.drugs.search(value);
+  };
+
   handleSearchChange = (e, { value }) => {
     this.setState({ searchQuery: value });
     if (value.length > 1) {
       this.props.drugs.searchReady = false;
-      this.props.drugs.search(value);
+      this.debouncedSearch(value);
     }
   };
 
@@ -181,7 +188,7 @@ class Main extends Component {
     const { id: patientId, email, fio } = patients.current;
     let isDisease = disease.length > 0 || co_disease.length > 0;
 
-    isDisease = false; // выключить клинреки
+    // isDisease = false; // выключить клинреки
 
     // console.log({
     //   makeLiquids,
@@ -261,6 +268,7 @@ class Main extends Component {
           {showMainBottomMenu && (
             <Menu className={`bottom fixed menu three item huge main`}>
               <Modal
+                closeIcon
                 onClose={() => this.setOpen(false, "openClearence")}
                 onOpen={() => this.setOpen(true, "openClearence")}
                 open={openClearence}
@@ -293,7 +301,7 @@ class Main extends Component {
                   />
                 </Modal.Actions>
               </Modal>
-              <Menu.Item disabled={ifFree} onClick={this.getInfoPrep}>
+              <Menu.Item disabled={false} onClick={this.getInfoPrep}>
                 Проверить
               </Menu.Item>
               {listChanged ? (
@@ -316,7 +324,7 @@ class Main extends Component {
                         })}
                     </Modal.Content>
                     <Modal.Actions>
-                      <Button color="black" onClick={() => this.setOpen(false)}>
+                      <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
                         Отмена
                       </Button>
                       <Button
@@ -479,9 +487,7 @@ class Main extends Component {
                     height={height - 130}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}
-                    onSearchChange={_.debounce(this.handleSearchChange, 500, {
-                      leading: true,
-                    })}
+                    onSearchChange={this.handleSearchChange}
                     noResultsMessage="Ничего не найдено."
                     results={searchRows}
                     value={searchQuery}

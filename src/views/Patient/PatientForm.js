@@ -41,6 +41,11 @@ class PatientForm extends Component {
       search_co_disease: "",
       search_allergy: "",
       lab_data: "",
+      mutation: {
+        gene: "",
+        allele1: "",
+        allele2: "",
+      },
     };
     //this.contextRef = createRef()
   }
@@ -90,6 +95,13 @@ class PatientForm extends Component {
       this.props.patients.current.trimester = null;
     }
     //console.log({ name, value });
+  };
+  handleAddMutation = () => {
+    this.props.patients.current.mutations.push(this.state.mutation);
+    this.setState({ mutation: { gene: "", allele1: "", allele2: "" } });
+  };
+  handleRemoveMutation = (item, i) => {
+    this.props.patients.current.mutations.splice(i, 1);
   };
   handleAddLabData = () => {
     this.props.patients.current.labparams.push(this.state.lab_data);
@@ -174,7 +186,9 @@ class PatientForm extends Component {
       lactation,
       driving,
       alcohol,
+      mutations,
     } = this.props.patients.current;
+    // console.log({ mutations });
     let { diseaseRows, allergyRows } = this.props.diseases;
     let { search_disease, search_co_disease, search_allergy } = this.state;
     let searchReady = true,
@@ -322,6 +336,84 @@ class PatientForm extends Component {
                 </List.Item>
               );
             })}
+          </List>
+          <Form.Group style={{ "align-items": "flex-end" }} widths={1}>
+            <Form.Field width={4}>
+              <label>Мутация гена</label>
+              {/* number: {mutations.length} gene: {this.state.mutation.gene} allele1:{" "}
+              {this.state.mutation.allele1} allele2: {this.state.mutation.allele2} */}
+              <Input
+                fluid
+                size="big"
+                name="gene"
+                value={this.state.mutation.gene}
+                onChange={(e) => {
+                  this.setState({ mutation: { ...this.state.mutation, gene: e.target.value } });
+                }}
+              />
+            </Form.Field>
+            <Form.Field width={4}>
+              <label>Аллель 1</label>
+              <Input
+                disabled={this.state.mutation.gene.trim().length === 0}
+                fluid
+                size="big"
+                name="allele1"
+                value={this.state.mutation.allele1}
+                onChange={(e) => {
+                  this.setState({ mutation: { ...this.state.mutation, allele1: e.target.value } });
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    this.handleAddLabData();
+                  }
+                }}
+              />
+            </Form.Field>
+            <Form.Field width={4}>
+              <label>Аллель 2</label>
+              <Input
+                disabled={this.state.mutation.gene.trim().length === 0}
+                fluid
+                size="big"
+                name="allele2"
+                value={this.state.mutation.allele2}
+                onChange={(e) => {
+                  this.setState({ mutation: { ...this.state.mutation, allele2: e.target.value } });
+                }}
+              />
+            </Form.Field>
+            <Form.Field width={4}>
+              <Button
+                disabled={this.state.mutation.gene.trim().length === 0}
+                size="big"
+                icon
+                fluid
+                labelPosition="right"
+                onClick={this.handleAddMutation}
+              >
+                Добавить
+                <Icon name="plus" />
+              </Button>
+            </Form.Field>
+          </Form.Group>
+          <List divided verticalAlign="middle">
+            {mutations &&
+              mutations.map((item, i) => {
+                return (
+                  <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
+                    <List.Content floated="right">
+                      <Button size="tiny" icon="delete" onClick={() => this.handleRemoveMutation(item, i)} />
+                    </List.Content>
+                    <List.Icon name="dna" size="big" verticalAlign="middle" />
+                    <List.Content>
+                      <List.Header>
+                        {item.gene} {item.allele1} {item.allele2.trim().length > 0 ? "/" : ""} {item.allele2}
+                      </List.Header>
+                    </List.Content>
+                  </List.Item>
+                );
+              })}
           </List>
           <Form.Group widths={1}>
             <Form.Field width={16}>

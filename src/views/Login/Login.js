@@ -22,7 +22,7 @@ class Login extends Component {
       this.props.actions.login();
     } else {
       let isOk = await this.props.actions.fakelogin();
-      console.log(isOk);
+      // console.log(isOk);
       // if( isOk ) this.setState({ showCode: true })
     }
   };
