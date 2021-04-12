@@ -18,6 +18,18 @@ class Clinrecs {
 
     autorun(() => {});
   }
+
+  resetClinrecs() {
+    this.ready = false;
+    this.checker = {};
+    this.clinrec = {};
+    this.names = {};
+    this.shortnames = {};
+    this.druglist = [];
+    this.stores.actions.clinrecCheckerData = {};
+    this.stores.actions.clinrecCheckerStep = 1;
+  }
+
   async check(flag = false) {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
@@ -48,7 +60,6 @@ class Clinrecs {
       data,
       success: async (data) => {
         if (flag) {
-          // console.log('DATA', data);
           this.clinrec = _.assignIn(this.clinrec, data.ClinRec);
           this.names = _.assignIn(this.names, data.names);
           this.shortnames = _.assignIn(this.shortnames, data.shortnames);
@@ -175,7 +186,7 @@ class Clinrecs {
   }
   iterator = 1;
   recursiveGetDrugs = (child = null) => {
-    // console.log(child);
+    console.log({ child });
     this.iterator++;
     if (child && child.check === false) return;
     if (child && child.type == "Drug" && child.check) {
@@ -204,7 +215,7 @@ class Clinrecs {
         });
       }
     } else {
-      this.stores.db.clearData(true);
+      // this.stores.db.clearData(true);
       this.druglist = observable([]);
       _.keys(this.clinrec).forEach((id, i) => {
         let item = this.clinrec[id];

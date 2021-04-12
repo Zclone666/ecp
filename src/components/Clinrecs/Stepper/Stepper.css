@@ -1,0 +1,10 @@
+@media (max-width: 480px) {
+  .clinRecHeader {
+    padding: 0px !important;
+    padding-bottom: 0.4em !important;
+    padding-top: 0.5em !important;
+  }
+  .clinRecHeaderContent {
+    font-size: 18px !important;
+  }
+}
