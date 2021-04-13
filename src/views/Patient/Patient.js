@@ -26,7 +26,7 @@ import {
 
 import _ from "lodash";
 
-@inject("router", "db", "actions", "patients")
+@inject("router", "db", "actions", "patients", "clinrecs")
 @observer
 class Patient extends Component {
   constructor(props) {
@@ -71,6 +71,7 @@ class Patient extends Component {
     this.props.actions.resetAll();
   };
   saveForm = (noClose) => {
+    this.props.clinrecs.resetClinrecs();
     let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
     const {
       id,
