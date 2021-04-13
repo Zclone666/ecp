@@ -112,7 +112,10 @@ class Clinrecs extends Component {
             Назад
           </Menu.Item>
           {hasForward && (
-            <Menu.Item disabled={!currPage.isReady} onClick={this.forward}>
+            // <Menu.Item disabled={!currPage.isReady} onClick={this.forward}>
+            //   Далее
+            // </Menu.Item>
+            <Menu.Item disabled={false} onClick={this.forward}>
               Далее
             </Menu.Item>
           )}
