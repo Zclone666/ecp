@@ -301,7 +301,7 @@ class Main extends Component {
                   />
                 </Modal.Actions>
               </Modal>
-              <Menu.Item disabled={false} onClick={this.getInfoPrep}>
+              <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
                 Проверить
               </Menu.Item>
               {listChanged ? (
