@@ -524,7 +524,7 @@ class Actions {
     let { privateKey, remember } = this.loginForm;
     let { active_language } = this;
     let data = {
-      //key: privateKey,
+      key: privateKey,
       authkey: this.authkey,
       active_language,
     };
@@ -746,6 +746,85 @@ class Actions {
         return true;
       },
       fail: (alerts) => {
+        this.loading = false;
+        return false;
+        // console.log('FAIL', alerts);
+      },
+      always: (data) => {
+        this.makeAlerts(data);
+        //console.log('ALWAYS', data);
+      },
+    });
+  }
+  async fakePrivateKeylogin() {
+    this.loginForm.key = AUTH_SERVICE_KEY;
+    let { privateKey } = this.loginForm;
+    let data = {
+      application: 108,
+      key: privateKey,
+    };
+    await fetch("https://cs.socmedica.com/api/umkb/checkRights", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if ((data.level = "success")) {
+          this.privateKey = this.loginForm.privateKey;
+          // this.stores.router.push('/')
+          // this.authorized = true
+          this.loading = false;
+          return this.login();
+        }
+      });
+
+    // data.active_language = active_language
+    return;
+    return await POST({
+      path: `https://cs.socmedica.com/api/umkb/checkRights`,
+      data,
+      success: async (data) => {
+        alert();
+        // this.makeAlerts({ alerts:[{
+        //   title: "Введите ключ.",
+        //   message: "Для входа в систему необходимо ввести ваш персональный ключ. Если у вас его нет, обратитесь к поставщику ПО.",
+        //   level: "info",
+        //   sticky: false
+        // }]})
+        if ((data.level = "success")) {
+          // console.log('HERE');
+          // if(remember){
+          //   await localStorage.setItem('authkey', data.authkey);
+          //   await localStorage.setItem('privateKey', this.loginForm.privateKey);
+          // }
+          this.privateKey = this.loginForm.privateKey;
+          // this.stores.router.push('/')
+          this.authkey = data.authkey;
+          // this.authorized = true
+          this.loading = false;
+          return this.login();
+          // this.stores.db.getFilters()
+        }
+        // if (data.authkey) {
+        //   if(remember){
+        //     await localStorage.setItem('authkey', data.authkey);
+        //     await localStorage.setItem('privateKey', this.loginForm.privateKey);
+        //   }
+        //
+        //   this.privateKey = this.loginForm.privateKey
+        //   this.stores.router.push('/')
+        //   this.authkey = data.authkey
+        //   this.authorized = true
+        //   this.loading = false
+        //   this.stores.db.getFilters()
+        // }
+        return true;
+      },
+      fail: (alerts) => {
+        alert("fail");
         this.loading = false;
         return false;
         // console.log('FAIL', alerts);
