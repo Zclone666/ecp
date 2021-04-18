@@ -4,6 +4,8 @@ import { observer, inject } from "mobx-react";
 import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Checkbox } from "semantic-ui-react";
 import RouterLink from "../../router/a";
 
+import { LOGIN } from "../../constants";
+
 @inject("router", "actions")
 @observer
 class Login extends Component {
@@ -13,12 +15,15 @@ class Login extends Component {
       filled: false,
       filledCode: false,
       showCode: false,
+      privateKeyOnly: LOGIN == "privateKeyOnly",
     };
   }
   handleLogin = async (e) => {
     e.preventDefault();
-    let { showCode } = this.state;
-    if (showCode) {
+    let { showCode, privateKeyOnly } = this.state;
+    if (privateKeyOnly) {
+      this.props.actions.fakePrivateKeylogin();
+    } else if (showCode) {
       this.props.actions.login();
     } else {
       let isOk = await this.props.actions.fakelogin();
@@ -61,27 +66,31 @@ class Login extends Component {
               </Header>
               <Form size="large" onSubmit={this.handleLogin}>
                 <Segment padded="very" className="no-border raised">
-                  <Form.Input
-                    size="huge"
-                    name="email"
-                    fluid
-                    icon="user"
-                    value={email}
-                    iconPosition="left"
-                    placeholder="E-mail address"
-                    onChange={this.handleChange}
-                  />
-                  <Form.Input
-                    size="huge"
-                    name="password"
-                    fluid
-                    icon="lock"
-                    iconPosition="left"
-                    placeholder="Пароль"
-                    type="password"
-                    onChange={this.handleChange}
-                  />
-                  {showCode && (
+                  {!this.state.privateKeyOnly && (
+                    <Form.Input
+                      size="huge"
+                      name="email"
+                      fluid
+                      icon="user"
+                      value={email}
+                      iconPosition="left"
+                      placeholder="E-mail address"
+                      onChange={this.handleChange}
+                    />
+                  )}
+                  {!this.state.privateKeyOnly && (
+                    <Form.Input
+                      size="huge"
+                      name="password"
+                      fluid
+                      icon="lock"
+                      iconPosition="left"
+                      placeholder="Пароль"
+                      type="password"
+                      onChange={this.handleChange}
+                    />
+                  )}
+                  {(showCode || this.state.privateKeyOnly) && (
                     <Form.Input
                       size="huge"
                       name="privateKey"
@@ -92,25 +101,29 @@ class Login extends Component {
                       onChange={this.handleChange}
                     />
                   )}
-                  <Form.Field align="left">
-                    <Checkbox
-                      value="remember"
-                      name="remember"
-                      checked={remember}
-                      label="Запомнить меня"
-                      onChange={this.handleChecked}
-                    />
-                  </Form.Field>
+                  {!this.state.privateKeyOnly && (
+                    <Form.Field align="left">
+                      <Checkbox
+                        value="remember"
+                        name="remember"
+                        checked={remember}
+                        label="Запомнить меня"
+                        onChange={this.handleChecked}
+                      />
+                    </Form.Field>
+                  )}
                   <Button fluid size="huge" color="grey" onClick={this.handleLogin}>
                     Вход
                   </Button>
                 </Segment>
               </Form>
-              <Message className="squared">
-                Забыли пароль? <RouterLink to="/resetpass">Восстановить</RouterLink>. <br />
-                <RouterLink to="/signup">Регистрация</RouterLink> в системе <br />
-                <RouterLink to="/confirm">Подтвердить</RouterLink> E-mail
-              </Message>
+              {!this.state.privateKeyOnly && (
+                <Message className="squared">
+                  Забыли пароль? <RouterLink to="/resetpass">Восстановить</RouterLink>. <br />
+                  <RouterLink to="/signup">Регистрация</RouterLink> в системе <br />
+                  <RouterLink to="/confirm">Подтвердить</RouterLink> E-mail
+                </Message>
+              )}
             </Segment>
           </Grid.Column>
         </Grid>
