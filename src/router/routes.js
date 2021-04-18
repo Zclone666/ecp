@@ -57,4 +57,5 @@ export default {
   "/newpass": { section: "auth", name: "auth", render: <NewPass /> },
 
   "/protocol/:protocol": { section: "main", name: "protocol", render: <Main /> },
+  "/mispatient/:miskey": { section: "main", name: "mis", render: <Main /> },
 };

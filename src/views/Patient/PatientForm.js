@@ -46,6 +46,7 @@ class PatientForm extends Component {
         allele1: "",
         allele2: "",
       },
+      misDisabled: this.props.actions.misLinkLogin,
     };
     //this.contextRef = createRef()
   }
@@ -190,7 +191,7 @@ class PatientForm extends Component {
     } = this.props.patients.current;
     // console.log({ mutations });
     let { diseaseRows, allergyRows } = this.props.diseases;
-    let { search_disease, search_co_disease, search_allergy } = this.state;
+    let { search_disease, search_co_disease, search_allergy, misDisabled } = this.state;
     let searchReady = true,
       searchRows = [],
       searchQuery = "";
@@ -206,18 +207,20 @@ class PatientForm extends Component {
       <Segment basic>
         <Form>
           <Form.Group>
-            <Form.Field width={6}>
-              <Button
-                size="big"
-                fluid
-                as={RouterLink}
-                to={"/patient/list"}
-                content={`Выбрать${fio ? " другого" : ""} пациента`}
-                labelPosition="left"
-                icon="chevron left"
-                primary
-              />
-            </Form.Field>
+            {!misDisabled && (
+              <Form.Field width={6}>
+                <Button
+                  size="big"
+                  fluid
+                  as={RouterLink}
+                  to={"/patient/list"}
+                  content={`Выбрать${fio ? " другого" : ""} пациента`}
+                  labelPosition="left"
+                  icon="chevron left"
+                  primary
+                />
+              </Form.Field>
+            )}
             <Form.Field width={10}>
               <Header as="h2" content={fio} subheader={email} />
             </Form.Field>
@@ -337,66 +340,68 @@ class PatientForm extends Component {
               );
             })}
           </List>
-          <Form.Group style={{ "align-items": "flex-end" }} widths={1}>
-            <Form.Field width={4}>
-              <label>Мутация гена</label>
-              {/* number: {mutations.length} gene: {this.state.mutation.gene} allele1:{" "}
+          {!misDisabled && (
+            <Form.Group style={{ "align-items": "flex-end" }} widths={1}>
+              <Form.Field width={4}>
+                <label>Мутация гена</label>
+                {/* number: {mutations.length} gene: {this.state.mutation.gene} allele1:{" "}
               {this.state.mutation.allele1} allele2: {this.state.mutation.allele2} */}
-              <Input
-                fluid
-                size="big"
-                name="gene"
-                value={this.state.mutation.gene}
-                onChange={(e) => {
-                  this.setState({ mutation: { ...this.state.mutation, gene: e.target.value } });
-                }}
-              />
-            </Form.Field>
-            <Form.Field width={4}>
-              <label>Аллель 1</label>
-              <Input
-                disabled={this.state.mutation.gene.trim().length === 0}
-                fluid
-                size="big"
-                name="allele1"
-                value={this.state.mutation.allele1}
-                onChange={(e) => {
-                  this.setState({ mutation: { ...this.state.mutation, allele1: e.target.value } });
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    this.handleAddLabData();
-                  }
-                }}
-              />
-            </Form.Field>
-            <Form.Field width={4}>
-              <label>Аллель 2</label>
-              <Input
-                disabled={this.state.mutation.gene.trim().length === 0}
-                fluid
-                size="big"
-                name="allele2"
-                value={this.state.mutation.allele2}
-                onChange={(e) => {
-                  this.setState({ mutation: { ...this.state.mutation, allele2: e.target.value } });
-                }}
-              />
-            </Form.Field>
-            <Form.Field width={4}>
-              <Button
-                disabled={this.state.mutation.gene.trim().length === 0}
-                size="big"
-                icon
-                fluid
-                labelPosition="right"
-                onClick={this.handleAddMutation}
-              >
-                Добавить
-                <Icon name="plus" />
-              </Button>
-            </Form.Field>
-          </Form.Group>
+                <Input
+                  fluid
+                  size="big"
+                  name="gene"
+                  value={this.state.mutation.gene}
+                  onChange={(e) => {
+                    this.setState({ mutation: { ...this.state.mutation, gene: e.target.value } });
+                  }}
+                />
+              </Form.Field>
+              <Form.Field width={4}>
+                <label>Аллель 1</label>
+                <Input
+                  disabled={this.state.mutation.gene.trim().length === 0}
+                  fluid
+                  size="big"
+                  name="allele1"
+                  value={this.state.mutation.allele1}
+                  onChange={(e) => {
+                    this.setState({ mutation: { ...this.state.mutation, allele1: e.target.value } });
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      this.handleAddLabData();
+                    }
+                  }}
+                />
+              </Form.Field>
+              <Form.Field width={4}>
+                <label>Аллель 2</label>
+                <Input
+                  disabled={this.state.mutation.gene.trim().length === 0}
+                  fluid
+                  size="big"
+                  name="allele2"
+                  value={this.state.mutation.allele2}
+                  onChange={(e) => {
+                    this.setState({ mutation: { ...this.state.mutation, allele2: e.target.value } });
+                  }}
+                />
+              </Form.Field>
+              <Form.Field width={4}>
+                <Button
+                  disabled={this.state.mutation.gene.trim().length === 0}
+                  size="big"
+                  icon
+                  fluid
+                  labelPosition="right"
+                  onClick={this.handleAddMutation}
+                >
+                  Добавить
+                  <Icon name="plus" />
+                </Button>
+              </Form.Field>
+            </Form.Group>
+          )}
           <List divided verticalAlign="middle">
             {mutations &&
               mutations.map((item, i) => {
@@ -456,31 +461,33 @@ class PatientForm extends Component {
               );
             })}
           </List>
-          <Form.Group widths={1}>
-            <Form.Field width={16}>
-              <label>Лабораторные данные</label>
-              <Input
-                fluid
-                size="big"
-                name="lab_data"
-                value={this.state.lab_data}
-                action={{
-                  labelPosition: "right",
-                  icon: "plus",
-                  content: "Добавить",
-                  onClick: this.handleAddLabData,
-                }}
-                onChange={(e) => {
-                  this.setState({ lab_data: e.target.value });
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    this.handleAddLabData();
-                  }
-                }}
-              />
-            </Form.Field>
-          </Form.Group>
+          {!misDisabled && (
+            <Form.Group widths={1}>
+              <Form.Field width={16}>
+                <label>Лабораторные данные</label>
+                <Input
+                  fluid
+                  size="big"
+                  name="lab_data"
+                  value={this.state.lab_data}
+                  action={{
+                    labelPosition: "right",
+                    icon: "plus",
+                    content: "Добавить",
+                    onClick: this.handleAddLabData,
+                  }}
+                  onChange={(e) => {
+                    this.setState({ lab_data: e.target.value });
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      this.handleAddLabData();
+                    }
+                  }}
+                />
+              </Form.Field>
+            </Form.Group>
+          )}
           <List divided verticalAlign="middle">
             {labparams &&
               labparams.map((item, i) => {

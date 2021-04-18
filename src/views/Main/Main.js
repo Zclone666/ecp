@@ -166,7 +166,14 @@ class Main extends Component {
 
   render() {
     const { open, openCautions, openClearence, searchQuery, selectedDrug, selectedConflict, clinic } = this.state;
-    let { currentPage, height, active_language, makeLiquids, isLiquidsOk } = this.props.actions;
+    let {
+      currentPage,
+      height,
+      active_language,
+      makeLiquids,
+      isLiquidsOk,
+      misLinkLogin: misDisabled,
+    } = this.props.actions;
     let {
       drugs: { searchReady, searchRows, selectedRows, drug, deletedLiquids, deletedRows, listChanged, checkLiquids }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage },
@@ -205,9 +212,11 @@ class Main extends Component {
     return (
       <>
         <Menu className={`ui top huge borderless tabular nomargin main menu fixed grey${showPage && " hidden"}`}>
-          <Menu.Item icon onClick={this.handleSidebar}>
-            <Icon size="large" name="content" />
-          </Menu.Item>
+          {!misDisabled && (
+            <Menu.Item icon onClick={this.handleSidebar}>
+              <Icon size="large" name="content" />
+            </Menu.Item>
+          )}
 
           <Menu.Menu position="right">
             <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth="481">
@@ -216,7 +225,7 @@ class Main extends Component {
                 {fio && fio.length > 2 ? fio : "Пациент не выбран"}
               </Menu.Item>
             </Responsive>
-            {isDisease && (
+            {!misDisabled && isDisease && (
               <Responsive
                 as={RouterLink}
                 to={`/clinrec/checker/${clinrecCheckerStep}`}
@@ -399,83 +408,85 @@ class Main extends Component {
             <Page />
           </Sidebar>
 
-          <Sidebar
-            style={{ paddingTop: "3.6em" }}
-            animation="overlay"
-            onClick={() => this.handleSidebar("close")}
-            onHide={() => this.handleSidebar("close")}
-            visible={open}
-            as={Menu}
-            vertical
-            size="huge"
-          >
-            <Menu.Item as={RouterLink} to="/patient/list">
-              <Icon name="address book" />
-              Пациенты
-            </Menu.Item>
-            {false && (
-              <Menu.Item as={RouterLink} to="/clinics/list">
-                <Icon name="hospital" />
-                Клиники
-              </Menu.Item>
-            )}
-            {false && (
-              <Menu.Item disabled as={RouterLink} to="/profile/show">
-                <Icon name="user md" />
-                Профиль
-              </Menu.Item>
-            )}
-            <Menu.Item disabled>
-              <Icon name="list ul" />
-              Текущие назначения
-            </Menu.Item>
-            <Menu.Item disabled>
-              <Icon name="clipboard list" />
-              История назначений
-            </Menu.Item>
-            <Dropdown
-              disabled
-              item
-              text={
-                active_language == "ru" ? (
-                  <>
-                    Русский <Flag name="ru" />
-                  </>
-                ) : (
-                  <>
-                    English <Flag name="gb" />
-                  </>
-                )
-              }
+          {!misDisabled && (
+            <Sidebar
+              style={{ paddingTop: "3.6em" }}
+              animation="overlay"
+              onClick={() => this.handleSidebar("close")}
+              onHide={() => this.handleSidebar("close")}
+              visible={open}
+              as={Menu}
+              vertical
+              size="huge"
             >
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={() => this.changeLang("en")}>
-                  <Flag name="gb" />
-                  English
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => this.changeLang("ru")}>
-                  <Flag name="ru" />
-                  Русский
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Menu.Item disabled>
-              <Icon name="book" />
-              Инструкция
-            </Menu.Item>
-            <Menu.Item disabled>
-              <Icon name="chat" />
-              Подсказки
-            </Menu.Item>
-            {/*<Menu.Item>
+              <Menu.Item as={RouterLink} to="/patient/list">
+                <Icon name="address book" />
+                Пациенты
+              </Menu.Item>
+              {false && (
+                <Menu.Item as={RouterLink} to="/clinics/list">
+                  <Icon name="hospital" />
+                  Клиники
+                </Menu.Item>
+              )}
+              {false && (
+                <Menu.Item disabled as={RouterLink} to="/profile/show">
+                  <Icon name="user md" />
+                  Профиль
+                </Menu.Item>
+              )}
+              <Menu.Item disabled>
+                <Icon name="list ul" />
+                Текущие назначения
+              </Menu.Item>
+              <Menu.Item disabled>
+                <Icon name="clipboard list" />
+                История назначений
+              </Menu.Item>
+              <Dropdown
+                disabled
+                item
+                text={
+                  active_language == "ru" ? (
+                    <>
+                      Русский <Flag name="ru" />
+                    </>
+                  ) : (
+                    <>
+                      English <Flag name="gb" />
+                    </>
+                  )
+                }
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => this.changeLang("en")}>
+                    <Flag name="gb" />
+                    English
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => this.changeLang("ru")}>
+                    <Flag name="ru" />
+                    Русский
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+              <Menu.Item disabled>
+                <Icon name="book" />
+                Инструкция
+              </Menu.Item>
+              <Menu.Item disabled>
+                <Icon name="chat" />
+                Подсказки
+              </Menu.Item>
+              {/*<Menu.Item>
               <Icon name='user' />
               Поделиться
             </Menu.Item>*/}
-            <Menu.Item onClick={this.logout}>
-              <Icon name="sign-out" />
-              Выход
-            </Menu.Item>
-          </Sidebar>
+              <Menu.Item onClick={this.logout}>
+                <Icon name="sign-out" />
+                Выход
+              </Menu.Item>
+            </Sidebar>
+          )}
 
           <Sidebar.Pusher dimmed={open || showPage} className="pusherwrapper">
             <Menu className="fluid one item ui top huge text menu searchwrapper" style={{ margin: 0 }}>

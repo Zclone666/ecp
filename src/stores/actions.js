@@ -1,5 +1,5 @@
 import { observable, action, autorun } from "mobx";
-import { GET, POST, PUT, PROJECT_TITLE } from "../lib/connect";
+import { GET, POST, PUT, PROJECT_TITLE, CREATE_API_URL } from "../lib/connect";
 import _ from "lodash";
 import moment from "moment";
 
@@ -42,6 +42,7 @@ class Actions {
   @observable isLiquidsOk = false;
 
   @observable protocol = null;
+  @observable misLinkLogin = false;
 
   @observable checkData = {
     lpu: [],
@@ -254,7 +255,7 @@ class Actions {
 
   constructor({ stores }) {
     this.stores = stores;
-
+    console.log("before autologin");
     this.autologin();
     autorun(() => {
       if (this.stepsData.dosage && this.stepsData.dosage.length > 0) {
@@ -460,8 +461,33 @@ class Actions {
     this.getObject("recipeData");
 
     this.loading = true;
-    this.authkey = (await localStorage.getItem("authkey")) || "";
 
+    //------------MIS---------------
+    if (this.stores.router.values.miskey) {
+      const misKey = this.stores.router.values.miskey;
+      console.log({ misKey });
+      const misAuthSuccess = await fetch(CREATE_API_URL({ path: "Mis/ActualArguments" }), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ key: misKey }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.alert.code == "200" && data.alert.level == "success") {
+            this.fakeMisLogin(data);
+            return true;
+          } else {
+            this.makeAlerts({ data: { alerts: data.alert } });
+          }
+        });
+      if (misAuthSuccess) return;
+    }
+    //------------------------------
+
+    this.authkey = (await localStorage.getItem("authkey")) || "";
+    // return;
     if (this.stores.router.values.protocol) {
       this.stores.warnings.protocol(this.stores.router.values.protocol);
       this.loading = false;
@@ -513,7 +539,6 @@ class Actions {
       },
       always: (data) => {
         this.makeAlerts(data);
-
         this.loading = false;
       },
     });
@@ -532,6 +557,7 @@ class Actions {
       path: `auth/Check`,
       data,
       success: async (data) => {
+        //----------------------------
         // console.log('SUCCESS', data);
         // if( data && data.level == 'success' ){
         let { doc, id, lpu, patients, names } = data;
@@ -756,6 +782,52 @@ class Actions {
       },
     });
   }
+
+  async fakeMisLogin(data) {
+    this.loginForm.key = AUTH_SERVICE_KEY;
+    this.loginForm.privateKey = data.args.key;
+    const args = data.args;
+    this.stores.router.push("/");
+
+    this.drugStructure = {
+      ...this.drugStructure,
+      clinic_code: args.clinic_code,
+      clinic_id: args.clinic_id,
+      clinic_name: args.clinic_name,
+      dep_id: args.dep_id,
+      dep_code: args.dep_code,
+      dep_name: args.dep_name,
+      doctor_code: args.doctor_code,
+      doctor_id: args.doctor_id,
+      doctor_name: args.doctor_name,
+    };
+    this.doctor.id = args.doctor_id;
+    this.doctor.name = args.doctor_name;
+    this.clinic = observable({ id: args.clinic_id, name: args.clinic_name });
+    this.makeAlerts({
+      alerts: [
+        {
+          title: `Здравствуйте, ${this.doctor.name}`,
+          message: "",
+          level: "info",
+          sticky: false,
+        },
+      ],
+    });
+    this.authorized = true;
+    this.privateKey = this.loginForm.privateKey;
+    // return this.login();
+    // data.active_language = active_language
+    this.misLinkLogin = true;
+    this.stores.tools.getUnitsPrimary();
+    this.stores.tools.getUnitsPharm();
+    this.stores.tools.getUnitsSchedule();
+
+    await this.stores.patients.request(args.patient_id);
+
+    this.loading = false;
+  }
+
   async fakePrivateKeylogin() {
     this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey } = this.loginForm;
