@@ -244,7 +244,7 @@ class Main extends Component {
                 <Icon name="bed" size="large" />
               </Menu.Item>
             </Responsive>
-            {isDisease && (
+            {!misDisabled && isDisease && (
               <Responsive
                 fireOnMount
                 as={RouterLink}
