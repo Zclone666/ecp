@@ -120,7 +120,7 @@ class Recipe extends Component {
         checkData,
         recipeData,
       },
-      recipes: { code, recipe_endtime, recipe_text },
+      recipes: { code, recipe_endtime, recipe_text, recipe_formid, recipe_endtimeitem },
       patients: { current: patient },
     } = this.props;
 
@@ -151,21 +151,44 @@ class Recipe extends Component {
           <Segment basic>
             <Form>
               <Form.Field>
-                <label>Время действия рецепта</label>
+                <label>Форма рецептурного бланка</label>
                 <Dropdown
                   size="big"
-                  options={recipeData.items.map((item) => {
+                  options={Object.entries(recipeData.items).map(([id, value]) => {
                     return {
-                      key: item.id,
-                      text: item.name,
-                      value: item.value,
+                      key: id,
+                      text: value.name,
+                      value: id,
                     };
                   })}
                   placeholder="Выберите"
-                  name="recipe_endtime"
+                  name="recipe_formid"
                   selection
                   fluid
-                  value={recipe_endtime}
+                  value={recipe_formid}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Время действия рецепта</label>
+                <Dropdown
+                  size="big"
+                  options={
+                    !recipe_formid
+                      ? []
+                      : recipeData.items[recipe_formid].durations.map((item) => {
+                          return {
+                            key: item.id,
+                            text: item.name,
+                            value: item,
+                          };
+                        })
+                  }
+                  placeholder="Выберите"
+                  name="recipe_endtimeitem"
+                  selection
+                  fluid
+                  value={recipe_endtimeitem}
                   onChange={this.handleChange}
                 />
               </Form.Field>

@@ -8,6 +8,8 @@ class Recipes {
   @observable ready = false;
   @observable code = null;
   @observable recipe_endtime = null;
+  @observable recipe_endtimeitem = null;
+  @observable recipe_formid = null;
   @observable recipe_text = null;
 
   constructor({ stores }) {
@@ -49,6 +51,8 @@ class Recipes {
     data.key = this.stores.actions.privateKey;
 
     data.recipe_endtime = this.recipe_endtime;
+    data.recipe_endtimeitem = this.recipe_endtimeitem;
+    data.recipe_formid = this.recipe_formid;
     data.recipe_text = this.recipe_text;
 
     return POST({

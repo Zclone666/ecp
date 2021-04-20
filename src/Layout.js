@@ -13,9 +13,6 @@ import routes from "./router/routes";
 class Layout extends Component {
   render() {
     const { loading } = this.props.actions;
-    {
-      console.log({ loading });
-    }
     return (
       <div className="ui body">
         <UserOnly>{this.props.router.match.render}</UserOnly>
