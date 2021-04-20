@@ -2,6 +2,7 @@ import { observable, action, autorun } from "mobx";
 import { GET, POST, PUT, PROJECT_TITLE, CREATE_API_URL } from "../lib/connect";
 import _ from "lodash";
 import moment from "moment";
+import { LOGIN } from "../constants";
 
 import { StructureScheme, ProfileScheme } from "../schemes";
 
@@ -10,6 +11,8 @@ export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
 export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
+const privateKeyOnly = LOGIN == "privateKeyOnly";
+
 class Actions {
   @observable view = false;
   @observable device = null;
@@ -255,7 +258,6 @@ class Actions {
 
   constructor({ stores }) {
     this.stores = stores;
-    console.log("before autologin");
     this.autologin();
     autorun(() => {
       if (this.stepsData.dosage && this.stepsData.dosage.length > 0) {
@@ -461,7 +463,11 @@ class Actions {
     this.getObject("recipeData");
 
     this.loading = true;
-
+    //------------PRIVATE KEY-------
+    if (privateKeyOnly && localStorage.getItem("privateKey")) {
+      await this.fakePrivateKeylogin(localStorage.getItem("privateKey"));
+      return;
+    }
     //------------MIS---------------
     if (this.stores.router.values.miskey) {
       const misKey = this.stores.router.values.miskey;
@@ -828,9 +834,10 @@ class Actions {
     this.loading = false;
   }
 
-  async fakePrivateKeylogin() {
+  async fakePrivateKeylogin(privateKey) {
     this.loginForm.key = AUTH_SERVICE_KEY;
-    let { privateKey } = this.loginForm;
+    if (privateKey == undefined) privateKey = this.loginForm.privateKey;
+    if (privateKey && !this.loginForm.privateKey) this.loginForm.privateKey = privateKey;
     let data = {
       application: 108,
       key: privateKey,
@@ -846,6 +853,7 @@ class Actions {
       .then((data) => {
         if ((data.level = "success")) {
           this.privateKey = this.loginForm.privateKey;
+          localStorage.setItem("privateKey", privateKey);
           // this.stores.router.push('/')
           // this.authorized = true
           this.loading = false;
@@ -1022,7 +1030,6 @@ class Actions {
       path: `https://cs.socmedica.com/api/registration/getconfirmemail`,
       data: this.getConfirmForm,
       success: async (data) => {
-        console.log("SUCCESS", data);
         this.stores.router.push("/confirm");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
@@ -1046,7 +1053,6 @@ class Actions {
       path: `https://cs.socmedica.com/api/user/recovery`,
       data: this.resetPassForm,
       success: async (data) => {
-        console.log("SUCCESS", data);
         this.stores.router.push("/newpass");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
