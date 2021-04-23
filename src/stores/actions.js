@@ -267,6 +267,7 @@ class Actions {
     });
 
     autorun(() => {
+      // console.log("loading: ", this.loading);
       // if (this.loading) {
       //   setTimeout(() => {
       //     this.loading = false;
