@@ -33,7 +33,6 @@ class Recipes {
 
     observe(this, (change) => {
       if (change.name == "recipeDiseaseId") {
-        console.log("recipeDiseaseId ", this.recipeDiseaseId);
         this.getMKB10();
       }
     });
@@ -127,7 +126,6 @@ class Recipes {
       path: `Info/GetMKB10`,
       data,
       success: async (data) => {
-        console.log("DATA", data);
         this.mkb10code = data.code;
       },
       fail: (alerts) => {},
