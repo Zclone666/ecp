@@ -2,6 +2,7 @@ export default {
   key: null, // уникальный ключ
   id: "", // айди ДВ или ТН
   name: "", // Название ДВ или ТН
+  mnnname: "",
   level: 0, //
   fpid: null, //
   type: null, // ДВ или ТН

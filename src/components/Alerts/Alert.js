@@ -19,10 +19,11 @@ class AlertItem extends React.Component {
   };
   componentDidMount() {
     let { sticky } = this.props;
+    sticky = false;
     if (!sticky) {
       setTimeout(() => {
         this.close();
-      }, 3000);
+      }, 7000);
     }
   }
   render() {

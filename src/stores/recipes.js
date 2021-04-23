@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, observe } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
@@ -8,7 +8,17 @@ class Recipes {
   @observable ready = false;
   @observable code = null;
   @observable recipe_endtime = null;
+  @observable recipe_endtimeitem = null;
+  @observable recipe_formid = null;
   @observable recipe_text = null;
+  @observable mkb10code = null;
+  @observable recipeDiseaseId = null;
+  @observable financingSource = null;
+  @observable citizenCategory = null;
+  @observable compensation = null;
+  @observable snils = null;
+  @observable insuranceNumber = null;
+  @observable patientCard = null;
 
   constructor({ stores }) {
     this.stores = stores;
@@ -20,6 +30,12 @@ class Recipes {
     };
 
     autorun(() => {});
+
+    observe(this, (change) => {
+      if (change.name == "recipeDiseaseId") {
+        this.getMKB10();
+      }
+    });
   }
 
   save = async () => {
@@ -49,7 +65,20 @@ class Recipes {
     data.key = this.stores.actions.privateKey;
 
     data.recipe_endtime = this.recipe_endtime;
+    data.recipe_endtimeitem = this.recipe_endtimeitem;
+    data.recipe_formid = this.recipe_formid;
     data.recipe_text = this.recipe_text;
+    data.mkb10code = this.mkb10code;
+    data.financingSource = this.financingSource;
+    data.citizenCategory = this.citizenCategory;
+    data.compensation = this.compensation;
+    data.fio = this.stores.patients.current.fio;
+    data.birthdate = this.stores.patients.current.birthdate;
+    data.doctor_name = this.stores.actions.drugStructure.doctor_name;
+    data.snils = this.snils;
+    data.insuranceNumber = this.insuranceNumber;
+    data.patientCard = this.patientCard;
+    data.clinic_id = this.stores.actions.drugStructure.clinic_id;
 
     return POST({
       path: "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
@@ -82,6 +111,25 @@ class Recipes {
       always: (data) => {
         this.stores.actions.makeAlerts(data);
       },
+    });
+  };
+
+  getMKB10 = async () => {
+    let { active_language } = this.stores.actions;
+    let data = {
+      active_language: active_language,
+      authkey: this.stores.actions.authkey,
+      key: this.stores.actions.privateKey,
+      id: this.recipeDiseaseId,
+    };
+    return POST({
+      path: `Info/GetMKB10`,
+      data,
+      success: async (data) => {
+        this.mkb10code = data.code;
+      },
+      fail: (alerts) => {},
+      always: (data) => {},
     });
   };
 

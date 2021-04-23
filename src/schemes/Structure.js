@@ -46,5 +46,7 @@ export default {
 
   text: null,
   recipe_endtime: 0,
+  recipe_endtimeitem: {},
+  recipe_formid: "",
   recipe_text: "",
 };
