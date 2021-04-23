@@ -267,11 +267,12 @@ class Actions {
     });
 
     autorun(() => {
-      if (this.loading) {
-        setTimeout(() => {
-          this.loading = false;
-        }, 5000);
-      }
+      // console.log("loading: ", this.loading);
+      // if (this.loading) {
+      //   setTimeout(() => {
+      //     this.loading = false;
+      //   }, 5000);
+      // }
     });
   }
   async setLang(lang) {

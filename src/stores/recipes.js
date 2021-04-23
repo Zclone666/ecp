@@ -102,14 +102,13 @@ class Recipes {
         } else {
           return false;
         }
-
-        this.stores.actions.loading = false;
       },
       fail: (alerts) => {
         this.stores.actions.loading = false;
       },
       always: (data) => {
         this.stores.actions.makeAlerts(data);
+        this.stores.actions.loading = false;
       },
     });
   };
