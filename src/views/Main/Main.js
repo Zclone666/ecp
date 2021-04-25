@@ -439,48 +439,52 @@ class Main extends Component {
                   Профиль
                 </Menu.Item>
               )}
-              <Menu.Item disabled>
-                <Icon name="list ul" />
-                Текущие назначения
-              </Menu.Item>
-              <Menu.Item disabled>
-                <Icon name="clipboard list" />
-                История назначений
-              </Menu.Item>
-              <Dropdown
-                disabled
-                item
-                text={
-                  active_language == "ru" ? (
-                    <>
-                      Русский <Flag name="ru" />
-                    </>
-                  ) : (
-                    <>
-                      English <Flag name="gb" />
-                    </>
-                  )
-                }
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => this.changeLang("en")}>
-                    <Flag name="gb" />
-                    English
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => this.changeLang("ru")}>
-                    <Flag name="ru" />
-                    Русский
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-              <Menu.Item disabled>
-                <Icon name="book" />
-                Инструкция
-              </Menu.Item>
-              <Menu.Item disabled>
-                <Icon name="chat" />
-                Подсказки
-              </Menu.Item>
+              {false && (
+                <div>
+                  <Menu.Item disabled>
+                    <Icon name="list ul" />
+                    Текущие назначения
+                  </Menu.Item>
+                  <Menu.Item disabled>
+                    <Icon name="clipboard list" />
+                    История назначений
+                  </Menu.Item>
+                  <Dropdown
+                    disabled
+                    item
+                    text={
+                      active_language == "ru" ? (
+                        <>
+                          Русский <Flag name="ru" />
+                        </>
+                      ) : (
+                        <>
+                          English <Flag name="gb" />
+                        </>
+                      )
+                    }
+                  >
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => this.changeLang("en")}>
+                        <Flag name="gb" />
+                        English
+                      </Dropdown.Item>
+                      <Dropdown.Item onClick={() => this.changeLang("ru")}>
+                        <Flag name="ru" />
+                        Русский
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Menu.Item disabled>
+                    <Icon name="book" />
+                    Инструкция
+                  </Menu.Item>
+                  <Menu.Item disabled>
+                    <Icon name="chat" />
+                    Подсказки
+                  </Menu.Item>
+                </div>
+              )}
               {/*<Menu.Item>
               <Icon name='user' />
               Поделиться
