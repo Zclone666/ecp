@@ -27,6 +27,7 @@ import {
   Grid,
   Modal,
   Flag,
+  TextArea,
 } from "semantic-ui-react";
 
 import _ from "lodash";
@@ -47,6 +48,9 @@ class Main extends Component {
       isLoading: false,
       searchQuery: "",
       clinic: null,
+
+      manualDrugInputDialog: false,
+      manualDrugInputText: "",
     };
     this.contextRef = createRef();
     this.debouncedSearch = _.debounce(this.callSearchFunction, 500, {
@@ -520,7 +524,36 @@ class Main extends Component {
                   <Segment basic>
                     <Message info>
                       <Icon name="info" />
-                      Внесите лекарственные препараты с помощью строки поиска наверху
+                      Внесите лекарственные препараты с помощью строки поиска наверху или&nbsp;
+                      <Modal
+                        onClose={() => this.setState({ manualDrugInputDialog: false })}
+                        onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
+                        open={this.state.manualDrugInputDialog}
+                        trigger={
+                          <a style={{ cursor: "pointer", textDecoration: "underline" }}>
+                            напишите их свободным текстом
+                          </a>
+                        }
+                      >
+                        <Modal.Header>Введите препараты</Modal.Header>
+                        <Modal.Content>
+                          <Form>
+                            <TextArea
+                              rows={4}
+                              name="drugs"
+                              value={this.state.manualDrugInputText}
+                              placeholder="Можно указать несколько препаратов с дозировками, система попытается их распознать"
+                              onChange={(e) => this.setState({ manualDrugInputText: e.target.value })}
+                            />
+                          </Form>
+                        </Modal.Content>
+                        <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
+                          <Button color="red" onClick={() => this.setState({ manualDrugInputDialog: false })}>
+                            Отмена
+                          </Button>
+                          <Button color="blue">Распознать</Button>
+                        </Modal.Actions>
+                      </Modal>
                     </Message>
                   </Segment>
                 )}
