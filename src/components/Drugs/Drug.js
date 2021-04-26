@@ -193,8 +193,8 @@ class Drug extends React.Component {
             >
               <Icon name="font" />
             </Button>
-            <Button icon>
-              <Icon name="delete" onClick={this.unselectDrug} />
+            <Button icon onClick={this.unselectDrug}>
+              <Icon name="delete" />
             </Button>
             {minus && (
               <Button icon>
