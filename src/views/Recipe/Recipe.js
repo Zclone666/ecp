@@ -208,7 +208,7 @@ class Recipe extends Component {
                   onChange={this.handleChange}
                 />
               </Form.Field>
-              {recipe_formid == "d0YN5Ejt9u2sB0WtKICOPQ==" && (
+              {recipe_formid == "2ApW9Ve9l7XXlXy5/59EUg==" && (
                 <div>
                   <Form.Field>
                     <label>Код категории граждан</label>
@@ -298,7 +298,7 @@ class Recipe extends Component {
                   </Form.Field>
                 </div>
               )}
-              {recipe_formid == "EeSNv3epbuUfOz425OoCKQ==" && (
+              {recipe_formid == "sqmNTYpmbqXh9bhNZBQpDQ==" && (
                 <div>
                   <Form.Group>
                     <Form.Field width={12}>
