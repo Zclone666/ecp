@@ -145,6 +145,9 @@ class Recipe extends Component {
     let noEmail = false;
     // console.log({ doctor, clinic, patient });
 
+    const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
+    // console.log({ tags });
+
     return (
       <>
         <Menu className="bottom fixed menu two item huge main">

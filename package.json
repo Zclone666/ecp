@@ -29,6 +29,7 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "react-slick": "^0.26.1",
+    "react-text-mask": "^5.4.3",
     "save": "^2.4.0",
     "semantic-ui-react": "^0.88.2",
     "slick-carousel": "^1.8.1",
