@@ -202,20 +202,20 @@ class Recipe extends Component {
 
     return (
       <>
-        <Menu className="bottom fixed menu two item huge main">
+        <Menu className="bottom fixed menu three item huge main">
           <Menu.Item color="red" onClick={this.back}>
             Назад
           </Menu.Item>
-          {!code && (
-            <Menu.Item disabled={noEmail} onClick={this.save}>
-              Отправить
-            </Menu.Item>
-          )}
-          {code && (
-            <Menu.Item disabled={noEmail} onClick={this.print}>
-              Печать
-            </Menu.Item>
-          )}
+          {/* {!code && ( */}
+          <Menu.Item disabled={noEmail} onClick={this.save}>
+            Отправить
+          </Menu.Item>
+          {/* )} */}
+          {/* {code && ( */}
+          <Menu.Item disabled={noEmail} onClick={this.print}>
+            Печать
+          </Menu.Item>
+          {/* )} */}
         </Menu>
 
         <div className="scrollwrapper">
