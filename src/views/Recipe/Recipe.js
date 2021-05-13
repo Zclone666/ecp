@@ -14,6 +14,8 @@ import PatientPassport from "../Patient/PatientPassport";
 import moment from "moment";
 import _ from "lodash";
 
+import MaskedInput from "react-text-mask";
+
 import {
   // Sidebar,
   Menu,
@@ -32,6 +34,7 @@ import {
   Button,
   // Responsive,
   // Grid
+  Checkbox,
 } from "semantic-ui-react";
 
 @inject("router", "db", "actions", "recipes", "patients")
@@ -43,6 +46,7 @@ class Recipe extends Component {
       open: false,
       openCode: false,
       code: null,
+      spectextPrompt: null,
     };
     //this.contextRef = createRef()
   }
@@ -113,6 +117,47 @@ class Recipe extends Component {
     this.props.recipes[name] = value;
   };
 
+  handleRecipeDataChange = (e, { name, value }) => {
+    console.log({ name, value, e });
+    if (!name && !value) {
+      let { name, value } = e.target;
+    }
+    let { checkData } = this.props.actions;
+    if (name == "spectextPrompt") {
+      this.setState({ spectextPrompt: value });
+      if (value == 1) {
+        this.props.recipes["spectext"] = "еженедельно";
+      }
+      if (value == 2) {
+        this.props.recipes["spectext"] = "ежемесячно";
+      }
+      if (value == 3) {
+        this.props.recipes["spectext"] = "";
+      }
+      return;
+    }
+    if (name == "recipe_endtimeitem" && value.value > 60) {
+      this.props.recipes["special"] = true;
+    }
+    if (name == "cito") {
+      this.props.recipes["cito"] = !this.props.recipes["cito"];
+      if (this.props.recipes["cito"] == true) this.props.recipes["statim"] = false;
+      return;
+    }
+    if (name == "statim") {
+      this.props.recipes["statim"] = !this.props.recipes["statim"];
+      if (this.props.recipes["statim"] == true) this.props.recipes["cito"] = false;
+      return;
+    }
+    if (name == "special") {
+      this.props.recipes["special"] = !this.props.recipes["special"];
+      return;
+    }
+    this.props.recipes[name] = value;
+  };
+
+  handlePatientDataChange = () => {};
+
   render() {
     let { open, openCode } = this.state;
     let {
@@ -136,6 +181,10 @@ class Recipe extends Component {
         snils,
         insuranceNumber,
         patientCard,
+        cito,
+        statim,
+        special,
+        spectext,
       },
       patients: { current: patient },
     } = this.props;
@@ -146,7 +195,10 @@ class Recipe extends Component {
     // console.log({ doctor, clinic, patient });
 
     const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
-    // console.log({ tags });
+    console.log({ tags });
+    console.log({ patient });
+    console.log({ recipe_endtimeitem });
+    let { medcard_num, main_address, policy_num } = patient;
 
     return (
       <>
@@ -208,10 +260,224 @@ class Recipe extends Component {
                   selection
                   fluid
                   value={recipe_endtimeitem}
-                  onChange={this.handleChange}
+                  onChange={this.handleRecipeDataChange}
                 />
               </Form.Field>
-              {recipe_formid == "2ApW9Ve9l7XXlXy5/59EUg==" && (
+              <Form.Group>
+                {tags.includes("PatientFIO") && (
+                  <Form.Field width={12}>
+                    <label>ФИО пациента</label>
+                    <Input name="fio" value={patient.fio} readOnly />
+                  </Form.Field>
+                )}
+                {tags.includes("DayOfBirth") && tags.includes("MonthOfBirth") && tags.includes("YearOfBirth") && (
+                  <Form.Field width={4}>
+                    <label>Дата рождения</label>
+                    <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly />
+                  </Form.Field>
+                )}
+              </Form.Group>
+              {tags.includes("DoctorFIO") && (
+                <Form.Field>
+                  <label>ФИО врача</label>
+                  <Input name="docName" value={docName} readOnly />
+                </Form.Field>
+              )}
+              {tags.includes("CategoryCode") && (
+                <Form.Field>
+                  <label>Код категории граждан</label>
+                  <Input name="citizenCategory" value={citizenCategory} onChange={this.handleChange} />
+                </Form.Field>
+              )}
+              {tags.includes("CodeMKB10") && (
+                <Form.Group>
+                  <Form.Field width={10}>
+                    <label>Выберите заболевание для определения кода нозологической формы (по МКБ)</label>
+                    <Dropdown
+                      size="big"
+                      options={diseases.map((x) => ({ key: x.id, text: x.name, value: x.id }))}
+                      placeholder="Выберите"
+                      name="recipeDiseaseId"
+                      selection
+                      fluid
+                      value={recipeDiseaseId}
+                      onChange={this.handleChange}
+                    />
+                  </Form.Field>
+                  <Form.Field width={6}>
+                    <label>Код нозологической формы (по МКБ)</label>
+                    <Input
+                      name="mkb10code"
+                      value={mkb10code}
+                      onChange={this.handleChange}
+                      readOnly={recipeDiseaseId != "ручной ввод кода"}
+                    />
+                  </Form.Field>
+                </Form.Group>
+              )}
+              {tags.includes("SourceOfFinancing") && (
+                <Form.Field>
+                  <label>Источник финансирования</label>
+                  <Dropdown
+                    size="big"
+                    options={["Федеральный бюджет", "Бюджет субъекта Российской Федерации", "Муниципальный бюджет"].map(
+                      (x) => ({ key: x, text: x, value: x })
+                    )}
+                    placeholder="Выберите"
+                    name="financingSource"
+                    selection
+                    fluid
+                    value={financingSource}
+                    onChange={this.handleChange}
+                  />
+                </Form.Field>
+              )}
+              {tags.includes("PercentageOfPayment") && (
+                <Form.Field>
+                  <label>% Оплаты</label>
+                  <Dropdown
+                    size="big"
+                    options={["50%", "100%"].map((x) => ({ key: x, text: x, value: x }))}
+                    placeholder="Выберите"
+                    name="compensation"
+                    selection
+                    fluid
+                    value={compensation}
+                    onChange={this.handleChange}
+                  />
+                </Form.Field>
+              )}
+              {tags.includes("SNILS") && (
+                <Form.Field>
+                  <label>СНИЛС</label>
+                  <Input
+                    size="big"
+                    children={
+                      <MaskedInput
+                        name="snils"
+                        value={snils || ""}
+                        onChange={this.handleMaskedInputChange}
+                        mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, " ", /\d/, /\d/]}
+                        placeholder="000-000-000 00"
+                      />
+                    }
+                  />
+                </Form.Field>
+              )}
+              {tags.includes("MedCardNumber") && (
+                <Form.Field>
+                  <label>Номер медицинской карты пациента</label>
+                  <Input
+                    size="big"
+                    name="medcard_num"
+                    value={medcard_num?.default || ""}
+                    placeholder=""
+                    onChange={this.handleChange}
+                  />
+                </Form.Field>
+              )}
+              {tags.includes("AdressOrMedCardNumber") && (
+                <Form.Field>
+                  <label>Адрес места жительства</label>
+                  <Input
+                    size="big"
+                    name="main_address"
+                    value={main_address || ""}
+                    placeholder=""
+                    onChange={this.handleChange}
+                  />
+                </Form.Field>
+              )}
+              {tags.includes("PolicyNumber") && (
+                <Form.Field>
+                  <label>Полис ОМС</label>
+                  <Input
+                    size="big"
+                    children={
+                      <MaskedInput
+                        name="policy_num"
+                        value={policy_num || ""}
+                        onChange={this.handleMaskedInputChange}
+                        mask={[
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          " ",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          " ",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          " ",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                        ]}
+                        placeholder="0000 0000 0000 0000"
+                      />
+                    }
+                  />
+                </Form.Field>
+              )}
+              {tags.includes("Cito") && (
+                <Form.Field align="left">
+                  <Checkbox name="cito" checked={cito} label="Cito" onChange={this.handleRecipeDataChange} />
+                </Form.Field>
+              )}
+              {tags.includes("Statim") && (
+                <Form.Field align="left">
+                  <Checkbox name="statim" checked={statim} label="Statim" onChange={this.handleRecipeDataChange} />
+                </Form.Field>
+              )}
+              {tags.includes("SpecNaz") && (
+                <Form.Field align="left">
+                  <Checkbox
+                    name="special"
+                    checked={special}
+                    label="По специальному назначению"
+                    onChange={this.handleRecipeDataChange}
+                  />
+                </Form.Field>
+              )}
+              {tags.includes("SpecNazTime") && special && (
+                <Form.Group>
+                  <Form.Field width={6}>
+                    <label>Выберите периодичность отпуска</label>
+                    <Dropdown
+                      size="big"
+                      options={[
+                        { key: 1, text: "ежедневно", value: 1 },
+                        { key: 2, text: "ежемесячно", value: 2 },
+                        { key: 3, text: "иной период", value: 3 },
+                      ]}
+                      placeholder="Выберите"
+                      name="spectextPrompt"
+                      selection
+                      fluid
+                      value={this.state.spectextPrompt}
+                      onChange={this.handleRecipeDataChange}
+                    />
+                  </Form.Field>
+                  {this.state.spectextPrompt == "3" && (
+                    <Form.Field width={10}>
+                      <label>Укажите другую периодичность отпуска</label>
+                      <Input
+                        name="spectext"
+                        value={spectext || ""}
+                        placeholder=""
+                        onChange={this.handleRecipeDataChange}
+                      />
+                    </Form.Field>
+                  )}
+                </Form.Group>
+              )}
+              {/* {recipe_formid == "2ApW9Ve9l7XXlXy5/59EUg==" && (
                 <div>
                   <Form.Field>
                     <label>Код категории граждан</label>
@@ -322,7 +588,7 @@ class Recipe extends Component {
                     <Input name="docName" value={docName} readOnly />
                   </Form.Field>
                 </div>
-              )}
+              )} */}
               <Form.Field>
                 <label>Комментарий к рецепту</label>
                 <TextArea

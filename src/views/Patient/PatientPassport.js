@@ -49,6 +49,10 @@ class PatientPassport extends Component {
     if (!name && !value) {
       let { name, value } = e.target;
     }
+    if (name == "medcard_num") {
+      this.props.actions.patientPassport["medcard_num"] = { default: value };
+      return;
+    }
     this.props.actions.patientPassport[name] = value;
   };
 
@@ -65,6 +69,8 @@ class PatientPassport extends Component {
       firstname,
       snils,
       policy_num,
+      medcard_num,
+      main_address,
     } = this.props.actions.patientPassport;
 
     return (
@@ -171,6 +177,28 @@ class PatientPassport extends Component {
                     placeholder="0000 0000 0000 0000"
                   />
                 }
+              />
+            </Form.Field>
+          </Form.Group>
+          <Form.Group widths={2}>
+            <Form.Field>
+              <label>Номер медицинской карты пациента</label>
+              <Input
+                size="big"
+                name="medcard_num"
+                value={medcard_num?.default || ""}
+                placeholder=""
+                onChange={this.handleChange}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>Адрес места жительства</label>
+              <Input
+                size="big"
+                name="main_address"
+                value={main_address || ""}
+                placeholder=""
+                onChange={this.handleChange}
               />
             </Form.Field>
           </Form.Group>

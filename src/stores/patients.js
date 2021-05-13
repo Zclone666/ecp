@@ -53,6 +53,9 @@ class Patients {
     firstname,
     snils,
     policy_num,
+    medcard_num,
+
+    main_address,
   }) => {
     let patientTpl = this.getNew();
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -84,6 +87,9 @@ class Patients {
       firstname,
       snils,
       policy_num,
+      medcard_num,
+
+      main_address,
     });
   };
 
@@ -154,6 +160,9 @@ class Patients {
 
           snils,
           policy_num,
+          medcard_num,
+
+          main_address,
         } = data.patient;
 
         let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -188,6 +197,8 @@ class Patients {
 
           snils,
           policy_num,
+          medcard_num,
+          main_address,
         };
 
         Object.assign(this.stores.actions.drugStructure.patient, {
@@ -219,6 +230,9 @@ class Patients {
 
           snils,
           policy_num,
+          medcard_num,
+
+          main_address,
         });
         // this.stores.actions.drugStructure.patient = {
         //   id,
@@ -256,6 +270,9 @@ class Patients {
 
           snils,
           policy_num,
+          medcard_num,
+
+          main_address,
         };
 
         let { drugs, liquids } = data;

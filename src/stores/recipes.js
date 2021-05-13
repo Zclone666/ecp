@@ -20,6 +20,11 @@ class Recipes {
   @observable insuranceNumber = null;
   @observable patientCard = null;
 
+  @observable cito = false;
+  @observable statim = false;
+  @observable special = false;
+  @observable spectext = "";
+
   constructor({ stores }) {
     this.stores = stores;
     this.router = stores.router;
