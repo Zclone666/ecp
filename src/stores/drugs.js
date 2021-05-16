@@ -996,5 +996,62 @@ class Drugs {
     this.listChanged = true;
     return true;
   }
+
+  async Parse(text) {
+    const texts = text.split("\n");
+    const data = { texts };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    data.active_language = this.stores.actions.active_language;
+
+    const saveTo = "parser";
+
+    return POST({
+      path: `Drugs/Parse`,
+      data,
+      success: async (data) => {
+        console.log({ data });
+        const filteredDrugs = data.drugs.filter((drug) => !!drug);
+        if (filteredDrugs && filteredDrugs.length > 0 && _.isArray(filteredDrugs)) {
+          await filteredDrugs.forEach((concept, i) => {
+            filteredDrugs[i].key = String(Math.floor(10000000000 * Math.random())); //moment().format("x").toString();
+            filteredDrugs[i].title = filteredDrugs[i].name;
+          });
+        }
+        // const { drugs } = data;
+        // console.log(
+        //   { filteredDrugs },
+        //   "asdasd: ",
+        //   filteredDrugs.map((d) => ({
+        //     ...d,
+        //     helpers: this.getNew().helpers,
+        //   }))
+        // );
+        // console.log("new drug: ", this.getNew());
+        const drugs = filteredDrugs.map((d) => ({
+          ...d,
+          helpers: this.getNew().helpers,
+          calc: this.getNew().calc,
+        }));
+        drugs.forEach(async (drug, i) => {
+          // console.log({ drug });
+          if (drug) await this.selectFromSearch(drug, false, false);
+        });
+        await this.stores.tools.stepByStepLoading(
+          this.stores.dosages.get,
+          drugs.map((d) => ({
+            ...d,
+            helpers: this.getNew().helpers,
+          }))
+        );
+      },
+      fail: (alerts) => {
+        this.stores.actions.makeAlerts(data);
+      },
+      always: (data) => {
+        // this.stores.actions.makeAlerts(data)
+      },
+    });
+  }
 }
 export default Drugs;

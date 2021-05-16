@@ -58,6 +58,11 @@ class Main extends Component {
     });
   }
 
+  detectManualDrugInput = async () => {
+    await this.props.drugs.Parse(this.state.manualDrugInputText);
+    this.setState({ manualDrugInputDialog: false });
+  };
+
   setOpen = (open, type) => {
     open = open || false;
     this.setState({ [type]: open });
@@ -555,7 +560,9 @@ class Main extends Component {
                           <Button color="red" onClick={() => this.setState({ manualDrugInputDialog: false })}>
                             Отмена
                           </Button>
-                          <Button color="blue">Распознать</Button>
+                          <Button color="blue" onClick={this.detectManualDrugInput}>
+                            Распознать
+                          </Button>
                         </Modal.Actions>
                       </Modal>
                     </Message>
