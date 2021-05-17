@@ -1006,6 +1006,7 @@ class Drugs {
 
     const saveTo = "parser";
 
+    this.stores.actions.loading = true;
     return POST({
       path: `Drugs/Parse`,
       data,
@@ -1037,6 +1038,8 @@ class Drugs {
           // console.log({ drug });
           if (drug) await this.selectFromSearch(drug, false, false);
         });
+
+        this.stores.actions.loading = false;
         await this.stores.tools.stepByStepLoading(
           this.stores.dosages.get,
           drugs.map((d) => ({

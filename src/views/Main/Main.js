@@ -59,8 +59,8 @@ class Main extends Component {
   }
 
   detectManualDrugInput = async () => {
-    await this.props.drugs.Parse(this.state.manualDrugInputText);
     this.setState({ manualDrugInputDialog: false });
+    await this.props.drugs.Parse(this.state.manualDrugInputText);
   };
 
   setOpen = (open, type) => {
