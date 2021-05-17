@@ -1036,17 +1036,24 @@ class Drugs {
         }));
         drugs.forEach(async (drug, i) => {
           // console.log({ drug });
-          if (drug) await this.selectFromSearch(drug, false, false);
+          await this.selectFromSearch(
+            {
+              group: drug.group,
+              id: drug.id,
+              key: drug.key,
+              level: drug.level,
+              main: drug.main,
+              name: drug.name,
+              namesearch: drug.namesearch,
+              type: drug.type,
+            },
+            false,
+            false
+          );
         });
 
         this.stores.actions.loading = false;
-        await this.stores.tools.stepByStepLoading(
-          this.stores.dosages.get,
-          drugs.map((d) => ({
-            ...d,
-            helpers: this.getNew().helpers,
-          }))
-        );
+        await this.stores.tools.stepByStepLoading(this.stores.dosages.get, drugs);
       },
       fail: (alerts) => {
         this.stores.actions.makeAlerts(data);
