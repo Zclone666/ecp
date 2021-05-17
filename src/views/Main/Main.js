@@ -517,6 +517,15 @@ class Main extends Component {
                     value={searchQuery}
                     resultRenderer={this.resultRenderer}
                     resultClassName="result-wrapper"
+                    icon={
+                      <Icon
+                        name="pencil"
+                        style={{ cursor: "pointer", "pointer-events": "all" }}
+                        onClick={() => {
+                          this.setState({ manualDrugInputDialog: true });
+                        }}
+                      />
+                    }
                   />
                 </Segment>
               </Menu.Item>
