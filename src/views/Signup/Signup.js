@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
-import { Button, Form, Grid, Header, Image, Message, Segment, Link } from "semantic-ui-react";
+import { Button, Form, Grid, Header, Image, Message, Segment, Link, Modal } from "semantic-ui-react";
 
 import Search from "../../components/Search";
 
@@ -260,6 +260,38 @@ class Signup extends Component {
             </Segment>
           </Grid.Column>
         </Grid>
+        <Modal
+          size={"tiny"}
+          closeOnEscape={true}
+          closeOnDimmerClick={true}
+          onClose={() => {
+            this.props.actions.signinForm.showUserAlreadyExistsDialog = false;
+          }}
+          // onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
+          open={this.props.actions.signinForm.showUserAlreadyExistsDialog}
+        >
+          <Modal.Header>Внимание!</Modal.Header>
+          <Modal.Content>
+            <Message warning>
+              <Message.Header>
+                Вы уже зарегистрированы в системе! <br /> Перейдите на страницу авторизации.
+              </Message.Header>
+            </Message>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              // color="black"
+              onClick={() => {
+                this.props.actions.signinForm.showUserAlreadyExistsDialog = false;
+                this.props.router.push("/login");
+                // this.loginForm.email = this.signinForm.email;
+                this.props.actions.signinForm.email = "";
+              }}
+            >
+              Перейти
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </div>
     );
   }

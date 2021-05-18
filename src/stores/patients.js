@@ -48,6 +48,14 @@ class Patients {
     masIndex,
     allergy,
     mutations,
+    lastname,
+    patronymic,
+    firstname,
+    snils,
+    policy_num,
+    medcard_num,
+
+    main_address,
   }) => {
     let patientTpl = this.getNew();
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -74,6 +82,14 @@ class Patients {
       masIndex,
       allergy,
       mutations,
+      lastname,
+      patronymic,
+      firstname,
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
     });
   };
 
@@ -137,6 +153,16 @@ class Patients {
           labparams,
           mutations,
           alcohol,
+
+          lastname,
+          patronymic,
+          firstname,
+
+          snils,
+          policy_num,
+          medcard_num,
+
+          main_address,
         } = data.patient;
 
         let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -164,6 +190,15 @@ class Patients {
           weight,
           masIndex,
           mutations,
+
+          lastname,
+          patronymic,
+          firstname,
+
+          snils,
+          policy_num,
+          medcard_num,
+          main_address,
         };
 
         Object.assign(this.stores.actions.drugStructure.patient, {
@@ -188,6 +223,16 @@ class Patients {
           allergy,
           mutations,
           labparams,
+
+          lastname,
+          patronymic,
+          firstname,
+
+          snils,
+          policy_num,
+          medcard_num,
+
+          main_address,
         });
         // this.stores.actions.drugStructure.patient = {
         //   id,
@@ -218,6 +263,16 @@ class Patients {
           miscode,
           misid,
           name,
+
+          lastname,
+          patronymic,
+          firstname,
+
+          snils,
+          policy_num,
+          medcard_num,
+
+          main_address,
         };
 
         let { drugs, liquids } = data;

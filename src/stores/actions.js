@@ -79,6 +79,7 @@ class Actions {
     isEmailReg: false,
     // relationCode: null,
     // clinicEncryptedId: "",
+    showUserAlreadyExistsDialog: false,
   };
 
   @observable confirmForm = {
@@ -954,6 +955,7 @@ class Actions {
         if (data && data.alerts && data.alerts[0].code == "200") {
           this.loginForm.email = _.cloneDeep(this.signinForm.email);
           this.signinForm.isEmailReg = false;
+          this.signinForm.showUserAlreadyExistsDialog = true;
           // this.stores.router.push("/login");
         } else {
           this.signinForm.isEmailReg = true;

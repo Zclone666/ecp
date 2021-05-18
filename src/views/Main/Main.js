@@ -58,6 +58,11 @@ class Main extends Component {
     });
   }
 
+  detectManualDrugInput = async () => {
+    this.setState({ manualDrugInputDialog: false });
+    await this.props.drugs.Parse(this.state.manualDrugInputText);
+  };
+
   setOpen = (open, type) => {
     open = open || false;
     this.setState({ [type]: open });
@@ -512,6 +517,15 @@ class Main extends Component {
                     value={searchQuery}
                     resultRenderer={this.resultRenderer}
                     resultClassName="result-wrapper"
+                    icon={
+                      <Icon
+                        name="pencil"
+                        style={{ cursor: "pointer", "pointer-events": "all" }}
+                        onClick={() => {
+                          this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" });
+                        }}
+                      />
+                    }
                   />
                 </Segment>
               </Menu.Item>
@@ -528,36 +542,13 @@ class Main extends Component {
                   <Segment basic>
                     <Message info>
                       <Icon name="info" />
-                      Внесите лекарственные препараты с помощью строки поиска наверху или&nbsp;
-                      <Modal
-                        onClose={() => this.setState({ manualDrugInputDialog: false })}
-                        onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
-                        open={this.state.manualDrugInputDialog}
-                        trigger={
-                          <a style={{ cursor: "pointer", textDecoration: "underline" }}>
-                            напишите их свободным текстом
-                          </a>
-                        }
+                      Внесите лекарственные препараты с помощью строки поиска наверху или&nbsp;{" "}
+                      <a
+                        style={{ cursor: "pointer", textDecoration: "underline" }}
+                        onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
                       >
-                        <Modal.Header>Введите препараты</Modal.Header>
-                        <Modal.Content>
-                          <Form>
-                            <TextArea
-                              rows={4}
-                              name="drugs"
-                              value={this.state.manualDrugInputText}
-                              placeholder="Можно указать несколько препаратов с дозировками, система попытается их распознать"
-                              onChange={(e) => this.setState({ manualDrugInputText: e.target.value })}
-                            />
-                          </Form>
-                        </Modal.Content>
-                        <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
-                          <Button color="red" onClick={() => this.setState({ manualDrugInputDialog: false })}>
-                            Отмена
-                          </Button>
-                          <Button color="blue">Распознать</Button>
-                        </Modal.Actions>
-                      </Modal>
+                        напишите их свободным текстом
+                      </a>
                     </Message>
                   </Segment>
                 )}
@@ -570,6 +561,33 @@ class Main extends Component {
             </div>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
+        <Modal
+          onClose={() => this.setState({ manualDrugInputDialog: false })}
+          onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
+          open={this.state.manualDrugInputDialog}
+        >
+          <Modal.Header>Введите препараты</Modal.Header>
+          <Modal.Content>
+            <Form>
+              <TextArea
+                autoFocus
+                rows={4}
+                name="drugs"
+                value={this.state.manualDrugInputText}
+                placeholder="Можно указать несколько препаратов с дозировками, система попытается их распознать"
+                onChange={(e) => this.setState({ manualDrugInputText: e.target.value })}
+              />
+            </Form>
+          </Modal.Content>
+          <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
+            <Button color="red" onClick={() => this.setState({ manualDrugInputDialog: false })}>
+              Отмена
+            </Button>
+            <Button color="blue" onClick={this.detectManualDrugInput}>
+              Распознать
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </>
     );
   }
