@@ -506,6 +506,7 @@ class Patients {
     // data.authkey = this.stores.actions.authkey
     // data.key = this.stores.actions.privateKey
     // console.log(data.patient);
+    this.stores.actions.loading = true;
     return POST({
       path: data.patient.id ? `tools/PatientUpdate` : "tools/PatientAdd",
       data,
@@ -520,6 +521,7 @@ class Patients {
       fail: (alerts) => {},
       always: (data) => {
         this.stores.actions.makeAlerts(data);
+        this.stores.actions.loading = false;
       },
     });
   }
