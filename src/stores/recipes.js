@@ -85,6 +85,19 @@ class Recipes {
     data.patientCard = this.patientCard;
     data.clinic_id = this.stores.actions.drugStructure.clinic_id;
 
+    data.recipe_data = {
+      formid: this.recipe_formid,
+      recipe_text: this.recipe_text,
+      recipe_endtime: this.recipe_endtime,
+      recipe_endtimeitem: this.recipe_endtimeitem,
+      pcatcode: this.citizenCategory,
+      pdiscount: this.financingSource,
+      cito: this.cito,
+      statim: this.statim,
+      special: this.special,
+      spectext: this.spectext,
+    };
+
     return POST({
       path: "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
