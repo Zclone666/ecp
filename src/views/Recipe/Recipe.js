@@ -156,7 +156,21 @@ class Recipe extends Component {
     this.props.recipes[name] = value;
   };
 
-  handlePatientDataChange = () => {};
+  handlePatientDataChange = (e, { name, value }) => {
+    if (!name && !value) {
+      let { name, value } = e.target;
+    }
+    if (name == "medcard_num") {
+      this.props.patients.current["medcard_num"] = { default: value };
+      return;
+    }
+    this.props.patients.current[name] = value;
+  };
+  handleMaskedInputPatientDataChange = (e) => {
+    const { value, name } = e.target;
+    console.log({ e, value, name });
+    this.props.patients.current[name] = value;
+  };
 
   render() {
     let { open, openCode } = this.state;
@@ -178,7 +192,6 @@ class Recipe extends Component {
         citizenCategory,
         financingSource,
         compensation,
-        snils,
         insuranceNumber,
         patientCard,
         cito,
@@ -188,6 +201,21 @@ class Recipe extends Component {
       },
       patients: { current: patient },
     } = this.props;
+    const {
+      id,
+      // name,
+      email,
+      // miscode,
+      // misid,
+      fio,
+      lastname,
+      patronymic,
+      firstname,
+      snils,
+      policy_num,
+      medcard_num,
+      main_address,
+    } = patient;
     const diseases = [...patient.co_disease, ...patient.disease, { name: "ручной ввод кода", id: "ручной ввод кода" }];
     doctor = doctor || doc.name;
 
@@ -195,10 +223,9 @@ class Recipe extends Component {
     // console.log({ doctor, clinic, patient });
 
     const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
-    console.log({ tags });
+    // console.log({ tags });
     console.log({ patient });
-    console.log({ recipe_endtimeitem });
-    let { medcard_num, main_address, policy_num } = patient;
+    // console.log({ recipe_endtimeitem });
 
     return (
       <>
@@ -212,7 +239,7 @@ class Recipe extends Component {
           </Menu.Item>
           {/* )} */}
           {/* {code && ( */}
-          <Menu.Item disabled={noEmail} onClick={this.print}>
+          <Menu.Item disabled={noEmail || !code} onClick={this.print}>
             Печать
           </Menu.Item>
           {/* )} */}
@@ -356,7 +383,7 @@ class Recipe extends Component {
                       <MaskedInput
                         name="snils"
                         value={snils || ""}
-                        onChange={this.handleMaskedInputChange}
+                        onChange={this.handleMaskedInputPatientDataChange}
                         mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, " ", /\d/, /\d/]}
                         placeholder="000-000-000 00"
                       />
@@ -372,7 +399,7 @@ class Recipe extends Component {
                     name="medcard_num"
                     value={medcard_num?.default || ""}
                     placeholder=""
-                    onChange={this.handleChange}
+                    onChange={this.handlePatientDataChange}
                   />
                 </Form.Field>
               )}
@@ -384,7 +411,7 @@ class Recipe extends Component {
                     name="main_address"
                     value={main_address || ""}
                     placeholder=""
-                    onChange={this.handleChange}
+                    onChange={this.handlePatientDataChange}
                   />
                 </Form.Field>
               )}
@@ -397,7 +424,7 @@ class Recipe extends Component {
                       <MaskedInput
                         name="policy_num"
                         value={policy_num || ""}
-                        onChange={this.handleMaskedInputChange}
+                        onChange={this.handleMaskedInputPatientDataChange}
                         mask={[
                           /\d/,
                           /\d/,
@@ -718,6 +745,7 @@ class Recipe extends Component {
               primary
               icon="mail"
               onClick={() => this.mail()}
+              disabled={this.props.recipes.emailSent}
             />
             <Button
               content="ОК"

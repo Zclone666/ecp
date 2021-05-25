@@ -230,8 +230,8 @@ class RecipeDrug extends React.Component {
             <Button icon onClick={this.edit}>
               <Icon name={edit ? "check" : "edit"} />
             </Button>
-            <Button icon>
-              <Icon name="delete" onClick={this.unselectDrug} />
+            <Button icon onClick={this.unselectDrug}>
+              <Icon name="delete" />
             </Button>
           </Button.Group>
         </List.Content>
