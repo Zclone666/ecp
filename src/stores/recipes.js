@@ -25,6 +25,8 @@ class Recipes {
   @observable special = false;
   @observable spectext = "";
 
+  @observable emailSent = false;
+
   constructor({ stores }) {
     this.stores = stores;
     this.router = stores.router;
@@ -203,6 +205,7 @@ class Recipes {
       data,
       success: async (data) => {
         // console.log("OKAY");
+        this.emailSent = true;
         this.stores.actions.makeAlerts({
           alerts: [
             {

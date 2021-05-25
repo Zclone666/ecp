@@ -745,6 +745,7 @@ class Recipe extends Component {
               primary
               icon="mail"
               onClick={() => this.mail()}
+              disabled={this.props.recipes.emailSent}
             />
             <Button
               content="ОК"
