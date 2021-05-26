@@ -123,6 +123,10 @@ class Recipe extends Component {
       let { name, value } = e.target;
     }
     let { checkData } = this.props.actions;
+    if (name == "recipe_formid") {
+      this.props.recipes["maxcount"] = this.props.actions.recipeData.items[value].maxcount;
+      this.props.recipes["drugKeysForPrescription"] = [];
+    }
     if (name == "spectextPrompt") {
       this.setState({ spectextPrompt: value });
       if (value == 1) {
@@ -264,32 +268,34 @@ class Recipe extends Component {
                   selection
                   fluid
                   value={recipe_formid}
-                  onChange={this.handleChange}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Время действия рецепта</label>
-                <Dropdown
-                  size="big"
-                  options={
-                    !recipe_formid
-                      ? []
-                      : recipeData.items[recipe_formid].durations.map((item) => {
-                          return {
-                            key: item.id,
-                            text: item.name,
-                            value: item,
-                          };
-                        })
-                  }
-                  placeholder="Выберите"
-                  name="recipe_endtimeitem"
-                  selection
-                  fluid
-                  value={recipe_endtimeitem}
                   onChange={this.handleRecipeDataChange}
                 />
               </Form.Field>
+              {recipe_formid && (
+                <Form.Field>
+                  <label>Время действия рецепта</label>
+                  <Dropdown
+                    size="big"
+                    options={
+                      !recipe_formid
+                        ? []
+                        : recipeData.items[recipe_formid].durations.map((item) => {
+                            return {
+                              key: item.id,
+                              text: item.name,
+                              value: item,
+                            };
+                          })
+                    }
+                    placeholder="Выберите"
+                    name="recipe_endtimeitem"
+                    selection
+                    fluid
+                    value={recipe_endtimeitem}
+                    onChange={this.handleRecipeDataChange}
+                  />
+                </Form.Field>
+              )}
               <Form.Group>
                 {tags.includes("PatientFIO") && (
                   <Form.Field width={12}>
@@ -616,17 +622,19 @@ class Recipe extends Component {
                   </Form.Field>
                 </div>
               )} */}
-              <Form.Field>
-                <label>Комментарий к рецепту</label>
-                <TextArea
-                  size="big"
-                  placeholder="Пояснения к рецепту"
-                  name="recipe_text"
-                  fluid
-                  value={recipe_text}
-                  onChange={this.handleChange}
-                />
-              </Form.Field>
+              {recipe_formid && (
+                <Form.Field>
+                  <label>Комментарий к рецепту</label>
+                  <TextArea
+                    size="big"
+                    placeholder="Пояснения к рецепту"
+                    name="recipe_text"
+                    fluid
+                    value={recipe_text}
+                    onChange={this.handleChange}
+                  />
+                </Form.Field>
+              )}
             </Form>
             {false && (
               <Form>

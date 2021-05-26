@@ -3,11 +3,11 @@ import { inject, observer } from "mobx-react";
 
 import RouterLink from "../../router/a";
 
-import { Menu, List, Feed, Button, Responsive, Icon, Popup, Input, TextArea, Form } from "semantic-ui-react";
+import { Menu, List, Feed, Button, Responsive, Icon, Popup, Input, TextArea, Form, Checkbox } from "semantic-ui-react";
 
 import _ from "lodash";
 
-@inject("db", "actions", "router", "drugs", "dosages", "tools")
+@inject("db", "actions", "router", "drugs", "dosages", "tools", "recipes")
 @observer
 class RecipeDrug extends React.Component {
   constructor(props) {
@@ -183,6 +183,15 @@ class RecipeDrug extends React.Component {
     });
   }
 
+  addOrRemoveDrugToPrescription(key) {
+    const index = this.props.recipes["drugKeysForPrescription"].indexOf(key);
+    if (index > -1) {
+      this.props.recipes["drugKeysForPrescription"].splice(index, 1);
+      return;
+    }
+    this.props.recipes["drugKeysForPrescription"].push(key);
+  }
+
   render() {
     let {
       actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
@@ -190,9 +199,12 @@ class RecipeDrug extends React.Component {
       drugKey: key,
       drugs,
       active,
+      recipes: { drugKeysForPrescription, maxcount },
     } = this.props;
 
     let { edit, text, from } = this.state;
+
+    console.log({ drugKeysForPrescription });
 
     // console.log({key});
     // let selectedWarnings = warnIcons[selectedDrug]
@@ -220,6 +232,14 @@ class RecipeDrug extends React.Component {
     let { inputValue } = this;
     return (
       <List.Item>
+        <List.Content floated="left">
+          <Checkbox
+            disabled={!drugKeysForPrescription.includes(key) && drugKeysForPrescription.length >= maxcount}
+            checked={drugKeysForPrescription.includes(key)}
+            onChange={() => this.addOrRemoveDrugToPrescription(key)}
+          />
+        </List.Content>
+
         <List.Content floated="right">
           <Button.Group color="blue">
             {false && (
