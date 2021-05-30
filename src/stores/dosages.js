@@ -399,6 +399,7 @@ class Dosages {
   setStepDosage = () => {
     // console.log('this.calcValues', this.calcValues);
     let vals = this.calcValues;
+    // console.log({ vals });
     let weight = this.stores.patients.current.weight || null;
 
     if (!vals.dosage.value) return;
@@ -417,7 +418,7 @@ class Dosages {
         }
       });
     }
-    if (vals.dosage.unit) {
+    if (vals.dosage.unit?.contains) {
       vals.dosage.unit.contains.forEach((contain) => {
         if (contain.action === "division") {
           dosage = _.map(dosage, (dos) => dos / contain.value);
