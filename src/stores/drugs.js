@@ -1012,7 +1012,7 @@ class Drugs {
       path: `Drugs/Parse`,
       data,
       success: async (data) => {
-        console.log({ data });
+        // console.log({ data });
         const filteredDrugs = data.drugs.filter((drug) => !!drug);
         // if (filteredDrugs && filteredDrugs.length > 0 && _.isArray(filteredDrugs)) {
         // await filteredDrugs.forEach((concept, i) => {
@@ -1032,12 +1032,15 @@ class Drugs {
         // console.log("new drug: ", this.getNew());
         const drugs = filteredDrugs.map((d) => {
           let { dosage } = d;
-          // console.log(dosage);
           dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
+          // console.log({ dosage });
           let helpers = {
             dosage: {
               short: "",
-              full: `${_.map(dosage, "value_1").join(" + ")} ${data.names[dosage[0].id_1]}`,
+              full:
+                dosage[0] && dosage[0]?.id_1
+                  ? `${_.map(dosage, "value_1").join(" + ")} ${data.names[dosage[0].id_1]}`
+                  : "",
               id: null,
             },
             pack: { short: "", full: "", id: null },
@@ -1060,6 +1063,7 @@ class Drugs {
           // currPack.pack.small +=
           //   (nameshort[packname] || names[packname]) +
           //   ((pack && ", " + pack.value_1 + " " + (nameshort[pack.id_1] || names[pack.id_1])) || "");
+          console.log({ helpers });
           return {
             ...d,
             helpers,
