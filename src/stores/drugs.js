@@ -961,6 +961,7 @@ class Drugs {
     if (!concept.calc) concept.calc = drug.calc;
     if (!concept.dosage) concept.dosage = drug.dosage;
     if (!concept.schedule) concept.schedule = drug.schedule;
+    if (!concept.helpers) concept.helpers = drug.helpers;
     drug = _.assignIn(drug, concept);
 
     drug.key = concept.key && concept.key.substring(0, 7) !== "concept" ? concept.key : moment().format("x").toString();
@@ -1011,14 +1012,14 @@ class Drugs {
       path: `Drugs/Parse`,
       data,
       success: async (data) => {
-        console.log({ data });
+        // console.log({ data });
         const filteredDrugs = data.drugs.filter((drug) => !!drug);
-        if (filteredDrugs && filteredDrugs.length > 0 && _.isArray(filteredDrugs)) {
-          await filteredDrugs.forEach((concept, i) => {
-            filteredDrugs[i].key = String(Math.floor(10000000000 * Math.random())); //moment().format("x").toString();
-            filteredDrugs[i].title = filteredDrugs[i].name;
-          });
-        }
+        // if (filteredDrugs && filteredDrugs.length > 0 && _.isArray(filteredDrugs)) {
+        // await filteredDrugs.forEach((concept, i) => {
+        // filteredDrugs[i].key = String(Math.floor(10000000000 * Math.random())); //moment().format("x").toString();
+        // filteredDrugs[i].title = filteredDrugs[i].name;
+        // });
+        // }
         // const { drugs } = data;
         // console.log(
         //   { filteredDrugs },
@@ -1029,31 +1030,59 @@ class Drugs {
         //   }))
         // );
         // console.log("new drug: ", this.getNew());
-        const drugs = filteredDrugs.map((d) => ({
-          ...d,
-          helpers: this.getNew().helpers,
-          calc: this.getNew().calc,
-        }));
+        const drugs = filteredDrugs.map((d) => {
+          let { dosage } = d;
+          dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
+          // console.log({ dosage });
+          let helpers = {
+            dosage: {
+              short: "",
+              full:
+                dosage[0] && dosage[0]?.id_1
+                  ? `${_.map(dosage, "value_1").join(" + ")} ${data.names[dosage[0].id_1]}`
+                  : "",
+              id: null,
+            },
+            pack: { short: "", full: "", id: null },
+            type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
+            // url: "",
+            key: null,
+            way: "lf",
+            step: 4,
+            // mnn: false,
+            // drugCache: null,
+          };
+          // } else if (_.isArray(dosage) && dosage.length === 1) {
+          //   let val = dosage[0].value_2 ? dosage[0].value_1 / dosage[0].value_2 : dosage[0].value_1;
+          //   currPack.dosage.full += val + " " + names[dosage[0].id_1];
+          //   currPack.dosage.small += val + " " + (nameshort[dosage[0].id_1] || names[dosage[0].id_1]);
+          //   currPack.value = [val];
+          // }
+          // currPack.pack.full +=
+          //   names[packname] + ((pack && ", " + pack.value_1 + " " + (nameshort[pack.id_1] || names[pack.id_1])) || "");
+          // currPack.pack.small +=
+          //   (nameshort[packname] || names[packname]) +
+          //   ((pack && ", " + pack.value_1 + " " + (nameshort[pack.id_1] || names[pack.id_1])) || "");
+          console.log({ helpers });
+          return {
+            ...d,
+            helpers,
+          };
+        });
+        // helpers: {
+        //   dosage: {
+        //     short: `${d.dosage[0].value_1} ${shortnames[d[0].id_1]}`,
+        //   },
+        // },
+        // calc: this.getNew().calc,
+        // }));
         drugs.forEach(async (drug, i) => {
           // console.log({ drug });
-          await this.selectFromSearch(
-            {
-              group: drug.group,
-              id: drug.id,
-              key: drug.key,
-              level: drug.level,
-              main: drug.main,
-              name: drug.name,
-              namesearch: drug.namesearch,
-              type: drug.type,
-            },
-            false,
-            false
-          );
+          await this.selectFromSearch(drug, false);
         });
 
         this.stores.actions.loading = false;
-        await this.stores.tools.stepByStepLoading(this.stores.dosages.get, drugs);
+        // await this.stores.tools.stepByStepLoading(this.stores.dosages.get, filteredDrugs);
       },
       fail: (alerts) => {
         this.stores.actions.makeAlerts(data);

@@ -26,6 +26,8 @@ class Recipes {
   @observable spectext = "";
 
   @observable emailSent = false;
+  @observable drugKeysForPrescription = [];
+  @observable maxcount = 0;
 
   constructor({ stores }) {
     this.stores = stores;
@@ -51,7 +53,11 @@ class Recipes {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
     await this.stores.db.clearData(false, true);
-    let data = this.stores.actions.structure;
+    // let data = this.stores.actions.structure;
+    let data = {
+      ...this.stores.actions.structure,
+      drugs: this.stores.actions.structure.drugs.filter((drug) => this.drugKeysForPrescription.includes(drug.key)),
+    };
     // let drugsFull = Array.from(this.stores.drugs.drug.values());
     // let liquidsFull = Array.from(this.stores.drugs.liquid.values());
     // drugsFull.forEach((drugFull, i) => {
