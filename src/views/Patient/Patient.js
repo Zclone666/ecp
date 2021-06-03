@@ -120,6 +120,7 @@ class Patient extends Component {
         allergy,
         mutations,
       });
+      this.props.actions.patientForm.birthdate = birthdate;
     }
     this.props.db.clearData(false, true);
     if (!noClose) this.props.router.push("/");
