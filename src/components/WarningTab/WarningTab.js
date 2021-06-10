@@ -226,7 +226,7 @@ class WarningTab extends Component {
           )}
           {secondDrugInstruction && (
             <Segment basic>
-              <Header as="h3">{getDrug(arr.last[0]).name}. Инстукция:</Header>
+              <Header as="h3">{getDrug(arr.last[0]).name}. Инструкция:</Header>
               <div dangerouslySetInnerHTML={{ __html: secondDrugInstruction }}></div>
             </Segment>
           )}
