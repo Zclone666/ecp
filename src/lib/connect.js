@@ -10,7 +10,11 @@ export const PROJECT_TITLE = "ЭКФ";
 export const PRE_PATH = "";
 export const PRODUCTION = false;
 export const API_SERVER =
-  SERVER === "prod" ? "https://service.socmedica.com:9004" : "https://service.socmedica.dev:9004";
+  !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
+    ? window.location.hostname + ":9004"
+    : SERVER === "prod"
+    ? "https://service.socmedica.com:9004"
+    : "https://service.socmedica.dev:9004";
 
 export const SERVICE = "108"; //"4";//43
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
