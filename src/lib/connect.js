@@ -23,7 +23,7 @@ export const AUTH_PASS_KEY = "9152ea8756f8f2b3";
 
 // export const SERVICE_KEY = "be1fe504f12126fd";
 export const CREATE_API_URL = ({ path }) => {
-  if (path.includes("://")) {
+  if (path.includes("://") || path.includes("9999")) {
     return path;
   }
   // if (process.env.REACT_APP_IS_LOCAL === true) {
