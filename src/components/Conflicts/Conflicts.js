@@ -110,6 +110,9 @@ class Conflicts extends Component {
             } else if (patientForm.birthdate && moment().diff(moment(patientForm.birthdate, "x"), "weeks")) {
               ageIconName = "ageweek";
               age = moment().diff(moment(patientForm.birthdate, "x"), "weeks");
+            } else if (patientForm.birthdate && moment().diff(moment(patientForm.birthdate, "x"), "days")) {
+              ageIconName = "ageday";
+              age = moment().diff(moment(patientForm.birthdate, "x"), "days");
             }
 
             return (
