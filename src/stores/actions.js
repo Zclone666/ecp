@@ -14,7 +14,7 @@ export const CHECK_REG_KEY = "340f725c9ccb9779";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
 const createCsServerUrl = (url) =>
   !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
-    ? window.location.hostname + ":9999" + url
+    ? "https://" + window.location.hostname + ":9999" + url
     : "https://cs.socmedica.com" + url;
 
 class Actions {

@@ -11,7 +11,7 @@ export const PRE_PATH = "";
 export const PRODUCTION = false;
 export const API_SERVER =
   !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
-    ? window.location.hostname + ":9004"
+    ? "https://" + window.location.hostname + ":9004"
     : SERVER === "prod"
     ? "https://service.socmedica.com:9004"
     : "https://service.socmedica.dev:9004";
