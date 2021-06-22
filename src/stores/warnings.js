@@ -1,6 +1,6 @@
 import { observable, action, autorun, computed } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
-import moment from "moment";
+import moment, { relativeTimeThreshold } from "moment";
 
 import _ from "lodash";
 
@@ -22,6 +22,7 @@ class Warnings {
   @observable cautionsTitle = null;
   @observable cautions = [];
   @observable icons = {};
+  @observable warningInfo = {};
   info = {
     names: observable({}),
     description: observable({}),
@@ -157,6 +158,7 @@ class Warnings {
           this.info.outcome = _.clone(data.outcome);
           this.info.urls = _.clone(data.urls);
           this.info.hinttype = _.clone(data.hinttype);
+          this.info.fields = _.clone(data.fields);
 
           this.cautionsTitle = data.cautiontitle && data.names[data.cautiontitle];
           this.cautions =
@@ -347,5 +349,35 @@ class Warnings {
       always: (data) => {},
     });
   }
+
+  async getWarningInfo(firstDrugId, lastDrugId, fieldId) {
+    const data = {};
+
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    data.active_language = this.stores.actions.active_language;
+    data.warnings = [];
+    firstDrugId &&
+      data.warnings.push({
+        fields: fieldId,
+        id: firstDrugId,
+      });
+    lastDrugId &&
+      data.warnings.push({
+        fields: fieldId,
+        id: lastDrugId,
+      });
+    return POST({
+      path: `Check/WarningInfo`,
+      data,
+      success: async (data) => {
+        data.warnings &&
+          data.warnings.forEach((w) => {
+            this.warningInfo[w.id] = w.text;
+          });
+      },
+    });
+  }
 }
+
 export default Warnings;

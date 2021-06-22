@@ -12,6 +12,10 @@ export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
 export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
+const createCsServerUrl = (url) =>
+  !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
+    ? "http://" + window.location.hostname + ":9999" + url
+    : "https://cs.socmedica.com" + url;
 
 class Actions {
   @observable view = false;
@@ -520,7 +524,7 @@ class Actions {
     }
     //// FIXME: for safari fucking shit
     return GET({
-      path: `https://cs.socmedica.com/api/user/authCheck`, //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
+      path: createCsServerUrl(`/api/user/authCheck`), //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
       data: {
         authkey: this.authkey,
         key: AUTH_SERVICE_KEY,
@@ -739,7 +743,7 @@ class Actions {
     let { privateKey, remember, ...data } = this.loginForm;
     // data.active_language = active_language
     return await POST({
-      path: `https://cs.socmedica.com/api/user/authorization`,
+      path: createCsServerUrl(`/api/user/authorization`),
       data,
       success: async (data) => {
         // console.log('SUCCESS', data);
@@ -844,7 +848,7 @@ class Actions {
       application: 108,
       key: privateKey,
     };
-    await fetch("https://cs.socmedica.com/api/umkb/checkRights", {
+    await fetch(createCsServerUrl(`/api/umkb/checkRights`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -921,7 +925,7 @@ class Actions {
     this.signinForm.key = AUTH_SERVICE_KEY;
 
     return POST({
-      path: `https://cs.socmedica.com/api/registration/send`,
+      path: createCsServerUrl(`/api/registration/send`),
       data: this.signinForm,
       success: async (data) => {
         // console.log('SUCCESS', data);
@@ -948,7 +952,7 @@ class Actions {
       email: this.signinForm.email,
     };
     return POST({
-      path: `https://cs.socmedica.com/api/user/getUserInfoByEmail`,
+      path: createCsServerUrl(`/api/user/getUserInfoByEmail`),
       data: dataSend,
       success: async (data) => {
         // console.log(data);
@@ -1007,7 +1011,7 @@ class Actions {
   async confirm() {
     this.confirmForm.key = AUTH_SERVICE_KEY;
     return POST({
-      path: `https://cs.socmedica.com/api/registration/confirmemail`,
+      path: createCsServerUrl(`/api/registration/confirmemail`),
       data: this.confirmForm,
       success: async (data) => {
         console.log("SUCCESS", data);
@@ -1030,7 +1034,7 @@ class Actions {
 
   async getConfirm() {
     return POST({
-      path: `https://cs.socmedica.com/api/registration/getconfirmemail`,
+      path: createCsServerUrl(`/api/registration/getconfirmemail`),
       data: this.getConfirmForm,
       success: async (data) => {
         this.stores.router.push("/confirm");
@@ -1053,7 +1057,7 @@ class Actions {
   async resetPass() {
     this.resetPassForm.key = REQUEST_PASS_KEY;
     return POST({
-      path: `https://cs.socmedica.com/api/user/recovery`,
+      path: createCsServerUrl(`/api/user/recovery`),
       data: this.resetPassForm,
       success: async (data) => {
         this.stores.router.push("/newpass");
@@ -1076,7 +1080,7 @@ class Actions {
   async newPass() {
     this.newPassForm.key = RESET_PASS_KEY;
     return POST({
-      path: `https://cs.socmedica.com/api/user/resetPassword`,
+      path: createCsServerUrl(`/api/user/resetPassword`),
       data: this.newPassForm,
       success: async (data) => {
         console.log("SUCCESS", data);
@@ -1099,7 +1103,7 @@ class Actions {
 
   async logout() {
     return GET({
-      path: `https://cs.socmedica.com/api/user/authexit`,
+      path: createCsServerUrl(`/api/user/authexit`),
       data: {
         authkey: localStorage.getItem("authkey"),
       },
