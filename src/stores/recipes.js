@@ -271,6 +271,7 @@ class Recipes {
       path: "prescript/New", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
       success: async (data) => {
+        window.parent.postMessage(data, "*");
         // misproto: "CiEIrJS7mv8uEhg2MDNlNDk2YzgwN2Q2NmUzZTM0MmIzYjI="
         // newdrugs: [,…]
         // newliquids: [,…]
