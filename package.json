@@ -13,7 +13,7 @@
     "craco-babel-loader": "^0.1.4",
     "extract-text-webpack-plugin": "^3.0.2",
     "history": "^4.10.1",
-    "less": "^4.1.1",
+    "less": "^3.11.1",
     "less-loader": "^6.1.0",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
@@ -36,7 +36,6 @@
     "url-mapper": "^2.0.0"
   },
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
@@ -65,9 +64,6 @@
     "@craco/craco": "^5.6.4",
     "@semantic-ui-react/craco-less": "^1.2.1",
     "semantic-ui-less": "^2.4.1"
-  },
-  "resolutions": {
-    "@semantic-ui-react/craco-less/craco-less": "1.17.1"
   },
   "peerDependencies": {
     "mobx": "^4.3.1 || ^5.0.0"
