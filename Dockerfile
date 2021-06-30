@@ -5,7 +5,7 @@ COPY package.json /app/package.json
 RUN npm install --only=prod
 COPY . /app
 
-RUN npm i -S @semantic-ui-react/craco-less/craco-less@1.2.1
+RUN npm i -S @semantic-ui-react/craco-less
 RUN npm run build
 FROM nginx:1.16.0
 COPY --from=build /app/build /usr/share/nginx/html
