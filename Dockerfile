@@ -4,6 +4,7 @@ COPY package.json /app/package.json
 
 
 RUN npm i -S @semantic-ui-react/craco-less
+RUN npm i craco-less@1.17.1
 RUN npx npm-force-resolutions
 RUN npm install --only=prod
 
