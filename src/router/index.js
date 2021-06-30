@@ -1,8 +1,8 @@
-import { observable, action, autorun } from 'mobx';
-import { createBrowserHistory } from 'history';
-import { PRE_PATH } from '../lib/connect'
-import Mapper from 'url-mapper';
-import _ from 'lodash';
+import { observable, action, autorun } from "mobx";
+import { createBrowserHistory } from "history";
+import { PRE_PATH } from "../lib/connect";
+import Mapper from "url-mapper";
+import _ from "lodash";
 
 export default class Router {
   @observable location = null;
@@ -13,27 +13,37 @@ export default class Router {
   constructor(options) {
     // this.params = observable.map({});
     this.options = {
-      routes: {}
+      routes: {},
     };
-    let routes = options && options.routes || {}
+    let routes = (options && options.routes) || {};
     _.keys(routes).forEach((key, i) => {
-      let newKey = PRE_PATH + key
-      this.options.routes[newKey] = routes[key]
-    })
-    this.stores = options.stores || {}
+      let newKey = PRE_PATH + key;
+      this.options.routes[newKey] = routes[key];
+    });
+    this.stores = options.stores || {};
     // options.stores.router = this
-    this.history = createBrowserHistory({ initialEntries: [ window.location.pathname ] });
+    this.history = createBrowserHistory({ initialEntries: [window.location.pathname] });
     this.mapper = Mapper();
     this.history.listen(this.onLocation.bind(this));
     this.onLocation(this.history.location);
 
-    autorun(() => {
-      // if (!this.match) this.push('/');
-    });
+    // autorun(() => {
+    //   // if (!this.match) this.push('/');
+    // });
     autorun(() => {
       // console.log('ROUTER',this.values);
       // console.log(this.values.protocol);
-      if(this.values && this.values.protocol && typeof(this.values.protocol) !== 'undefined') this.stores.warnings.protocol(this.values.protocol)
+      if (this.values && this.values.protocol && typeof this.values.protocol !== "undefined") {
+        this.stores.warnings.protocol(this.values.protocol);
+      }
+      // console.log(this.values);
+      // console.log(this.match);
+      if (this.values && this.values.miskey && typeof this.values.miskey !== "undefined") {
+        if (this.match.disabled) {
+          // console.log("HERE!");
+          this.stores.actions.disabled = true;
+        }
+      }
       // if(this.values && this.values.page) this.stores.actions.setCurrentPage(this.values.page)
     });
   }
@@ -43,12 +53,15 @@ export default class Router {
     // let oldRoute = this.match;
     // let oldVals = this.values;
     let matchedRoute = this.mapper.map(location.pathname, this.options.routes);
-     // console.log(matchedRoute);
-    let { match, values, route } = matchedRoute
-    if( this.match && match.section == this.match.section && match.section !== 'auth' ){
+    // console.log(matchedRoute);
+    let { match, values, route } = matchedRoute;
+    // console.log({ match });
+
+    if (this.match && match.section == this.match.section && match.section !== "auth") {
       Object.assign(this, { values, route, location });
-      this.match.name = match.name
-    }else{
+      this.match.name = match.name;
+      //this.match.disabled = match.disabled;
+    } else {
       Object.assign(this, { match, values, route, location });
     }
 
@@ -68,9 +81,19 @@ export default class Router {
     if (this.location && this.location.pathname === location) return;
     this.history.push(PRE_PATH + location);
   }
-  replace(location) { this.history.replace(location) }
-  go(n) { this.history.go(n) }
-  goBack() { this.history.goBack() }
-  goForward() { this.history.goForward() }
-  createHref() { return this.history.createHref(...arguments) };
+  replace(location) {
+    this.history.replace(location);
+  }
+  go(n) {
+    this.history.go(n);
+  }
+  goBack() {
+    this.history.goBack();
+  }
+  goForward() {
+    this.history.goForward();
+  }
+  createHref() {
+    return this.history.createHref(...arguments);
+  }
 }

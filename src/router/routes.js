@@ -58,4 +58,5 @@ export default {
 
   "/protocol/:protocol": { section: "main", name: "protocol", render: <Main /> },
   "/mispatient/:miskey": { section: "main", name: "mis", render: <Main /> },
+  "/mispatient/:miskey/disabled": { section: "main", name: "mis", disabled: true, render: <Main /> },
 };

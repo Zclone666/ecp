@@ -123,7 +123,7 @@ class Drug extends React.Component {
 
   render() {
     let {
-      actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
+      actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, disabled },
       drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage: dose },
       warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
@@ -173,36 +173,40 @@ class Drug extends React.Component {
       <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
         <List.Content floated="right">
           <Responsive fireOnMount as={Button.Group} minWidth="481">
-            {dosReady && (
+            {!disabled && dosReady && (
               <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
                 <Icon name="tint" />
               </Button>
             )}
-            {!dosReady && (
+            {!disabled && !dosReady && (
               <Button disabled icon>
                 <Icon loading name="circle notch" />
               </Button>
             )}
 
-            <Button
-              disabled={drug.group !== 0}
-              icon
-              as={RouterLink}
-              to={`/analog/${drug.key}`}
-              onClick={this.getAnalog}
-            >
-              <Icon name="font" />
-            </Button>
-            <Button icon onClick={this.unselectDrug}>
-              <Icon name="delete" />
-            </Button>
-            {minus && (
+            {!disabled && (
+              <Button
+                disabled={drug.group !== 0}
+                icon
+                as={RouterLink}
+                to={`/analog/${drug.key}`}
+                onClick={this.getAnalog}
+              >
+                <Icon name="font" />
+              </Button>
+            )}
+            {!disabled && (
+              <Button icon onClick={this.unselectDrug}>
+                <Icon name="delete" />
+              </Button>
+            )}
+            {!disabled && minus && (
               <Button icon>
                 <Icon name="minus" onClick={onRemove} />
               </Button>
             )}
           </Responsive>
-          {minus && (
+          {!disabled && minus && (
             <Responsive fireOnMount as={Button.Group} maxWidth="480">
               <Button icon>
                 <Icon name="minus" onClick={onRemove} />
@@ -307,39 +311,41 @@ class Drug extends React.Component {
               </Feed.Event>
             }
           >
-            <Dropdown.Menu>
-              {dosReady && (
+            {!disabled && (
+              <Dropdown.Menu>
+                {dosReady && (
+                  <Dropdown.Item
+                    disabled={drug.group !== 0}
+                    icon="tint"
+                    as={RouterLink}
+                    to={url}
+                    onClick={this.getLF}
+                    text="Дозировка"
+                  />
+                )}
+                {!dosReady && <Dropdown.Item disabled icon={<Icon loading name="circle notch" />} text="Дозировка" />}
+
                 <Dropdown.Item
                   disabled={drug.group !== 0}
-                  icon="tint"
+                  icon="font"
                   as={RouterLink}
-                  to={url}
-                  onClick={this.getLF}
-                  text="Дозировка"
+                  to={`/analog/${drug.key}`}
+                  onClick={this.getAnalog}
+                  text="Аналоги"
                 />
-              )}
-              {!dosReady && <Dropdown.Item disabled icon={<Icon loading name="circle notch" />} text="Дозировка" />}
-
-              <Dropdown.Item
-                disabled={drug.group !== 0}
-                icon="font"
-                as={RouterLink}
-                to={`/analog/${drug.key}`}
-                onClick={this.getAnalog}
-                text="Аналоги"
-              />
-              <Dropdown.Item
-                icon="ellipsis horizontal"
-                as={RouterLink}
-                to={`/druginfo/${drug.key}`}
-                text="Подробнее"
-                onClick={this.getInfo}
-              />
-              <Dropdown.Item icon="delete" onClick={this.unselectDrug} text="Убрать из списка" />
-            </Dropdown.Menu>
+                <Dropdown.Item
+                  icon="ellipsis horizontal"
+                  as={RouterLink}
+                  to={`/druginfo/${drug.key}`}
+                  text="Подробнее"
+                  onClick={this.getInfo}
+                />
+                <Dropdown.Item icon="delete" onClick={this.unselectDrug} text="Убрать из списка" />
+              </Dropdown.Menu>
+            )}
           </List.Content>
         </Responsive>
-        {canDrag && (
+        {!disabled && canDrag && (
           <div className="draghandler">
             <div></div>
             <div></div>

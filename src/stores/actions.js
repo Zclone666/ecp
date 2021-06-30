@@ -31,6 +31,8 @@ class Actions {
   @observable authkey = null;
   @observable privateKey = null;
 
+  @observable disabled = false;
+
   @observable active_language = "ru";
 
   @observable pages = {};
