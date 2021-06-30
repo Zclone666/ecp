@@ -1,6 +1,8 @@
 FROM node:12-alpine as build
 WORKDIR /app
 COPY package.json /app/package.json
+RUN npx npm-force-resolutions
+RUN npm i -S @semantic-ui-react/craco-less
 
 RUN npm install --only=prod
 
