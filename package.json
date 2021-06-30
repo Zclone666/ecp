@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "craco-less": "1.15.0",
     "@jackwilsdon/craco-use-babelrc": "^1.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -32,7 +31,7 @@
     "react-slick": "^0.26.1",
     "react-text-mask": "^5.4.3",
     "save": "^2.4.0",
-    "semantic-ui-react": "^0.88.2",
+    "semantic-ui-react": "0.88.2",
     "slick-carousel": "^1.8.1",
     "url-mapper": "^2.0.0"
   },
@@ -58,13 +57,13 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.1.0",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
-    "@craco/craco": "^5.6.4",
-    "@semantic-ui-react/craco-less": "^1.2.1",
-    "semantic-ui-less": "^2.4.1"
+    "@babel/core": "7.1.0",
+    "@babel/plugin-proposal-decorators": "7.8.3",
+    "@babel/plugin-proposal-class-properties": "7.1.0",
+    "@babel/preset-env": "7.1.0",
+    "@craco/craco": "5.6.4",
+    "@semantic-ui-react/craco-less": "1.2.1",
+    "semantic-ui-less": "2.4.1"
   },
   "peerDependencies": {
     "mobx": "^4.3.1 || ^5.0.0"
