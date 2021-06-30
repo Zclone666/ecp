@@ -1,4 +1,4 @@
-FROM node:12-alpine as build
+FROM node:12 as build
 
 WORKDIR /app
 COPY package.json /app/package.json
@@ -7,7 +7,7 @@ COPY . /app
 
 RUN npm i -S @semantic-ui-react/craco-less
 RUN npm run build
-FROM nginx:1.16.0-alpine
+FROM nginx:1.16.0
 COPY --from=build /app/build /usr/share/nginx/html
 COPY default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
