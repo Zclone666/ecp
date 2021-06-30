@@ -31,7 +31,7 @@
     "react-slick": "^0.26.1",
     "react-text-mask": "^5.4.3",
     "save": "^2.4.0",
-    "semantic-ui-react": "^2.0.3",
+    "semantic-ui-react": "^0.88.2",
     "slick-carousel": "^1.8.1",
     "url-mapper": "^2.0.0"
   },
