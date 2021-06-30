@@ -36,6 +36,7 @@
     "url-mapper": "^2.0.0"
   },
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
@@ -67,5 +68,8 @@
   },
   "peerDependencies": {
     "mobx": "^4.3.1 || ^5.0.0"
+  },
+  "resolutions": {
+    "@semantic-ui-react/craco-less/craco-less": "1.17.1"
   }
 }
