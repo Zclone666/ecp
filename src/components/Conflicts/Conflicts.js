@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 
 import RouterLink from "../../router/a";
 
-import Conflict from "./Conflict";
+// import Conflict from "./Conflict";
 
 import { Menu, List, Feed, Button, Responsive, Icon, Grid, Segment, Popup, Header } from "semantic-ui-react";
 

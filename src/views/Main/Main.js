@@ -195,6 +195,7 @@ class Main extends Component {
         patientPassport,
         drugStructure,
         checkData,
+        disabled,
       },
       patients,
     } = this.props;
@@ -221,56 +222,58 @@ class Main extends Component {
 
     return (
       <>
-        <Menu className={`ui top huge borderless tabular nomargin main menu fixed grey${showPage && " hidden"}`}>
-          {!misDisabled && (
-            <Menu.Item icon onClick={this.handleSidebar}>
-              <Icon size="large" name="content" />
-            </Menu.Item>
-          )}
-
-          <Menu.Menu position="right">
-            <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth="481">
-              <Menu.Item>
-                <Icon name={"bed"} className={patientId ? "" : " glowing"} />
-                {fio && fio.length > 2 ? fio : "Пациент не выбран"}
+        {!disabled && (
+          <Menu className={`ui top huge borderless tabular nomargin main menu fixed grey${showPage && " hidden"}`}>
+            {!misDisabled && (
+              <Menu.Item icon onClick={this.handleSidebar}>
+                <Icon size="large" name="content" />
               </Menu.Item>
-            </Responsive>
-            {!misDisabled && isDisease && (
-              <Responsive
-                as={RouterLink}
-                to={`/clinrec/checker/${clinrecCheckerStep}`}
-                onClick={this.getClinrec}
-                fireOnMount
-                minWidth="481"
-              >
+            )}
+
+            <Menu.Menu position="right">
+              <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth="481">
                 <Menu.Item>
-                  <Icon name="clipboard list" />
-                  Клинреки
+                  <Icon name={"bed"} className={patientId ? "" : " glowing"} />
+                  {fio && fio.length > 2 ? fio : "Пациент не выбран"}
                 </Menu.Item>
               </Responsive>
-            )}
-            <Responsive fireOnMount as={RouterLink} to="/patient/info" maxWidth="480">
-              <Menu.Item icon>
-                <Icon name="bed" size="large" />
-              </Menu.Item>
-            </Responsive>
-            {!misDisabled && isDisease && (
-              <Responsive
-                fireOnMount
-                as={RouterLink}
-                onClick={this.getClinrec}
-                to={`/clinrec/checker/${clinrecCheckerStep}`}
-                maxWidth="480"
-              >
+              {!misDisabled && isDisease && (
+                <Responsive
+                  as={RouterLink}
+                  to={`/clinrec/checker/${clinrecCheckerStep}`}
+                  onClick={this.getClinrec}
+                  fireOnMount
+                  minWidth="481"
+                >
+                  <Menu.Item>
+                    <Icon name="clipboard list" />
+                    Клинреки
+                  </Menu.Item>
+                </Responsive>
+              )}
+              <Responsive fireOnMount as={RouterLink} to="/patient/info" maxWidth="480">
                 <Menu.Item icon>
-                  <Icon name="clipboard list" size="large" />
+                  <Icon name="bed" size="large" />
                 </Menu.Item>
               </Responsive>
-            )}
-          </Menu.Menu>
-        </Menu>
+              {!misDisabled && isDisease && (
+                <Responsive
+                  fireOnMount
+                  as={RouterLink}
+                  onClick={this.getClinrec}
+                  to={`/clinrec/checker/${clinrecCheckerStep}`}
+                  maxWidth="480"
+                >
+                  <Menu.Item icon>
+                    <Icon name="clipboard list" size="large" />
+                  </Menu.Item>
+                </Responsive>
+              )}
+            </Menu.Menu>
+          </Menu>
+        )}
 
-        <Sidebar.Pushable>
+        <Sidebar.Pushable className={disabled && "disabled"}>
           {deletedRows.length > 0 && (
             <Menu secondary className={`bottom fixed`}>
               <Menu.Item>Удалено строк: {deletedRows.length}</Menu.Item>
@@ -284,7 +287,15 @@ class Main extends Component {
               </Menu.Item>
             </Menu>
           )}
-          {showMainBottomMenu && (
+          {disabled && showMainBottomMenu && (
+            <Menu className={`bottom fixed menu three item huge main`}>
+              <Menu.Item onClick={() => this.handleResetAll("all")}>Сбросить</Menu.Item>
+              <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
+                Проверить
+              </Menu.Item>
+            </Menu>
+          )}
+          {!disabled && showMainBottomMenu && (
             <Menu className={`bottom fixed menu three item huge main`}>
               <Modal
                 closeIcon
@@ -503,35 +514,37 @@ class Main extends Component {
           )}
 
           <Sidebar.Pusher dimmed={open || showPage} className="pusherwrapper">
-            <Menu className="fluid one item ui top huge text menu searchwrapper" style={{ margin: 0 }}>
-              <Menu.Item>
-                <Segment basic className="fluid">
-                  <Search
-                    fluid
-                    size="huge"
-                    height={height - 130}
-                    loading={!searchReady}
-                    onResultSelect={this.handleResultSelect}
-                    onSearchChange={this.handleSearchChange}
-                    noResultsMessage="Ничего не найдено."
-                    results={searchRows}
-                    value={searchQuery}
-                    resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
-                    icon={
-                      <Icon
-                        name="pencil"
-                        style={{ cursor: "pointer", "pointer-events": "all" }}
-                        onClick={() => {
-                          this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" });
-                        }}
-                      />
-                    }
-                  />
-                </Segment>
-              </Menu.Item>
-            </Menu>
-            <div className="scrollwrapper">
+            {!disabled && (
+              <Menu className="fluid one item ui top huge text menu searchwrapper" style={{ margin: 0 }}>
+                <Menu.Item>
+                  <Segment basic className="fluid">
+                    <Search
+                      fluid
+                      size="huge"
+                      height={height - 130}
+                      loading={!searchReady}
+                      onResultSelect={this.handleResultSelect}
+                      onSearchChange={this.handleSearchChange}
+                      noResultsMessage="Ничего не найдено."
+                      results={searchRows}
+                      value={searchQuery}
+                      resultRenderer={this.resultRenderer}
+                      resultClassName="result-wrapper"
+                      icon={
+                        <Icon
+                          name="pencil"
+                          style={{ cursor: "pointer", "pointer-events": "all" }}
+                          onClick={() => {
+                            this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" });
+                          }}
+                        />
+                      }
+                    />
+                  </Segment>
+                </Menu.Item>
+              </Menu>
+            )}
+            <div className={`scrollwrapper`}>
               <Segment
                 className="basic no-padding"
                 width={16}
@@ -540,18 +553,20 @@ class Main extends Component {
                 {drug.size > 0 ? (
                   <Drugs />
                 ) : (
-                  <Segment basic>
-                    <Message info>
-                      <Icon name="info" />
-                      Внесите лекарственные препараты с помощью строки поиска наверху или&nbsp;{" "}
-                      <a
-                        style={{ cursor: "pointer", textDecoration: "underline" }}
-                        onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
-                      >
-                        напишите их свободным текстом
-                      </a>
-                    </Message>
-                  </Segment>
+                  !disabled && (
+                    <Segment basic>
+                      <Message info>
+                        <Icon name="info" />
+                        Внесите лекарственные препараты с помощью строки поиска наверху или&nbsp;{" "}
+                        <a
+                          style={{ cursor: "pointer", textDecoration: "underline" }}
+                          onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
+                        >
+                          напишите их свободным текстом
+                        </a>
+                      </Message>
+                    </Segment>
+                  )
                 )}
               </Segment>
               {drug.size > 0 && (

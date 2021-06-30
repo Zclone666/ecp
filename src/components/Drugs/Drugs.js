@@ -175,7 +175,7 @@ class Drugs extends Component {
 
   render() {
     let {
-      actions: { selectedDrug, makeLiquids },
+      actions: { selectedDrug, makeLiquids, disabled },
       drugs: { drug: drugs, liquid: liquidList, checkLiquids },
       warnings: { warning }, //warnings, warnGroups
       dosages: { dosage },
@@ -192,7 +192,7 @@ class Drugs extends Component {
     // console.log({ drugs: Array.from(drugs.values()), liquids: Array.from(liquidList.values()) });
     return (
       <>
-        {!isRecipe && (
+        {!disabled && !isRecipe && (
           <DragDropContext
             onBeforeDragStart={this.onBeforeDragStart}
             onDragStart={this.onDragStart}
@@ -343,6 +343,13 @@ class Drugs extends Component {
             {iterator.map((drug, i) => {
               // console.log({drug});
               return <RecipeDrug drugKey={drug.key} key={`drug_${i}`} />;
+            })}
+          </List>
+        )}
+        {disabled && (
+          <List divided selection verticalAlign="middle" size="big" className={isRecipe ? "" : "drugslist"}>
+            {iterator.map((drug, i) => {
+              return <Drug active={warnDrugs[drug.key] || false} drug={drug} key={`drug_${i}`} />;
             })}
           </List>
         )}
