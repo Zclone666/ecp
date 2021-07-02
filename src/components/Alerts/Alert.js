@@ -40,7 +40,7 @@ class AlertItem extends React.Component {
           warning={level === "warning"}
         >
           {title && <Message.Header>{title}</Message.Header>}
-          <p>{message}</p>
+          <p>{code != 200 ? message.substring(message.indexOf(":") + 1) : message}</p>
           {button && button.text && (
             <Button
               size="small"

@@ -75,16 +75,8 @@ class Calculator extends Component {
       // this.props.actions.calculatorForm[name] = value
     }
 
-    let {
-      dosage,
-      count,
-      dayCount,
-      dosageUnit,
-      fullDosage,
-      weightDosage,
-      dayDosage,
-      dayWeightDosage,
-    } = this.props.actions.calculatorForm;
+    let { dosage, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage } =
+      this.props.actions.calculatorForm;
 
     // console.log({ dosage, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage });
 
@@ -185,17 +177,8 @@ class Calculator extends Component {
     let { getToBase, getFromBase, calcValues } = this.props.dosages;
     let { freq } = this.props.tools.unitsSchedule;
     let preset = { tpl: freq[value] }; //_.find(presets, { 'id': value});
-    let {
-      type,
-      dosage,
-      count,
-      dosageUnit,
-      dayCount,
-      fullDosage,
-      weightDosage,
-      dayDosage,
-      dayWeightDosage,
-    } = this.props.actions.calculatorForm;
+    let { type, dosage, count, dosageUnit, dayCount, fullDosage, weightDosage, dayDosage, dayWeightDosage } =
+      this.props.actions.calculatorForm;
     this.props.drugs.current.freq = value;
     this.props.drugs.current.freq_id = preset.tpl[0].id;
     this.props.actions.scheduleForm.interval = preset.tpl;
@@ -432,7 +415,8 @@ class Calculator extends Component {
                   <Dropdown
                     disabled={disableAll}
                     selection
-                    defaultValue={(current && current.freq) || null}
+                    // defaultValue={(current && current.freq) || null}
+                    value={current?.freq}
                     className="input big"
                     name={"dayCount"}
                     placeholder={"Выбрать"}

@@ -366,7 +366,8 @@ class LiquidCalculator extends Component {
                 <Dropdown
                   disabled={disableAll}
                   selection
-                  defaultValue={freq || null}
+                  // defaultValue={freq || null}
+                  value={freq || null}
                   className="input big"
                   name={"dayCount"}
                   placeholder={"Выбрать"}
