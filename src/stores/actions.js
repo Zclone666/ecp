@@ -32,6 +32,7 @@ class Actions {
   @observable privateKey = null;
 
   @observable disabled = false;
+  @observable miskey = null;
 
   @observable active_language = "ru";
 
@@ -479,7 +480,8 @@ class Actions {
     //------------MIS---------------
     if (this.stores.router.values.miskey) {
       const misKey = this.stores.router.values.miskey;
-      console.log({ misKey });
+      this.miskey = misKey;
+      // console.log({ misKey });
       const misAuthSuccess = await fetch(CREATE_API_URL({ path: "Mis/ActualArguments" }), {
         method: "POST",
         headers: {

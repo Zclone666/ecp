@@ -5,6 +5,7 @@ import moment from "moment";
 import { PatientScheme } from "../schemes";
 
 import _ from "lodash";
+import AlertItem from "../components/Alerts/Alert";
 
 class Patients {
   @observable ready = false;
@@ -301,7 +302,13 @@ class Patients {
         return data.patient || {};
       },
       fail: (alerts) => {},
-      always: (data) => {},
+      always: (data) => {
+        if (this.stores?.actions?.miskey) {
+          setTimeout(() => {
+            this.stores.warnings.check();
+          });
+        }
+      },
     });
   }
 

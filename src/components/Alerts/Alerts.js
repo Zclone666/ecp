@@ -17,7 +17,6 @@ class Alerts extends React.Component {
       <div className={"alertbox" + (_.keys(alerts).length === 0 ? " empty" : "")}>
         {_.keys(alerts).map((key, i) => {
           let item = alerts[key];
-          console.log({ item });
           if (item.code == 401)
             setTimeout(() => {
               this.props.actions.logout();
