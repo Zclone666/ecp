@@ -42,6 +42,7 @@ export default class Router {
         if (this.match.disabled) {
           // console.log("HERE!");
           this.stores.actions.disabled = true;
+          //this.stores.actions.miskey = this.values.miskey;
         }
       }
       // if(this.values && this.values.page) this.stores.actions.setCurrentPage(this.values.page)

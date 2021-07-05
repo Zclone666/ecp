@@ -64,7 +64,9 @@ class Tools {
         this.stores.actions.loading = false;
       },
       fail: (alerts) => {},
-      always: (data) => {},
+      always: (data) => {
+        this.stores.actions.loading = false;
+      },
     });
   }
 
