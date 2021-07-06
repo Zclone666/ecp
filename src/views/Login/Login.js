@@ -12,6 +12,7 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      authPending: false,
       filled: false,
       filledCode: false,
       showCode: false,
@@ -20,16 +21,19 @@ class Login extends Component {
   }
   handleLogin = async (e) => {
     e.preventDefault();
+    if (this.state.authPending) return;
+    this.setState({ authPending: true });
     let { showCode, privateKeyOnly } = this.state;
     if (privateKeyOnly) {
       this.props.actions.fakePrivateKeylogin();
     } else if (showCode) {
-      this.props.actions.login();
+      await this.props.actions.login();
     } else {
       let isOk = await this.props.actions.fakelogin();
       // console.log(isOk);
       // if( isOk ) this.setState({ showCode: true })
     }
+    this.setState({ authPending: false });
   };
   checkFilled = () => {
     let { loginForm } = this.props.actions;
@@ -112,7 +116,7 @@ class Login extends Component {
                       />
                     </Form.Field>
                   )}
-                  <Button fluid size="huge" color="grey" onClick={this.handleLogin}>
+                  <Button loading={this.state.authPending} fluid size="huge" color="grey" onClick={this.handleLogin}>
                     Вход
                   </Button>
                 </Segment>
