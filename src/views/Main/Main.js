@@ -152,6 +152,7 @@ class Main extends Component {
   goRecipe = () => {
     this.setOpen(false, "openCautions");
     this.props.router.push("/recipe/new");
+    this.props.recipes.resetState();
     this.props.recipes.emailSent = false;
   };
   saveList = () => {

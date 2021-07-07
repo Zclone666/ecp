@@ -238,7 +238,7 @@ class Recipe extends Component {
             Назад
           </Menu.Item>
           {/* {!code && ( */}
-          <Menu.Item disabled={noEmail} onClick={this.save}>
+          <Menu.Item disabled={noEmail || !recipe_formid} onClick={this.save}>
             Отправить
           </Menu.Item>
           {/* )} */}
@@ -731,7 +731,7 @@ class Recipe extends Component {
                 </Form.Field>
               </Form>
             )}
-            <Drugs isRecipe={true} />
+            {recipe_formid && <Drugs isRecipe={true} />}
           </Segment>
         </div>
         <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
