@@ -47,6 +47,32 @@ class Recipes {
     });
   }
 
+  resetState = () => {
+    this.ready = false;
+    this.code = null;
+    this.recipe_endtime = null;
+    this.recipe_endtimeitem = null;
+    this.recipe_formid = null;
+    this.recipe_text = null;
+    this.mkb10code = null;
+    this.recipeDiseaseId = null;
+    this.financingSource = null;
+    this.citizenCategory = null;
+    this.compensation = null;
+    this.snils = null;
+    this.insuranceNumber = null;
+    this.patientCard = null;
+
+    this.cito = false;
+    this.statim = false;
+    this.special = false;
+    this.pectext = "";
+
+    this.emailSent = false;
+    this.drugKeysForPrescription = [];
+    this.maxcount = 0;
+  };
+
   save = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
