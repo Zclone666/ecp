@@ -201,15 +201,15 @@ class Drug extends React.Component {
               </Button>
             )}
             {!disabled && minus && (
-              <Button icon>
-                <Icon name="minus" onClick={onRemove} />
+              <Button icon onClick={onRemove}>
+                <Icon name="minus" />
               </Button>
             )}
           </Responsive>
           {!disabled && minus && (
             <Responsive fireOnMount as={Button.Group} maxWidth="480">
-              <Button icon>
-                <Icon name="minus" onClick={onRemove} />
+              <Button icon onClick={onRemove}>
+                <Icon name="minus" />
               </Button>
             </Responsive>
           )}
