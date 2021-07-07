@@ -95,6 +95,7 @@ class Patients {
   };
 
   unsetCurrent = () => {
+    this.stores.actions.resetPatientPassport();
     _.assignIn(this.current, PatientScheme);
   };
 
@@ -349,6 +350,15 @@ class Patients {
           trimester,
           weight,
           mutations,
+          lastname,
+          patronymic,
+          firstname,
+
+          snils,
+          policy_num,
+          medcard_num,
+
+          main_address,
         } = data.patient;
         // let { drugs } = data
         co_disease = co_disease || [];
@@ -373,6 +383,15 @@ class Patients {
           trimester,
           weight,
           mutations,
+          lastname,
+          patronymic,
+          firstname,
+
+          snils,
+          policy_num,
+          medcard_num,
+
+          main_address,
         };
         // this.stores.actions.drugStructure.patient = {
         //   id,
@@ -403,6 +422,15 @@ class Patients {
           miscode,
           misid,
           name,
+          lastname,
+          patronymic,
+          firstname,
+
+          snils,
+          policy_num,
+          medcard_num,
+
+          main_address,
         };
 
         // drugs.forEach(async (drug, i) => {

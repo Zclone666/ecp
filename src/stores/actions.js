@@ -157,6 +157,29 @@ class Actions {
     miscode: null,
     misid: null,
     fio: null,
+    lastname: null,
+    patronymic: null,
+    firstname: null,
+    snils: null,
+    policy_num: null,
+    medcard_num: null,
+  };
+
+  resetPatientPassport = () => {
+    this.patientPassport = {
+      id: null,
+      name: null,
+      email: null,
+      miscode: null,
+      misid: null,
+      fio: null,
+      lastname: null,
+      patronymic: null,
+      firstname: null,
+      snils: null,
+      policy_num: null,
+      medcard_num: null,
+    };
   };
 
   @observable scheduleForm = {
