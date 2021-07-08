@@ -178,7 +178,8 @@ class Dosages {
     drug.solute = solute;
   };
 
-  get = async (drug_obj, flag = false) => {
+  get = async (drug_obj, flag = false, additionalNames) => {
+    additionalNames = additionalNames ? additionalNames : {};
     // console.log(drug_obj);
     let currentDosages = await this.dosage.get(drug_obj.id);
     let { active_language } = this.stores.actions;
@@ -203,6 +204,7 @@ class Dosages {
       success: async (data) => {
         //console.log('DATA', data);
         let { drug, form, methodform, names, nameshort, units } = data;
+        names = { ...additionalNames, ...names };
 
         let solute = false;
 

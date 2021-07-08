@@ -118,7 +118,7 @@ class Recipe extends Component {
   };
 
   handleRecipeDataChange = (e, { name, value }) => {
-    console.log({ name, value, e });
+    // console.log({ name, value, e });
     if (!name && !value) {
       let { name, value } = e.target;
     }
@@ -172,7 +172,6 @@ class Recipe extends Component {
   };
   handleMaskedInputPatientDataChange = (e) => {
     const { value, name } = e.target;
-    console.log({ e, value, name });
     this.props.patients.current[name] = value;
   };
 
@@ -228,7 +227,7 @@ class Recipe extends Component {
 
     const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
     // console.log({ tags });
-    console.log({ patient });
+    // console.log({ patient });
     // console.log({ recipe_endtimeitem });
 
     return (

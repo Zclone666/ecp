@@ -204,7 +204,7 @@ class RecipeDrug extends React.Component {
 
     let { edit, text, from } = this.state;
 
-    console.log({ drugKeysForPrescription });
+    // console.log({ drugKeysForPrescription });
 
     // console.log({key});
     // let selectedWarnings = warnIcons[selectedDrug]
