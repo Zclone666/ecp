@@ -110,7 +110,9 @@ class Clinrecs {
         this.stores.actions.loading = false;
       },
       fail: (alerts) => {},
-      always: (data) => {},
+      always: (data) => {
+        this.stores.actions.loading = false;
+      },
     });
   }
   async getByFG(child) {
@@ -186,7 +188,7 @@ class Clinrecs {
   }
   iterator = 1;
   recursiveGetDrugs = (child = null) => {
-    console.log({ child });
+    // console.log({ child });
     this.iterator++;
     if (child && child.check === false) return;
     if (child && child.type == "Drug" && child.check) {

@@ -1,156 +1,146 @@
-import React, { Fragment } from 'react';
-import { inject, observer } from 'mobx-react';
+import React, { Fragment } from "react";
+import { inject, observer } from "mobx-react";
 
-import { useDrag } from 'react-dnd'
+import { useDrag } from "react-dnd";
 
-import RouterLink from '../../router/a';
+import RouterLink from "../../router/a";
 
-import {
-	Menu,
-	List,
-	Feed,
-	Button,
-	Responsive,
-	Icon,
-	Popup,
-	Dropdown
-} from 'semantic-ui-react'
+import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "semantic-ui-react";
 
-import _ from 'lodash';
+import _ from "lodash";
 
-@inject('actions', 'router', 'tools', 'drugs', 'warnings', 'dosages', 'analogs', 'druginfo')
+@inject("actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")
 @observer
 class ClinrecDrug extends React.Component {
-	constructor(props){
-		super(props)
+  constructor(props) {
+    super(props);
 
-		this.state = {
-			open: true,
-		}
-	}
+    this.state = {
+      open: true,
+    };
+  }
 
-	renderRules(){
+  renderRules() {
     let {
       dosages: { getFromBase },
       tools: { names, shortnames, round },
-      drug: {
-        freq,
-        duration,
-        calc,
-        dosage,
-        helpers
-      },
+      drug: { freq, duration, calc, dosage, helpers },
       drug,
-      actions: { UIText }
-    } = this.props
+      actions: { UIText },
+    } = this.props;
 
-    let arr = []
+    let arr = [];
 
     // console.log({drug});
 
-    if(calc.fullDosage && helpers.dosage && helpers.dosage.id ){
-      let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage)
-      let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit]
-      arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(' + ')} ${dosageName}`)
+    if (calc.fullDosage && helpers.dosage && helpers.dosage.id) {
+      let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
+      let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
+      arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
     }
 
-    if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
-    if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+    if (freq && UIText.freq[freq]) arr.push(UIText.freq[freq]);
+    if (duration && UIText.duration[duration]) arr.push(UIText.duration[duration]);
 
     return {
       empty: arr.length < 1,
-      text: arr.join(', ')
-    }
+      text: arr.join(", "),
+    };
   }
 
-	render(){
-		let {
-			actions: {
-				selectedDrug,
-				selectedConflict,
-			},
-			router: { values },
-			drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
-			dosages: { dosage: dose },
-			warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
-			drug,
-			active,
-			style,
-			canDrag,
-		} = this.props
+  render() {
+    let {
+      actions: { selectedDrug, selectedConflict },
+      router: { values },
+      drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
+      dosages: { dosage: dose },
+      warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
+      drug,
+      active,
+      style,
+      canDrag,
+    } = this.props;
 
-		let { key, name, type, dosage, helpers } = drug
-		let drugDosages = dose.get(key) || {}
+    let { key, name, type, dosage, helpers } = drug;
 
-		let names = drugDosages.names || {}
-		let nameshort = drugDosages.nameshort || {}
-		// liquid/calc/1/dozes/lf/4
-		// console.log({drug});
-		let urlArr = ['/liquid/calc',values.liquid,'dozes']
+    let drugDosages = dose.get(key) || {};
 
-		if(helpers.way) urlArr.push(helpers.way)
-		if(helpers.step) urlArr.push(helpers.step)
+    let names = drugDosages.names || {};
+    let nameshort = drugDosages.nameshort || {};
+    // liquid/calc/1/dozes/lf/4
+    // console.log({drug});
+    let urlArr = ["/liquid/calc", values.liquid, "dozes"];
 
-		let url = urlArr.join('/')
-		// let url = `/liquid/calc/${values.liquid}${(drugDosages.url && drugDosages.url.replace('/concept', '')) || '/dozes'}`
-		let className = selectedDrug === drug.key ? 'selected' : ''
-		className += ((selectedDrug === drug.key || active) || (!selectedDrug && !selectedConflict) )  ? '' : ' unused'
+    if (helpers.way) urlArr.push(helpers.way);
+    if (helpers.step) urlArr.push(helpers.step);
 
-		let resultStyle = { ...(style || {}), ...(!canDrag ? { cursor: 'default' } : { cursor: 'move' }) }
+    let url = urlArr.join("/");
+    // let url = `/liquid/calc/${values.liquid}${(drugDosages.url && drugDosages.url.replace('/concept', '')) || '/dozes'}`
+    let className = selectedDrug === drug.key ? "selected" : "";
+    className += selectedDrug === drug.key || active || (!selectedDrug && !selectedConflict) ? "" : " unused";
 
-		let rules = this.renderRules()
-		return(
-			<List.Item style={resultStyle} className={`nowarnings ${className}`}>
-				<div className='border' style={{ backgroundColor: 'transparent' }} />
-				<Responsive as={List.Content} className='ui feed large' fireOnMount minWidth='481'>
-					<Feed.Event>
-						<Feed.Content>
-							<Feed.Summary>
-								<span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
-								<Feed.Date>
-									{dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-									{(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) && ', '}
-									{(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ''}
-								</Feed.Date>
-							</Feed.Summary>
-							<Feed.Meta>
-								{(nameshort[dosage.method] || names[dosage.method]) || ''}
-								{!rules.empty && ', '}
-								{rules.text}
-							</Feed.Meta>
-						</Feed.Content>
-					</Feed.Event>
-				</Responsive>
-				<Responsive
-					as={Fragment}
-					maxWidth='480'
-				>
-					<List.Content className='ui feed large' >
+    let resultStyle = { ...(style || {}), ...(!canDrag ? { cursor: "default" } : { cursor: "move" }) };
+
+    let rules = this.renderRules();
+    return (
+      <List.Item style={resultStyle} className={`nowarnings ${className}`}>
+        <div className="border" style={{ backgroundColor: "transparent" }} />
+        <Responsive as={List.Content} className="ui feed large" fireOnMount minWidth="481">
+          <Feed.Event>
+            <Feed.Content>
+              <Feed.Summary>
+                <span className="underlined">{name}</span>
+                {type === "TN" && (
+                  <span>
+                    <sup>TM</sup>
+                  </span>
+                )}
+                <Feed.Date>
+                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
+                  {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
+                  {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""}
+                </Feed.Date>
+              </Feed.Summary>
+              <Feed.Meta>
+                {nameshort[dosage.method] || names[dosage.method] || ""}
+                {!rules.empty && ", "}
+                {rules.text}
+              </Feed.Meta>
+            </Feed.Content>
+          </Feed.Event>
+        </Responsive>
+        <Responsive as={Fragment} maxWidth="480">
+          <List.Content className="ui feed large">
             <Feed.Event>
               <Feed.Content>
-	              <Feed.Summary>
-		              <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}
-	              </Feed.Summary>
-	              <Feed.Meta>
-									{dosage.form && (nameshort[dosage.form] || names[dosage.form])}{' '}
-									{(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) && ', '}
-									{(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ''}
-									{(nameshort[dosage.method] || names[dosage.method]) && ', '}
-									{rules.empty && ((nameshort[dosage.method] || names[dosage.method]) || '')}
-	              </Feed.Meta><br />
-								{!rules.empty && <Feed.Meta>
-									{(nameshort[dosage.method] || names[dosage.method]) || ''}, &nbsp;
-									{rules.text}
-								</Feed.Meta>}
-
+                <Feed.Summary>
+                  <span className="underlined">{name}</span>
+                  {type === "TN" && (
+                    <span>
+                      <sup>TM</sup>
+                    </span>
+                  )}
+                </Feed.Summary>
+                <Feed.Meta>
+                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
+                  {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
+                  {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""}
+                  {(nameshort[dosage.method] || names[dosage.method]) && ", "}
+                  {rules.empty && (nameshort[dosage.method] || names[dosage.method] || "")}
+                </Feed.Meta>
+                <br />
+                {!rules.empty && (
+                  <Feed.Meta>
+                    {nameshort[dosage.method] || names[dosage.method] || ""}, &nbsp;
+                    {rules.text}
+                  </Feed.Meta>
+                )}
               </Feed.Content>
             </Feed.Event>
-					</List.Content>
-				</Responsive>
-			</List.Item>
-
-		)
-	}
-
-};
-export default ClinrecDrug
+          </List.Content>
+        </Responsive>
+      </List.Item>
+    );
+  }
+}
+export default ClinrecDrug;

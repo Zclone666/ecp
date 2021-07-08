@@ -956,7 +956,7 @@ class Drugs {
   }
 
   // concept from search, flag - if true, do not clear data
-  selectFromSearch = async (concept, flag = false, getDosages = true) => {
+  selectFromSearch = async (concept, flag = false, getDosages = true, names) => {
     let drug = this.getNew();
     if (!concept.calc) concept.calc = drug.calc;
     if (!concept.dosage) concept.dosage = drug.dosage;
@@ -971,7 +971,7 @@ class Drugs {
     // _.assignIn(this.current, drug);
 
     if (getDosages) {
-      await this.stores.dosages.get(drug);
+      await this.stores.dosages.get(drug, false, names);
     }
 
     if (!flag) {
@@ -1013,6 +1013,7 @@ class Drugs {
       data,
       success: async (data) => {
         // console.log({ data });
+        const { names } = data;
         const filteredDrugs = data.drugs.filter((drug) => !!drug);
         // if (filteredDrugs && filteredDrugs.length > 0 && _.isArray(filteredDrugs)) {
         // await filteredDrugs.forEach((concept, i) => {
@@ -1063,7 +1064,6 @@ class Drugs {
           // currPack.pack.small +=
           //   (nameshort[packname] || names[packname]) +
           //   ((pack && ", " + pack.value_1 + " " + (nameshort[pack.id_1] || names[pack.id_1])) || "");
-          console.log({ helpers });
           return {
             ...d,
             helpers,
@@ -1078,7 +1078,7 @@ class Drugs {
         // }));
         drugs.forEach(async (drug, i) => {
           // console.log({ drug });
-          await this.selectFromSearch(drug, false);
+          await this.selectFromSearch(drug, false, true, names);
         });
 
         this.stores.actions.loading = false;

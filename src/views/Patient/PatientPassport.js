@@ -41,7 +41,7 @@ class PatientPassport extends Component {
 
   handleMaskedInputChange = (e) => {
     const { value, name } = e.target;
-    console.log({ e, value, name });
+    // console.log({ e, value, name });
     this.props.actions.patientPassport[name] = value;
   };
 
