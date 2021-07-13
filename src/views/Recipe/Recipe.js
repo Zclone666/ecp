@@ -177,12 +177,6 @@ class Recipe extends Component {
     }
     this.props.patients.current[name] = value;
   };
-  handleBirthDateChange = (_e, { value }) => {
-    console.log(value)
-    const date = moment(value).format('x');
-    console.log(date);
-    // this.props.patiens.current['birthdate'] = date
-  }
   handleMaskedInputPatientDataChange = (e) => {
     const { value, name } = e.target;
     this.props.patients.current[name] = value;
@@ -242,7 +236,6 @@ class Recipe extends Component {
     // console.log({ tags });
     // console.log({ patient });
     // console.log({ recipe_endtimeitem });
-    console.log(patient)
     return (
       <>
         <Menu className="bottom fixed menu three item huge main">
