@@ -98,7 +98,7 @@ class BirthDate extends Component {
         <div className="birthdate">
           <AutoComplete value={birth} onChange={this.handleChangeBirth} />
           <Button basic icon="arrows alternate horizontal" />
-          <Calendar value={date} onChange={this.handleChangeDate} />
+          <Calendar value={date} onChange={this.handleChangeDate} maxDate={new Date()}/>
         </div>
       </Form.Field>
     );
