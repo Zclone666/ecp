@@ -197,6 +197,7 @@ class Main extends Component {
         drugStructure,
         checkData,
         disabled,
+        buttonTexts,
       },
       patients,
     } = this.props;
@@ -220,6 +221,8 @@ class Main extends Component {
     let showMainBottomMenu =
       !(makeLiquids || !checkLiquids) && (drug.size > 0 || deletedRows.length > 0 || deletedLiquids.length > 0);
     let showRevert = drug.size == 0 && deletedRows.length > 0;
+
+    const texts = buttonTexts ? buttonTexts.text : null;
 
     return (
       <>
@@ -445,6 +448,18 @@ class Main extends Component {
                 <Icon name="address book" />
                 Пациенты
               </Menu.Item>
+              {texts && texts.agreementheader &&
+                (<Menu.Item as={RouterLink} to="/license-agreement">
+                  <Icon name="file alternate" />
+                  {texts.agreementheader}
+                </Menu.Item>
+              )}
+              {texts && texts.manualheader &&
+                (<Menu.Item as={RouterLink} to="/manual">
+                  <Icon name="clipboard list" />
+                  {texts.manualheader}
+                </Menu.Item>
+              )}
               {false && (
                 <Menu.Item as={RouterLink} to="/clinics/list">
                   <Icon name="hospital" />
