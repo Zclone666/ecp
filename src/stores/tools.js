@@ -269,7 +269,7 @@ class Tools {
 
   async loadGenPassport(idPatient, mutations) {
     this.stores.actions.loading = true;
-    let { active_language, authkey, makeAlerts } = this.stores.actions;
+    let { active_language, authkey } = this.stores.actions;
     const data = {
       authkey,
       active_language,
@@ -279,15 +279,15 @@ class Tools {
     return POST({
       path: "Tools/PatientNewMutations",
       data,
-      success: async (data) => {
-        makeAlerts(data);
+      success: async (res) => {
+        this.stores.actions.makeAlerts({ alerts: [res] });
         this.stores.actions.loading = false;
       },
-      fail: (alerts) => {
-        makeAlerts(data);
+      fail: (res) => {
+        this.stores.actions.makeAlerts({ alerts: [res] });
         this.stores.actions.loading = false;
       },
-      always(data) {},
+      always: (res) => {},
     });
   }
 
