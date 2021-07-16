@@ -333,11 +333,20 @@ class Actions {
   }
 
   makeAlerts(data) {
-    if (data.alerts && data.alerts.length > 0) {
-      data.alerts.forEach((item, i) => {
-        let key = Math.floor(Math.random() * 10000);
-        this.alerts[key] = item;
-      });
+    if (data.alerts || data.alert || data.level) {
+      const alerts = data.alert || data.level ? [data.alert || data] : data.alerts;
+      const overlap =
+        this.alerts &&
+        Object.values(this.alerts).find(
+          (item) =>
+            item.level === alerts[0].level && item.message === alerts[0].message && item.title === alerts[0].title
+        );
+      if (alerts.length > 0 && !overlap) {
+        alerts.forEach((item, i) => {
+          let key = Math.floor(Math.random() * 10000);
+          this.alerts[key] = item;
+        });
+      }
     }
   }
 
