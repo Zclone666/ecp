@@ -13,7 +13,7 @@ import { Transition, Accordion, Icon, Step, Responsive, List, Header } from "sem
 import _ from "lodash";
 import "./Stepper.css";
 
-@inject("db", "actions", "router", "drugs", "warnings", "dosages", "clinrecs")
+@inject("db", "actions", "router", "drugs", "warnings", "dosages", "clinrecs", "patients")
 @observer
 class Stepper extends Component {
   constructor(props) {
@@ -99,6 +99,9 @@ class Stepper extends Component {
       router: { values },
       clinrecs: { checker },
       actions: { clinrecCheckerStep, clinrecCheckerData },
+      patients: {
+        current: { disease },
+      },
     } = this.props;
 
     let currPage = checker[_.keys(checker)[clinrecCheckerStep - 1]] || {}; //page id is not equal array index!
@@ -113,6 +116,9 @@ class Stepper extends Component {
       swipe: false,
       initialSlide: clinrecCheckerStep - 1,
     };
+
+    const headerMessage =
+      disease.length === 1 ? `Клинические рекомендации по диагнозу "${disease[0].name}"` : "Клинические рекоммендации";
     // console.log({checker, clinrecCheckerStep});
     return (
       <Responsive className="h100 with-steps" fireOnMount columns="equal" onUpdate={this.handleOnUpdate}>
@@ -120,7 +126,7 @@ class Stepper extends Component {
           <Header as="h2" className="clinRecHeader" style={{ padding: "0.8em" }}>
             <Icon name="clipboard list" />
             <Header.Content className="clinRecHeaderContent">
-              Клинические рекомендации
+              {headerMessage}
               <Header.Subheader>
                 {clinrecCheckerStep <= _.keys(checker).length && `${clinrecCheckerStep}/${_.keys(checker).length}`}
                 {clinrecCheckerStep > _.keys(checker).length && "Результат"}{" "}
