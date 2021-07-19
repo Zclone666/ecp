@@ -269,12 +269,13 @@ class Tools {
 
   async loadGenPassport(idPatient, mutations) {
     this.stores.actions.loading = true;
-    let { active_language, authkey } = this.stores.actions;
+    let { active_language, authkey, privateKey } = this.stores.actions;
     const data = {
       authkey,
       active_language,
       idPatient,
       mutations,
+      key: privateKey,
     };
     return POST({
       path: "Tools/PatientNewMutations",

@@ -184,10 +184,16 @@ class RecipeDrug extends React.Component {
   }
 
   addOrRemoveDrugToPrescription(key) {
-    const index = this.props.recipes["drugKeysForPrescription"].indexOf(key);
+    const {
+      recipes: { drugKeysForPrescription, maxcount },
+    } = this.props;
+    const index = drugKeysForPrescription.indexOf(key);
     if (index > -1) {
       this.props.recipes["drugKeysForPrescription"].splice(index, 1);
       return;
+    }
+    if (drugKeysForPrescription.length === maxcount) {
+      this.props.recipes["drugKeysForPrescription"].pop();
     }
     this.props.recipes["drugKeysForPrescription"].push(key);
   }
@@ -234,7 +240,7 @@ class RecipeDrug extends React.Component {
       <List.Item>
         <List.Content floated="left">
           <Checkbox
-            disabled={!drugKeysForPrescription.includes(key) && drugKeysForPrescription.length >= maxcount}
+            // disabled={!drugKeysForPrescription.includes(key) && drugKeysForPrescription.length >= maxcount}
             checked={drugKeysForPrescription.includes(key)}
             onChange={() => this.addOrRemoveDrugToPrescription(key)}
           />
