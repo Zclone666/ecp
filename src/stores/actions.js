@@ -53,6 +53,8 @@ class Actions {
 
   @observable protocol = null;
   @observable misLinkLogin = false;
+  @observable topview_disabled = false;
+  @observable bottomview_disabled = false;
 
   @observable checkData = {
     lpu: [],
@@ -503,6 +505,17 @@ class Actions {
     //------------MIS---------------
     if (this.stores.router.values.miskey) {
       const misKey = this.stores.router.values.miskey;
+      //----- getting query parameters ------------
+      const queryParams = new URLSearchParams(window.location.search);
+      const SETTING_bottomview_disabled = queryParams.get("SETTING_bottomview") == 0;
+      const SETTING_topview_disabled = queryParams.get("SETTING_topview") == 0;
+      // console.log({
+      //   SETTING_bottomview_disabled,
+      //   SETTING_topview_disabled,
+      // });
+      this.topview_disabled = SETTING_topview_disabled;
+      this.bottomview_disabled = SETTING_bottomview_disabled;
+      //-------------------------------------------
       this.miskey = misKey;
       // console.log({ misKey });
       const misAuthSuccess = await fetch(CREATE_API_URL({ path: "Mis/ActualArguments" }), {
