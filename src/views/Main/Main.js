@@ -184,6 +184,8 @@ class Main extends Component {
       makeLiquids,
       isLiquidsOk,
       misLinkLogin: misDisabled,
+      topview_disabled,
+      bottomview_disabled,
     } = this.props.actions;
     let {
       drugs: { searchReady, searchRows, selectedRows, drug, deletedLiquids, deletedRows, listChanged, checkLiquids }, //drugs, drugsDosages, currDrug, setDosageParams
@@ -197,6 +199,7 @@ class Main extends Component {
         drugStructure,
         checkData,
         disabled,
+        buttonTexts,
       },
       patients,
     } = this.props;
@@ -221,9 +224,11 @@ class Main extends Component {
       !(makeLiquids || !checkLiquids) && (drug.size > 0 || deletedRows.length > 0 || deletedLiquids.length > 0);
     let showRevert = drug.size == 0 && deletedRows.length > 0;
 
+    const texts = buttonTexts ? buttonTexts.text : null;
+
     return (
       <>
-        {!disabled && (
+        {!disabled && !topview_disabled && (
           <Menu className={`ui top huge borderless tabular nomargin main menu fixed grey${showPage && " hidden"}`}>
             {!misDisabled && (
               <Menu.Item icon onClick={this.handleSidebar}>
@@ -296,7 +301,7 @@ class Main extends Component {
               </Menu.Item>
             </Menu>
           )}
-          {!disabled && showMainBottomMenu && (
+          {!disabled && showMainBottomMenu && !bottomview_disabled && (
             <Menu className={`bottom fixed menu three item huge main`}>
               <Modal
                 closeIcon
@@ -445,6 +450,18 @@ class Main extends Component {
                 <Icon name="address book" />
                 Пациенты
               </Menu.Item>
+              {texts && texts.agreementheader && (
+                <Menu.Item as={RouterLink} to="/license-agreement">
+                  <Icon name="file alternate" />
+                  {texts.agreementheader}
+                </Menu.Item>
+              )}
+              {texts && texts.manualheader && (
+                <Menu.Item as={RouterLink} to="/manual">
+                  <Icon name="clipboard list" />
+                  {texts.manualheader}
+                </Menu.Item>
+              )}
               {false && (
                 <Menu.Item as={RouterLink} to="/clinics/list">
                   <Icon name="hospital" />

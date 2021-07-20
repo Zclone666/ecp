@@ -88,7 +88,15 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
           delete response.data.alert;
         }
         if (response.data.message) {
-          alerts = [response.data.Message];
+          alerts = [
+            {
+              message: response.data.message,
+              level: response.data.level,
+              code: response.data.code,
+              title: response.data.title,
+              sticky: response.data.sticky,
+            },
+          ];
         }
         if (response.data.alerts) {
           alerts = [...response.data.alerts];
@@ -101,11 +109,13 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
       }
       response.data.alerts = alerts;
       let isError = false;
-      response.data.alerts.forEach((alert) => {
-        if (alert.level === "error") {
-          isError = true;
-        }
-      });
+      response.data.alerts &&
+        response.data.alerts.forEach((alert) => {
+          if (alert.level === "error") {
+            console.log("isError");
+            isError = true;
+          }
+        });
       always && always(response.data);
       if (isError) {
         return fail && fail(response.data.alerts);

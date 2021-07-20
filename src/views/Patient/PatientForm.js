@@ -31,7 +31,7 @@ import {
 import _ from "lodash";
 import moment from "moment";
 
-@inject("router", "diseases", "actions", "patients")
+@inject("router", "diseases", "actions", "patients", "tools")
 @observer
 class PatientForm extends Component {
   constructor(props) {
@@ -48,7 +48,17 @@ class PatientForm extends Component {
       },
       misDisabled: this.props.actions.misLinkLogin,
     };
-    //this.contextRef = createRef()
+    this.fileUploadRef = createRef();
+  }
+
+  componentDidMount() {
+    const fileSelector = document.getElementById("genpassport-upload");
+    fileSelector.addEventListener("change", this.handleFileUpload);
+  }
+
+  componentWillUnmount() {
+    const fileSelector = document.getElementById("genpassport-upload");
+    fileSelector.removeEventListener("change", this.handleFileUpload);
   }
 
   handleChange = (e, { name, value }) => {
@@ -100,6 +110,27 @@ class PatientForm extends Component {
   handleAddMutation = () => {
     this.props.patients.current.mutations.push(this.state.mutation);
     this.setState({ mutation: { gene: "", allele1: "", allele2: "" } });
+  };
+  handleFileUpload = (e) => {
+    const { id } = this.props.patients.current;
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const string = evt.target.result;
+      const parsedResult = string.split("\r").map((str) => {
+        const parsedString = str.split(";");
+        if (parsedString.length === 4)
+          return {
+            gene: parsedString[0],
+            code: parsedString[1],
+            reference: parsedString[2],
+            alleles: parsedString[3].split("/"),
+          };
+        return {};
+      });
+      this.props.tools.loadGenPassport(id, parsedResult);
+    };
+    reader.readAsBinaryString(file);
   };
   handleRemoveMutation = (item, i) => {
     this.props.patients.current.mutations.splice(i, 1);
@@ -402,6 +433,22 @@ class PatientForm extends Component {
               </Form.Field>
             </Form.Group>
           )}
+          <Form.Group widths={1}>
+            <Form.Field width={16}>
+              <label>Генетический паспорт</label>
+              <Button
+                disabled={!id}
+                size="big"
+                fluid
+                labelPosition="left"
+                icon="file"
+                onClick={() => this.fileUploadRef.current.click()}
+              >
+                Загрузить генетический паспорт
+              </Button>
+              <input id="genpassport-upload" ref={this.fileUploadRef} type="file" hidden accept=".csv" />
+            </Form.Field>
+          </Form.Group>
           <List divided verticalAlign="middle">
             {mutations &&
               mutations.map((item, i) => {

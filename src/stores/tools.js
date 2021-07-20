@@ -267,6 +267,57 @@ class Tools {
     if (shortnames) this.shortnames = await _.extend(this.shortnames, shortnames);
   }
 
+  async loadGenPassport(idPatient, mutations) {
+    this.stores.actions.loading = true;
+    let { active_language, authkey, privateKey } = this.stores.actions;
+    const data = {
+      authkey,
+      active_language,
+      idPatient,
+      mutations,
+      key: privateKey,
+    };
+    return POST({
+      path: "Tools/PatientNewMutations",
+      data,
+      success: async (res) => {
+        this.stores.actions.makeAlerts({ alerts: [res] });
+        this.stores.actions.loading = false;
+      },
+      fail: (res) => {
+        this.stores.actions.makeAlerts({ alerts: [res] });
+        this.stores.actions.loading = false;
+      },
+      always: (res) => {},
+    });
+  }
+
+  async ReportError(message) {
+    this.stores.actions.loading = true;
+    let { active_language, authkey, makeAlerts } = this.stores.actions;
+
+    const data = {
+      authkey,
+      active_language,
+      message,
+    };
+
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: "Tools/ReportError",
+      data,
+      success: async (data) => {
+        makeAlerts(data);
+        this.stores.actions.loading = false;
+      },
+      fail: (alerts) => {
+        makeAlerts(data);
+        this.stores.actions.loading = false;
+      },
+      always(data) {},
+    });
+  }
+
   round = (val, dec = 3) => {
     let delimiter = Math.pow(10, dec);
     return Math.floor(val * delimiter) / delimiter;

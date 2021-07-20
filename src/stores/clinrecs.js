@@ -182,7 +182,9 @@ class Clinrecs {
 
         this.stores.actions.loading = false;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => {
+        this.stores.actions.loading = false;
+      },
       always: (data) => {},
     });
   }

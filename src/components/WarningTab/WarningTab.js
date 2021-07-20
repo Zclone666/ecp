@@ -51,7 +51,7 @@ class WarningTab extends Component {
 
     const fieldId = info?.fields[tab.id];
     const firstDrugId = getDrug(arr.first[0]).id;
-    const secondDrugId = getDrug(arr.last[0]).id;
+    const secondDrugId = arr.last && getDrug(arr.last[0]).id;
 
     this.props.warnings.getWarningInfo(firstDrugId, secondDrugId, fieldId);
   }
@@ -95,7 +95,7 @@ class WarningTab extends Component {
     const firstDrugInstruction =
       warningInfo && warningInfo[getDrug(arr.first[0]).id]?.[this.props.warnings.info?.fields[tab.id]?.[0]];
     const secondDrugInstruction =
-      warningInfo && warningInfo[getDrug(arr.last[0]).id]?.[this.props.warnings.info?.fields[tab.id]?.[0]];
+      warningInfo && arr.last && warningInfo[getDrug(arr.last[0]).id]?.[this.props.warnings.info?.fields[tab.id]?.[0]];
 
     //console.log({warnInfo});
 
@@ -139,7 +139,7 @@ class WarningTab extends Component {
                 return (
                   <List.Item key="1">
                     {i > 0 && <div className="warningline" style={{ backgroundColor: tab.color }}></div>}
-                    <List.Content>
+                    <List.Content style={!item.subjectid && !arr.last ? { padding: "8px 0" } : {}}>
                       <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
                       {!!item.subjectid && drug.name}
                     </List.Content>
