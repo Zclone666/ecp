@@ -467,13 +467,14 @@ class Actions {
   }
 
   getElement = (name, value) => {
-    // console.log({ el: this.elements, name, value});
+    // console.log({ el: this.elements, name, value });
     let text = "";
     this.elements[name].forEach((item, i) => {
-      if ((item.from < value && value <= item.to) || item.to === value) {
+      if ((item.from <= value && value <= item.to) || item.to === value) {
         text = item.name;
       }
     });
+    // console.log({ text });
     return text;
   };
 
