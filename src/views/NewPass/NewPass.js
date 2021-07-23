@@ -89,9 +89,9 @@ class NewPass extends Component {
                     size="huge"
                     name="newPassword"
                     fluid
-                    icon="lock"
+                    icon="key"
                     iconPosition="left"
-                    placeholder="Пароль"
+                    placeholder="Введите новый пароль"
                     type="password"
                     onChange={this.handleChange}
                   />
