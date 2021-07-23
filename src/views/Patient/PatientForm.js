@@ -149,11 +149,8 @@ class PatientForm extends Component {
     this.setState({ [`search_${name}`]: "" });
   };
   handleResultUnselect = async (name, result) => {
-    // console.log({ name, result });
-    //let newName = name === 'co_disease' ? 'disease' : name
     await this.props.actions.unselectPatient(result, name);
     this.forceUpdate();
-    // this.setState({ [`search_${name}`]: '' })
   };
 
   handleSearchChange = (e, { name, value }) => {
