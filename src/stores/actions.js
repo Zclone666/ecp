@@ -1102,6 +1102,7 @@ class Actions {
       path: createCsServerUrl(`/api/user/recovery`),
       data: this.resetPassForm,
       success: async (data) => {
+        // console.log({ data });
         this.stores.router.push("/newpass");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
@@ -1109,10 +1110,12 @@ class Actions {
         // }
       },
       fail: (alerts) => {
+        // console.log({ alerts });
         this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
+        // console.log({ data });
         this.makeAlerts(data);
         // console.log('ALWAYS', data);
       },
@@ -1131,12 +1134,17 @@ class Actions {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey
         // }
+        return true;
       },
       fail: (alerts) => {
+        // console.log({ alerts });
         this.loading = false;
+        if (alerts && alerts[0] && alerts[0].code == "403") return false;
+        return true;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
+        // console.log({ data });
         this.makeAlerts(data);
         // console.log('ALWAYS', data);
       },
