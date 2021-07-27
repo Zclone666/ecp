@@ -35,7 +35,7 @@ class Login extends Component {
     } else {
       let isOk = await this.props.actions.fakelogin();
       const { password, email, remember } = this.props.actions.loginForm;
-      if (isOk && !window.hasOwnProperty("cordova") && remember) {
+      if (isOk && window.hasOwnProperty("cordova") && remember) {
         localStorage.setItem("cordovaEmail", email);
         localStorage.setItem("cordovaPassword", password);
       }
