@@ -18,6 +18,10 @@ class Login extends Component {
       showCode: false,
       privateKeyOnly: LOGIN == "privateKeyOnly",
     };
+    if (window.hasOwnProperty("cordova")) {
+      this.props.actions.loginForm.email = localStorage.getItem("cordovaEmail");
+      this.props.actions.loginForm.password = localStorage.getItem("cordovaPassword");
+    }
   }
   handleLogin = async (e) => {
     e.preventDefault();
@@ -30,6 +34,11 @@ class Login extends Component {
       await this.props.actions.login();
     } else {
       let isOk = await this.props.actions.fakelogin();
+      const { password, email, remember } = this.props.actions.loginForm;
+      if (isOk && !window.hasOwnProperty("cordova") && remember) {
+        localStorage.setItem("cordovaEmail", email);
+        localStorage.setItem("cordovaPassword", password);
+      }
       // console.log(isOk);
       // if( isOk ) this.setState({ showCode: true })
     }
@@ -54,7 +63,7 @@ class Login extends Component {
   render() {
     let { filled, filledCode, showCode } = this.state;
     let {
-      loginForm: { remember, email },
+      loginForm: { remember, email, password },
       projectTitle,
     } = this.props.actions;
     return (
@@ -87,6 +96,7 @@ class Login extends Component {
                       size="huge"
                       name="password"
                       fluid
+                      value={password}
                       icon="lock"
                       iconPosition="left"
                       placeholder="Пароль"

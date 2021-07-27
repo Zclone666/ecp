@@ -807,7 +807,8 @@ class Actions {
           this.authkey = data.authkey;
           // this.authorized = true
           this.loading = false;
-          return this.login();
+          this.login();
+          return true;
           // this.stores.db.getFilters()
         }
         // if (data.authkey) {
