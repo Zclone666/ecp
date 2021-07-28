@@ -53,6 +53,8 @@ class Actions {
 
   @observable protocol = null;
   @observable misLinkLogin = false;
+  @observable topview_disabled = false;
+  @observable bottomview_disabled = false;
 
   @observable checkData = {
     lpu: [],
@@ -435,6 +437,7 @@ class Actions {
       [row],
       (a, b) => a.id === b.id
     );
+    this.patientForm[from] = _.cloneDeep(this.stores.patients.current[from]);
     this.stores.db.clearData();
     return true;
   }
@@ -464,13 +467,14 @@ class Actions {
   }
 
   getElement = (name, value) => {
-    // console.log({ el: this.elements, name, value});
+    // console.log({ el: this.elements, name, value });
     let text = "";
     this.elements[name].forEach((item, i) => {
-      if ((item.from < value && value <= item.to) || item.to === value) {
+      if ((item.from <= value && value <= item.to) || item.to === value) {
         text = item.name;
       }
     });
+    // console.log({ text });
     return text;
   };
 
@@ -503,6 +507,17 @@ class Actions {
     //------------MIS---------------
     if (this.stores.router.values.miskey) {
       const misKey = this.stores.router.values.miskey;
+      //----- getting query parameters ------------
+      const queryParams = new URLSearchParams(window.location.search);
+      const SETTING_bottomview_disabled = queryParams.get("SETTING_bottomview") == 0;
+      const SETTING_topview_disabled = queryParams.get("SETTING_topview") == 0;
+      // console.log({
+      //   SETTING_bottomview_disabled,
+      //   SETTING_topview_disabled,
+      // });
+      this.topview_disabled = SETTING_topview_disabled;
+      this.bottomview_disabled = SETTING_bottomview_disabled;
+      //-------------------------------------------
       this.miskey = misKey;
       // console.log({ misKey });
       const misAuthSuccess = await fetch(CREATE_API_URL({ path: "Mis/ActualArguments" }), {
@@ -792,7 +807,8 @@ class Actions {
           this.authkey = data.authkey;
           // this.authorized = true
           this.loading = false;
-          return this.login();
+          this.login();
+          return true;
           // this.stores.db.getFilters()
         }
         // if (data.authkey) {
@@ -1087,6 +1103,7 @@ class Actions {
       path: createCsServerUrl(`/api/user/recovery`),
       data: this.resetPassForm,
       success: async (data) => {
+        // console.log({ data });
         this.stores.router.push("/newpass");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
@@ -1094,10 +1111,12 @@ class Actions {
         // }
       },
       fail: (alerts) => {
+        // console.log({ alerts });
         this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
+        // console.log({ data });
         this.makeAlerts(data);
         // console.log('ALWAYS', data);
       },
@@ -1116,12 +1135,17 @@ class Actions {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey
         // }
+        return true;
       },
       fail: (alerts) => {
+        // console.log({ alerts });
         this.loading = false;
+        if (alerts && alerts[0] && alerts[0].code == "403") return false;
+        return true;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
+        // console.log({ data });
         this.makeAlerts(data);
         // console.log('ALWAYS', data);
       },

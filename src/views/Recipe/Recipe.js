@@ -11,6 +11,8 @@ import { CREATE_API_URL } from "../../lib/connect";
 
 import PatientPassport from "../Patient/PatientPassport";
 
+import Calendar from "../../components/BirthDate/Calendar";
+
 import moment from "moment";
 import _ from "lodash";
 
@@ -105,7 +107,7 @@ class Recipe extends Component {
   //   let key = moment().format('x').toString()
   //   await this.props.patients.patient.set(key, {key, name: value, id: null})
   //   this.handleChange(null, { name: 'patient', value: key })
-  // }
+  // }handlePatientDataChange
 
   handleChange = async (e, { name, value }) => {
     // if (name === "patient") console.log({ value });
@@ -166,6 +168,11 @@ class Recipe extends Component {
     }
     if (name == "medcard_num") {
       this.props.patients.current["medcard_num"] = { default: value };
+      return;
+    }
+    if (name === 'birthdate') {
+      const date = moment(value).format('x');
+      this.props.patients.current["birthdate"] = date;
       return;
     }
     this.props.patients.current[name] = value;
@@ -229,7 +236,6 @@ class Recipe extends Component {
     // console.log({ tags });
     // console.log({ patient });
     // console.log({ recipe_endtimeitem });
-
     return (
       <>
         <Menu className="bottom fixed menu three item huge main">
@@ -305,7 +311,14 @@ class Recipe extends Component {
                 {tags.includes("DayOfBirth") && tags.includes("MonthOfBirth") && tags.includes("YearOfBirth") && (
                   <Form.Field width={4}>
                     <label>Дата рождения</label>
-                    <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly />
+                    <Calendar
+                      name='birthdate'
+                      value={moment(patient.birthdate).format("x")} 
+                      maxDate={new Date()} 
+                      onChange={this.handlePatientDataChange} 
+                      size='medium'
+                    />
+                    {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
                   </Form.Field>
                 )}
               </Form.Group>

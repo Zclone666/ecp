@@ -60,15 +60,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/preset-env": "^7.1.0",
     "@craco/craco": "^5.6.4",
-    "@semantic-ui-react/craco-less": "^1.2.1",
+    "@semantic-ui-react/craco-less": "^1.2.3",
     "semantic-ui-less": "^2.4.1"
-  },
-  "resolutions": {
-    "@semantic-ui-react/craco-less/craco-less": "1.17.1"
   },
   "peerDependencies": {
     "mobx": "^4.3.1 || ^5.0.0"
