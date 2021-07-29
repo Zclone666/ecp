@@ -467,13 +467,14 @@ class Actions {
   }
 
   getElement = (name, value) => {
-    // console.log({ el: this.elements, name, value});
+    // console.log({ el: this.elements, name, value });
     let text = "";
     this.elements[name].forEach((item, i) => {
-      if ((item.from < value && value <= item.to) || item.to === value) {
+      if ((item.from <= value && value <= item.to) || item.to === value) {
         text = item.name;
       }
     });
+    // console.log({ text });
     return text;
   };
 
@@ -806,7 +807,8 @@ class Actions {
           this.authkey = data.authkey;
           // this.authorized = true
           this.loading = false;
-          return this.login();
+          this.login();
+          return true;
           // this.stores.db.getFilters()
         }
         // if (data.authkey) {
@@ -1101,6 +1103,7 @@ class Actions {
       path: createCsServerUrl(`/api/user/recovery`),
       data: this.resetPassForm,
       success: async (data) => {
+        // console.log({ data });
         this.stores.router.push("/newpass");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
@@ -1108,10 +1111,12 @@ class Actions {
         // }
       },
       fail: (alerts) => {
+        // console.log({ alerts });
         this.loading = false;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
+        // console.log({ data });
         this.makeAlerts(data);
         // console.log('ALWAYS', data);
       },
@@ -1130,12 +1135,17 @@ class Actions {
         //   await localStorage.setItem('authkey', data.authkey);
         //   this.authkey = data.authkey
         // }
+        return true;
       },
       fail: (alerts) => {
+        // console.log({ alerts });
         this.loading = false;
+        if (alerts && alerts[0] && alerts[0].code == "403") return false;
+        return true;
         // console.log('FAIL', alerts);
       },
       always: (data) => {
+        // console.log({ data });
         this.makeAlerts(data);
         // console.log('ALWAYS', data);
       },

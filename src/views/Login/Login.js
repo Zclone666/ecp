@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
-import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Checkbox } from "semantic-ui-react";
+import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Checkbox, Confirm } from "semantic-ui-react";
 import RouterLink from "../../router/a";
 
 import { LOGIN } from "../../constants";
@@ -18,18 +18,40 @@ class Login extends Component {
       showCode: false,
       privateKeyOnly: LOGIN == "privateKeyOnly",
     };
+    const autofill = localStorage.getItem("autofill");
+    // console.log({ autofill });
+    const autofillEmail = localStorage.getItem("autofillEmail");
+    const autofillPassword = localStorage.getItem("autofillPassword");
+
+    if (autofill == "yes") {
+      this.props.actions.loginForm.email = autofillEmail ? autofillEmail : "";
+      this.props.actions.loginForm.password = autofillPassword ? autofillPassword : "";
+    }
   }
   handleLogin = async (e) => {
-    e.preventDefault();
+    e && e.preventDefault();
     if (this.state.authPending) return;
     this.setState({ authPending: true });
     let { showCode, privateKeyOnly } = this.state;
     if (privateKeyOnly) {
+      this.setState({ autofillAsk: false });
       this.props.actions.fakePrivateKeylogin();
     } else if (showCode) {
       await this.props.actions.login();
+      this.setState({ autofillAsk: false });
     } else {
       let isOk = await this.props.actions.fakelogin();
+      const { password, email } = this.props.actions.loginForm;
+      const autofill = localStorage.getItem("autofill");
+      // console.log({ autofill });
+      if (isOk && autofill != "yes") {
+        const autofillAsk = window.confirm("запомнить ваш email и пароль?");
+        if (autofillAsk) {
+          localStorage.setItem("autofillEmail", email);
+          localStorage.setItem("autofillPassword", password);
+          localStorage.setItem("autofill", "yes");
+        }
+      }
       // console.log(isOk);
       // if( isOk ) this.setState({ showCode: true })
     }
@@ -54,7 +76,7 @@ class Login extends Component {
   render() {
     let { filled, filledCode, showCode } = this.state;
     let {
-      loginForm: { remember, email },
+      loginForm: { remember, email, password },
       projectTitle,
     } = this.props.actions;
     return (
@@ -68,7 +90,7 @@ class Login extends Component {
               <Header as="h3" color="grey" textAlign="center">
                 Вход в систему
               </Header>
-              <Form size="large" onSubmit={this.handleLogin}>
+              <Form size="large">
                 <Segment padded="very" className="no-border raised">
                   {!this.state.privateKeyOnly && (
                     <Form.Input
@@ -87,6 +109,7 @@ class Login extends Component {
                       size="huge"
                       name="password"
                       fluid
+                      value={password}
                       icon="lock"
                       iconPosition="left"
                       placeholder="Пароль"
@@ -131,6 +154,19 @@ class Login extends Component {
             </Segment>
           </Grid.Column>
         </Grid>
+        {/* <Confirm
+          open={this.state.autofillConfirm}
+          content=""
+          header="запомнить email и пароль?"
+          cancelButton="не запоминать"
+          confirmButton="да"
+          onCancel={() => {
+            this.setState({ autofillConfirm: false });
+            localStorage.setItem("autofill", "no");
+            this.handleLogin();
+          }}
+          onConfirm={this.handleConfirm}
+        /> */}
       </div>
     );
   }
