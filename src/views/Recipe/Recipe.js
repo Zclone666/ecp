@@ -18,6 +18,8 @@ import _ from "lodash";
 
 import MaskedInput from "react-text-mask";
 
+import { getUserCertificates, Certificate, createDetachedSignature, createHash } from "crypto-pro";
+
 import {
   // Sidebar,
   Menu,
@@ -49,6 +51,9 @@ class Recipe extends Component {
       openCode: false,
       code: null,
       spectextPrompt: null,
+      certificates: [],
+      selectedCertificate: null,
+      certificateSelectionDialog: false,
     };
     //this.contextRef = createRef()
   }
@@ -170,8 +175,8 @@ class Recipe extends Component {
       this.props.patients.current["medcard_num"] = { default: value };
       return;
     }
-    if (name === 'birthdate') {
-      const date = moment(value).format('x');
+    if (name === "birthdate") {
+      const date = moment(value).format("x");
       this.props.patients.current["birthdate"] = date;
       return;
     }
@@ -180,6 +185,32 @@ class Recipe extends Component {
   handleMaskedInputPatientDataChange = (e) => {
     const { value, name } = e.target;
     this.props.patients.current[name] = value;
+  };
+
+  initiateSigningProcess = async () => {
+    const availableCertificates = await getUserCertificates()
+      .then((certs) => certs)
+      .catch((e) => {
+        // console.log({ e });
+        return [];
+      })
+      .then((certs) => Promise.all(certs.map(async (c) => ({ cert: c, valid: await c.isValid() }))));
+    const validCertificates = availableCertificates.filter((c) => c.valid).map((c) => c.cert);
+    this.setState({ certificates: validCertificates, certificateSelectionDialog: true });
+  };
+
+  sign = async () => {
+    this.props.actions.makeAlerts({
+      alerts: [
+        {
+          title: `Рецепт был успешно подписан цифровой подписью.`,
+          message: "",
+          level: "success",
+          sticky: false,
+        },
+      ],
+    });
+    this.setState({ selectedCertificate: null, certificates: [], certificateSelectionDialog: false });
   };
 
   render() {
@@ -238,7 +269,7 @@ class Recipe extends Component {
     // console.log({ recipe_endtimeitem });
     return (
       <>
-        <Menu className="bottom fixed menu three item huge main">
+        <Menu className="bottom fixed menu four item huge main">
           <Menu.Item color="red" onClick={this.back}>
             Назад
           </Menu.Item>
@@ -250,6 +281,9 @@ class Recipe extends Component {
           {/* {code && ( */}
           <Menu.Item disabled={noEmail || !code} onClick={this.print}>
             Печать
+          </Menu.Item>
+          <Menu.Item disabled={noEmail || !recipe_formid} onClick={this.initiateSigningProcess}>
+            Подписать
           </Menu.Item>
           {/* )} */}
         </Menu>
@@ -312,11 +346,11 @@ class Recipe extends Component {
                   <Form.Field width={4}>
                     <label>Дата рождения</label>
                     <Calendar
-                      name='birthdate'
-                      value={moment(patient.birthdate).format("x")} 
-                      maxDate={new Date()} 
-                      onChange={this.handlePatientDataChange} 
-                      size='medium'
+                      name="birthdate"
+                      value={moment(patient.birthdate).format("x")}
+                      maxDate={new Date()}
+                      onChange={this.handlePatientDataChange}
+                      size="medium"
                     />
                     {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
                   </Form.Field>
@@ -774,6 +808,44 @@ class Recipe extends Component {
               onClick={() => this.setOpenCode(false)}
               positive
             />
+          </Modal.Actions>
+        </Modal>
+        <Modal
+          onClose={() => this.setState({ certificateSelectionDialog: false })}
+          onOpen={() => this.setState({ certificateSelectionDialog: true })}
+          open={this.state.certificateSelectionDialog}
+        >
+          <Modal.Header>Выберите сертификат для подписи</Modal.Header>
+          <Modal.Content>
+            <Form>
+              <Form.Field>
+                <label>доступные сертификаты</label>
+                <Dropdown
+                  size="big"
+                  options={this.state.certificates.map((cert) => {
+                    return {
+                      key: cert.thumbprint,
+                      text: cert.name,
+                      value: cert,
+                    };
+                  })}
+                  placeholder=""
+                  name="recipe_formid"
+                  selection
+                  fluid
+                  value={this.state.selectedCertificate}
+                  onChange={(e, { name, value }) => this.setState({ selectedCertificate: value })}
+                />
+              </Form.Field>
+            </Form>
+          </Modal.Content>
+          <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
+            <Button color="red" onClick={() => this.setState({ certificateSelectionDialog: false })}>
+              Отмена
+            </Button>
+            <Button color="blue" onClick={this.sign} disabled={this.state.selectedCertificate == null}>
+              Подписать
+            </Button>
           </Modal.Actions>
         </Modal>
       </>
