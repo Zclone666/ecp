@@ -43,19 +43,8 @@ class Profile extends Component {
   }
 
   render() {
-    const {
-      id,
-      fio,
-      firstname,
-      lastname,
-      patronymic,
-      sex,
-      snils,
-      diploms,
-      licenses,
-      emails,
-      phone,
-    } = this.props.actions.profile;
+    const { id, fio, firstname, lastname, patronymic, sex, snils, diploms, licenses, emails, phone } =
+      this.props.actions.profile;
 
     let email = (emails.length > 0 && emails[0]) || "";
 
@@ -125,10 +114,10 @@ class Profile extends Component {
                 <Form.Field>
                   <label>Пол</label>
                   <Button.Group size="big" fluid>
-                    <Button primary={sex === "man"} onClick={this.handleChange} name="sex" value="man">
+                    <Button primary={sex === "male"} onClick={this.handleChange} name="sex" value="male">
                       Мужчина
                     </Button>
-                    <Button primary={sex === "woman"} onClick={this.handleChange} name="sex" value="woman">
+                    <Button primary={sex === "female"} onClick={this.handleChange} name="sex" value="female">
                       Женщина
                     </Button>
                   </Button.Group>

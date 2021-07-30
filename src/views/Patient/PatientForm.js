@@ -82,7 +82,7 @@ class PatientForm extends Component {
     } else {
       this.props.patients.current[name] = value;
     }
-    if ((name === "sex" && value !== "woman") || veryOld) {
+    if ((name === "sex" && value !== "female") || veryOld) {
       this.props.patients.current.pregnancy = false;
       this.props.patients.current.gestation = null;
       this.props.patients.current.trimester = null;
@@ -224,7 +224,7 @@ class PatientForm extends Component {
       searchRows = [],
       searchQuery = "";
 
-    let isWoman = sex === "woman";
+    let isWoman = sex === "female";
     let isPregant = !!pregnancy;
 
     // console.log({birthdate});
@@ -259,10 +259,10 @@ class PatientForm extends Component {
             <Form.Field>
               <label>Пол</label>
               <Button.Group size="big">
-                <Button primary={sex === "man"} onClick={this.handleChange} name="sex" value="man">
+                <Button primary={sex === "male"} onClick={this.handleChange} name="sex" value="male">
                   Мужчина
                 </Button>
-                <Button primary={sex === "woman"} onClick={this.handleChange} name="sex" value="woman">
+                <Button primary={sex === "female"} onClick={this.handleChange} name="sex" value="female">
                   Женщина
                 </Button>
               </Button.Group>
