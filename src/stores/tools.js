@@ -307,11 +307,11 @@ class Tools {
       path: "Tools/ReportError",
       data,
       success: async (data) => {
-        makeAlerts(data);
+        this.stores.actions.makeAlerts(data);
         this.stores.actions.loading = false;
       },
       fail: (alerts) => {
-        makeAlerts(data);
+        this.stores.actions.makeAlerts(data);
         this.stores.actions.loading = false;
       },
       always(data) {},
