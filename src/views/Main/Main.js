@@ -240,7 +240,7 @@ class Main extends Component {
               <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth="481">
                 <Menu.Item>
                   <Icon name={"bed"} className={patientId ? "" : " glowing"} />
-                  {fio && fio.length > 2 ? fio : "Пациент не выбран"}
+                  {fio || "Пациент не выбран"}
                 </Menu.Item>
               </Responsive>
               {!misDisabled && isDisease && (

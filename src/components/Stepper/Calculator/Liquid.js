@@ -332,7 +332,7 @@ class LiquidCalculator extends Component {
                 </Input>
               </Form.Field>
               <Form.Field width={3}>
-                <label>На массу тела:</label>
+                <label>Масса тела:</label>
                 <Input
                   disabled={disableAll}
                   size="big"
@@ -345,7 +345,7 @@ class LiquidCalculator extends Component {
                 />
               </Form.Field>
               <Form.Field width={3}>
-                <label>На кг веса:</label>
+                <label>На кг массы тела:</label>
                 <Input
                   size="big"
                   name="weightDosage"

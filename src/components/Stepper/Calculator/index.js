@@ -382,7 +382,7 @@ class Calculator extends Component {
                 />
               </Form.Field>
               <Form.Field width={3}>
-                <label>На массу тела:</label>
+                <label>Масса тела:</label>
                 <Input
                   disabled={disableAll}
                   size="big"
@@ -395,7 +395,7 @@ class Calculator extends Component {
                 />
               </Form.Field>
               <Form.Field width={3}>
-                <label>На кг веса:</label>
+                <label>На кг массы тела:</label>
                 <Input
                   disabled={disableAll || disableMulti}
                   size="big"

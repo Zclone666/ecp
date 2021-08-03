@@ -600,6 +600,7 @@ class Actions {
 
   async login() {
     //this.loginForm.key = AUTH_SERVICE_KEY;
+    this.loading = true;
     let { privateKey, remember } = this.loginForm;
     let { active_language } = this;
     let data = {
@@ -723,6 +724,7 @@ class Actions {
             }, 3000);
           }
         });
+        this.loading = false;
       },
       always: (data) => {
         this.loading = false;

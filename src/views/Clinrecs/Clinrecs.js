@@ -127,7 +127,7 @@ class Clinrecs extends Component {
           {!hasForward && haveResult && <Menu.Item onClick={this.setClinrec}>Применить</Menu.Item>}
         </Menu>
 
-        <div className="scrollwrapper bottomMenu">
+        <div className="scrollwrapper bottomMenu" style={{ overflow: "hidden" }}>
           <Stepper />
         </div>
       </>
