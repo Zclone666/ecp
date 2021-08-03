@@ -1,11 +1,11 @@
-import { observable, action, autorun, computed } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
-import moment from "moment";
+import { observable, action, autorun, computed } from 'mobx';
+import { GET, POST, PUT } from '../lib/connect';
+import moment from 'moment';
 
-import { PatientScheme } from "../schemes";
+import { PatientScheme } from '../schemes';
 
-import _ from "lodash";
-import AlertItem from "../components/Alerts/Alert";
+import _ from 'lodash';
+import AlertItem from '../components/Alerts/Alert';
 
 class Patients {
   @observable ready = false;
@@ -21,7 +21,7 @@ class Patients {
     this.stores = stores;
     this.router = stores.router;
 
-    this.patient = observable.map({}, "patient");
+    this.patient = observable.map({}, 'patient');
 
     autorun(() => {});
   }
@@ -447,7 +447,7 @@ class Patients {
     if (patients && _.isArray(patients)) {
       patients.forEach(async (patientId, i) => {
         let patient = this.getById(patientId);
-        let key = patientId || (moment().format("x") + i).toString();
+        let key = patientId || (moment().format('x') + i).toString();
 
         // let current = await this.patient.get(key) || {}
         // let patient = await _.extend(current, { name: names[patientId], id: patientId, key });
@@ -479,7 +479,7 @@ class Patients {
     return res;
   }
 
-  async search(text, saveTo = "search") {
+  async search(text, saveTo = 'search') {
     // {
     //   "key":"",
     //   "authkey":"ауткей",
@@ -508,7 +508,7 @@ class Patients {
       success: async (data) => {
         if (data.patients && data.patients.length > 0 && _.isArray(data.patients)) {
           await data.patients.forEach((concept, i) => {
-            data.patients[i].key = "concept" + i;
+            data.patients[i].key = 'concept' + i;
             data.patients[i].title = data.patients[i].name;
           });
 
@@ -538,12 +538,15 @@ class Patients {
     };
     let patient = await _.assignIn({ ...this.current }, { ...this.stores.actions.patientPassport });
     data.patient = patient;
+    if (data.patient.birthdate) {
+      data.patient.birthdate = moment(data.patient.birthdate, 'x').utc().format('x');
+    }
     // data.authkey = this.stores.actions.authkey
     // data.key = this.stores.actions.privateKey
     // console.log(data.patient);
     this.stores.actions.loading = true;
     return POST({
-      path: data.patient.id ? `tools/PatientUpdate` : "tools/PatientAdd",
+      path: data.patient.id ? `tools/PatientUpdate` : 'tools/PatientAdd',
       data,
       success: async (data) => {
         if (data.patients) {
