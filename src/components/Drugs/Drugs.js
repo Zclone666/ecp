@@ -255,7 +255,7 @@ class Drugs extends Component {
                       }}
                     </Droppable>
                   );
-                } else {
+                } else if (!topview_disabled) {
                   return (
                     <Droppable droppableId={`drug_place_${liquid}`} type="DRUG" key={`drug_place_${liquid}`}>
                       {(prov, snap) => {
@@ -270,7 +270,7 @@ class Drugs extends Component {
                             }}
                             {...prov.droppableProps}
                           >
-                            {!grouped[liquid] && !topview_disabled && (
+                            {!grouped[liquid] && (
                               <div className={"abstext"}>Перетащите сюда не менее двух составляющих для раствора</div>
                             )}
                             {grouped[liquid] && (

@@ -123,7 +123,7 @@ class Drug extends React.Component {
 
   render() {
     let {
-      actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, disabled },
+      actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, disabled, topview_disabled },
       drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage: dose },
       warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
@@ -345,7 +345,7 @@ class Drug extends React.Component {
             )}
           </List.Content>
         </Responsive>
-        {!disabled && canDrag && (
+        {!disabled && canDrag && !topview_disabled && (
           <div className="draghandler">
             <div></div>
             <div></div>
