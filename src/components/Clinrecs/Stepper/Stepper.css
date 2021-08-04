@@ -7,19 +7,4 @@
   .clinRecHeaderContent {
     font-size: 18px !important;
   }
-  .with-steps {
-    padding-top: 6em !important;
-  }
-}
-
-@media (max-width: 660px) {
-  .with-steps {
-    padding-top: 7em !important;
-  }
-}
-
-@media (max-width: 335px) {
-  .with-steps {
-    padding-top: 9em !important;
-  }
 }
