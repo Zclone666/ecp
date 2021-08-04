@@ -114,12 +114,14 @@ class Stepper extends Component {
     };
 
     const headerMessage =
-      disease.length === 1 ? `Клинические рекомендации по диагнозу "${disease[0].name}"` : "Клинические рекоммендации";
+      disease.length === 1 && disease[0].name.length < 15
+        ? `Клинические рекомендации по диагнозу "${disease[0].name}"`
+        : "Клинические рекоммендации";
     // console.log({checker, clinrecCheckerStep});
     return (
-      <>
+      <Responsive className="h100 with-steps" fireOnMount columns="equal" onUpdate={this.handleOnUpdate}>
         <Step.Group attached="top" className="noborder fluid" style={{ backgroundColor: "#f0f0f0" }}>
-          <Header as="h2" className="clinRecHeader" style={{ padding: "0.8em", backgroundColor: "rgb(240, 240, 240)" }}>
+          <Header as="h2" className="clinRecHeader" style={{ padding: "0.8em" }}>
             <Icon name="clipboard list" />
             <Header.Content className="clinRecHeaderContent">
               {headerMessage}
@@ -131,45 +133,43 @@ class Stepper extends Component {
             </Header.Content>
           </Header>
         </Step.Group>
-        <Responsive className="h100 with-steps no-padding" fireOnMount columns="equal" onUpdate={this.handleOnUpdate}>
-          <Slider ref={this.sliderRef} {...settings}>
-            {_.keys(checker).map((id, i) => {
-              let page = checker[id];
-              // console.log({id, page});
-              return (
-                <div className="scrollwrapper" key={"page" + i}>
-                  <List selection divided className="dozelist big">
-                    {page.arr.map((item, x) => {
-                      return {
-                        Binary: (
-                          <Binary
-                            name={item.id}
-                            onChange={this.onChange}
-                            title={item.name}
-                            value={clinrecCheckerData[item.id].value}
-                          />
-                        ),
-                        Value: (
-                          <Value
-                            unit={item.unit}
-                            name={item.id}
-                            onChange={this.onChange}
-                            title={item.name}
-                            value={clinrecCheckerData[item.id].value}
-                          />
-                        ),
-                      }[item.type];
-                    })}
-                  </List>
-                </div>
-              );
-            })}
-            <div className="scrollwrapper">
-              <Clinrec />
-            </div>
-          </Slider>
-        </Responsive>
-      </>
+        <Slider ref={this.sliderRef} {...settings}>
+          {_.keys(checker).map((id, i) => {
+            let page = checker[id];
+            // console.log({id, page});
+            return (
+              <div className="scrollwrapper" key={"page" + i}>
+                <List selection divided className="dozelist big">
+                  {page.arr.map((item, x) => {
+                    return {
+                      Binary: (
+                        <Binary
+                          name={item.id}
+                          onChange={this.onChange}
+                          title={item.name}
+                          value={clinrecCheckerData[item.id].value}
+                        />
+                      ),
+                      Value: (
+                        <Value
+                          unit={item.unit}
+                          name={item.id}
+                          onChange={this.onChange}
+                          title={item.name}
+                          value={clinrecCheckerData[item.id].value}
+                        />
+                      ),
+                    }[item.type];
+                  })}
+                </List>
+              </div>
+            );
+          })}
+          <div className="scrollwrapper">
+            <Clinrec />
+          </div>
+        </Slider>
+      </Responsive>
     );
   }
 }
