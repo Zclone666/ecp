@@ -2,12 +2,13 @@ import React, { Component, createRef } from "react";
 import { inject, observer } from "mobx-react";
 
 import Slider from "react-slick";
+import RouterLink from "../../../router/a";
 
 import Binary from "../Checker/Binary";
 import Value from "../Checker/Value";
 import Clinrec from "../Clinrec";
 
-import { Icon, Step, Responsive, List, Header } from "semantic-ui-react";
+import { Transition, Accordion, Icon, Step, Responsive, List, Header } from "semantic-ui-react";
 
 import _ from "lodash";
 import "./Stepper.css";
@@ -26,6 +27,7 @@ class Stepper extends Component {
 
   onChange = ({ name, value }) => {
     let {
+      router: { values },
       clinrecs: { checker },
       actions: { clinrecCheckerStep, clinrecCheckerData },
     } = this.props;
@@ -92,7 +94,9 @@ class Stepper extends Component {
     }
   };
   render() {
+    let { activeIndex, viewType } = this.state;
     let {
+      router: { values },
       clinrecs: { checker },
       actions: { clinrecCheckerStep, clinrecCheckerData },
       patients: {
@@ -114,12 +118,10 @@ class Stepper extends Component {
     };
 
     const headerMessage =
-      disease.length === 1 && disease[0].name.length < 15
-        ? `Клинические рекомендации по диагнозу "${disease[0].name}"`
-        : "Клинические рекоммендации";
+      disease.length === 1 ? `Клинические рекомендации по диагнозу "${disease[0].name}"` : "Клинические рекоммендации";
     // console.log({checker, clinrecCheckerStep});
     return (
-      <Responsive className="h100 with-steps" fireOnMount columns="equal" onUpdate={this.handleOnUpdate}>
+      <>
         <Step.Group attached="top" className="noborder fluid" style={{ backgroundColor: "#f0f0f0" }}>
           <Header as="h2" className="clinRecHeader" style={{ padding: "0.8em" }}>
             <Icon name="clipboard list" />
@@ -133,43 +135,45 @@ class Stepper extends Component {
             </Header.Content>
           </Header>
         </Step.Group>
-        <Slider ref={this.sliderRef} {...settings}>
-          {_.keys(checker).map((id, i) => {
-            let page = checker[id];
-            // console.log({id, page});
-            return (
-              <div className="scrollwrapper" key={"page" + i}>
-                <List selection divided className="dozelist big">
-                  {page.arr.map((item, x) => {
-                    return {
-                      Binary: (
-                        <Binary
-                          name={item.id}
-                          onChange={this.onChange}
-                          title={item.name}
-                          value={clinrecCheckerData[item.id].value}
-                        />
-                      ),
-                      Value: (
-                        <Value
-                          unit={item.unit}
-                          name={item.id}
-                          onChange={this.onChange}
-                          title={item.name}
-                          value={clinrecCheckerData[item.id].value}
-                        />
-                      ),
-                    }[item.type];
-                  })}
-                </List>
-              </div>
-            );
-          })}
-          <div className="scrollwrapper">
-            <Clinrec />
-          </div>
-        </Slider>
-      </Responsive>
+        <Responsive className="h100 with-steps no-padding" fireOnMount columns="equal" onUpdate={this.handleOnUpdate}>
+          <Slider ref={this.sliderRef} {...settings}>
+            {_.keys(checker).map((id, i) => {
+              let page = checker[id];
+              // console.log({id, page});
+              return (
+                <div className="scrollwrapper" key={"page" + i}>
+                  <List selection divided className="dozelist big">
+                    {page.arr.map((item, x) => {
+                      return {
+                        Binary: (
+                          <Binary
+                            name={item.id}
+                            onChange={this.onChange}
+                            title={item.name}
+                            value={clinrecCheckerData[item.id].value}
+                          />
+                        ),
+                        Value: (
+                          <Value
+                            unit={item.unit}
+                            name={item.id}
+                            onChange={this.onChange}
+                            title={item.name}
+                            value={clinrecCheckerData[item.id].value}
+                          />
+                        ),
+                      }[item.type];
+                    })}
+                  </List>
+                </div>
+              );
+            })}
+            <div className="scrollwrapper">
+              <Clinrec />
+            </div>
+          </Slider>
+        </Responsive>
+      </>
     );
   }
 }
