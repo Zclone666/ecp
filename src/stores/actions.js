@@ -651,7 +651,7 @@ class Actions {
         this.drugStructure.doctor_id = (doc && doc[0]) || null;
         this.drugStructure.doctor_name = (doc && doc[0] && names[doc[0]]) || null;
 
-        if (doc && doc[0]) {
+        if (doc && doc[0] && !this.bottomview_disabled) {
           this.makeAlerts({
             alerts: [
               {
@@ -861,16 +861,18 @@ class Actions {
     this.doctor.id = args.doctor_id;
     this.doctor.name = args.doctor_name;
     this.clinic = observable({ id: args.clinic_id, name: args.clinic_name });
-    this.makeAlerts({
-      alerts: [
-        {
-          title: `Здравствуйте, ${this.doctor.name}`,
-          message: "",
-          level: "info",
-          sticky: false,
-        },
-      ],
-    });
+    if (!this.bottomview_disabled) {
+      this.makeAlerts({
+        alerts: [
+          {
+            title: `Здравствуйте, ${this.doctor.name}`,
+            message: "",
+            level: "info",
+            sticky: false,
+          },
+        ],
+      });
+    }
     this.authorized = true;
     this.privateKey = this.loginForm.privateKey;
     // return this.login();

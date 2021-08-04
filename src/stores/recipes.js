@@ -29,6 +29,9 @@ class Recipes {
   @observable drugKeysForPrescription = [];
   @observable maxcount = 0;
 
+  @observable digitallySignedRecipe = null;
+  @observable certificateBase64 = null;
+
   constructor({ stores }) {
     this.stores = stores;
     this.router = stores.router;
@@ -71,6 +74,26 @@ class Recipes {
     this.emailSent = false;
     this.drugKeysForPrescription = [];
     this.maxcount = 0;
+  };
+
+  getDataToSign = () => {
+    let data = {
+      ...this.stores.actions.structure,
+      drugs: this.stores.actions.structure.drugs.filter((drug) => this.drugKeysForPrescription.includes(drug.key)),
+    };
+    data.recipe_data = {
+      formid: this.recipe_formid,
+      recipe_text: this.recipe_text,
+      recipe_endtime: this.recipe_endtime,
+      recipe_endtimeitem: this.recipe_endtimeitem,
+      pcatcode: this.citizenCategory,
+      pdiscount: this.financingSource,
+      cito: this.cito,
+      statim: this.statim,
+      special: this.special,
+      spectext: this.spectext,
+    };
+    return data;
   };
 
   save = async () => {
@@ -130,6 +153,8 @@ class Recipes {
       statim: this.statim,
       special: this.special,
       spectext: this.spectext,
+      docsign: this.digitallySignedRecipe,
+      doccertify: this.certificateBase64,
     };
 
     return POST({

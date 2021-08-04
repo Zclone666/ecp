@@ -175,7 +175,7 @@ class Drugs extends Component {
 
   render() {
     let {
-      actions: { selectedDrug, makeLiquids, disabled },
+      actions: { selectedDrug, makeLiquids, disabled, topview_disabled },
       drugs: { drug: drugs, liquid: liquidList, checkLiquids },
       warnings: { warning }, //warnings, warnGroups
       dosages: { dosage },
@@ -270,7 +270,7 @@ class Drugs extends Component {
                             }}
                             {...prov.droppableProps}
                           >
-                            {!grouped[liquid] && (
+                            {!grouped[liquid] && !topview_disabled && (
                               <div className={"abstext"}>Перетащите сюда не менее двух составляющих для раствора</div>
                             )}
                             {grouped[liquid] && (

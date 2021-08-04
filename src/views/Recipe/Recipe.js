@@ -54,8 +54,13 @@ class Recipe extends Component {
       certificates: [],
       selectedCertificate: null,
       certificateSelectionDialog: false,
+      wasSigned: false,
+      signedData: null,
     };
     //this.contextRef = createRef()
+  }
+  componentWillUnmount() {
+    this.resetSign();
   }
   setOpen = (open) => {
     open = open || false;
@@ -115,6 +120,7 @@ class Recipe extends Component {
   // }handlePatientDataChange
 
   handleChange = async (e, { name, value }) => {
+    this.resetSign();
     // if (name === "patient") console.log({ value });
     if (!name && !value) {
       let { name, value } = e.target;
@@ -126,6 +132,7 @@ class Recipe extends Component {
 
   handleRecipeDataChange = (e, { name, value }) => {
     // console.log({ name, value, e });
+    this.resetSign();
     if (!name && !value) {
       let { name, value } = e.target;
     }
@@ -168,6 +175,7 @@ class Recipe extends Component {
   };
 
   handlePatientDataChange = (e, { name, value }) => {
+    this.resetSign();
     if (!name && !value) {
       let { name, value } = e.target;
     }
@@ -183,6 +191,7 @@ class Recipe extends Component {
     this.props.patients.current[name] = value;
   };
   handleMaskedInputPatientDataChange = (e) => {
+    this.resetSign();
     const { value, name } = e.target;
     this.props.patients.current[name] = value;
   };
@@ -200,6 +209,21 @@ class Recipe extends Component {
   };
 
   sign = async () => {
+    const data = this.props.recipes.getDataToSign();
+    const stringifiedData = JSON.stringify(data);
+    const cert = this.state.selectedCertificate;
+    // console.log({ cert, data });
+    const certBase64 = await cert.exportBase64();
+    await createHash(stringifiedData).then((hashedDataToSign) =>
+      createDetachedSignature(this.state.selectedCertificate.thumbprint, hashedDataToSign).then((result) => {
+        this.setState({ signedData: result });
+        this.props.recipes.digitallySignedRecipe = result;
+        this.props.recipes.certificateBase64 = certBase64;
+      })
+    );
+
+    this.setState({ selectedCertificate: null, certificates: [], certificateSelectionDialog: false, wasSigned: true });
+
     this.props.actions.makeAlerts({
       alerts: [
         {
@@ -210,7 +234,15 @@ class Recipe extends Component {
         },
       ],
     });
-    this.setState({ selectedCertificate: null, certificates: [], certificateSelectionDialog: false });
+  };
+
+  resetSign = () => {
+    this.setState({
+      wasSigned: false,
+    });
+
+    this.props.recipes.digitallySignedRecipe = null;
+    this.props.recipes.certificateBase64 = null;
   };
 
   render() {
@@ -282,8 +314,8 @@ class Recipe extends Component {
           <Menu.Item disabled={noEmail || !code} onClick={this.print}>
             Печать
           </Menu.Item>
-          <Menu.Item disabled={noEmail || !recipe_formid} onClick={this.initiateSigningProcess}>
-            Подписать
+          <Menu.Item disabled={noEmail || !recipe_formid || this.state.wasSigned} onClick={this.initiateSigningProcess}>
+            <span>{this.state.wasSigned ? "Подписано" : "Подписать"}</span>
           </Menu.Item>
           {/* )} */}
         </Menu>
