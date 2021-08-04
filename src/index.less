@@ -1,4 +1,4 @@
-@import 'semantic-ui/site/globals/site.variables';
+@import "semantic-ui/site/globals/site.variables";
 html,
 body,
 .main.container {
@@ -229,6 +229,9 @@ body > #root,
 body > #root > .ui.body {
   height: 100% !important;
 }
+.ui.body > .no-pushable-padding {
+  margin-top: -4 * @relativeSmall !important;
+}
 .ui.body > .pushable {
   padding-top: 4 * @relativeSmall !important;
 }
@@ -250,7 +253,7 @@ body > #root > .ui.body {
   margin: 0.75rem 0em !important;
 }
 .logobg {
-  background-image: url('/records.png');
+  background-image: url("/records.png");
   background-position: left;
   background-size: cover;
   width: 107px !important;
@@ -266,7 +269,7 @@ body > #root > .ui.body {
 }
 
 .ui.image.minilogo {
-  background-image: url('/new.svg');
+  background-image: url("/new.svg");
   background-position: left;
   background-size: cover;
   width: 62px !important;
@@ -282,7 +285,7 @@ body > #root > .ui.body {
   right: 0;
   margin: 0;
   opacity: 0;
-  -ms-filter: 'alpha(opacity=0)';
+  -ms-filter: "alpha(opacity=0)";
   direction: ltr;
   cursor: pointer;
   width: 100% !important;
@@ -298,7 +301,7 @@ body > #root > .ui.body {
   right: 0;
   margin: 0;
   opacity: 0;
-  -ms-filter: 'alpha(opacity=0)';
+  -ms-filter: "alpha(opacity=0)";
   direction: ltr;
   cursor: pointer;
   width: 100% !important;
@@ -454,7 +457,7 @@ i.huge.violet.icon {
   border-width: 1px;
   margin-bottom: 4px;
 }
-.labeled.image .ui[class*='right ribbon'].label {
+.labeled.image .ui[class*="right ribbon"].label {
   z-index: 999;
 }
 
@@ -1321,7 +1324,7 @@ ul.ui.list li {
 .ui.list .list .item,
 ol.ui.list li:first-child:after,
 ul.ui.list li:first-child:after {
-  content: '';
+  content: "";
   display: block;
   height: 0;
   clear: both;
@@ -1376,8 +1379,8 @@ ul.ui.list li {
   display: table-cell;
 }
 
-.ui.list .list .item [class*='left floated'],
-.ui.list .item [class*='left floated'] {
+.ui.list .list .item [class*="left floated"],
+.ui.list .item [class*="left floated"] {
   float: left;
   margin: 0 1em 0 0;
 }
@@ -1719,7 +1722,7 @@ ul.ui.list li {
   left: auto;
   line-height: 200px;
   color: #f0f3f5;
-  transform: ~'rotate(45deg)';
+  transform: ~"rotate(45deg)";
 }
 
 .concept_container .ui.label {

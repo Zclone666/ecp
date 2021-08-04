@@ -279,7 +279,7 @@ class Main extends Component {
           </Menu>
         )}
 
-        <Sidebar.Pushable className={disabled && "disabled"}>
+        <Sidebar.Pushable className={`${disabled ? "disabled" : ""}${topview_disabled ? " no-pushable-padding" : ""}`}>
           {deletedRows.length > 0 && (
             <Menu secondary className={`bottom fixed`}>
               <Menu.Item>Удалено строк: {deletedRows.length}</Menu.Item>
@@ -532,7 +532,7 @@ class Main extends Component {
           )}
 
           <Sidebar.Pusher dimmed={open || showPage} className="pusherwrapper">
-            {!disabled && (
+            {!disabled && !topview_disabled && (
               <Menu className="fluid one item ui top huge text menu searchwrapper" style={{ margin: 0 }}>
                 <Menu.Item>
                   <Segment basic className="fluid">
