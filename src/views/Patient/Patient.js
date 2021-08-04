@@ -38,6 +38,7 @@ class Patient extends Component {
 
       isLoading: false,
       searchQuery: "",
+      pending: false,
     };
     this.sliderRef = createRef();
   }
@@ -61,7 +62,10 @@ class Patient extends Component {
   };
 
   savePatient = async () => {
+    if (this.state.pending) return;
+    this.setState({ pending: true });
     let res = await this.props.patients.save();
+    this.setState({ pending: false });
     if (res) {
       this.props.router.push("/");
     }
@@ -212,7 +216,9 @@ class Patient extends Component {
             <Menu.Item color="red" onClick={this.back}>
               Отмена
             </Menu.Item>
-            <Menu.Item onClick={this.savePatient}>Сохранить</Menu.Item>
+            <Menu.Item isLoading={this.state.pending} onClick={this.savePatient}>
+              Сохранить
+            </Menu.Item>
           </Menu>
         )}
 
