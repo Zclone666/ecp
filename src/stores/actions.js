@@ -860,6 +860,8 @@ class Actions {
     };
     this.doctor.id = args.doctor_id;
     this.doctor.name = args.doctor_name;
+    this.authkey = args.authkey;
+    this.key = args.key;
     this.clinic = observable({ id: args.clinic_id, name: args.clinic_name });
     if (!this.bottomview_disabled) {
       this.makeAlerts({
