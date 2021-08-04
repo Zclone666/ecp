@@ -571,7 +571,8 @@ class Main extends Component {
                 {drug.size > 0 ? (
                   <Drugs />
                 ) : (
-                  !disabled && (
+                  !disabled &&
+                  !topview_disabled && (
                     <Segment basic>
                       <Message info>
                         <Icon name="info" />
