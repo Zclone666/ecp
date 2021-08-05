@@ -112,6 +112,8 @@ class Main extends Component {
     // console.log("search rows: ", this.props.drugs.searchRows);
     // return;
 
+    // if (this.props.drugs.searchReady == false) return;
+
     this.setState({ searchQuery: "" });
     if (!["FG", "ATX"].includes(result.type)) {
       await this.props.drugs.selectFromSearch(result);

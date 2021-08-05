@@ -1105,7 +1105,7 @@ class Drugs {
       path: "Drugs/ByFG",
       data,
       success: async (data) => {
-        return data.childs;
+        return [...data.childs, ...data.concepts];
       },
       fail: () => [],
     });
