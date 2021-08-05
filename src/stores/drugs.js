@@ -1092,5 +1092,23 @@ class Drugs {
       },
     });
   }
+
+  async searchByFG(concept) {
+    let { active_language } = this.stores.actions;
+    let data = {
+      drug: concept,
+      active_language,
+    };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: "Drugs/ByFG",
+      data,
+      success: async (data) => {
+        return data.childs;
+      },
+      fail: () => [],
+    });
+  }
 }
 export default Drugs;
