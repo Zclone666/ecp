@@ -31,6 +31,7 @@ class Recipes {
 
   @observable digitallySignedRecipe = null;
   @observable certificateBase64 = null;
+  @observable stringifiedSignData = null;
 
   constructor({ stores }) {
     this.stores = stores;
@@ -155,6 +156,7 @@ class Recipes {
       spectext: this.spectext,
       docsign: this.digitallySignedRecipe,
       doccertify: this.certificateBase64,
+      signeddata: this.stringifiedSignData,
     };
 
     return POST({
