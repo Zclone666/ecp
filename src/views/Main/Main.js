@@ -116,16 +116,19 @@ class Main extends Component {
 
     this.setState({ searchQuery: "" });
     if (!["FG", "ATX"].includes(result.type)) {
-      await this.props.drugs.selectFromSearch(result);
+      this.props.drugs.selectFromSearch(result);
       const input = document.querySelector(".results.transition.result-wrapper");
       input.classList.remove("visible");
     } else if (["FG", "ATX"].includes(result.type)) {
       // console.log("fg or atx");
       this.props.drugs.searchReady = false;
+
+      const input = document.querySelector(".results.transition.result-wrapper");
+      input.classList.remove("visible");
       this.setState({ searchQuery: result.name });
       this.props.drugs.searchRows = await this.props.drugs.searchByFG(result);
       this.props.drugs.searchReady = true;
-      const input = document.querySelector(".results.transition.result-wrapper");
+      // const input = document.querySelector(".results.transition.result-wrapper");
       input.classList.add("visible");
     }
   };
