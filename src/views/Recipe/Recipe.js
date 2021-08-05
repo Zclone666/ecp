@@ -219,7 +219,6 @@ class Recipe extends Component {
         this.setState({ signedData: result });
         this.props.recipes.digitallySignedRecipe = result;
         this.props.recipes.certificateBase64 = certBase64;
-        this.props.recipes.stringifiedSignData = stringifiedData;
       })
     );
 
@@ -244,7 +243,6 @@ class Recipe extends Component {
 
     this.props.recipes.digitallySignedRecipe = null;
     this.props.recipes.certificateBase64 = null;
-    this.props.recipes.stringifiedSignData = null;
   };
 
   render() {

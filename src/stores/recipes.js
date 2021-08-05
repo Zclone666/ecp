@@ -79,7 +79,6 @@ class Recipes {
 
   getDataToSign = () => {
     let data = {
-      ...this.stores.actions.structure,
       drugs: this.stores.actions.structure.drugs.filter((drug) => this.drugKeysForPrescription.includes(drug.key)),
     };
     data.recipe_data = {
@@ -156,7 +155,6 @@ class Recipes {
       spectext: this.spectext,
       docsign: this.digitallySignedRecipe,
       doccertify: this.certificateBase64,
-      signeddata: this.stringifiedSignData,
     };
 
     return POST({
