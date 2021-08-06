@@ -53,6 +53,7 @@ class Main extends Component {
       manualDrugInputText: "",
     };
     this.contextRef = createRef();
+    this.searchInput = createRef();
     this.debouncedSearch = _.debounce(this.callSearchFunction, 500, {
       leading: true,
     });
@@ -77,8 +78,59 @@ class Main extends Component {
   };
 
   handleResultSelect = async (e, { result }) => {
+    // this.props.drugs.searchRows = [
+    //   {
+    //     key: null,
+    //     id: "cyP8RzdZUco9PaSp+Zbmug==",
+    //     fpid: null,
+    //     type: "DV",
+    //     level: 283,
+    //     name: "Минералокортикоиды",
+    //     namesearch: null,
+    //     group: 0,
+    //     main: false,
+    //   },
+    //   {
+    //     key: null,
+    //     id: "DpRCvhJYBTNl8S32CoaWAw==",
+    //     fpid: null,
+    //     type: "DV",
+    //     level: 283,
+    //     name: "Глюкокортикоиды",
+    //     namesearch: null,
+    //     group: 0,
+    //     main: false,
+    //   },
+    // ];
+    // this.props.drugs.searchRows = await this.props.drugs.searchByFG(result);
+    // this.setState({ searchQuery: "e pa pa" });
+    // console.log("search input ", this.searchInput.current);
+    // const input = document.querySelector(".results.transition.result-wrapper");
+    // input.classList.add("visible");
+    // console.log({ input });
+
+    // console.log("search rows: ", this.props.drugs.searchRows);
+    // return;
+
+    // if (this.props.drugs.searchReady == false) return;
+
     this.setState({ searchQuery: "" });
-    await this.props.drugs.selectFromSearch(result);
+    if (!["FG", "ATX"].includes(result.type)) {
+      this.props.drugs.selectFromSearch(result);
+      const input = document.querySelector(".results.transition.result-wrapper");
+      input.classList.remove("visible");
+    } else if (["FG", "ATX"].includes(result.type)) {
+      // console.log("fg or atx");
+      this.props.drugs.searchReady = false;
+
+      const input = document.querySelector(".results.transition.result-wrapper");
+      input.classList.remove("visible");
+      this.setState({ searchQuery: result.name });
+      this.props.drugs.searchRows = await this.props.drugs.searchByFG(result);
+      this.props.drugs.searchReady = true;
+      // const input = document.querySelector(".results.transition.result-wrapper");
+      input.classList.add("visible");
+    }
   };
 
   callSearchFunction = (value) => {
@@ -537,6 +589,8 @@ class Main extends Component {
                 <Menu.Item>
                   <Segment basic className="fluid">
                     <Search
+                      ref={this.searchInput}
+                      id="searchInput"
                       fluid
                       size="huge"
                       height={height - 130}
