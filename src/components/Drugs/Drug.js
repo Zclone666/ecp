@@ -180,8 +180,6 @@ class Drug extends React.Component {
         ? nameshort[dosage.method] || names[dosage.method]
         : "";
 
-    console.log({ dosageForm, helpersDosage, dosageMethod, nameshort, names, helpers });
-
     return (
       <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
         <List.Content floated="right">
