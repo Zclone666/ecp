@@ -539,7 +539,7 @@ class Patients {
     let patient = await _.assignIn({ ...this.current }, { ...this.stores.actions.patientPassport });
     data.patient = patient;
     data.doctorId = this.stores.actions.drugStructure.doctor_id;
-    data.clinicId = this.stores.actions.drugStructure.clinic_id;
+    data.clinicId = this.stores.actions.default_clinic_id;
     if (data.patient.birthdate) {
       data.patient.birthdate = moment(data.patient.birthdate, "x").utc().format("x");
     }
