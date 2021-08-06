@@ -180,8 +180,6 @@ class Drug extends React.Component {
         ? nameshort[dosage.method] || names[dosage.method]
         : "";
 
-    console.log({ dosageForm, helpersDosage, dosageMethod, nameshort, names, helpers });
-
     return (
       <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
         <List.Content floated="right">
@@ -273,7 +271,7 @@ class Drug extends React.Component {
                 )}
                 {specials && <Popup content={specials} trigger={<Icon name="file alternate" />} />}
                 <Feed.Date className={!dosReady ? "gradient" : ""}>
-                  {dosageForm ? dosageForm + ", " : ""}
+                  {dosageForm ? `${dosageForm.trim()}, ` : ""}
                   {helpersDosage}
                   {/* {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
                   {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
@@ -309,8 +307,8 @@ class Drug extends React.Component {
                   </Feed.Summary>
 
                   <Feed.Meta>
-                    {dosageForm ? dosageForm + ", " : ""}
-                    {helpersDosage ? helpersDosage + ", " : ""}
+                    {dosageForm ? `${dosageForm.trim()}, ` : ""}
+                    {helpersDosage ? `${helpersDosage.trim()}, ` : ""}
                     {dosageMethod}
                     {/* {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
                     {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""}
