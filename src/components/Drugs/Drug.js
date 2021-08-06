@@ -169,6 +169,19 @@ class Drug extends React.Component {
 
     let rules = this.renderRules();
 
+    const dosageForm =
+      dosage.form && (nameshort[dosage.form] || names[dosage.form]) ? nameshort[dosage.form] || names[dosage.form] : "";
+    const helpersDosage =
+      helpers.dosage && (helpers.dosage.small || helpers.dosage.full)
+        ? helpers.dosage.small || helpers.dosage.full
+        : "";
+    const dosageMethod =
+      dosage.method && (nameshort[dosage.method] || names[dosage.method])
+        ? nameshort[dosage.method] || names[dosage.method]
+        : "";
+
+    console.log({ dosageForm, helpersDosage, dosageMethod, nameshort, names, helpers });
+
     return (
       <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
         <List.Content floated="right">
@@ -260,9 +273,11 @@ class Drug extends React.Component {
                 )}
                 {specials && <Popup content={specials} trigger={<Icon name="file alternate" />} />}
                 <Feed.Date className={!dosReady ? "gradient" : ""}>
-                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
+                  {dosageForm ? dosageForm + ", " : ""}
+                  {helpersDosage}
+                  {/* {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
                   {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
-                  {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""}
+                  {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""} */}
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta className={!dosReady ? "gradient" : ""}>
@@ -294,11 +309,13 @@ class Drug extends React.Component {
                   </Feed.Summary>
 
                   <Feed.Meta>
-                    {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
-                    {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
+                    {dosageForm ? dosageForm + ", " : ""}
+                    {helpersDosage ? helpersDosage + ", " : ""}
+                    {dosageMethod}
+                    {/* {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
                     {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""}
                     {(nameshort[dosage.method] || names[dosage.method]) && ", "}
-                    {rules.empty && (nameshort[dosage.method] || names[dosage.method] || "")}
+                    {rules.empty && (nameshort[dosage.method] || names[dosage.method] || "")} */}
                   </Feed.Meta>
                   <br />
                   {!rules.empty && (
