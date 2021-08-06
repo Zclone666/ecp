@@ -12,6 +12,8 @@ import Conflicts from "../../components/Conflicts";
 
 import Page from "../Page";
 
+import "./Main.css";
+
 import {
   Sidebar,
   Menu,
@@ -304,8 +306,10 @@ class Main extends Component {
                   minWidth="481"
                 >
                   <Menu.Item>
-                    <Icon name="clipboard list" />
-                    Клинреки
+                    <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}>
+                      <Icon name="clipboard list" />
+                      Клинреки
+                    </div>
                   </Menu.Item>
                 </Responsive>
               )}

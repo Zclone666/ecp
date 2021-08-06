@@ -132,6 +132,9 @@ class Patients {
         if (data.patient && data.patient.id) {
           await this.setCurrent(data.patient);
         }
+
+        this.stores.clinrecs.collectorAvailable = data.is_collector_available;
+
         let {
           allergy,
           birthdate,
