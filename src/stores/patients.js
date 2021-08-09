@@ -560,6 +560,7 @@ class Patients {
           await this.request(patients[0]);
           return this.getById(patients[0]);
         }
+        return data;
       },
       fail: (alerts) => {},
       always: (data) => {
