@@ -150,7 +150,7 @@ class Patient extends Component {
         break;
       case "new":
         step = 1;
-        this.clearPatient();
+        // this.clearPatient();
         break;
       case "passport":
         step = 2;
