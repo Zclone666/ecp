@@ -66,7 +66,7 @@ class Patient extends Component {
     this.setState({ pending: true });
     let res = await this.props.patients.save();
     this.setState({ pending: false });
-    if (res) {
+    if (res && res.alerts && res.alerts.length && res.alerts[0].code === "200") {
       this.props.router.push("/");
     }
   };
