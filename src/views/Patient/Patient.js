@@ -165,6 +165,7 @@ class Patient extends Component {
     let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
     let section = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
     let { step } = this.state;
+    const { firstname, lastname } = this.props.actions.patientPassport;
     switch (shownPage) {
       case "list":
         step = 0;
@@ -216,7 +217,7 @@ class Patient extends Component {
             <Menu.Item color="red" onClick={this.back}>
               Отмена
             </Menu.Item>
-            <Menu.Item isLoading={this.state.pending} onClick={this.savePatient}>
+            <Menu.Item isLoading={this.state.pending} onClick={this.savePatient} disabled={!firstname || !lastname}>
               Сохранить
             </Menu.Item>
           </Menu>

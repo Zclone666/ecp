@@ -87,7 +87,7 @@ class PatientPassport extends Component {
                 onChange={this.handleChange}
               />
             </Form.Field> */}
-            <Form.Field>
+            <Form.Field required>
               <label>Фамилия</label>
               <Input
                 size="big"
@@ -97,7 +97,7 @@ class PatientPassport extends Component {
                 onChange={this.handleChange}
               />
             </Form.Field>
-            <Form.Field>
+            <Form.Field required>
               <label>Имя</label>
               <Input
                 size="big"

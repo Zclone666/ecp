@@ -183,8 +183,11 @@ class Main extends Component {
   };
 
   resultRenderer = ({ name, level, tn, type }) => {
+    const icon = ["FG", "ATX"].includes(type) ? "folder open" : "pills";
+
     return (
       <div>
+        <Icon name={icon} />
         {name}
         {type === "TN" && <sup>TM</sup>}
       </div>
