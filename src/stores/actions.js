@@ -248,6 +248,8 @@ class Actions {
   @observable activeConflicts = [];
 
   @observable drugStructure = _.cloneDeep(StructureScheme);
+
+  @observable default_clinic_id = null;
   // {
   //   key: "key",
   //   device_id: null,
@@ -622,6 +624,8 @@ class Actions {
           lpu.forEach((item, i) => {
             this.checkData.lpu.push({ id: item, name: names[item] });
           });
+
+        if (lpu) this.default_clinic_id = lpu[0];
 
         if (lpu && lpu.length == 1) {
           this.drugStructure.clinic_id = (lpu && lpu[0]) || null;

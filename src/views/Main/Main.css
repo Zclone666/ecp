@@ -1,0 +1,10 @@
+.alertBlinker {
+  animation: blinker 1s linear infinite;
+  background: yellow;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}

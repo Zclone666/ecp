@@ -35,6 +35,7 @@ class Clinrecs extends Component {
       hasBackward: false,
     };
     this.contextRef = createRef();
+    this.props.clinrecs.collectorAvailable = false;
   }
 
   saveDoze = async () => {

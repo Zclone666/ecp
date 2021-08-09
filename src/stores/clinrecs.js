@@ -11,6 +11,8 @@ class Clinrecs {
   @observable names = {};
   @observable shortnames = {};
   @observable druglist = [];
+  @observable drugToClinrecHashset = {};
+  @observable collectorAvailable = false;
 
   constructor({ stores }) {
     this.stores = stores;
@@ -28,6 +30,7 @@ class Clinrecs {
     this.druglist = [];
     this.stores.actions.clinrecCheckerData = {};
     this.stores.actions.clinrecCheckerStep = 1;
+    this.drugToClinrecHashset = {};
   }
 
   async check(flag = false) {
@@ -189,7 +192,9 @@ class Clinrecs {
     });
   }
   iterator = 1;
-  recursiveGetDrugs = (child = null) => {
+  recursiveGetDrugs = (child = null, clinrecId = null) => {
+    // console.log("checker: ", this.checker);
+    // console.log("drugToClinrecHashset ", this.drugToClinrecHashset);
     // console.log({ child });
     this.iterator++;
     if (child && child.check === false) return;
@@ -207,6 +212,7 @@ class Clinrecs {
       }
       //drug.dosage.form
       // console.log(drug);
+      this.drugToClinrecHashset[drug.id] = clinrecId;
       setTimeout(() => this.stores.drugs.selectFromSearch(drug), this.iterator * 10);
       return;
     }
@@ -215,7 +221,7 @@ class Clinrecs {
       if (child.childs && child.childs.length > 0) {
         child.childs.forEach((id, i) => {
           let item = this.clinrec[id];
-          item && this.recursiveGetDrugs(item);
+          item && this.recursiveGetDrugs(item, clinrecId);
         });
       }
     } else {
@@ -224,7 +230,7 @@ class Clinrecs {
       _.keys(this.clinrec).forEach((id, i) => {
         let item = this.clinrec[id];
         if (!item.parents) {
-          item && this.recursiveGetDrugs(item);
+          item && this.recursiveGetDrugs(item, id);
         }
       });
     }

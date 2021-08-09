@@ -132,6 +132,9 @@ class Patients {
         if (data.patient && data.patient.id) {
           await this.setCurrent(data.patient);
         }
+
+        this.stores.clinrecs.collectorAvailable = data.is_collector_available;
+
         let {
           allergy,
           birthdate,
@@ -538,8 +541,8 @@ class Patients {
     };
     let patient = await _.assignIn({ ...this.current }, { ...this.stores.actions.patientPassport });
     data.patient = patient;
-    data.doctorId = this.stores.actions.doctor.id;
-    data.clinicId = this.stores.actions.clinic.id;
+    data.doctorId = this.stores.actions.drugStructure.doctor_id;
+    data.clinicId = this.stores.actions.default_clinic_id;
     if (data.patient.birthdate) {
       data.patient.birthdate = moment(data.patient.birthdate, "x").utc().format("x");
     }
