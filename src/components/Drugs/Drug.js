@@ -5,7 +5,7 @@ import { useDrag } from "react-dnd";
 
 import RouterLink from "../../router/a";
 
-import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "semantic-ui-react";
+import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown, Visibility } from "semantic-ui-react";
 
 import _ from "lodash";
 
@@ -195,7 +195,7 @@ class Drug extends React.Component {
               </Button>
             )}
             {!disabled && !dosReady && (
-              <Button disabled icon>
+              <Button disabled icon style={{ visibility: "hidden" }}>
                 <Icon loading name="circle notch" />
               </Button>
             )}
