@@ -169,6 +169,8 @@ class Drug extends React.Component {
 
     let rules = this.renderRules();
 
+    console.log({ dosage, nameshort, names, helpers });
+
     const dosageForm =
       dosage.form && (nameshort[dosage.form] || names[dosage.form]) ? nameshort[dosage.form] || names[dosage.form] : "";
     const helpersDosage =
@@ -179,6 +181,9 @@ class Drug extends React.Component {
       dosage.method && (nameshort[dosage.method] || names[dosage.method])
         ? nameshort[dosage.method] || names[dosage.method]
         : "";
+
+    console.log({ dosage, nameshort, names, helpers, rules });
+    console.log({ dosageForm, helpersDosage, dosageMethod });
 
     return (
       <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
@@ -279,8 +284,8 @@ class Drug extends React.Component {
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta className={!dosReady ? "gradient" : ""}>
-                {nameshort[dosage.method] || names[dosage.method] || ""}
-                {!rules.empty && ", "}
+                {dosageMethod}
+                {!rules.empty && dosageMethod ? ", " : ""}
                 {rules.text}
               </Feed.Meta>
             </Feed.Content>
@@ -318,7 +323,8 @@ class Drug extends React.Component {
                   <br />
                   {!rules.empty && (
                     <Feed.Meta>
-                      {nameshort[dosage.method] || names[dosage.method] || ""}, &nbsp;
+                      {dosageMethod}
+                      {!rules.empty && dosageMethod ? ", " : ""}
                       {rules.text}
                     </Feed.Meta>
                   )}
