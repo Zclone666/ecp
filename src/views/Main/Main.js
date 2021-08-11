@@ -609,6 +609,7 @@ class Main extends Component {
                       value={searchQuery}
                       resultRenderer={this.resultRenderer}
                       resultClassName="result-wrapper"
+                      minCharacters={2}
                       icon={
                         <Icon
                           name="pencil"
