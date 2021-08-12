@@ -1067,7 +1067,7 @@ class Actions {
       path: createCsServerUrl(`/api/registration/confirmemail`),
       data: this.confirmForm,
       success: async (data) => {
-        console.log("SUCCESS", data);
+        // console.log("SUCCESS", data);
         this.stores.router.push("/login");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);
@@ -1139,7 +1139,7 @@ class Actions {
       path: createCsServerUrl(`/api/user/resetPassword`),
       data: this.newPassForm,
       success: async (data) => {
-        console.log("SUCCESS", data);
+        // console.log("SUCCESS", data);
         this.stores.router.push("/login");
         // if (data.authkey) {
         //   await localStorage.setItem('authkey', data.authkey);

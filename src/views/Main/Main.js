@@ -283,6 +283,9 @@ class Main extends Component {
 
     const texts = buttonTexts ? buttonTexts.text : null;
 
+    topview_disabled &&
+      document.querySelector(".ui.body > .pushable") &&
+      document.querySelector(".ui.body > .pushable").classList.remove("pushable");
     return (
       <>
         {!disabled && !topview_disabled && (

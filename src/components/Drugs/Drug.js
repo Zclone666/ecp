@@ -169,7 +169,7 @@ class Drug extends React.Component {
 
     let rules = this.renderRules();
 
-    console.log({ dosage, nameshort, names, helpers });
+    // console.log({ dosage, nameshort, names, helpers });
 
     const dosageForm =
       dosage.form && (nameshort[dosage.form] || names[dosage.form]) ? nameshort[dosage.form] || names[dosage.form] : "";
@@ -182,8 +182,8 @@ class Drug extends React.Component {
         ? nameshort[dosage.method] || names[dosage.method]
         : "";
 
-    console.log({ dosage, nameshort, names, helpers, rules });
-    console.log({ dosageForm, helpersDosage, dosageMethod });
+    // console.log({ dosage, nameshort, names, helpers, rules });
+    // console.log({ dosageForm, helpersDosage, dosageMethod });
 
     return (
       <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
