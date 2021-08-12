@@ -932,6 +932,9 @@ class Drugs {
       path: `search/Drugs`,
       data,
       success: async (data) => {
+        if (data.searched && data.searched !== text) {
+          return;
+        }
         if (data.concepts && data.concepts.length > 0 && _.isArray(data.concepts)) {
           await data.concepts.forEach((concept, i) => {
             data.concepts[i].key = "concept" + i;

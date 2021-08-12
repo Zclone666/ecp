@@ -31,6 +31,7 @@ class Recipes {
 
   @observable digitallySignedRecipe = null;
   @observable certificateBase64 = null;
+  @observable stringifiedSignData = null;
 
   constructor({ stores }) {
     this.stores = stores;
@@ -77,10 +78,33 @@ class Recipes {
   };
 
   getDataToSign = () => {
+    let { active_language } = this.stores.actions;
     let data = {
       ...this.stores.actions.structure,
       drugs: this.stores.actions.structure.drugs.filter((drug) => this.drugKeysForPrescription.includes(drug.key)),
     };
+    data.service = "43";
+    data.active_language = active_language;
+    data.return_subjects = false;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+
+    data.recipe_endtime = this.recipe_endtime;
+    data.recipe_endtimeitem = this.recipe_endtimeitem;
+    data.recipe_formid = this.recipe_formid;
+    data.recipe_text = this.recipe_text;
+    data.mkb10code = this.mkb10code;
+    data.financingSource = this.financingSource;
+    data.citizenCategory = this.citizenCategory;
+    data.compensation = this.compensation;
+    data.fio = this.stores.patients.current.fio;
+    data.birthdate = this.stores.patients.current.birthdate;
+    data.doctor_name = this.stores.actions.drugStructure.doctor_name;
+    data.snils = this.snils;
+    data.insuranceNumber = this.insuranceNumber;
+    data.patientCard = this.patientCard;
+    data.clinic_id = this.stores.actions.drugStructure.clinic_id;
+
     data.recipe_data = {
       formid: this.recipe_formid,
       recipe_text: this.recipe_text,
@@ -318,6 +342,10 @@ class Recipes {
     data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+
+    data.сlinical_guidelines = this.stores.clinrecs.drugToClinrecHashset;
+    data.checker = this.stores.clinrecs.checker;
+
     return POST({
       path: "prescript/New", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,

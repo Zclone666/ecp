@@ -112,7 +112,7 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
       response.data.alerts &&
         response.data.alerts.forEach((alert) => {
           if (alert.level === "error") {
-            console.log("isError");
+            // console.log("isError");
             isError = true;
           }
         });

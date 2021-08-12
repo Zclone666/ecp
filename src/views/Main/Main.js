@@ -12,6 +12,8 @@ import Conflicts from "../../components/Conflicts";
 
 import Page from "../Page";
 
+import "./Main.css";
+
 import {
   Sidebar,
   Menu,
@@ -183,8 +185,11 @@ class Main extends Component {
   };
 
   resultRenderer = ({ name, level, tn, type }) => {
+    const icon = ["FG", "ATX"].includes(type) ? "folder open" : "pills";
+
     return (
       <div>
+        <Icon name={icon} />
         {name}
         {type === "TN" && <sup>TM</sup>}
       </div>
@@ -278,6 +283,9 @@ class Main extends Component {
 
     const texts = buttonTexts ? buttonTexts.text : null;
 
+    topview_disabled &&
+      document.querySelector(".ui.body > .pushable") &&
+      document.querySelector(".ui.body > .pushable").classList.remove("pushable");
     return (
       <>
         {!disabled && !topview_disabled && (
@@ -304,8 +312,10 @@ class Main extends Component {
                   minWidth="481"
                 >
                   <Menu.Item>
-                    <Icon name="clipboard list" />
-                    Клинреки
+                    <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}>
+                      <Icon name="clipboard list" />
+                      Клинреки
+                    </div>
                   </Menu.Item>
                 </Responsive>
               )}
@@ -602,6 +612,7 @@ class Main extends Component {
                       value={searchQuery}
                       resultRenderer={this.resultRenderer}
                       resultClassName="result-wrapper"
+                      minCharacters={2}
                       icon={
                         <Icon
                           name="pencil"

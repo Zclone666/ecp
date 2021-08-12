@@ -5,7 +5,7 @@ import { useDrag } from "react-dnd";
 
 import RouterLink from "../../router/a";
 
-import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "semantic-ui-react";
+import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown, Visibility } from "semantic-ui-react";
 
 import _ from "lodash";
 
@@ -169,6 +169,22 @@ class Drug extends React.Component {
 
     let rules = this.renderRules();
 
+    // console.log({ dosage, nameshort, names, helpers });
+
+    const dosageForm =
+      dosage.form && (nameshort[dosage.form] || names[dosage.form]) ? nameshort[dosage.form] || names[dosage.form] : "";
+    const helpersDosage =
+      helpers.dosage && (helpers.dosage.small || helpers.dosage.full)
+        ? helpers.dosage.small || helpers.dosage.full
+        : "";
+    const dosageMethod =
+      dosage.method && (nameshort[dosage.method] || names[dosage.method])
+        ? nameshort[dosage.method] || names[dosage.method]
+        : "";
+
+    // console.log({ dosage, nameshort, names, helpers, rules });
+    // console.log({ dosageForm, helpersDosage, dosageMethod });
+
     return (
       <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
         <List.Content floated="right">
@@ -179,7 +195,7 @@ class Drug extends React.Component {
               </Button>
             )}
             {!disabled && !dosReady && (
-              <Button disabled icon>
+              <Button disabled icon style={{ visibility: "hidden" }}>
                 <Icon loading name="circle notch" />
               </Button>
             )}
@@ -260,14 +276,16 @@ class Drug extends React.Component {
                 )}
                 {specials && <Popup content={specials} trigger={<Icon name="file alternate" />} />}
                 <Feed.Date className={!dosReady ? "gradient" : ""}>
-                  {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
+                  {dosageForm}
+                  {helpersDosage && `${dosageForm && ", "}${helpersDosage}`}
+                  {/* {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
                   {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
-                  {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""}
+                  {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""} */}
                 </Feed.Date>
               </Feed.Summary>
               <Feed.Meta className={!dosReady ? "gradient" : ""}>
-                {nameshort[dosage.method] || names[dosage.method] || ""}
-                {!rules.empty && ", "}
+                {dosageMethod}
+                {!rules.empty && dosageMethod ? ", " : ""}
                 {rules.text}
               </Feed.Meta>
             </Feed.Content>
@@ -294,16 +312,19 @@ class Drug extends React.Component {
                   </Feed.Summary>
 
                   <Feed.Meta>
-                    {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
-                    {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
+                    {dosageForm && dosageForm.trim()}
+                    {helpersDosage && `${dosageForm && ", "}${helpersDosage.trim()}`}
+                    {dosageMethod && `${(dosageForm || helpersDosage) && ", "}${dosageMethod}`}
+                    {/* {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
                     {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""}
                     {(nameshort[dosage.method] || names[dosage.method]) && ", "}
-                    {rules.empty && (nameshort[dosage.method] || names[dosage.method] || "")}
+                    {rules.empty && (nameshort[dosage.method] || names[dosage.method] || "")} */}
                   </Feed.Meta>
                   <br />
                   {!rules.empty && (
                     <Feed.Meta>
-                      {nameshort[dosage.method] || names[dosage.method] || ""}, &nbsp;
+                      {dosageMethod}
+                      {!rules.empty && dosageMethod ? ", " : ""}
                       {rules.text}
                     </Feed.Meta>
                   )}

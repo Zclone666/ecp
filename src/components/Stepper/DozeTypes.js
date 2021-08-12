@@ -109,6 +109,12 @@ class DozeTypes extends Component {
     return (
       <List animated divided selection className="dozelist" verticalAlign="middle" size="large">
         {currDosagesArr.map((dose, i) => {
+          let dosePack = "";
+          if (dose.pack.full.length > 0) {
+            const prev = dose.pack.full;
+            const pos = prev.lastIndexOf(",");
+            dosePack = prev.substring(0, pos);
+          }
           return (
             <List.Item
               as={RouterLink}
@@ -123,7 +129,7 @@ class DozeTypes extends Component {
               <List.Content className="large">
                 {dose.flag && <Icon name="warning sign" color="red" style={{ float: "left" }} />}
                 <List.Header>{dose.dosage.small.length > 0 ? dose.dosage.small : dose.dosage.full}</List.Header>
-                {dose.pack.full.length > 0 && <List.Description>{dose.pack.full}</List.Description>}
+                {dosePack.length > 0 && <List.Description>{dosePack}</List.Description>}
               </List.Content>
             </List.Item>
           );
