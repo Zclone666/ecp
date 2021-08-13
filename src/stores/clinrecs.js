@@ -212,7 +212,10 @@ class Clinrecs {
       }
       //drug.dosage.form
       // console.log(drug);
-      this.drugToClinrecHashset[drug.id] = clinrecId;
+      // this.drugToClinrecHashset[drug.id] = clinrecId;
+      _.keys(this.clinrec).forEach((id, i) => {
+        if (this.clinrec[id]?.drug?.id == drug.id) this.drugToClinrecHashset[drug.id] = id;
+      });
       setTimeout(() => this.stores.drugs.selectFromSearch(drug), this.iterator * 10);
       return;
     }
