@@ -85,6 +85,7 @@ class Recipe extends Component {
     // console.log({res});
     if (!code) return;
 
+    document.getElementById("ifmcontentstoprint").style.display = "contents";
     var pri = document.getElementById("ifmcontentstoprint").contentWindow;
     pri.document.open();
     await pri.document.write(code);
