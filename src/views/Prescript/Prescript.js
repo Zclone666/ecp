@@ -46,7 +46,7 @@ class Prescript extends Component {
     };
     //this.contextRef = createRef()
     this.debouncedSearch = _.debounce(this.callSearchFunction, 500, {
-      leading: true,
+      leading: false,
     });
   }
 
