@@ -34,6 +34,11 @@ class Tools {
 
   async getUnitsPharm(units) {
     units = units || [];
+
+    if (units.every((unit) => _.keys(this.units).includes(unit))) {
+      return;
+    }
+
     let { active_language } = this.stores.actions;
     let data = {
       units,
@@ -151,6 +156,7 @@ class Tools {
   };
 
   setUnits = (units, unitrefs, unitpharm) => {
+    // console.log("units: ", this.units);
     // _.keys(unitrefs).forEach( refkey => {
     //   this.unitarrs.push([ refkey, ...unitrefs[refkey] ])
     // })

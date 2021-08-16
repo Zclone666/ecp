@@ -45,7 +45,15 @@ class Prescript extends Component {
       search_clinic: "",
     };
     //this.contextRef = createRef()
+    this.debouncedSearch = _.debounce(this.callSearchFunction, 500, {
+      leading: false,
+    });
   }
+
+  callSearchFunction = (value) => {
+    this.props.tools.searchClinic(value);
+  };
+
   setOpen = (open) => {
     open = open || false;
     this.setState({ open });
@@ -124,7 +132,7 @@ class Prescript extends Component {
     this.setState({ [`search_clinic`]: value });
     if (value.length > 1) {
       this.props.tools.searchReady = false;
-      this.props.tools.searchClinic(value);
+      this.debouncedSearch(value);
     }
   };
 
@@ -267,9 +275,7 @@ class Prescript extends Component {
                   placeholder="Введите наименование вашей клиники"
                   loading={!searchReady}
                   onResultSelect={this.handleResultSelect}
-                  onSearchChange={_.debounce(this.handleSearchChange, 500, {
-                    leading: true,
-                  })}
+                  onSearchChange={this.handleSearchChange}
                   results={this.listSearch}
                   value={search_clinic}
                   resultClassName="result-wrapper"
