@@ -34,8 +34,8 @@ class Tools {
 
   async getUnitsPharm(units) {
     units = units || [];
-
-    if (units.every((unit) => _.keys(this.units).includes(unit))) {
+    console.log("this units keys", _.keys(this.units));
+    if (units.length > 0 && units.every((unit) => _.keys(this.units).includes(unit))) {
       return;
     }
 
