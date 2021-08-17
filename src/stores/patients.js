@@ -519,6 +519,7 @@ class Patients {
           this.searchReady = true;
         } else {
           this.searchReady = true;
+          this.stores.actions.makeAlerts(data);
         }
       },
       fail: (alerts) => {

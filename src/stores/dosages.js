@@ -204,6 +204,9 @@ class Dosages {
       success: async (data) => {
         //console.log('DATA', data);
         let { drug, form, methodform, names, nameshort, units } = data;
+
+        if (drug == null) this.stores.actions.makeAlerts(data);
+
         names = { ...additionalNames, ...names };
 
         let solute = false;

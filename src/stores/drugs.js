@@ -1018,6 +1018,7 @@ class Drugs {
       success: async (data) => {
         // console.log({ data });
         const { names } = data;
+        if (data.drugs?.length === 0) this.stores.actions.makeAlerts(data);
         const filteredDrugs = data.drugs.filter((drug) => !!drug);
         // if (filteredDrugs && filteredDrugs.length > 0 && _.isArray(filteredDrugs)) {
         // await filteredDrugs.forEach((concept, i) => {
