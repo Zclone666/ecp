@@ -264,8 +264,8 @@ const Drug = inject("db", "actions", "router", "tools", "drugs", "warnings", "do
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className="underlined">
-                  {name}
+                <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className="underlined">                       
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
                 </RouterLink>
                 {type === "TN" && (
                   <span>
@@ -300,7 +300,10 @@ const Drug = inject("db", "actions", "router", "tools", "drugs", "warnings", "do
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Summary>
-                    <span className="underlined">{name}</span>
+                    <span className="underlined">
+                      {/* {name} */}
+                      <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                    </span>
                     {type === "TN" && (
                       <span>
                         <sup>TM</sup>

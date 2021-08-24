@@ -201,7 +201,8 @@ const Main = inject(
         return (
           <div>
             <Icon name={icon} />
-            {name}
+            {/* {name} */}
+            <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
             {type === "TN" && <sup>TM</sup>}
           </div>
         );

@@ -221,7 +221,10 @@ const Clinrec = inject("db", "actions", "druginfo", "router", "drugs", "clinrecs
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <span className="underlined">{name}</span>
+                <span className="underlined">
+                  {/* {name} */}
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                </span>
                 {type === "TN" && (
                   <span>
                     <sup>TM</sup>
@@ -246,7 +249,10 @@ const Clinrec = inject("db", "actions", "druginfo", "router", "drugs", "clinrecs
             <Feed.Event>
               <Feed.Content>
                 <Feed.Summary>
-                  <span className="underlined">{name}</span>
+                  <span className="underlined">
+                    {/* {name} */}
+                    <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  </span>
                   {type === "TN" && (
                     <span>
                       <sup>TM</sup>

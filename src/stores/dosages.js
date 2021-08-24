@@ -289,7 +289,7 @@ class Dosages {
         } else {
           let currPack = {
             dosage: { small: "", full: "", id: itemDosage[0].id_1 },
-            pack: { small: "", full: "", id: item.pack[0].dosage ? item.pack[0].dosage.id_1 : null },
+            pack: { small: "", full: "", id: item?.pack[0]?.dosage ? item.pack[0].dosage.id_1 : null },
             type: "simple",
             value: [0],
             flag: false,

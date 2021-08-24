@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Segment, Header, Menu } from 'semantic-ui-react';
+import { Segment, Header, Menu, Container } from 'semantic-ui-react';
 
 const LicenseAgreement = inject('actions', 'router')(observer(class LicenseAgreement extends Component {
   render() {
@@ -11,13 +11,18 @@ const LicenseAgreement = inject('actions', 'router')(observer(class LicenseAgree
     const texts = buttonTexts ? buttonTexts.text : null;
 
     return (
-      <Segment basic>
-        <Header>{texts.agreementheader}</Header>
+      <Container text style={{padding: "1em 0em"}}>
+
+      <Segment style={{padding: "3em 1em"}}>
+
+        <Header style={{textAlign: "center"}}>{texts.agreementheader}</Header>
         <div dangerouslySetInnerHTML={{ __html: texts.agreementboby }} />
-        <Menu className="bottom fixed menu one item huge main">
+        
+      </Segment>
+      <Menu className="bottom fixed menu one item huge main">
           <Menu.Item onClick={() => this.props.router.push('/')}>Назад</Menu.Item>
         </Menu>
-      </Segment>
+      </Container>      
     );
   }
 }));

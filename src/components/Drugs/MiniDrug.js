@@ -118,7 +118,10 @@ const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosa
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <span className="underlined">{name}</span>
+                <span className="underlined">
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  {/* {name} */}
+                </span>
                 {type === "TN" && (
                   <span>
                     <sup>TM</sup>
@@ -143,7 +146,10 @@ const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosa
             <Feed.Event>
               <Feed.Content>
                 <Feed.Summary>
-                  <span className="underlined">{name}</span>
+                  <span className="underlined">
+                    {/* {name} */}
+                    <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  </span>
                   {type === "TN" && (
                     <span>
                       <sup>TM</sup>
