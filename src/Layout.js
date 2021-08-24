@@ -8,9 +8,7 @@ import Loader from "./components/Loader";
 
 import routes from "./router/routes";
 
-@inject("router", "db", "actions")
-@observer
-class Layout extends Component {
+const Layout = inject("router", "db", "actions")(observer(class Layout extends Component {
   render() {
     const { loading } = this.props.actions;
     return (
@@ -21,5 +19,6 @@ class Layout extends Component {
       </div>
     );
   }
-}
+}));
+
 export default Layout;

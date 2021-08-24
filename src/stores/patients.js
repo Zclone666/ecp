@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
@@ -8,16 +8,24 @@ import _ from "lodash";
 import AlertItem from "../components/Alerts/Alert";
 
 class Patients {
-  @observable ready = false;
-  @observable searchRows = [];
+  ready = false;
+  searchRows = [];
 
-  @observable searchReady = true;
+  searchReady = true;
 
-  @observable selectedRows = [];
+  selectedRows = [];
 
-  @observable current = this.getNew();
+  current = _.cloneDeep(PatientScheme);
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      searchRows: observable,
+      searchReady: observable,
+      selectedRows: observable,
+      current: observable,
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
@@ -58,7 +66,7 @@ class Patients {
 
     main_address,
   }) => {
-    let patientTpl = this.getNew();
+    let patientTpl = _.cloneDeep(PatientScheme);
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
     await _.assignIn(this.current, patientTpl, {
       id,

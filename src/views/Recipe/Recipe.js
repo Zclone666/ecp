@@ -41,9 +41,7 @@ import {
   Checkbox,
 } from "semantic-ui-react";
 
-@inject("router", "db", "actions", "recipes", "patients")
-@observer
-class Recipe extends Component {
+const Recipe = inject("router", "db", "actions", "recipes", "patients")(observer(class Recipe extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -300,108 +298,300 @@ class Recipe extends Component {
     // console.log({ tags });
     // console.log({ patient });
     // console.log({ recipe_endtimeitem });
-    return (
-      <>
-        <Menu className="bottom fixed menu four item huge main">
-          <Menu.Item color="red" onClick={this.back}>
-            Назад
-          </Menu.Item>
-          {/* {!code && ( */}
-          <Menu.Item disabled={noEmail || !recipe_formid} onClick={this.save}>
-            Отправить
-          </Menu.Item>
-          {/* )} */}
-          {/* {code && ( */}
-          <Menu.Item disabled={noEmail || !code} onClick={this.print}>
-            Печать
-          </Menu.Item>
-          <Menu.Item disabled={noEmail || !recipe_formid || this.state.wasSigned} onClick={this.initiateSigningProcess}>
-            <span>{this.state.wasSigned ? "Подписано" : "Подписать"}</span>
-          </Menu.Item>
-          {/* )} */}
-        </Menu>
+    return <>
+      <Menu className="bottom fixed menu four item huge main">
+        <Menu.Item color="red" onClick={this.back}>
+          Назад
+        </Menu.Item>
+        {/* {!code && ( */}
+        <Menu.Item disabled={noEmail || !recipe_formid} onClick={this.save}>
+          Отправить
+        </Menu.Item>
+        {/* )} */}
+        {/* {code && ( */}
+        <Menu.Item disabled={noEmail || !code} onClick={this.print}>
+          Печать
+        </Menu.Item>
+        <Menu.Item disabled={noEmail || !recipe_formid || this.state.wasSigned} onClick={this.initiateSigningProcess}>
+          <span>{this.state.wasSigned ? "Подписано" : "Подписать"}</span>
+        </Menu.Item>
+        {/* )} */}
+      </Menu>
 
-        <div className="scrollwrapper">
-          <Segment basic>
-            <Form>
+      <div className="scrollwrapper">
+        <Segment basic>
+          <Form>
+            <Form.Field>
+              <label>Форма рецептурного бланка</label>
+              <Dropdown
+                size="big"
+                options={Object.entries(recipeData.items).map(([id, value]) => {
+                  return {
+                    key: id,
+                    text: value.name,
+                    value: id,
+                  };
+                })}
+                placeholder="Выберите"
+                name="recipe_formid"
+                selection
+                fluid
+                value={recipe_formid}
+                onChange={this.handleRecipeDataChange}
+              />
+            </Form.Field>
+            {recipe_formid && (
               <Form.Field>
-                <label>Форма рецептурного бланка</label>
+                <label>Время действия рецепта</label>
                 <Dropdown
                   size="big"
-                  options={Object.entries(recipeData.items).map(([id, value]) => {
-                    return {
-                      key: id,
-                      text: value.name,
-                      value: id,
-                    };
-                  })}
+                  options={
+                    !recipe_formid
+                      ? []
+                      : recipeData.items[recipe_formid].durations.map((item) => {
+                          return {
+                            key: item.id,
+                            text: item.name,
+                            value: item,
+                          };
+                        })
+                  }
                   placeholder="Выберите"
-                  name="recipe_formid"
+                  name="recipe_endtimeitem"
                   selection
                   fluid
-                  value={recipe_formid}
+                  value={recipe_endtimeitem}
                   onChange={this.handleRecipeDataChange}
                 />
               </Form.Field>
-              {recipe_formid && (
-                <Form.Field>
-                  <label>Время действия рецепта</label>
+            )}
+            <Form.Group>
+              {tags.includes("PatientFIO") && (
+                <Form.Field width={12}>
+                  <label>ФИО пациента</label>
+                  <Input name="fio" value={patient.fio} readOnly />
+                </Form.Field>
+              )}
+              {tags.includes("DayOfBirth") && tags.includes("MonthOfBirth") && tags.includes("YearOfBirth") && (
+                <Form.Field width={4}>
+                  <label>Дата рождения</label>
+                  <Calendar
+                    name="birthdate"
+                    value={moment(patient.birthdate).format("x")}
+                    maxDate={new Date()}
+                    onChange={this.handlePatientDataChange}
+                    size="medium"
+                  />
+                  {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
+                </Form.Field>
+              )}
+            </Form.Group>
+            {tags.includes("DoctorFIO") && (
+              <Form.Field>
+                <label>ФИО врача</label>
+                <Input name="docName" value={docName} readOnly />
+              </Form.Field>
+            )}
+            {tags.includes("CategoryCode") && (
+              <Form.Field>
+                <label>Код категории граждан</label>
+                <Input name="citizenCategory" value={citizenCategory} onChange={this.handleChange} />
+              </Form.Field>
+            )}
+            {tags.includes("CodeMKB10") && (
+              <Form.Group>
+                <Form.Field width={10}>
+                  <label>Выберите заболевание для определения кода нозологической формы (по МКБ)</label>
                   <Dropdown
                     size="big"
-                    options={
-                      !recipe_formid
-                        ? []
-                        : recipeData.items[recipe_formid].durations.map((item) => {
-                            return {
-                              key: item.id,
-                              text: item.name,
-                              value: item,
-                            };
-                          })
-                    }
+                    options={diseases.map((x) => ({ key: x.id, text: x.name, value: x.id }))}
                     placeholder="Выберите"
-                    name="recipe_endtimeitem"
+                    name="recipeDiseaseId"
                     selection
                     fluid
-                    value={recipe_endtimeitem}
+                    value={recipeDiseaseId}
+                    onChange={this.handleChange}
+                  />
+                </Form.Field>
+                <Form.Field width={6}>
+                  <label>Код нозологической формы (по МКБ)</label>
+                  <Input
+                    name="mkb10code"
+                    value={mkb10code}
+                    onChange={this.handleChange}
+                    readOnly={recipeDiseaseId != "ручной ввод кода"}
+                  />
+                </Form.Field>
+              </Form.Group>
+            )}
+            {tags.includes("SourceOfFinancing") && (
+              <Form.Field>
+                <label>Источник финансирования</label>
+                <Dropdown
+                  size="big"
+                  options={["Федеральный бюджет", "Бюджет субъекта Российской Федерации", "Муниципальный бюджет"].map(
+                    (x) => ({ key: x, text: x, value: x })
+                  )}
+                  placeholder="Выберите"
+                  name="financingSource"
+                  selection
+                  fluid
+                  value={financingSource}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            )}
+            {tags.includes("PercentageOfPayment") && (
+              <Form.Field>
+                <label>% Оплаты</label>
+                <Dropdown
+                  size="big"
+                  options={["50%", "100%"].map((x) => ({ key: x, text: x, value: x }))}
+                  placeholder="Выберите"
+                  name="compensation"
+                  selection
+                  fluid
+                  value={compensation}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            )}
+            {tags.includes("SNILS") && (
+              <Form.Field>
+                <label>СНИЛС</label>
+                <Input
+                  size="big"
+                  children={
+                    <MaskedInput
+                      name="snils"
+                      value={snils || ""}
+                      onChange={this.handleMaskedInputPatientDataChange}
+                      mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, " ", /\d/, /\d/]}
+                      placeholder="000-000-000 00"
+                    />
+                  }
+                />
+              </Form.Field>
+            )}
+            {tags.includes("MedCardNumber") && (
+              <Form.Field>
+                <label>Номер медицинской карты пациента</label>
+                <Input
+                  size="big"
+                  name="medcard_num"
+                  value={medcard_num?.default || ""}
+                  placeholder=""
+                  onChange={this.handlePatientDataChange}
+                />
+              </Form.Field>
+            )}
+            {tags.includes("AdressOrMedCardNumber") && (
+              <Form.Field>
+                <label>Адрес места жительства</label>
+                <Input
+                  size="big"
+                  name="main_address"
+                  value={main_address || ""}
+                  placeholder=""
+                  onChange={this.handlePatientDataChange}
+                />
+              </Form.Field>
+            )}
+            {tags.includes("PolicyNumber") && (
+              <Form.Field>
+                <label>Полис ОМС</label>
+                <Input
+                  size="big"
+                  children={
+                    <MaskedInput
+                      name="policy_num"
+                      value={policy_num || ""}
+                      onChange={this.handleMaskedInputPatientDataChange}
+                      mask={[
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        " ",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        " ",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        " ",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                      ]}
+                      placeholder="0000 0000 0000 0000"
+                    />
+                  }
+                />
+              </Form.Field>
+            )}
+            {tags.includes("Cito") && (
+              <Form.Field align="left">
+                <Checkbox name="cito" checked={cito} label="Cito" onChange={this.handleRecipeDataChange} />
+              </Form.Field>
+            )}
+            {tags.includes("Statim") && (
+              <Form.Field align="left">
+                <Checkbox name="statim" checked={statim} label="Statim" onChange={this.handleRecipeDataChange} />
+              </Form.Field>
+            )}
+            {tags.includes("SpecNaz") && (
+              <Form.Field align="left">
+                <Checkbox
+                  name="special"
+                  checked={special}
+                  label="По специальному назначению"
+                  onChange={this.handleRecipeDataChange}
+                />
+              </Form.Field>
+            )}
+            {tags.includes("SpecNazTime") && special && (
+              <Form.Group>
+                <Form.Field width={6}>
+                  <label>Выберите периодичность отпуска</label>
+                  <Dropdown
+                    size="big"
+                    options={[
+                      { key: 1, text: "ежедневно", value: 1 },
+                      { key: 2, text: "ежемесячно", value: 2 },
+                      { key: 3, text: "иной период", value: 3 },
+                    ]}
+                    placeholder="Выберите"
+                    name="spectextPrompt"
+                    selection
+                    fluid
+                    value={this.state.spectextPrompt}
                     onChange={this.handleRecipeDataChange}
                   />
                 </Form.Field>
-              )}
-              <Form.Group>
-                {tags.includes("PatientFIO") && (
-                  <Form.Field width={12}>
-                    <label>ФИО пациента</label>
-                    <Input name="fio" value={patient.fio} readOnly />
-                  </Form.Field>
-                )}
-                {tags.includes("DayOfBirth") && tags.includes("MonthOfBirth") && tags.includes("YearOfBirth") && (
-                  <Form.Field width={4}>
-                    <label>Дата рождения</label>
-                    <Calendar
-                      name="birthdate"
-                      value={moment(patient.birthdate).format("x")}
-                      maxDate={new Date()}
-                      onChange={this.handlePatientDataChange}
-                      size="medium"
+                {this.state.spectextPrompt == "3" && (
+                  <Form.Field width={10}>
+                    <label>Укажите другую периодичность отпуска</label>
+                    <Input
+                      name="spectext"
+                      value={spectext || ""}
+                      placeholder=""
+                      onChange={this.handleRecipeDataChange}
                     />
-                    {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
                   </Form.Field>
                 )}
               </Form.Group>
-              {tags.includes("DoctorFIO") && (
-                <Form.Field>
-                  <label>ФИО врача</label>
-                  <Input name="docName" value={docName} readOnly />
-                </Form.Field>
-              )}
-              {tags.includes("CategoryCode") && (
+            )}
+            {/* {recipe_formid == "2ApW9Ve9l7XXlXy5/59EUg==" && (
+              <div>
                 <Form.Field>
                   <label>Код категории граждан</label>
                   <Input name="citizenCategory" value={citizenCategory} onChange={this.handleChange} />
                 </Form.Field>
-              )}
-              {tags.includes("CodeMKB10") && (
                 <Form.Group>
                   <Form.Field width={10}>
                     <label>Выберите заболевание для определения кода нозологической формы (по МКБ)</label>
@@ -426,15 +616,15 @@ class Recipe extends Component {
                     />
                   </Form.Field>
                 </Form.Group>
-              )}
-              {tags.includes("SourceOfFinancing") && (
                 <Form.Field>
                   <label>Источник финансирования</label>
                   <Dropdown
                     size="big"
-                    options={["Федеральный бюджет", "Бюджет субъекта Российской Федерации", "Муниципальный бюджет"].map(
-                      (x) => ({ key: x, text: x, value: x })
-                    )}
+                    options={[
+                      "Федеральный бюджет",
+                      "Бюджет субъекта Российской Федерации",
+                      "Муниципальный бюджет",
+                    ].map((x) => ({ key: x, text: x, value: x }))}
                     placeholder="Выберите"
                     name="financingSource"
                     selection
@@ -443,8 +633,6 @@ class Recipe extends Component {
                     onChange={this.handleChange}
                   />
                 </Form.Field>
-              )}
-              {tags.includes("PercentageOfPayment") && (
                 <Form.Field>
                   <label>% Оплаты</label>
                   <Dropdown
@@ -458,431 +646,240 @@ class Recipe extends Component {
                     onChange={this.handleChange}
                   />
                 </Form.Field>
-              )}
-              {tags.includes("SNILS") && (
+                <Form.Group>
+                  <Form.Field width={12}>
+                    <label>ФИО пациента</label>
+                    <Input name="fio" value={patient.fio} readOnly />
+                  </Form.Field>
+                  <Form.Field width={4}>
+                    <label>Дата рождения</label>
+                    <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly />
+                  </Form.Field>
+                </Form.Group>
                 <Form.Field>
                   <label>СНИЛС</label>
-                  <Input
-                    size="big"
-                    children={
-                      <MaskedInput
-                        name="snils"
-                        value={snils || ""}
-                        onChange={this.handleMaskedInputPatientDataChange}
-                        mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, " ", /\d/, /\d/]}
-                        placeholder="000-000-000 00"
-                      />
-                    }
-                  />
+                  <Input name="snils" value={snils} onChange={this.handleChange} />
                 </Form.Field>
-              )}
-              {tags.includes("MedCardNumber") && (
                 <Form.Field>
-                  <label>Номер медицинской карты пациента</label>
-                  <Input
-                    size="big"
-                    name="medcard_num"
-                    value={medcard_num?.default || ""}
-                    placeholder=""
-                    onChange={this.handlePatientDataChange}
-                  />
+                  <label>№ полиса ОМС</label>
+                  <Input name="insuranceNumber" value={insuranceNumber} onChange={this.handleChange} />
                 </Form.Field>
-              )}
-              {tags.includes("AdressOrMedCardNumber") && (
                 <Form.Field>
-                  <label>Адрес места жительства</label>
-                  <Input
-                    size="big"
-                    name="main_address"
-                    value={main_address || ""}
-                    placeholder=""
-                    onChange={this.handlePatientDataChange}
-                  />
+                  <label>
+                    Номер медицинской карты пациента, получающего медицинскую помощь в амбулаторных условиях
+                  </label>
+                  <Input name="patientCard" value={patientCard} onChange={this.handleChange} />
                 </Form.Field>
-              )}
-              {tags.includes("PolicyNumber") && (
                 <Form.Field>
-                  <label>Полис ОМС</label>
-                  <Input
-                    size="big"
-                    children={
-                      <MaskedInput
-                        name="policy_num"
-                        value={policy_num || ""}
-                        onChange={this.handleMaskedInputPatientDataChange}
-                        mask={[
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          " ",
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          " ",
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          " ",
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                        ]}
-                        placeholder="0000 0000 0000 0000"
-                      />
-                    }
-                  />
+                  <label>ФИО врача</label>
+                  <Input name="docName" value={docName} readOnly />
                 </Form.Field>
-              )}
-              {tags.includes("Cito") && (
-                <Form.Field align="left">
-                  <Checkbox name="cito" checked={cito} label="Cito" onChange={this.handleRecipeDataChange} />
-                </Form.Field>
-              )}
-              {tags.includes("Statim") && (
-                <Form.Field align="left">
-                  <Checkbox name="statim" checked={statim} label="Statim" onChange={this.handleRecipeDataChange} />
-                </Form.Field>
-              )}
-              {tags.includes("SpecNaz") && (
-                <Form.Field align="left">
-                  <Checkbox
-                    name="special"
-                    checked={special}
-                    label="По специальному назначению"
-                    onChange={this.handleRecipeDataChange}
-                  />
-                </Form.Field>
-              )}
-              {tags.includes("SpecNazTime") && special && (
+              </div>
+            )}
+            {recipe_formid == "sqmNTYpmbqXh9bhNZBQpDQ==" && (
+              <div>
                 <Form.Group>
-                  <Form.Field width={6}>
-                    <label>Выберите периодичность отпуска</label>
-                    <Dropdown
-                      size="big"
-                      options={[
-                        { key: 1, text: "ежедневно", value: 1 },
-                        { key: 2, text: "ежемесячно", value: 2 },
-                        { key: 3, text: "иной период", value: 3 },
-                      ]}
-                      placeholder="Выберите"
-                      name="spectextPrompt"
-                      selection
-                      fluid
-                      value={this.state.spectextPrompt}
-                      onChange={this.handleRecipeDataChange}
-                    />
+                  <Form.Field width={12}>
+                    <label>ФИО пациента</label>
+                    <Input name="fio" value={patient.fio} readOnly />
                   </Form.Field>
-                  {this.state.spectextPrompt == "3" && (
-                    <Form.Field width={10}>
-                      <label>Укажите другую периодичность отпуска</label>
-                      <Input
-                        name="spectext"
-                        value={spectext || ""}
-                        placeholder=""
-                        onChange={this.handleRecipeDataChange}
-                      />
-                    </Form.Field>
-                  )}
+                  <Form.Field width={4}>
+                    <label>Дата рождения</label>
+                    <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly />
+                  </Form.Field>
                 </Form.Group>
-              )}
-              {/* {recipe_formid == "2ApW9Ve9l7XXlXy5/59EUg==" && (
-                <div>
-                  <Form.Field>
-                    <label>Код категории граждан</label>
-                    <Input name="citizenCategory" value={citizenCategory} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Group>
-                    <Form.Field width={10}>
-                      <label>Выберите заболевание для определения кода нозологической формы (по МКБ)</label>
-                      <Dropdown
-                        size="big"
-                        options={diseases.map((x) => ({ key: x.id, text: x.name, value: x.id }))}
-                        placeholder="Выберите"
-                        name="recipeDiseaseId"
-                        selection
-                        fluid
-                        value={recipeDiseaseId}
-                        onChange={this.handleChange}
-                      />
-                    </Form.Field>
-                    <Form.Field width={6}>
-                      <label>Код нозологической формы (по МКБ)</label>
-                      <Input
-                        name="mkb10code"
-                        value={mkb10code}
-                        onChange={this.handleChange}
-                        readOnly={recipeDiseaseId != "ручной ввод кода"}
-                      />
-                    </Form.Field>
-                  </Form.Group>
-                  <Form.Field>
-                    <label>Источник финансирования</label>
-                    <Dropdown
-                      size="big"
-                      options={[
-                        "Федеральный бюджет",
-                        "Бюджет субъекта Российской Федерации",
-                        "Муниципальный бюджет",
-                      ].map((x) => ({ key: x, text: x, value: x }))}
-                      placeholder="Выберите"
-                      name="financingSource"
-                      selection
-                      fluid
-                      value={financingSource}
-                      onChange={this.handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>% Оплаты</label>
-                    <Dropdown
-                      size="big"
-                      options={["50%", "100%"].map((x) => ({ key: x, text: x, value: x }))}
-                      placeholder="Выберите"
-                      name="compensation"
-                      selection
-                      fluid
-                      value={compensation}
-                      onChange={this.handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Group>
-                    <Form.Field width={12}>
-                      <label>ФИО пациента</label>
-                      <Input name="fio" value={patient.fio} readOnly />
-                    </Form.Field>
-                    <Form.Field width={4}>
-                      <label>Дата рождения</label>
-                      <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly />
-                    </Form.Field>
-                  </Form.Group>
-                  <Form.Field>
-                    <label>СНИЛС</label>
-                    <Input name="snils" value={snils} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>№ полиса ОМС</label>
-                    <Input name="insuranceNumber" value={insuranceNumber} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>
-                      Номер медицинской карты пациента, получающего медицинскую помощь в амбулаторных условиях
-                    </label>
-                    <Input name="patientCard" value={patientCard} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>ФИО врача</label>
-                    <Input name="docName" value={docName} readOnly />
-                  </Form.Field>
-                </div>
-              )}
-              {recipe_formid == "sqmNTYpmbqXh9bhNZBQpDQ==" && (
-                <div>
-                  <Form.Group>
-                    <Form.Field width={12}>
-                      <label>ФИО пациента</label>
-                      <Input name="fio" value={patient.fio} readOnly />
-                    </Form.Field>
-                    <Form.Field width={4}>
-                      <label>Дата рождения</label>
-                      <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly />
-                    </Form.Field>
-                  </Form.Group>
-                  <Form.Field>
-                    <label>Адрес места жительства или № медицинской карты амбулаторного пациента</label>
-                    <TextArea size="big" fluid name="patientCard" value={patientCard} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>ФИО врача</label>
-                    <Input name="docName" value={docName} readOnly />
-                  </Form.Field>
-                </div>
-              )} */}
-              {recipe_formid && (
                 <Form.Field>
-                  <label>Комментарий к рецепту</label>
-                  <TextArea
-                    size="big"
-                    placeholder="Пояснения к рецепту"
-                    name="recipe_text"
-                    fluid
-                    value={recipe_text}
-                    onChange={this.handleChange}
-                  />
+                  <label>Адрес места жительства или № медицинской карты амбулаторного пациента</label>
+                  <TextArea size="big" fluid name="patientCard" value={patientCard} onChange={this.handleChange} />
                 </Form.Field>
-              )}
-            </Form>
-            {false && (
-              <Form>
                 <Form.Field>
-                  <label>Врач</label>
+                  <label>ФИО врача</label>
+                  <Input name="docName" value={docName} readOnly />
+                </Form.Field>
+              </div>
+            )} */}
+            {recipe_formid && (
+              <Form.Field>
+                <label>Комментарий к рецепту</label>
+                <TextArea
+                  size="big"
+                  placeholder="Пояснения к рецепту"
+                  name="recipe_text"
+                  fluid
+                  value={recipe_text}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+            )}
+          </Form>
+          {false && (
+            <Form>
+              <Form.Field>
+                <label>Врач</label>
+                <Dropdown
+                  options={checkData.doctor.map((item) => {
+                    return {
+                      key: item.id,
+                      text: item.name,
+                      value: item.id,
+                    };
+                  })}
+                  placeholder="Иван Иванов"
+                  search
+                  name="doctor"
+                  selection
+                  fluid
+                  value={doctor}
+                  onChange={this.handleChange}
+                />
+              </Form.Field>
+
+              <Form.Group>
+                <Form.Field width={16}>
+                  <label>Пациент</label>
                   <Dropdown
-                    options={checkData.doctor.map((item) => {
+                    options={this.props.patients.arr.map((item) => {
                       return {
-                        key: item.id,
+                        key: item.key,
                         text: item.name,
-                        value: item.id,
+                        value: item.key,
                       };
                     })}
                     placeholder="Иван Иванов"
-                    search
-                    name="doctor"
+                    search={false}
+                    name="patient"
                     selection
                     fluid
-                    value={doctor}
+                    value={patient.key}
+                    onAddItem={this.handleAddition}
                     onChange={this.handleChange}
                   />
-                </Form.Field>
-
-                <Form.Group>
-                  <Form.Field width={16}>
-                    <label>Пациент</label>
-                    <Dropdown
-                      options={this.props.patients.arr.map((item) => {
-                        return {
-                          key: item.key,
-                          text: item.name,
-                          value: item.key,
-                        };
-                      })}
-                      placeholder="Иван Иванов"
-                      search={false}
-                      name="patient"
-                      selection
-                      fluid
-                      value={patient.key}
-                      onAddItem={this.handleAddition}
-                      onChange={this.handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>&nbsp;</label>
-                    <Modal
-                      onClose={() => this.setOpen(false)}
-                      onOpen={() => this.setOpen(true)}
-                      open={open}
-                      trigger={<Button>Добавить</Button>}
-                    >
-                      <Modal.Header>Создать пациента</Modal.Header>
-                      <Modal.Content>
-                        <PatientPassport />
-                      </Modal.Content>
-                      <Modal.Actions>
-                        <Button color="black" onClick={() => this.setOpen(false)}>
-                          Отмена
-                        </Button>
-                        <Button
-                          content="Создать"
-                          labelPosition="right"
-                          icon="checkmark"
-                          onClick={() => this.savePatient()}
-                          positive
-                        />
-                      </Modal.Actions>
-                    </Modal>
-                  </Form.Field>
-                </Form.Group>
-                <Form.Field error={patient.key && noEmail}>
-                  <label>E-mail пациента</label>
-                  <Input name="email" value={patient.email} onChange={this.handleChange} placeholder="some@email.ru" />
                 </Form.Field>
                 <Form.Field>
-                  <label>ЛПУ</label>
-                  <Dropdown
-                    options={checkData.lpu.map((item) => {
-                      return {
-                        key: item.id,
-                        text: item.name,
-                        value: item.id,
-                      };
-                    })}
-                    placeholder="Клиника"
-                    search
-                    name="clinic"
-                    selection
-                    fluid
-                    value={clinic}
-                    onChange={this.handleChange}
-                  />
+                  <label>&nbsp;</label>
+                  <Modal
+                    onClose={() => this.setOpen(false)}
+                    onOpen={() => this.setOpen(true)}
+                    open={open}
+                    trigger={<Button>Добавить</Button>}
+                  >
+                    <Modal.Header>Создать пациента</Modal.Header>
+                    <Modal.Content>
+                      <PatientPassport />
+                    </Modal.Content>
+                    <Modal.Actions>
+                      <Button color="black" onClick={() => this.setOpen(false)}>
+                        Отмена
+                      </Button>
+                      <Button
+                        content="Создать"
+                        labelPosition="right"
+                        icon="checkmark"
+                        onClick={() => this.savePatient()}
+                        positive
+                      />
+                    </Modal.Actions>
+                  </Modal>
                 </Form.Field>
-              </Form>
-            )}
-            {recipe_formid && <Drugs isRecipe={true} />}
-          </Segment>
-        </div>
-        <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
-          <Modal.Header>Ваш код для аптеки</Modal.Header>
-          <Modal.Content>
-            <Header as="h1">{code}</Header>
-          </Modal.Content>
-          <Modal.Actions>
-            <Button
-              content="Печать рецепта"
-              labelPosition="right"
-              primary
-              icon="file alternate outline"
-              onClick={() => this.print()}
-            />
-            <Button
-              content="Отправить по E-mail"
-              labelPosition="right"
-              primary
-              icon="mail"
-              onClick={() => this.mail()}
-              disabled={this.props.recipes.emailSent}
-            />
-            <Button
-              content="ОК"
-              labelPosition="right"
-              icon="checkmark"
-              onClick={() => this.setOpenCode(false)}
-              positive
-            />
-          </Modal.Actions>
-        </Modal>
-        <Modal
-          onClose={() => this.setState({ certificateSelectionDialog: false })}
-          onOpen={() => this.setState({ certificateSelectionDialog: true })}
-          open={this.state.certificateSelectionDialog}
-        >
-          <Modal.Header>Выберите сертификат для подписи</Modal.Header>
-          <Modal.Content>
-            <Form>
+              </Form.Group>
+              <Form.Field error={patient.key && noEmail}>
+                <label>E-mail пациента</label>
+                <Input name="email" value={patient.email} onChange={this.handleChange} placeholder="some@email.ru" />
+              </Form.Field>
               <Form.Field>
-                <label>доступные сертификаты</label>
+                <label>ЛПУ</label>
                 <Dropdown
-                  size="big"
-                  options={this.state.certificates.map((cert) => {
+                  options={checkData.lpu.map((item) => {
                     return {
-                      key: cert.thumbprint,
-                      text: cert.name,
-                      value: cert,
+                      key: item.id,
+                      text: item.name,
+                      value: item.id,
                     };
                   })}
-                  placeholder=""
-                  name="recipe_formid"
+                  placeholder="Клиника"
+                  search
+                  name="clinic"
                   selection
                   fluid
-                  value={this.state.selectedCertificate}
-                  onChange={(e, { name, value }) => this.setState({ selectedCertificate: value })}
+                  value={clinic}
+                  onChange={this.handleChange}
                 />
               </Form.Field>
             </Form>
-          </Modal.Content>
-          <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
-            <Button color="red" onClick={() => this.setState({ certificateSelectionDialog: false })}>
-              Отмена
-            </Button>
-            <Button color="blue" onClick={this.sign} disabled={this.state.selectedCertificate == null}>
-              Подписать
-            </Button>
-          </Modal.Actions>
-        </Modal>
-      </>
-    );
+          )}
+          {recipe_formid && <Drugs isRecipe={true} />}
+        </Segment>
+      </div>
+      <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
+        <Modal.Header>Ваш код для аптеки</Modal.Header>
+        <Modal.Content>
+          <Header as="h1">{code}</Header>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button
+            content="Печать рецепта"
+            labelPosition="right"
+            primary
+            icon="file alternate outline"
+            onClick={() => this.print()}
+          />
+          <Button
+            content="Отправить по E-mail"
+            labelPosition="right"
+            primary
+            icon="mail"
+            onClick={() => this.mail()}
+            disabled={this.props.recipes.emailSent}
+          />
+          <Button
+            content="ОК"
+            labelPosition="right"
+            icon="checkmark"
+            onClick={() => this.setOpenCode(false)}
+            positive
+          />
+        </Modal.Actions>
+      </Modal>
+      <Modal
+        onClose={() => this.setState({ certificateSelectionDialog: false })}
+        onOpen={() => this.setState({ certificateSelectionDialog: true })}
+        open={this.state.certificateSelectionDialog}
+      >
+        <Modal.Header>Выберите сертификат для подписи</Modal.Header>
+        <Modal.Content>
+          <Form>
+            <Form.Field>
+              <label>доступные сертификаты</label>
+              <Dropdown
+                size="big"
+                options={this.state.certificates.map((cert) => {
+                  return {
+                    key: cert.thumbprint,
+                    text: cert.name,
+                    value: cert,
+                  };
+                })}
+                placeholder=""
+                name="recipe_formid"
+                selection
+                fluid
+                value={this.state.selectedCertificate}
+                onChange={(e, { name, value }) => this.setState({ selectedCertificate: value })}
+              />
+            </Form.Field>
+          </Form>
+        </Modal.Content>
+        <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
+          <Button color="red" onClick={() => this.setState({ certificateSelectionDialog: false })}>
+            Отмена
+          </Button>
+          <Button color="blue" onClick={this.sign} disabled={this.state.selectedCertificate == null}>
+            Подписать
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    </>;
   }
-}
+}));
+
 export default Recipe;

@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
@@ -10,23 +10,35 @@ const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#
 
 class Drugs {
   //start-decorators
-  @observable ready = false;
-  @observable searchRows = [];
+  ready = false;
+  searchRows = [];
 
-  @observable deletedRows = [];
-  @observable deletedLiquids = [];
+  deletedRows = [];
+  deletedLiquids = [];
 
-  @observable searchReady = true;
+  searchReady = true;
 
-  @observable listChanged = true;
+  listChanged = true;
 
-  @observable selectedRows = [];
+  selectedRows = [];
 
-  @observable current = this.getNew();
-  @observable currLiquid = this.getNewLiquid();
+  current = _.cloneDeep(DrugScheme);
+  currLiquid = _.cloneDeep(LiquidScheme);
   //end-decorators
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      searchRows: observable,
+      deletedRows: observable,
+      deletedLiquids: observable,
+      searchReady: observable,
+      listChanged: observable,
+      selectedRows: observable,
+      current: observable,
+      currLiquid: observable,
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
@@ -45,7 +57,7 @@ class Drugs {
   }
   //drug
   setCurrent = async ({ drug, key, id }) => {
-    let drugTpl = this.getNew();
+    let drugTpl = _.cloneDeep(DrugScheme);
     drugTpl.key = key;
     drugTpl.id = id;
     await _.assignIn(this.current, drugTpl);

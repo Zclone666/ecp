@@ -7,9 +7,7 @@ import { Menu, List, Feed, Button, Responsive, Icon, Popup, Input, TextArea, For
 
 import _ from "lodash";
 
-@inject("db", "actions", "router", "drugs", "dosages", "tools", "recipes")
-@observer
-class RecipeDrug extends React.Component {
+const RecipeDrug = inject("db", "actions", "router", "drugs", "dosages", "tools", "recipes")(observer(class RecipeDrug extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -293,5 +291,6 @@ class RecipeDrug extends React.Component {
       </List.Item>
     );
   }
-}
+}));
+
 export default RecipeDrug;

@@ -5,9 +5,7 @@ import Alert from "./Alert";
 
 import _ from "lodash";
 
-@inject("actions")
-@observer
-class Alerts extends React.Component {
+const Alerts = inject("actions")(observer(class Alerts extends React.Component {
   onClose = (key) => {
     this.props.actions.alerts = _.omit(this.props.actions.alerts, key);
   };
@@ -26,5 +24,6 @@ class Alerts extends React.Component {
       </div>
     );
   }
-}
+}));
+
 export default Alerts;

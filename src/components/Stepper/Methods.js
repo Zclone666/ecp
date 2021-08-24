@@ -6,9 +6,7 @@ import { List, Icon } from "semantic-ui-react";
 
 import _ from "lodash";
 
-@inject("db", "actions", "router", "drugs", "dosages")
-@observer
-class MethodsLF extends Component {
+const MethodsLF = inject("db", "actions", "router", "drugs", "dosages")(observer(class MethodsLF extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -68,5 +66,6 @@ class MethodsLF extends Component {
       </List>
     );
   }
-}
+}));
+
 export default MethodsLF;

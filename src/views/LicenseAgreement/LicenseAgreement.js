@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Segment, Header, Menu } from 'semantic-ui-react';
 
-@inject('actions', 'router')
-@observer
-class LicenseAgreement extends Component {
+const LicenseAgreement = inject('actions', 'router')(observer(class LicenseAgreement extends Component {
   render() {
     const {
       actions: { buttonTexts },
@@ -22,6 +20,6 @@ class LicenseAgreement extends Component {
       </Segment>
     );
   }
-}
+}));
 
 export default LicenseAgreement;

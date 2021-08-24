@@ -10,9 +10,7 @@ import { Menu, List, Feed, Button, Responsive, Icon, Grid, Segment, Popup, Heade
 import _ from "lodash";
 import moment from "moment";
 
-@inject("db", "actions", "drugs", "warnings")
-@observer
-class Conflicts extends Component {
+const Conflicts = inject("db", "actions", "drugs", "warnings")(observer(class Conflicts extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -172,5 +170,6 @@ class Conflicts extends Component {
       </>
     );
   }
-}
+}));
+
 export default Conflicts;

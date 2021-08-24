@@ -9,9 +9,7 @@ import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "sem
 
 import _ from "lodash";
 
-@inject("actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")
-@observer
-class MiniDrug extends React.Component {
+const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")(observer(class MiniDrug extends React.Component {
   constructor(props) {
     super(props);
 
@@ -173,5 +171,6 @@ class MiniDrug extends React.Component {
       </List.Item>
     );
   }
-}
+}));
+
 export default MiniDrug;

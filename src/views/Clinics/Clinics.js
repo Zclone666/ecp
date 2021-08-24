@@ -10,9 +10,7 @@ import { Segment, List, Button } from "semantic-ui-react";
 
 import _ from "lodash";
 
-@inject("router", "db", "actions", "patients")
-@observer
-class Clinics extends Component {
+const Clinics = inject("router", "db", "actions", "patients")(observer(class Clinics extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -67,5 +65,6 @@ class Clinics extends Component {
       </Segment>
     );
   }
-}
+}));
+
 export default Clinics;

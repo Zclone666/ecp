@@ -31,9 +31,7 @@ import {
 import _ from "lodash";
 import moment from "moment";
 
-@inject("router", "diseases", "actions", "patients", "tools")
-@observer
-class PatientForm extends Component {
+const PatientForm = inject("router", "diseases", "actions", "patients", "tools")(observer(class PatientForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -794,5 +792,6 @@ class PatientForm extends Component {
       </Segment>
     );
   }
-}
+}));
+
 export default PatientForm;

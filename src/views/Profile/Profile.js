@@ -10,9 +10,7 @@ import { Menu, Icon, Segment, List, Divider, Button, Form, Header, Input } from 
 
 import _ from "lodash";
 
-@inject("router", "db", "actions", "patients")
-@observer
-class Profile extends Component {
+const Profile = inject("router", "db", "actions", "patients")(observer(class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -187,5 +185,6 @@ class Profile extends Component {
       </div>
     );
   }
-}
+}));
+
 export default Profile;

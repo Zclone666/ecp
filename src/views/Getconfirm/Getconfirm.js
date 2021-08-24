@@ -5,9 +5,7 @@ import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui
 
 import RouterLink from "../../router/a";
 
-@inject("router", "actions")
-@observer
-class Getconfirm extends Component {
+const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends Component {
   constructor(props) {
     super(props);
     this.state = { filled: null };
@@ -68,6 +66,6 @@ class Getconfirm extends Component {
       </div>
     );
   }
-}
+}));
 
 export default Getconfirm;

@@ -1,20 +1,31 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
 import _ from "lodash";
 
 class Clinrecs {
-  @observable ready = false;
-  @observable checker = {};
-  @observable clinrec = {};
-  @observable names = {};
-  @observable shortnames = {};
-  @observable druglist = [];
-  @observable drugToClinrecHashset = {};
-  @observable collectorAvailable = false;
+  ready = false;
+  checker = {};
+  clinrec = {};
+  names = {};
+  shortnames = {};
+  druglist = [];
+  drugToClinrecHashset = {};
+  collectorAvailable = false;
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      checker: observable,
+      clinrec: observable,
+      names: observable,
+      shortnames: observable,
+      druglist: observable,
+      drugToClinrecHashset: observable,
+      collectorAvailable: observable
+    });
+
     this.stores = stores;
     this.router = stores.router;
 

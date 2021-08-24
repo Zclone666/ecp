@@ -1,39 +1,66 @@
-import { observable, action, autorun, computed, observe } from "mobx";
+import { observable, action, autorun, computed, observe, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
 import _ from "lodash";
 
 class Recipes {
-  @observable ready = false;
-  @observable code = null;
-  @observable recipe_endtime = null;
-  @observable recipe_endtimeitem = null;
-  @observable recipe_formid = null;
-  @observable recipe_text = null;
-  @observable mkb10code = null;
-  @observable recipeDiseaseId = null;
-  @observable financingSource = null;
-  @observable citizenCategory = null;
-  @observable compensation = null;
-  @observable snils = null;
-  @observable insuranceNumber = null;
-  @observable patientCard = null;
+  ready = false;
+  code = null;
+  recipe_endtime = null;
+  recipe_endtimeitem = null;
+  recipe_formid = null;
+  recipe_text = null;
+  mkb10code = null;
+  recipeDiseaseId = null;
+  financingSource = null;
+  citizenCategory = null;
+  compensation = null;
+  snils = null;
+  insuranceNumber = null;
+  patientCard = null;
 
-  @observable cito = false;
-  @observable statim = false;
-  @observable special = false;
-  @observable spectext = "";
+  cito = false;
+  statim = false;
+  special = false;
+  spectext = "";
 
-  @observable emailSent = false;
-  @observable drugKeysForPrescription = [];
-  @observable maxcount = 0;
+  emailSent = false;
+  drugKeysForPrescription = [];
+  maxcount = 0;
 
-  @observable digitallySignedRecipe = null;
-  @observable certificateBase64 = null;
-  @observable stringifiedSignData = null;
+  digitallySignedRecipe = null;
+  certificateBase64 = null;
+  stringifiedSignData = null;
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      code: observable,
+      recipe_endtime: observable,
+      recipe_endtimeitem: observable,
+      recipe_formid: observable,
+      recipe_text: observable,
+      mkb10code: observable,
+      recipeDiseaseId: observable,
+      financingSource: observable,
+      citizenCategory: observable,
+      compensation: observable,
+      snils: observable,
+      insuranceNumber: observable,
+      patientCard: observable,
+      cito: observable,
+      statim: observable,
+      special: observable,
+      spectext: observable,
+      emailSent: observable,
+      drugKeysForPrescription: observable,
+      maxcount: observable,
+      digitallySignedRecipe: observable,
+      certificateBase64: observable,
+      stringifiedSignData: observable
+    });
+
     this.stores = stores;
     this.router = stores.router;
 

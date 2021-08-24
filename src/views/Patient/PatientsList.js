@@ -16,9 +16,7 @@ import { Segment, List, Button, Form, Input } from "semantic-ui-react";
 import _ from "lodash";
 import moment from "moment";
 
-@inject("router", "db", "actions", "patients")
-@observer
-class PatientsList extends Component {
+const PatientsList = inject("router", "db", "actions", "patients")(observer(class PatientsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -173,5 +171,6 @@ class PatientsList extends Component {
       </Segment>
     );
   }
-}
+}));
+
 export default PatientsList;

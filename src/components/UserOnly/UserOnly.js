@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import Loader from '../Loader'
 
-@inject('router', 'actions')
-@observer
-class UserOnly extends Component {
+const UserOnly = inject('router', 'actions')(observer(class UserOnly extends Component {
   render(){
     let {
       children,
@@ -23,5 +21,6 @@ class UserOnly extends Component {
     )
   }
 
-};
+}));
+
 export default UserOnly

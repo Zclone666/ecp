@@ -13,9 +13,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('router', 'db', 'actions', 'drugs', 'warnings')
-@observer
-class Analog extends Component {
+const Analog = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(class Analog extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -65,5 +63,6 @@ class Analog extends Component {
 
     );
   }
-};
+}));
+
 export default Analog

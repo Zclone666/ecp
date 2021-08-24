@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Segment, Header, Menu } from 'semantic-ui-react';
 
-@inject('actions', 'router')
-@observer
-class Manual extends Component {
+const Manual = inject('actions', 'router')(observer(class Manual extends Component {
   render() {
     const {
       actions: { buttonTexts },
@@ -22,6 +20,6 @@ class Manual extends Component {
       </Segment>
     );
   }
-}
+}));
 
 export default Manual;

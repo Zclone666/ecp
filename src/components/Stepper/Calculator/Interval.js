@@ -33,9 +33,7 @@ ref_months = [ 'месяц', 'месяца', 'месяцев' ],
 ref_years = [ 'год', 'года', 'лет' ],
 ref_times = [ 'раз', 'раза', 'раз' ]
 
-@inject('db', 'actions', 'router', 'drugs', 'dosages')
-@observer
-class Interval extends Component {
+const Interval = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class Interval extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -369,5 +367,6 @@ class Interval extends Component {
     )
   }
 
-};
+}));
+
 export default Interval

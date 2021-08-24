@@ -1,16 +1,24 @@
-import { observable, action, autorun } from "mobx";
+import { observable, action, autorun, makeObservable } from "mobx";
 import { createBrowserHistory } from "history";
 import { PRE_PATH } from "../lib/connect";
 import Mapper from "url-mapper";
 import _ from "lodash";
 
 export default class Router {
-  @observable location = null;
-  @observable route = null;
-  @observable match = null;
-  @observable values = {};
+  location = null;
+  route = null;
+  match = null;
+  values = {};
 
   constructor(options) {
+    makeObservable(this, {
+      location: observable,
+      route: observable,
+      match: observable,
+      values: observable,
+      onLocation: action
+    });
+
     // this.params = observable.map({});
     this.options = {
       routes: {},
@@ -49,7 +57,7 @@ export default class Router {
     });
   }
 
-  @action onLocation(location) {
+  onLocation(location) {
     // console.log("YES");
     // let oldRoute = this.match;
     // let oldVals = this.values;

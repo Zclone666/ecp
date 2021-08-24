@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment, { relativeTimeThreshold } from "moment";
 
@@ -17,12 +17,12 @@ const colorPallette = [
 ];
 
 class Warnings {
-  @observable ready = false;
-  @observable groups = {};
-  @observable cautionsTitle = null;
-  @observable cautions = [];
-  @observable icons = {};
-  @observable warningInfo = {};
+  ready = false;
+  groups = {};
+  cautionsTitle = null;
+  cautions = [];
+  icons = {};
+  warningInfo = {};
   info = {
     names: observable({}),
     description: observable({}),
@@ -33,6 +33,15 @@ class Warnings {
   };
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      groups: observable,
+      cautionsTitle: observable,
+      cautions: observable,
+      icons: observable,
+      warningInfo: observable,
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
@@ -130,6 +139,7 @@ class Warnings {
     let drugsFull = Array.from(this.stores.drugs.drug.values());
     let liquidsFull = Array.from(this.stores.drugs.liquid.values());
     drugsFull.forEach((drugFull, i) => {
+      if (!data.drugs) data.drugs = [];
       let { helpers, ...drug } = drugFull;
       data.drugs.push(drug);
     });

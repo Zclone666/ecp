@@ -9,9 +9,7 @@ import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown, Visibility
 
 import _ from "lodash";
 
-@inject("db", "actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")
-@observer
-class Drug extends React.Component {
+const Drug = inject("db", "actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")(observer(class Drug extends React.Component {
   constructor(props) {
     super(props);
 
@@ -381,5 +379,6 @@ class Drug extends React.Component {
       </List.Item>
     );
   }
-}
+}));
+
 export default Drug;

@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from 'mobx';
+import { observable, action, autorun, computed, makeObservable } from 'mobx';
 import { GET, POST, PUT } from '../lib/connect'
 import moment from 'moment'
 
@@ -6,13 +6,20 @@ import _ from 'lodash';
 
 
 class Diseases {
-  @observable ready = false;
-  @observable searchReady = false;
+  ready = false;
+  searchReady = false;
 
-  @observable diseaseRows = [];
-  @observable allergyRows = [];
+  diseaseRows = [];
+  allergyRows = [];
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      searchReady: observable,
+      diseaseRows: observable,
+      allergyRows: observable
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
@@ -25,8 +32,6 @@ class Diseases {
     autorun(() => {
 
     });
-
-
   }
   async getSearchDisease(text, saveTo){
     this.searchReady = false

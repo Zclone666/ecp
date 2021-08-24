@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
@@ -9,9 +9,9 @@ import _ from "lodash";
 const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#fc7301", "#f42a03"];
 
 class Dosages {
-  @observable ready = false;
+  ready = false;
 
-  @observable current = {
+  current = {
     //drugDosage
     drug: {},
     form: {},
@@ -22,6 +22,11 @@ class Dosages {
   };
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      current: observable
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
