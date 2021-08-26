@@ -33,6 +33,11 @@ class Recipes {
   certificateBase64 = null;
   stringifiedSignData = null;
 
+  cert_owner = null;
+  cert_code = null;
+  validity_start_date = null;
+  validity_end_date = null;
+
   constructor({ stores }) {
     makeObservable(this, {
       ready: observable,
@@ -58,7 +63,11 @@ class Recipes {
       maxcount: observable,
       digitallySignedRecipe: observable,
       certificateBase64: observable,
-      stringifiedSignData: observable
+      stringifiedSignData: observable,
+      cert_owner: observable,
+      cert_code: observable,
+      validity_start_date: observable,
+      validity_end_date: observable,
     });
 
     this.stores = stores;
@@ -102,6 +111,15 @@ class Recipes {
     this.emailSent = false;
     this.drugKeysForPrescription = [];
     this.maxcount = 0;
+
+    this.digitallySignedRecipe = null;
+    this.certificateBase64 = null;
+    this.stringifiedSignData = null;
+
+    this.cert_owner = null;
+    this.cert_code = null;
+    this.validity_start_date = null;
+    this.validity_end_date = null;
   };
 
   getDataToSign = () => {
@@ -206,6 +224,10 @@ class Recipes {
       spectext: this.spectext,
       docsign: this.digitallySignedRecipe,
       doccertify: this.certificateBase64,
+      cert_owner: this.cert_owner,
+      cert_code: this.cert_code,
+      validity_start_date: this.validity_start_date,
+      validity_end_date: this.validity_end_date,
     };
 
     return POST({
