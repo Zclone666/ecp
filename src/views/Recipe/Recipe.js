@@ -786,7 +786,7 @@ const Recipe = inject("router", "db", "actions", "recipes", "patients")(observer
                 <label>E-mail пациента</label>
                 <Input name="email" value={patient.email} onChange={this.handleChange} placeholder="some@email.ru" />
               </Form.Field>
-              <Form.Field>
+              <Form.Field required>
                 <label>ЛПУ</label>
                 <Dropdown
                   options={checkData.lpu.map((item) => {

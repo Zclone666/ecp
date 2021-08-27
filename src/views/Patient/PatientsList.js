@@ -159,7 +159,7 @@ const PatientsList = inject("router", "db", "actions", "patients")(observer(clas
                   fluid
                   as={RouterLink}
                   to={"/patient/info"}
-                  content="Анамнез"
+                  content="Данные пациента"
                   labelPosition="right"
                   icon="clipboard"
                   primary
