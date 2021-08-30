@@ -503,7 +503,7 @@ const Main = inject(
                 </Modal.Actions>
               </Modal>
 
-              {(makeLiquids || !checkLiquids) && (
+              {(makeLiquids || !checkLiquids) & !bottomview_disabled && (
                 <Menu className="bottom fixed menu two item huge main">
                   <Menu.Item onClick={this.resetLiquids}>Сбросить растворы</Menu.Item>
                   <Menu.Item disabled={!isLiquidsOk} onClick={this.confirmLiquids}>
