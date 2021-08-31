@@ -30,4 +30,5 @@ export default {
   policy_num: null,
   medcard_num: null,
   main_address: null,
+  genpassport_exist: false,
 };

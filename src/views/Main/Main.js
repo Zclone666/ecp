@@ -202,7 +202,7 @@ const Main = inject(
           <div>
             <Icon name={icon} />
             {/* {name} */}
-            <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+            <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
             {type === "TN" && <sup>TM</sup>}
           </div>
         );
@@ -503,7 +503,7 @@ const Main = inject(
                 </Modal.Actions>
               </Modal>
 
-              {(makeLiquids || !checkLiquids) & !bottomview_disabled && (
+              {(makeLiquids || !checkLiquids) && !bottomview_disabled && (
                 <Menu className="bottom fixed menu two item huge main">
                   <Menu.Item onClick={this.resetLiquids}>Сбросить растворы</Menu.Item>
                   <Menu.Item disabled={!isLiquidsOk} onClick={this.confirmLiquids}>
