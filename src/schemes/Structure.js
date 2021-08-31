@@ -37,6 +37,7 @@ export default {
     lactation: false,
     driving: false,
     alcohol: false,
+    genpassport_exist: false,
   },
 
   liquids: [],

@@ -1,11 +1,11 @@
-import { observable, action, autorun, computed, makeObservable } from 'mobx';
-import { GET, POST, PUT } from '../lib/connect';
-import moment from 'moment';
+import { observable, action, autorun, computed, makeObservable } from "mobx";
+import { GET, POST, PUT } from "../lib/connect";
+import moment from "moment";
 
-import { PatientScheme } from '../schemes';
+import { PatientScheme } from "../schemes";
 
-import _ from 'lodash';
-import AlertItem from '../components/Alerts/Alert';
+import _ from "lodash";
+import AlertItem from "../components/Alerts/Alert";
 
 class Patients {
   ready = false;
@@ -29,7 +29,7 @@ class Patients {
     this.stores = stores;
     this.router = stores.router;
 
-    this.patient = observable.map({}, 'patient');
+    this.patient = observable.map({}, "patient");
 
     autorun(() => {});
   }
@@ -65,6 +65,7 @@ class Patients {
     medcard_num,
 
     main_address,
+    genpassport_exist,
   }) => {
     let patientTpl = _.cloneDeep(PatientScheme);
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -99,6 +100,8 @@ class Patients {
       medcard_num,
 
       main_address,
+
+      genpassport_exist,
     });
   };
 
@@ -176,6 +179,8 @@ class Patients {
           medcard_num,
 
           main_address,
+
+          genpassport_exist,
         } = data.patient;
 
         let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -212,6 +217,8 @@ class Patients {
           policy_num,
           medcard_num,
           main_address,
+
+          genpassport_exist,
         };
 
         Object.assign(this.stores.actions.drugStructure.patient, {
@@ -236,6 +243,8 @@ class Patients {
           allergy,
           mutations,
           labparams,
+
+          genpassport_exist,
 
           lastname,
           patronymic,
@@ -459,7 +468,7 @@ class Patients {
     if (patients && _.isArray(patients)) {
       patients.forEach(async (patientId, i) => {
         let patient = this.getById(patientId);
-        let key = patientId || (moment().format('x') + i).toString();
+        let key = patientId || (moment().format("x") + i).toString();
 
         // let current = await this.patient.get(key) || {}
         // let patient = await _.extend(current, { name: names[patientId], id: patientId, key });
@@ -491,7 +500,7 @@ class Patients {
     return res;
   }
 
-  async search(text, saveTo = 'search') {
+  async search(text, saveTo = "search") {
     // {
     //   "key":"",
     //   "authkey":"ауткей",
@@ -520,7 +529,7 @@ class Patients {
       success: async (data) => {
         if (data.patients && data.patients.length > 0 && _.isArray(data.patients)) {
           await data.patients.forEach((concept, i) => {
-            data.patients[i].key = 'concept' + i;
+            data.patients[i].key = "concept" + i;
             data.patients[i].title = data.patients[i].name;
           });
 
@@ -554,14 +563,14 @@ class Patients {
     data.doctorId = this.stores.actions.drugStructure.doctor_id;
     data.clinicId = this.stores.actions.default_clinic_id;
     if (data.patient.birthdate) {
-      data.patient.birthdate = moment(data.patient.birthdate, 'x').utc().format('x');
+      data.patient.birthdate = moment(data.patient.birthdate, "x").utc().format("x");
     }
     // data.authkey = this.stores.actions.authkey
     // data.key = this.stores.actions.privateKey
     // console.log(data.patient);
     this.stores.actions.loading = true;
     return POST({
-      path: data.patient.id ? `tools/PatientUpdate` : 'tools/PatientAdd',
+      path: data.patient.id ? `tools/PatientUpdate` : "tools/PatientAdd",
       data,
       success: async (data) => {
         if (data.patients) {
