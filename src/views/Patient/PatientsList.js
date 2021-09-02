@@ -120,6 +120,7 @@ const PatientsList = inject("router", "db", "actions", "patients")(observer(clas
             <Form.Field>
               <label>ФИО</label>
               <Input
+                disabled
                 size="big"
                 name="fio"
                 value={fio || ""}
@@ -130,6 +131,7 @@ const PatientsList = inject("router", "db", "actions", "patients")(observer(clas
             <Form.Field>
               <label>E-mail</label>
               <Input
+                disabled
                 size="big"
                 name="email"
                 value={email || ""}
