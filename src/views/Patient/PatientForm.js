@@ -53,6 +53,8 @@ const PatientForm = inject(
             allele2: "",
           },
           misDisabled: this.props.actions.misLinkLogin,
+
+          search_patient: "",
         };
         this.fileUploadRef = createRef();
       }
@@ -159,6 +161,41 @@ const PatientForm = inject(
         this.forceUpdate();
       };
 
+      clearPatient = () => {
+        this.props.patients.unsetCurrent();
+        this.props.actions.resetAll();
+      };
+
+      handlePatientResultSelect = async (e, { name, result }) => {
+        //let newName = name === 'co_disease' ? 'disease' : name
+        await this.props.patients.request(result.id);
+        this.setState({ [`search_${name}`]: "" });
+        this.props.router.push("/patient/info");
+      };
+
+      handlePatientSearchChange = (e, { name, value }) => {
+        this.setState({ [`search_${name}`]: value });
+        if (value.length > 1) {
+          this.props.patients.searchReady = false;
+          this.props.patients.search(value);
+        }
+      };
+
+      get listSearch() {
+        let arr = [];
+        this.props.patients.searchRows.forEach((item, i) => {
+          if (item.name) {
+            arr.push({
+              id: item.id,
+              title: item.name,
+              price: item.birthdate ? moment(item.birthdate, "x").format("DD.MM.YYYY") : "",
+              description: item.email,
+            });
+          }
+        });
+        return arr;
+      }
+
       handleSearchChange = (e, { name, value }) => {
         this.setState({ [`search_${name}`]: value });
         if (value.length > 1) {
@@ -239,11 +276,13 @@ const PatientForm = inject(
         let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
         // console.log({veryOld});
 
+        let { search_patient } = this.state;
+
         return (
           <Segment basic>
             <Form>
               <Form.Group>
-                {!misDisabled && (
+                {/* {!misDisabled && (
                   <Form.Field width={6}>
                     <Button
                       size="big"
@@ -256,9 +295,28 @@ const PatientForm = inject(
                       primary
                     />
                   </Form.Field>
-                )}
-                <Form.Field width={10}>
+                )} */}
+                <Form.Field width={9}>
+                  <Search
+                    fluid
+                    size="big"
+                    name="patient"
+                    placeholder="Введите имя пациента"
+                    loading={!searchReady}
+                    onResultSelect={this.handlePatientResultSelect}
+                    onSearchChange={_.debounce(this.handlePatientSearchChange, 500, {
+                      leading: true,
+                    })}
+                    results={this.listSearch}
+                    value={search_patient}
+                    resultClassName="result-wrapper"
+                  />
+                </Form.Field>
+                <Form.Field width={5}>
                   <Header as="h2" content={fio} subheader={email} />
+                </Form.Field>
+                <Form.Field width={2}>
+                  <Button onClick={() => this.clearPatient()}>Сбросить</Button>
                 </Form.Field>
               </Form.Group>
               <Divider horizontal fitted />
@@ -446,6 +504,7 @@ const PatientForm = inject(
                 <Form.Field width={16}>
                   <label>Генетический паспорт</label>
                   <Button
+                    primary={genpassport_exist}
                     disabled={!id}
                     size="big"
                     fluid
