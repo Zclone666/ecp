@@ -23,7 +23,7 @@ class Clinrecs {
       shortnames: observable,
       druglist: observable,
       drugToClinrecHashset: observable,
-      collectorAvailable: observable
+      collectorAvailable: observable,
     });
 
     this.stores = stores;
@@ -157,7 +157,7 @@ class Clinrecs {
             form: [],
             intervalpreset: [],
             method: [],
-            name: "группировка признаков с условием - ИЛИ",
+            name: "выберите одну из схем лечения", //"группировка признаков с условием - ИЛИ",
             parents: child.id,
             schedulepreset: [],
             trust: child.trust,
