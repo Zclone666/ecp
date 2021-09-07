@@ -12,10 +12,12 @@ import Tools from "./tools";
 import Analogs from "./analogs";
 import DrugInfo from "./druginfo";
 import Clinrecs from "./clinrecs";
-
 import { configure } from "mobx";
+
+var ua = window.navigator.userAgent;
+var isIE = /MSIE|Trident/.test(ua);
 configure({
-  // useProxies: "never",
+  useProxies: isIE ? "never" : "always",
   enforceActions: "never",
 });
 
