@@ -221,7 +221,7 @@ const Recipe = inject(
         const cert = this.state.selectedCertificate;
         // console.log({ cert, data });
         const certBase64 = await cert.exportBase64();
-        await createHash(stringifiedData).then((hashedDataToSign) =>
+        await createHash(stringifiedData.replaceAll("/", "").replaceAll('"', "")).then((hashedDataToSign) =>
           createDetachedSignature(this.state.selectedCertificate.thumbprint, hashedDataToSign).then((result) => {
             this.setState({ signedData: result });
             // console.log({ cert });
