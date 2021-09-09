@@ -211,6 +211,8 @@ class Recipes {
     data.patientCard = this.patientCard;
     data.clinic_id = this.stores.actions.drugStructure.clinic_id;
 
+    data.forFront = this.stringifiedSignData;
+
     data.recipe_data = {
       formid: this.recipe_formid,
       recipe_text: this.recipe_text,

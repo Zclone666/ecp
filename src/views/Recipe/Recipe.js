@@ -225,6 +225,7 @@ const Recipe = inject(
           createDetachedSignature(this.state.selectedCertificate.thumbprint, hashedDataToSign).then((result) => {
             this.setState({ signedData: result });
             // console.log({ cert });
+            this.props.recipes.stringifiedSignData = stringifiedData.replaceAll("/", "").replaceAll('"', "");
             this.props.recipes.digitallySignedRecipe = result;
             this.props.recipes.certificateBase64 = certBase64;
             this.props.recipes.cert_owner = cert.name;
