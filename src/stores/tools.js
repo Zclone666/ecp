@@ -39,7 +39,7 @@ class Tools {
       unitsPharm: observable,
       unitsPrimary: observable,
       unitsComplex: observable,
-      unitsSchedule: observable
+      unitsSchedule: observable,
     });
 
     this.stores = stores;
@@ -304,6 +304,7 @@ class Tools {
       success: async (res) => {
         this.stores.actions.makeAlerts({ alerts: [res] });
         this.stores.actions.loading = false;
+        this.stores.patients.genepassport_exist = true;
       },
       fail: (res) => {
         this.stores.actions.makeAlerts({ alerts: [res] });
