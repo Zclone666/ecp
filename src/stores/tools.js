@@ -304,7 +304,7 @@ class Tools {
       success: async (res) => {
         this.stores.actions.makeAlerts({ alerts: [res] });
         this.stores.actions.loading = false;
-        this.stores.patients.genepassport_exist = true;
+        if (this.stores.patients.current) this.stores.patients.current.genpassport_exist = true;
       },
       fail: (res) => {
         this.stores.actions.makeAlerts({ alerts: [res] });
