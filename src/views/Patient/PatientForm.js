@@ -316,7 +316,7 @@ const PatientForm = inject(
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
                 <Form.Field width={2}>
-                  <Button onClick={() => this.clearPatient()}>Сбросить</Button>
+                  <Button onClick={() => this.clearPatient()}>Новый пациент</Button>
                 </Form.Field>
               </Form.Group>
               <Divider horizontal fitted />
