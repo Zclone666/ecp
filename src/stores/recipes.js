@@ -232,9 +232,18 @@ class Recipes {
       validity_end_date: this.validity_end_date,
     };
 
+    const data2 = {
+      key: this.stores.actions.privateKey,
+      authkey: this.stores.actions.authkey,
+      active_language: active_language,
+      message: this.stringifiedSignData,
+      certificate: this.certificateBase64,
+      signed_data: this.digitallySignedRecipe,
+    };
+
     return POST({
-      path: "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
-      data,
+      path: this.stringifiedSignData ? "/Prescript/RecipeNewEDS" : "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      data: this.stringifiedSignData ? data2 : data,
       success: async (data) => {
         if (data && data.code) {
           this.code = data.code;
