@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from 'mobx';
+import { observable, action, autorun, computed, makeObservable } from 'mobx';
 import { GET, POST, PUT } from '../lib/connect'
 import moment from 'moment'
 
@@ -6,20 +6,26 @@ import _ from 'lodash';
 
 
 class Analogs {
-  @observable ready = false;
+  ready = false;
 
-  @observable current = { //drugDosage
+  current = { //drugDosage
     drug: {},
     form: {},
     methodform: {},
     names: {},
     nameshort: {},
     units: {}
-  }
+  };
 
-  @observable names = {}
+  names = {};
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      current: observable,
+      names: observable
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
@@ -28,8 +34,6 @@ class Analogs {
     autorun(() => {
 
     });
-
-
   }
 
   //getLF
@@ -57,7 +61,7 @@ class Analogs {
 
           this.names = await _.extend(this.names, names)
 
-          let current = await this.analog.get(drug_obj.key) || {};
+          let current = (await this.analog.get(drug_obj.key)) || {};
 
           let analogs = {
             key: drug_obj.key,

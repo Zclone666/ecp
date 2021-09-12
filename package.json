@@ -9,19 +9,22 @@
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "babel": "^6.23.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-runtime": "^6.26.0",
+    "core-js": "^3.6.5",
     "craco-babel-loader": "^0.1.4",
     "crypto-pro": "^2.2.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "history": "^4.10.1",
     "less": "^4.1.1",
     "less-loader": "^6.1.0",
-    "mobx": "^5.15.4",
-    "mobx-react": "^6.2.2",
+    "mobx": "6.3.2",
+    "mobx-react": "7.2.0",
     "moment": "^2.26.0",
     "rc-datepicker": "^5.0.16",
     "rc-swipeout": "^2.0.11",
     "react": "^16.13.1",
+    "react-app-polyfill": "^2.0.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-collapse": "^5.0.1",
     "react-datepicker": "^3.2.2",
@@ -51,12 +54,14 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "ie 9"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "ie 9"
     ]
   },
   "devDependencies": {

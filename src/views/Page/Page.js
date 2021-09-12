@@ -13,9 +13,7 @@ import DrugInfo from '../DrugInfo';
 import Liquid from '../Liquid';
 import Clinrecs from '../Clinrecs';
 
-@inject('router', 'actions')
-@observer
-class Page extends Component {
+const Page = inject('router', 'actions')(observer(class Page extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,5 +51,6 @@ class Page extends Component {
       }[name] || null
     );
   }
-}
+}));
+
 export default Page;

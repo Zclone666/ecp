@@ -21,9 +21,7 @@ import {
 
 import _ from "lodash";
 
-@inject("db", "actions", "druginfo", "router", "drugs", "clinrecs", "warnings")
-@observer
-class Clinrec extends Component {
+const Clinrec = inject("db", "actions", "druginfo", "router", "drugs", "clinrecs", "warnings")(observer(class Clinrec extends Component {
   constructor(props) {
     super(props);
 
@@ -223,7 +221,10 @@ class Clinrec extends Component {
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <span className="underlined">{name}</span>
+                <span className="underlined">
+                  {/* {name} */}
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                </span>
                 {type === "TN" && (
                   <span>
                     <sup>TM</sup>
@@ -248,7 +249,10 @@ class Clinrec extends Component {
             <Feed.Event>
               <Feed.Content>
                 <Feed.Summary>
-                  <span className="underlined">{name}</span>
+                  <span className="underlined">
+                    {/* {name} */}
+                    <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  </span>
                   {type === "TN" && (
                     <span>
                       <sup>TM</sup>
@@ -396,5 +400,6 @@ class Clinrec extends Component {
       </>
     );
   }
-}
+}));
+
 export default Clinrec;

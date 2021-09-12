@@ -9,9 +9,7 @@ import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "sem
 
 import _ from "lodash";
 
-@inject("actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")
-@observer
-class MiniDrug extends React.Component {
+const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")(observer(class MiniDrug extends React.Component {
   constructor(props) {
     super(props);
 
@@ -120,7 +118,10 @@ class MiniDrug extends React.Component {
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <span className="underlined">{name}</span>
+                <span className="underlined">
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  {/* {name} */}
+                </span>
                 {type === "TN" && (
                   <span>
                     <sup>TM</sup>
@@ -145,7 +146,10 @@ class MiniDrug extends React.Component {
             <Feed.Event>
               <Feed.Content>
                 <Feed.Summary>
-                  <span className="underlined">{name}</span>
+                  <span className="underlined">
+                    {/* {name} */}
+                    <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  </span>
                   {type === "TN" && (
                     <span>
                       <sup>TM</sup>
@@ -173,5 +177,6 @@ class MiniDrug extends React.Component {
       </List.Item>
     );
   }
-}
+}));
+
 export default MiniDrug;

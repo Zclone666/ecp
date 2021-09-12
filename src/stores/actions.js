@@ -1,4 +1,4 @@
-import { observable, action, autorun } from "mobx";
+import { observable, action, autorun, makeObservable } from "mobx";
 import { GET, POST, PUT, PROJECT_TITLE, CREATE_API_URL } from "../lib/connect";
 import _ from "lodash";
 import moment from "moment";
@@ -18,55 +18,55 @@ const createCsServerUrl = (url) =>
     : "https://cs.socmedica.com" + url;
 
 class Actions {
-  @observable view = false;
-  @observable device = null;
-  @observable mobilewarning = false;
-  @observable height = 0;
+  view = false;
+  device = null;
+  mobilewarning = false;
+  height = 0;
 
-  @observable projectTitle = PROJECT_TITLE;
+  projectTitle = PROJECT_TITLE;
 
-  @observable authorized = false;
-  @observable loading = false;
-  @observable dataLoading = false;
-  @observable authkey = null;
-  @observable privateKey = null;
+  authorized = false;
+  loading = false;
+  dataLoading = false;
+  authkey = null;
+  privateKey = null;
 
-  @observable disabled = false;
-  @observable miskey = null;
+  disabled = false;
+  miskey = null;
 
-  @observable active_language = "ru";
+  active_language = "ru";
 
-  @observable pages = {};
-  @observable currentPage = null;
+  pages = {};
+  currentPage = null;
 
-  @observable filtersChanged = false;
+  filtersChanged = false;
 
-  @observable alerts = {};
+  alerts = {};
 
-  @observable elements = {};
-  @observable buttonTexts = {};
-  @observable UIText = {};
-  @observable recipeData = {};
+  elements = {};
+  buttonTexts = {};
+  UIText = {};
+  recipeData = {};
 
-  @observable makeLiquids = false;
-  @observable isLiquidsOk = false;
+  makeLiquids = false;
+  isLiquidsOk = false;
 
-  @observable protocol = null;
-  @observable misLinkLogin = false;
-  @observable topview_disabled = false;
-  @observable bottomview_disabled = false;
+  protocol = null;
+  misLinkLogin = false;
+  topview_disabled = false;
+  bottomview_disabled = false;
 
-  @observable checkData = {
+  checkData = {
     lpu: [],
     doctor: null,
   };
 
-  @observable doctor = {
+  doctor = {
     id: null,
     name: null,
   };
 
-  @observable loginForm = {
+  loginForm = {
     email: "",
     password: "",
     privateKey: "",
@@ -74,9 +74,9 @@ class Actions {
     hidden: true,
   };
 
-  @observable profile = _.cloneDeep(ProfileScheme);
+  profile = _.cloneDeep(ProfileScheme);
 
-  @observable signinForm = {
+  signinForm = {
     email: "",
     password: "",
     lastName: "",
@@ -91,32 +91,32 @@ class Actions {
     showUserAlreadyExistsDialog: false,
   };
 
-  @observable confirmForm = {
+  confirmForm = {
     email: "",
     code: "",
     service: "",
   };
 
-  @observable getConfirmForm = {
+  getConfirmForm = {
     email: "",
   };
 
-  @observable resetPassForm = {
+  resetPassForm = {
     email: "",
     key: "",
   };
 
-  @observable newPassForm = {
+  newPassForm = {
     email: "",
     recoveryCode: "",
     newPassword: "",
     key: "",
   };
 
-  @observable clinrecCheckerData = {};
-  @observable clinrecCheckerStep = 1;
+  clinrecCheckerData = {};
+  clinrecCheckerStep = 1;
 
-  @observable stepsData = {
+  stepsData = {
     key: null,
     way: null,
     step: null,
@@ -128,7 +128,7 @@ class Actions {
     helpers: {},
   };
 
-  @observable patientForm = {
+  patientForm = {
     id: null,
     email: null,
     fio: null,
@@ -152,7 +152,7 @@ class Actions {
     allergy: [],
   };
 
-  @observable patientPassport = {
+  patientPassport = {
     id: null,
     name: null,
     email: null,
@@ -184,7 +184,7 @@ class Actions {
     };
   };
 
-  @observable scheduleForm = {
+  scheduleForm = {
     dateStart: null,
     dateFinish: null,
     finishAlternate: null,
@@ -197,7 +197,7 @@ class Actions {
     format: "interval",
   };
 
-  @observable calculatorForm = {
+  calculatorForm = {
     dosage: [0],
     count: 1,
     dosageUnit: "248",
@@ -208,7 +208,7 @@ class Actions {
     dayWeightDosage: [0],
   };
 
-  @observable liquidForm = {
+  liquidForm = {
     name: "", // Название ДВ или ТН
     group: 0, // группа раствора (0 - нет раствора, больше 0 - раствор)
     specials: null,
@@ -242,14 +242,14 @@ class Actions {
     },
   };
 
-  @observable selectedDrug = null;
-  @observable selectedConflict = null;
-  @observable activeDrugs = [];
-  @observable activeConflicts = [];
+  selectedDrug = null;
+  selectedConflict = null;
+  activeDrugs = [];
+  activeConflicts = [];
 
-  @observable drugStructure = _.cloneDeep(StructureScheme);
+  drugStructure = _.cloneDeep(StructureScheme);
 
-  @observable default_clinic_id = null;
+  default_clinic_id = null;
   // {
   //   key: "key",
   //   device_id: null,
@@ -292,6 +292,62 @@ class Actions {
   // };
 
   constructor({ stores }) {
+    makeObservable(this, {
+      view: observable,
+      device: observable,
+      mobilewarning: observable,
+      height: observable,
+      projectTitle: observable,
+      authorized: observable,
+      loading: observable,
+      dataLoading: observable,
+      authkey: observable,
+      privateKey: observable,
+      disabled: observable,
+      miskey: observable,
+      active_language: observable,
+      pages: observable,
+      currentPage: observable,
+      filtersChanged: observable,
+      alerts: observable,
+      elements: observable,
+      buttonTexts: observable,
+      UIText: observable,
+      recipeData: observable,
+      makeLiquids: observable,
+      isLiquidsOk: observable,
+      protocol: observable,
+      misLinkLogin: observable,
+      topview_disabled: observable,
+      bottomview_disabled: observable,
+      checkData: observable,
+      doctor: observable,
+      loginForm: observable,
+      profile: observable,
+      signinForm: observable,
+      confirmForm: observable,
+      getConfirmForm: observable,
+      resetPassForm: observable,
+      newPassForm: observable,
+      clinrecCheckerData: observable,
+      clinrecCheckerStep: observable,
+      stepsData: observable,
+      patientForm: observable,
+      patientPassport: observable,
+      scheduleForm: observable,
+      calculatorForm: observable,
+      liquidForm: observable,
+      selectedDrug: observable,
+      selectedConflict: observable,
+      activeDrugs: observable,
+      activeConflicts: observable,
+      drugStructure: observable,
+      default_clinic_id: observable,
+      resetAll: action,
+      selectPatient: action,
+      unselectPatient: action
+    });
+
     this.stores = stores;
     this.autologin();
     autorun(() => {
@@ -356,7 +412,7 @@ class Actions {
     return structure;
   }
 
-  @action async resetAll(flag = "patient") {
+  async resetAll(flag = "patient") {
     let structure = await _.cloneDeep(StructureScheme);
 
     switch (flag) {
@@ -421,7 +477,7 @@ class Actions {
     // }
   }
 
-  @action async selectPatient(row, from) {
+  async selectPatient(row, from) {
     row.key = moment().format("x").toString();
     this.stores.patients.current[from] = await _.unionWith(
       this.stores.patients.current[from],
@@ -433,7 +489,7 @@ class Actions {
     return true;
   }
 
-  @action async unselectPatient(row, from) {
+  async unselectPatient(row, from) {
     this.stores.patients.current[from] = await _.xorWith(
       this.stores.patients.current[from],
       [row],

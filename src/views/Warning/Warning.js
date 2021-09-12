@@ -53,9 +53,7 @@ function getLetter(value) {
   return result;
 }
 
-@inject("router", "db", "actions", "drugs", "warnings", "tools")
-@observer
-class Warning extends Component {
+const Warning = inject("router", "db", "actions", "drugs", "warnings", "tools")(observer(class Warning extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -271,5 +269,6 @@ class Warning extends Component {
       </>
     );
   }
-}
+}));
+
 export default Warning;

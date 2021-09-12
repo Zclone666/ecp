@@ -13,9 +13,7 @@ import Drugs from "./Drugs";
 
 import _ from "lodash";
 
-@inject("db", "actions", "router", "drugs", "dosages", "tools", "patients")
-@observer
-class LiquidCalculator extends Component {
+const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "tools", "patients")(observer(class LiquidCalculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -506,5 +504,6 @@ class LiquidCalculator extends Component {
       </Segment>
     );
   }
-}
+}));
+
 export default LiquidCalculator;

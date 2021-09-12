@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
-@inject('router')
-@observer
-class RouterLink extends Component {
+const RouterLink = inject('router')(observer(class RouterLink extends Component {
   render() {
     const { router, common, activeClassName, className, onClick, children, to, path, ...otherProps } = this.props;
     otherProps.href = router.createHref({ pathname: to });
@@ -25,5 +23,6 @@ class RouterLink extends Component {
     };
     return <a children={children} className={cls} {...otherProps} />;
   }
-}
+}));
+
 export default RouterLink

@@ -1,39 +1,75 @@
-import { observable, action, autorun, computed, observe } from "mobx";
+import { observable, action, autorun, computed, observe, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
 import _ from "lodash";
 
 class Recipes {
-  @observable ready = false;
-  @observable code = null;
-  @observable recipe_endtime = null;
-  @observable recipe_endtimeitem = null;
-  @observable recipe_formid = null;
-  @observable recipe_text = null;
-  @observable mkb10code = null;
-  @observable recipeDiseaseId = null;
-  @observable financingSource = null;
-  @observable citizenCategory = null;
-  @observable compensation = null;
-  @observable snils = null;
-  @observable insuranceNumber = null;
-  @observable patientCard = null;
+  ready = false;
+  code = null;
+  recipe_endtime = null;
+  recipe_endtimeitem = null;
+  recipe_formid = null;
+  recipe_text = null;
+  mkb10code = null;
+  recipeDiseaseId = null;
+  financingSource = null;
+  citizenCategory = null;
+  compensation = null;
+  snils = null;
+  insuranceNumber = null;
+  patientCard = null;
 
-  @observable cito = false;
-  @observable statim = false;
-  @observable special = false;
-  @observable spectext = "";
+  cito = false;
+  statim = false;
+  special = false;
+  spectext = "";
 
-  @observable emailSent = false;
-  @observable drugKeysForPrescription = [];
-  @observable maxcount = 0;
+  emailSent = false;
+  drugKeysForPrescription = [];
+  maxcount = 0;
 
-  @observable digitallySignedRecipe = null;
-  @observable certificateBase64 = null;
-  @observable stringifiedSignData = null;
+  digitallySignedRecipe = null;
+  certificateBase64 = null;
+  stringifiedSignData = null;
+
+  cert_owner = null;
+  cert_code = null;
+  validity_start_date = null;
+  validity_end_date = null;
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      code: observable,
+      recipe_endtime: observable,
+      recipe_endtimeitem: observable,
+      recipe_formid: observable,
+      recipe_text: observable,
+      mkb10code: observable,
+      recipeDiseaseId: observable,
+      financingSource: observable,
+      citizenCategory: observable,
+      compensation: observable,
+      snils: observable,
+      insuranceNumber: observable,
+      patientCard: observable,
+      cito: observable,
+      statim: observable,
+      special: observable,
+      spectext: observable,
+      emailSent: observable,
+      drugKeysForPrescription: observable,
+      maxcount: observable,
+      digitallySignedRecipe: observable,
+      certificateBase64: observable,
+      stringifiedSignData: observable,
+      cert_owner: observable,
+      cert_code: observable,
+      validity_start_date: observable,
+      validity_end_date: observable,
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
@@ -75,6 +111,15 @@ class Recipes {
     this.emailSent = false;
     this.drugKeysForPrescription = [];
     this.maxcount = 0;
+
+    this.digitallySignedRecipe = null;
+    this.certificateBase64 = null;
+    this.stringifiedSignData = null;
+
+    this.cert_owner = null;
+    this.cert_code = null;
+    this.validity_start_date = null;
+    this.validity_end_date = null;
   };
 
   getDataToSign = () => {
@@ -166,6 +211,8 @@ class Recipes {
     data.patientCard = this.patientCard;
     data.clinic_id = this.stores.actions.drugStructure.clinic_id;
 
+    data.forFront = this.stringifiedSignData;
+
     data.recipe_data = {
       formid: this.recipe_formid,
       recipe_text: this.recipe_text,
@@ -179,6 +226,10 @@ class Recipes {
       spectext: this.spectext,
       docsign: this.digitallySignedRecipe,
       doccertify: this.certificateBase64,
+      cert_owner: this.cert_owner,
+      cert_code: this.cert_code,
+      validity_start_date: this.validity_start_date,
+      validity_end_date: this.validity_end_date,
     };
 
     return POST({

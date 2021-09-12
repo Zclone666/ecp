@@ -17,9 +17,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'dosages')
-@observer
-class Schedule extends Component {
+const Schedule = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class Schedule extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -194,5 +192,6 @@ class Schedule extends Component {
     )
   }
 
-};
+}));
+
 export default Schedule

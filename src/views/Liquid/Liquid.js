@@ -22,9 +22,7 @@ import {
 } from 'semantic-ui-react'
 
 
-@inject('router', 'db', 'actions', 'drugs', 'warnings')
-@observer
-class Liquid extends Component {
+const Liquid = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(class Liquid extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -96,5 +94,6 @@ class Liquid extends Component {
 
     );
   }
-};
+}));
+
 export default Liquid

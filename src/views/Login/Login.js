@@ -6,9 +6,7 @@ import RouterLink from "../../router/a";
 
 import { LOGIN } from "../../constants";
 
-@inject("router", "actions")
-@observer
-class Login extends Component {
+const Login = inject("router", "actions")(observer(class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -170,5 +168,6 @@ class Login extends Component {
       </div>
     );
   }
-}
+}));
+
 export default Login;

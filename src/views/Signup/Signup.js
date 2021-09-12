@@ -9,9 +9,7 @@ import RouterLink from "../../router/a";
 
 import _ from "lodash";
 
-@inject("router", "db", "actions", "tools")
-@observer
-class Signup extends Component {
+const Signup = inject("router", "db", "actions", "tools")(observer(class Signup extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -295,6 +293,6 @@ class Signup extends Component {
       </div>
     );
   }
-}
+}));
 
 export default Signup;

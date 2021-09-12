@@ -9,9 +9,7 @@ import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown, Visibility
 
 import _ from "lodash";
 
-@inject("db", "actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")
-@observer
-class Drug extends React.Component {
+const Drug = inject("db", "actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")(observer(class Drug extends React.Component {
   constructor(props) {
     super(props);
 
@@ -266,8 +264,8 @@ class Drug extends React.Component {
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className="underlined">
-                  {name}
+                <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className="underlined">                       
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
                 </RouterLink>
                 {type === "TN" && (
                   <span>
@@ -302,7 +300,10 @@ class Drug extends React.Component {
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Summary>
-                    <span className="underlined">{name}</span>
+                    <span className="underlined">
+                      {/* {name} */}
+                      <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                    </span>
                     {type === "TN" && (
                       <span>
                         <sup>TM</sup>
@@ -381,5 +382,6 @@ class Drug extends React.Component {
       </List.Item>
     );
   }
-}
+}));
+
 export default Drug;

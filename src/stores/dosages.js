@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
@@ -9,9 +9,9 @@ import _ from "lodash";
 const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#fc7301", "#f42a03"];
 
 class Dosages {
-  @observable ready = false;
+  ready = false;
 
-  @observable current = {
+  current = {
     //drugDosage
     drug: {},
     form: {},
@@ -22,6 +22,11 @@ class Dosages {
   };
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      current: observable
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
@@ -204,6 +209,9 @@ class Dosages {
       success: async (data) => {
         //console.log('DATA', data);
         let { drug, form, methodform, names, nameshort, units } = data;
+
+        if (drug == null) this.stores.actions.makeAlerts(data);
+
         names = { ...additionalNames, ...names };
 
         let solute = false;
@@ -281,7 +289,7 @@ class Dosages {
         } else {
           let currPack = {
             dosage: { small: "", full: "", id: itemDosage[0].id_1 },
-            pack: { small: "", full: "", id: item.pack[0].dosage ? item.pack[0].dosage.id_1 : null },
+            pack: { small: "", full: "", id: item?.pack[0]?.dosage ? item.pack[0].dosage.id_1 : null },
             type: "simple",
             value: [0],
             flag: false,

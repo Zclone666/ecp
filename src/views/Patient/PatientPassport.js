@@ -30,9 +30,7 @@ import {
 
 import _ from "lodash";
 
-@inject("router", "diseases", "actions")
-@observer
-class PatientPassport extends Component {
+const PatientPassport = inject("router", "diseases", "actions")(observer(class PatientPassport extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -206,5 +204,6 @@ class PatientPassport extends Component {
       </Segment>
     );
   }
-}
+}));
+
 export default PatientPassport;

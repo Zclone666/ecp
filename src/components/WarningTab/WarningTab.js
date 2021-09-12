@@ -4,9 +4,7 @@ import { observer, inject } from "mobx-react";
 import { Segment, List, Message, Header, Icon, Popup, Divider } from "semantic-ui-react";
 import _ from "lodash";
 
-@inject("router", "db", "actions", "drugs", "warnings")
-@observer
-class WarningTab extends Component {
+const WarningTab = inject("router", "db", "actions", "drugs", "warnings")(observer(class WarningTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -234,5 +232,6 @@ class WarningTab extends Component {
       </Segment>
     );
   }
-}
+}));
+
 export default WarningTab;

@@ -7,9 +7,7 @@ import RouterLink from '../../router/a';
 
 
 
-@inject('router', 'actions')
-@observer
-class Confirm extends Component {
+const Confirm = inject('router', 'actions')(observer(class Confirm extends Component {
   constructor(props) {
     super(props);
     this.state = { filled: null}
@@ -95,6 +93,6 @@ class Confirm extends Component {
     );
   }
 
-}
+}));
 
 export default Confirm;

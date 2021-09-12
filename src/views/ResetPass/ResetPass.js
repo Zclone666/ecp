@@ -6,9 +6,7 @@ import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui
 import RouterLink from '../../router/a';
 
 
-@inject('router', 'db', 'actions')
-@observer
-class ResetPass extends Component {
+const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass extends Component {
   constructor(props) {
     super(props);
     this.state = { filled: null}
@@ -75,6 +73,6 @@ class ResetPass extends Component {
       </div>
     );
   }
-}
+}));
 
 export default ResetPass

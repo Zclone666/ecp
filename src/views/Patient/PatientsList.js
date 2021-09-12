@@ -16,9 +16,7 @@ import { Segment, List, Button, Form, Input } from "semantic-ui-react";
 import _ from "lodash";
 import moment from "moment";
 
-@inject("router", "db", "actions", "patients")
-@observer
-class PatientsList extends Component {
+const PatientsList = inject("router", "db", "actions", "patients")(observer(class PatientsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -122,6 +120,7 @@ class PatientsList extends Component {
             <Form.Field>
               <label>ФИО</label>
               <Input
+                disabled
                 size="big"
                 name="fio"
                 value={fio || ""}
@@ -132,6 +131,7 @@ class PatientsList extends Component {
             <Form.Field>
               <label>E-mail</label>
               <Input
+                disabled
                 size="big"
                 name="email"
                 value={email || ""}
@@ -161,7 +161,7 @@ class PatientsList extends Component {
                   fluid
                   as={RouterLink}
                   to={"/patient/info"}
-                  content="Анамнез"
+                  content="Данные пациента"
                   labelPosition="right"
                   icon="clipboard"
                   primary
@@ -173,5 +173,6 @@ class PatientsList extends Component {
       </Segment>
     );
   }
-}
+}));
+
 export default PatientsList;

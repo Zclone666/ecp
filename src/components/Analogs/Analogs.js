@@ -18,9 +18,7 @@ import {
 
 // import _ from 'lodash';
 
-@inject('db', 'actions', 'analogs', 'router', 'drugs')
-@observer
-class Analogs extends Component {
+const Analogs = inject('db', 'actions', 'analogs', 'router', 'drugs')(observer(class Analogs extends Component {
   constructor(props){
     super(props)
 
@@ -138,5 +136,6 @@ class Analogs extends Component {
     )
   }
 
-};
+}));
+
 export default Analogs

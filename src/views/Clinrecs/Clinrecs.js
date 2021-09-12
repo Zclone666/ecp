@@ -21,9 +21,7 @@ import {
 
 import _ from "lodash";
 
-@inject("router", "db", "actions", "drugs", "warnings", "clinrecs")
-@observer
-class Clinrecs extends Component {
+const Clinrecs = inject("router", "db", "actions", "drugs", "warnings", "clinrecs")(observer(class Clinrecs extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -134,5 +132,6 @@ class Clinrecs extends Component {
       </>
     );
   }
-}
+}));
+
 export default Clinrecs;

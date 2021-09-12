@@ -9,9 +9,7 @@ import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "sem
 
 import _ from "lodash";
 
-@inject("actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")
-@observer
-class ClinrecDrug extends React.Component {
+const ClinrecDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosages", "analogs", "druginfo")(observer(class ClinrecDrug extends React.Component {
   constructor(props) {
     super(props);
 
@@ -89,7 +87,10 @@ class ClinrecDrug extends React.Component {
           <Feed.Event>
             <Feed.Content>
               <Feed.Summary>
-                <span className="underlined">{name}</span>
+                <span className="underlined">
+                  {/* {name} */}
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                </span>
                 {type === "TN" && (
                   <span>
                     <sup>TM</sup>
@@ -114,7 +115,10 @@ class ClinrecDrug extends React.Component {
             <Feed.Event>
               <Feed.Content>
                 <Feed.Summary>
-                  <span className="underlined">{name}</span>
+                  <span className="underlined">
+                    {/* {name} */}
+                    <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  </span>
                   {type === "TN" && (
                     <span>
                       <sup>TM</sup>
@@ -142,5 +146,6 @@ class ClinrecDrug extends React.Component {
       </List.Item>
     );
   }
-}
+}));
+
 export default ClinrecDrug;

@@ -1,32 +1,47 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
 import _ from "lodash";
 
 class Tools {
-  @observable ready = false;
-  @observable searchReady = true;
+  ready = false;
+  searchReady = true;
 
-  @observable loadingCounter = 0;
+  loadingCounter = 0;
 
-  @observable searchClinicRows = [];
+  searchClinicRows = [];
 
-  @observable names = {};
-  @observable shortnames = {};
+  names = {};
+  shortnames = {};
 
-  @observable units = {};
-  @observable unitarrs = {};
+  units = {};
+  unitarrs = {};
 
-  @observable unitsPharm = {};
-  @observable unitsPrimary = {};
-  @observable unitsComplex = {};
-  @observable unitsSchedule = {
+  unitsPharm = {};
+  unitsPrimary = {};
+  unitsComplex = {};
+  unitsSchedule = {
     freq: {},
     duration: {},
   };
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      searchReady: observable,
+      loadingCounter: observable,
+      searchClinicRows: observable,
+      names: observable,
+      shortnames: observable,
+      units: observable,
+      unitarrs: observable,
+      unitsPharm: observable,
+      unitsPrimary: observable,
+      unitsComplex: observable,
+      unitsSchedule: observable,
+    });
+
     this.stores = stores;
     this.router = stores.router;
     autorun(() => {});
@@ -34,7 +49,7 @@ class Tools {
 
   async getUnitsPharm(units) {
     units = units || [];
-    console.log("this units keys", _.keys(this.units));
+
     if (units.length > 0 && units.every((unit) => _.keys(this.units).includes(unit))) {
       return;
     }
@@ -289,6 +304,7 @@ class Tools {
       success: async (res) => {
         this.stores.actions.makeAlerts({ alerts: [res] });
         this.stores.actions.loading = false;
+        if (this.stores.patients.current) this.stores.patients.current.genpassport_exist = true;
       },
       fail: (res) => {
         this.stores.actions.makeAlerts({ alerts: [res] });

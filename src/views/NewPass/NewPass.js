@@ -5,9 +5,7 @@ import { Button, Form, Grid, Header, Image, Message, Segment, Modal, Icon } from
 
 import RouterLink from "../../router/a";
 
-@inject("router", "actions")
-@observer
-class NewPass extends Component {
+const NewPass = inject("router", "actions")(observer(class NewPass extends Component {
   constructor(props) {
     super(props);
     this.state = { filled: null, openResend: false };
@@ -126,6 +124,6 @@ class NewPass extends Component {
       </div>
     );
   }
-}
+}));
 
 export default NewPass;

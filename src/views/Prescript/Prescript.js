@@ -33,9 +33,7 @@ import {
   // Grid
 } from "semantic-ui-react";
 
-@inject("router", "db", "actions", "recipes", "patients", "tools")
-@observer
-class Prescript extends Component {
+const Prescript = inject("router", "db", "actions", "recipes", "patients", "tools")(observer(class Prescript extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -287,5 +285,6 @@ class Prescript extends Component {
       </>
     );
   }
-}
+}));
+
 export default Prescript;

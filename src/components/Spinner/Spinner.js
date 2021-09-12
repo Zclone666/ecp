@@ -5,9 +5,7 @@ import {
 } from 'semantic-ui-react';
 import Loader from '../Loader';
 
-@inject('actions')
-@observer
-class Spinner extends React.Component {
+const Spinner = inject('actions')(observer(class Spinner extends React.Component {
 
   render(){
     let { children, actions: { dataLoading } } = this.props;
@@ -21,5 +19,6 @@ class Spinner extends React.Component {
     )
   }
 
-};
+}));
+
 export default Spinner

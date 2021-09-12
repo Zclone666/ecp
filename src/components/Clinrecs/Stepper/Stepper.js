@@ -13,9 +13,7 @@ import { Transition, Accordion, Icon, Step, Responsive, List, Header } from "sem
 import _ from "lodash";
 import "./Stepper.css";
 
-@inject("db", "actions", "router", "drugs", "warnings", "dosages", "clinrecs", "patients")
-@observer
-class Stepper extends Component {
+const Stepper = inject("db", "actions", "router", "drugs", "warnings", "dosages", "clinrecs", "patients")(observer(class Stepper extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -176,5 +174,6 @@ class Stepper extends Component {
       </>
     );
   }
-}
+}));
+
 export default Stepper;

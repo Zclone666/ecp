@@ -9,9 +9,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'dosages')
-@observer
-class LF extends Component {
+const LF = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class LF extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -81,5 +79,6 @@ class LF extends Component {
     )
   }
 
-};
+}));
+
 export default LF

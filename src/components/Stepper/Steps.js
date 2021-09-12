@@ -20,9 +20,7 @@ import {
 
 import _ from 'lodash';
 
-@inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')
-@observer
-class Steps extends Component {
+const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(observer(class Steps extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -106,5 +104,6 @@ class Steps extends Component {
     )
   }
 
-};
+}));
+
 export default Steps

@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed } from "mobx";
+import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
 
@@ -8,16 +8,24 @@ import _ from "lodash";
 import AlertItem from "../components/Alerts/Alert";
 
 class Patients {
-  @observable ready = false;
-  @observable searchRows = [];
+  ready = false;
+  searchRows = [];
 
-  @observable searchReady = true;
+  searchReady = true;
 
-  @observable selectedRows = [];
+  selectedRows = [];
 
-  @observable current = this.getNew();
+  current = _.cloneDeep(PatientScheme);
 
   constructor({ stores }) {
+    makeObservable(this, {
+      ready: observable,
+      searchRows: observable,
+      searchReady: observable,
+      selectedRows: observable,
+      current: observable,
+    });
+
     this.stores = stores;
     this.router = stores.router;
 
@@ -57,8 +65,9 @@ class Patients {
     medcard_num,
 
     main_address,
+    genpassport_exist,
   }) => {
-    let patientTpl = this.getNew();
+    let patientTpl = _.cloneDeep(PatientScheme);
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
     await _.assignIn(this.current, patientTpl, {
       id,
@@ -91,6 +100,8 @@ class Patients {
       medcard_num,
 
       main_address,
+
+      genpassport_exist,
     });
   };
 
@@ -168,6 +179,8 @@ class Patients {
           medcard_num,
 
           main_address,
+
+          genpassport_exist,
         } = data.patient;
 
         let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
@@ -204,6 +217,8 @@ class Patients {
           policy_num,
           medcard_num,
           main_address,
+
+          genpassport_exist,
         };
 
         Object.assign(this.stores.actions.drugStructure.patient, {
@@ -228,6 +243,8 @@ class Patients {
           allergy,
           mutations,
           labparams,
+
+          genpassport_exist,
 
           lastname,
           patronymic,
@@ -307,6 +324,7 @@ class Patients {
       },
       fail: (alerts) => {},
       always: (data) => {
+        this.stores.actions.makeAlerts(data);
         if (this.stores?.actions?.miskey) {
           setTimeout(() => {
             this.stores.warnings.check();
@@ -519,6 +537,7 @@ class Patients {
           this.searchReady = true;
         } else {
           this.searchReady = true;
+          this.stores.actions.makeAlerts(data);
         }
       },
       fail: (alerts) => {

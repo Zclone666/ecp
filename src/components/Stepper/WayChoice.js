@@ -12,9 +12,7 @@ import {
 
 // import _ from 'lodash';
 
-@inject('db', 'actions', 'drugs', 'warnings', 'router')
-@observer
-class WayChoice extends Component {
+const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observer(class WayChoice extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -139,5 +137,6 @@ class WayChoice extends Component {
     )
   }
 
-};
+}));
+
 export default WayChoice
