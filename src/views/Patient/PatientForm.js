@@ -262,6 +262,8 @@ const PatientForm = inject(
           mutations,
           genpassport_exist,
         } = this.props.patients.current;
+
+        // console.log("current patient: ", this.props.patients.current);
         // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
         let { search_disease, search_co_disease, search_allergy, misDisabled } = this.state;

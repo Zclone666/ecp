@@ -242,7 +242,7 @@ class Recipes {
     };
 
     return POST({
-      path: this.stringifiedSignData ? "/Prescript/RecipeNewEDS" : "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: this.stringifiedSignData ? "Prescript/RecipeNewEDS" : "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data: this.stringifiedSignData ? data2 : data,
       success: async (data) => {
         if (data && data.code) {
