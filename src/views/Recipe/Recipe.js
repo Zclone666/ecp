@@ -221,13 +221,13 @@ const Recipe = inject(
         const cert = this.state.selectedCertificate;
         // console.log({ cert, data });
         const certBase64 = await cert.exportBase64();
-        await createHash(stringifiedData.replaceAll("/", "").replaceAll('"', "")).then((hashedDataToSign) =>
+        await createHash(stringifiedData).then((hashedDataToSign) =>
           createDetachedSignature(this.state.selectedCertificate.thumbprint, hashedDataToSign).then((result) => {
             this.setState({ signedData: result });
             // console.log({ cert });
-            this.props.recipes.stringifiedSignData = stringifiedData.replaceAll("/", "").replaceAll('"', "");
-            this.props.recipes.digitallySignedRecipe = result;
-            this.props.recipes.certificateBase64 = certBase64;
+            this.props.recipes.stringifiedSignData = stringifiedData;
+            this.props.recipes.digitallySignedRecipe = result.replaceAll("\r\n", "");
+            this.props.recipes.certificateBase64 = certBase64.replaceAll("\r\n", "");
             this.props.recipes.cert_owner = cert.name;
             this.props.recipes.cert_code = cert.thumbprint;
             this.props.recipes.validity_start_date = cert.validFrom;
