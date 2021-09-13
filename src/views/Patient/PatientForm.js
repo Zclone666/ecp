@@ -262,6 +262,8 @@ const PatientForm = inject(
           mutations,
           genpassport_exist,
         } = this.props.patients.current;
+
+        // console.log("current patient: ", this.props.patients.current);
         // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
         let { search_disease, search_co_disease, search_allergy, misDisabled } = this.state;
@@ -316,7 +318,7 @@ const PatientForm = inject(
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
                 <Form.Field width={2}>
-                  <Button onClick={() => this.clearPatient()}>Новый пациент</Button>
+                  <Button onClick={() => this.clearPatient()}>{id ? "Новый пациент" : "Сбросить"}</Button>
                 </Form.Field>
               </Form.Group>
               <Divider horizontal fitted />
