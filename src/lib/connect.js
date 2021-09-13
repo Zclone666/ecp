@@ -81,13 +81,14 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
         response.data.alert ||
         response.data.alerts ||
         response.data.message ||
+        response.data.level ||
         (response.data[0] && response.data[0].message)
       ) {
         if (response.data.alert) {
           alerts = [response.data.alert];
           delete response.data.alert;
         }
-        if (response.data.message) {
+        if (response.data.message || response.data.level || response.data.title) {
           alerts = [
             {
               message: response.data.message,

@@ -126,6 +126,7 @@ class Clinrecs {
       fail: (alerts) => {},
       always: (data) => {
         this.stores.actions.loading = false;
+        this.stores.actions.makeAlerts(data);
       },
     });
   }

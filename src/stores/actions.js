@@ -345,7 +345,7 @@ class Actions {
       default_clinic_id: observable,
       resetAll: action,
       selectPatient: action,
-      unselectPatient: action
+      unselectPatient: action,
     });
 
     this.stores = stores;

@@ -29,6 +29,7 @@ class AlertItem extends React.Component {
   render() {
     let { code, title, message, level, sticky, button } = this.props;
     let { open } = this.state;
+
     return (
       <Transition visible={open} animation="scale" duration={1000}>
         <Message
