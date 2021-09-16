@@ -513,7 +513,7 @@ const Main = inject(
               )}
               <Sidebar
                 width="very wide"
-                direction="right"
+                direction="left"
                 animation="overlay"
                 visible={showPage}
                 style={{ backgroundColor: "#FFFFFF" }}
