@@ -305,9 +305,14 @@ const Main = inject(
 
         const texts = buttonTexts ? buttonTexts.text : null;
 
-        topview_disabled &&
+        if (topview_disabled) {
           document.querySelector(".ui.body > .pushable") &&
-          document.querySelector(".ui.body > .pushable").classList.remove("pushable");
+            document.querySelector(".ui.body > .pushable").classList.remove("pushable");
+        }
+        if (bottomview_disabled) {
+          document.querySelector(".pusherwrapper.pusher") &&
+            document.querySelector(".pusherwrapper.pusher").classList.remove("pusherwrapper", "pusher");
+        }
         return (
           <>
             {!disabled && !topview_disabled && (
