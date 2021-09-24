@@ -20,7 +20,7 @@ const Alerts = inject("actions")(
               if (item.code == 401)
                 setTimeout(() => {
                   this.props.actions.logout();
-                }, 1000);
+                }, 3000);
               return <Alert key={`alert_${key}`} open onClose={() => this.onClose(key)} {...item} />;
             })}
           </div>
