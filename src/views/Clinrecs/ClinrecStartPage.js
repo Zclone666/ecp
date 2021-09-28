@@ -139,7 +139,7 @@ const ClinrecStartPage = inject(
               <Segment basic>
                 {clinicalGuidelinesExist &&
                   clinicalGuidelinesExist.map &&
-                  clinicalGuidelinesExist.map((item) => <List>{rednerTree(item)}</List>)}
+                  clinicalGuidelinesExist.map((item) => <List size={"big"}>{rednerTree(item)}</List>)}
               </Segment>
             </div>
           </>
