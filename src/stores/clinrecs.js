@@ -13,6 +13,7 @@ class Clinrecs {
   druglist = [];
   drugToClinrecHashset = {};
   collectorAvailable = false;
+  clinicalGuidelinesExist = {};
 
   constructor({ stores }) {
     makeObservable(this, {
@@ -24,6 +25,7 @@ class Clinrecs {
       druglist: observable,
       drugToClinrecHashset: observable,
       collectorAvailable: observable,
+      clinicalGuidelinesExist: observable,
     });
 
     this.stores = stores;
@@ -42,6 +44,7 @@ class Clinrecs {
     this.stores.actions.clinrecCheckerData = {};
     this.stores.actions.clinrecCheckerStep = 1;
     this.drugToClinrecHashset = {};
+    this.clinicalGuidelinesExist = [];
   }
 
   async check(flag = false) {
@@ -130,6 +133,32 @@ class Clinrecs {
       },
     });
   }
+
+  async getClinicalGuidelinesExist() {
+    const data = {};
+    this.stores.actions.loading = true;
+    let { active_language } = this.stores.actions;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    const patient = _.cloneDeep(this.stores.patients.current);
+    // console.log("patient: ", this.stores.patients.current);
+    data.disease = patient?.disease;
+
+    return POST({
+      path: "tools/clinicalGuidelinesExist",
+      data,
+      success: async (data) => {
+        // console.log(data);
+        if (data.result) this.clinicalGuidelinesExist = data.result;
+      },
+      fail: (alerts) => {},
+      always: (data) => {
+        this.stores.actions.loading = false;
+        this.stores.actions.makeAlerts(data);
+      },
+    });
+  }
+
   async getByFG(child) {
     this.ready = false;
     this.stores.actions.loading = true;

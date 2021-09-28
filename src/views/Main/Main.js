@@ -194,6 +194,9 @@ const Main = inject(
       getClinrec = () => {
         this.props.clinrecs.check();
       };
+      getClinrecExist = () => {
+        this.props.clinrecs.getClinicalGuidelinesExist();
+      };
 
       resultRenderer = ({ name, level, tn, type }) => {
         const icon = ["FG", "ATX"].includes(type) ? "folder open" : "pills";
@@ -283,6 +286,7 @@ const Main = inject(
         } = this.props;
         let selectedWarnings = warning[selectedDrug];
         let showPage = !!(this.props.router.values && this.props.router.values.page);
+        // console.log({ showPage, values: this.props.router.values, page: this.props.router.values.page });
         // console.log('router', this.props.router);
         // let showPage2 = true
         const { id: patientId, email, fio } = patients.current;
@@ -333,8 +337,10 @@ const Main = inject(
                   {!misDisabled && isDisease && (
                     <Responsive
                       as={RouterLink}
-                      to={`/clinrec/checker/${clinrecCheckerStep}`}
-                      onClick={this.getClinrec}
+                      // to={`/clinrec/checker/${clinrecCheckerStep}`}
+                      to="/crstartpage/default"
+                      // onClick={this.getClinrec}
+                      onClick={this.getClinrecExist}
                       fireOnMount
                       minWidth="481"
                     >
@@ -355,8 +361,10 @@ const Main = inject(
                     <Responsive
                       fireOnMount
                       as={RouterLink}
-                      onClick={this.getClinrec}
-                      to={`/clinrec/checker/${clinrecCheckerStep}`}
+                      // onClick={this.getClinrec}
+                      onClick={this.getClinrecExist}
+                      // to={`/clinrec/checker/${clinrecCheckerStep}`}
+                      to="/crstartpage/default"
                       maxWidth="480"
                     >
                       <Menu.Item icon>
