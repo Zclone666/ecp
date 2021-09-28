@@ -137,9 +137,9 @@ const ClinrecStartPage = inject(
 
             <div className="scrollwrapper bottomMenu">
               <Segment basic>
-                {clinicalGuidelinesExist.map((item) => (
-                  <List>{rednerTree(item)}</List>
-                ))}
+                {clinicalGuidelinesExist &&
+                  clinicalGuidelinesExist.map &&
+                  clinicalGuidelinesExist.map((item) => <List>{rednerTree(item)}</List>)}
               </Segment>
             </div>
           </>
