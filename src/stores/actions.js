@@ -15,7 +15,7 @@ const privateKeyOnly = LOGIN == "privateKeyOnly";
 const createCsServerUrl = (url) =>
   !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
     ? "http://" + window.location.hostname + ":9999" + url
-    : "https://cs.socmedica.com" + url;
+    : "https://cs.socmedica" + (window.location.href.includes(["com"]) ? ".com" : ".dev") + url;
 
 class Actions {
   view = false;
