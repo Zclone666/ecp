@@ -9,6 +9,8 @@ import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown, Visibility
 
 import _ from "lodash";
 
+import moment from "moment";
+
 const Drug = inject(
   "db",
   "actions",
@@ -149,7 +151,8 @@ const Drug = inject(
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
         let selectedWarnings = warnIcons[selectedDrug];
         // console.log({ drug });
-        let { key, name, level, tn, type, dosage, helpers, specials } = drug;
+        let { key, name, level, tn, type, dosage, helpers, specials, date } = drug;
+        const dateOfPrescription = date ? moment(date, "x").format("DD.MM.YYYY") : "";
         let drugDosages = dose.get(drug.id) || {};
         let hasWarnings = warning.size > 0;
         let names = drugDosages.names || {};
@@ -201,6 +204,7 @@ const Drug = inject(
         return (
           <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
             <List.Content floated="right">
+              <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
               <Responsive fireOnMount as={Button.Group} minWidth="481">
                 {!disabled && dosReady && (
                   <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
