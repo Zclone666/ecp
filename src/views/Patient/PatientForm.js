@@ -7,6 +7,8 @@ import Spinner from "../../components/Spinner";
 import BirthDate from "../../components/BirthDate";
 import Search from "../../components/Search";
 
+import PatientPassport from "./PatientPassport";
+
 import { checkDouble, clearDouble } from "../../lib/helpers";
 
 import {
@@ -55,6 +57,7 @@ const PatientForm = inject(
           misDisabled: this.props.actions.misLinkLogin,
 
           search_patient: "",
+          showPatientPassport: false,
         };
         this.fileUploadRef = createRef();
       }
@@ -162,6 +165,7 @@ const PatientForm = inject(
       };
 
       clearPatient = () => {
+        if (this.props.patients?.current?.id) this.setState({ showPatientPassport: true });
         this.props.patients.unsetCurrent();
         this.props.actions.resetAll();
       };
@@ -266,7 +270,7 @@ const PatientForm = inject(
         // console.log("current patient: ", this.props.patients.current);
         // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
-        let { search_disease, search_co_disease, search_allergy, misDisabled } = this.state;
+        let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport } = this.state;
         let searchReady = true,
           searchRows = [],
           searchQuery = "";
@@ -298,7 +302,7 @@ const PatientForm = inject(
                     />
                   </Form.Field>
                 )} */}
-                <Form.Field width={9}>
+                <Form.Field width={7}>
                   <Search
                     fluid
                     size="big"
@@ -314,14 +318,25 @@ const PatientForm = inject(
                     resultClassName="result-wrapper"
                   />
                 </Form.Field>
-                <Form.Field width={5}>
+                <Form.Field width={4}>
                   <Header as="h2" content={fio} subheader={email} />
+                </Form.Field>
+                <Form.Field width={3}>
+                  <Button onClick={() => this.setState({ showPatientPassport: !showPatientPassport })}>
+                    {showPatientPassport
+                      ? "Свернуть паспортные данные"
+                      : id
+                      ? "Редактировать паспортные данные"
+                      : "Заполнить паспортные данные"}
+                  </Button>
                 </Form.Field>
                 <Form.Field width={2}>
                   <Button onClick={() => this.clearPatient()}>{id ? "Новый пациент" : "Сбросить"}</Button>
                 </Form.Field>
               </Form.Group>
               <Divider horizontal fitted />
+
+              {showPatientPassport && <PatientPassport />}
               <Form.Group>
                 <BirthDate name="birthdate" value={birthdate} onChange={this.handleChange} />
                 <Form.Field>

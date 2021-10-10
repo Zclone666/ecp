@@ -62,6 +62,7 @@ const Recipe = inject(
           certificateSelectionDialog: false,
           wasSigned: false,
           signedData: null,
+          savePending: false,
         };
         //this.contextRef = createRef()
       }
@@ -79,7 +80,10 @@ const Recipe = inject(
         });
       };
       save = async () => {
+        this.setState({ savePending: true });
         let code = await this.props.recipes.save();
+
+        this.setState({ savePending: false });
         // console.log({res});
         if (!code) return;
         this.setState({ code });
@@ -332,7 +336,7 @@ const Recipe = inject(
                 Назад
               </Menu.Item>
               {/* {!code && ( */}
-              <Menu.Item disabled={noEmail || !recipe_formid} onClick={this.save}>
+              <Menu.Item disabled={noEmail || !recipe_formid || this.state.savePending} onClick={this.save}>
                 Отправить
               </Menu.Item>
               {/* )} */}
