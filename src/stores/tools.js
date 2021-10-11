@@ -67,7 +67,7 @@ class Tools {
       success: async (data) => {
         // console.log(data);
         let { names, nameshort, units, unitrefs, unitpharm } = data;
-
+        this.unitsPharm = data;
         // kostyl
         // if(units[99])
         if (units[250 || units[99]]) {
