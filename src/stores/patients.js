@@ -308,6 +308,38 @@ class Patients {
           }
         });
 
+        // console.log("drugs: ", drugs);
+        drugs = drugs.map((d) => {
+          if (d.helpers) return d;
+          let { dosage } = d;
+          dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
+          // console.log({ dosage });
+          const { names, nameshort } = this.stores.tools.unitsPharm;
+          let helpers = {
+            dosage: {
+              short: "",
+              full:
+                dosage[0] && dosage[0]?.id_1
+                  ? `${_.map(dosage, "value_1").join(" + ")} ${nameshort[dosage[0].id_1]}`
+                  : "",
+              id: null,
+            },
+            pack: { short: "", full: "", id: null },
+            type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
+            // url: "",
+            key: null,
+            way: "lf",
+            step: 4,
+            // mnn: false,
+            // drugCache: null,
+          };
+          return {
+            ...d,
+            helpers,
+          };
+        });
+        // console.log("drugs with helpers: ", drugs);
+
         drugs.forEach(async (drug, i) => {
           await this.stores.drugs.selectFromSearch(drug, false, false);
         });
