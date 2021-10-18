@@ -319,9 +319,9 @@ class Patients {
             dosage: {
               short: "",
               full:
-                dosage[0] && dosage[0]?.id_1
+                (dosage[0] && dosage[0]?.id_1
                   ? `${_.map(dosage, "value_1").join(" + ")} ${nameshort[dosage[0].id_1]}`
-                  : "",
+                  : "") || "",
               id: null,
             },
             pack: { short: "", full: "", id: null },
