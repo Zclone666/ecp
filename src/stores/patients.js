@@ -611,6 +611,10 @@ class Patients {
           await this.request(patients[0]);
           return this.getById(patients[0]);
         }
+        if (data.patient) {
+          let { id } = data.patient;
+          await this.request(id);
+        }
         return data;
       },
       fail: (alerts) => {},
