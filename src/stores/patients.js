@@ -319,9 +319,9 @@ class Patients {
             dosage: {
               short: "",
               full:
-                dosage[0] && dosage[0]?.id_1
+                (dosage[0] && dosage[0]?.id_1
                   ? `${_.map(dosage, "value_1").join(" + ")} ${nameshort[dosage[0].id_1]}`
-                  : "",
+                  : "") || "",
               id: null,
             },
             pack: { short: "", full: "", id: null },
@@ -610,6 +610,10 @@ class Patients {
           await this.makeList({ patients, names });
           await this.request(patients[0]);
           return this.getById(patients[0]);
+        }
+        if (data.patient) {
+          let { id } = data.patient;
+          await this.request(id);
         }
         return data;
       },

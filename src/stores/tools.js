@@ -302,15 +302,18 @@ class Tools {
       path: "Tools/PatientNewMutations",
       data,
       success: async (res) => {
-        this.stores.actions.makeAlerts({ alerts: [res] });
+        // this.stores.actions.makeAlerts(res);
         this.stores.actions.loading = false;
         if (this.stores.patients.current) this.stores.patients.current.genpassport_exist = true;
       },
       fail: (res) => {
-        this.stores.actions.makeAlerts({ alerts: [res] });
+        // this.stores.actions.makeAlerts(res);
         this.stores.actions.loading = false;
       },
-      always: (res) => {},
+      always: (res) => {
+        this.stores.actions.makeAlerts(res);
+        this.stores.actions.loading = false;
+      },
     });
   }
 

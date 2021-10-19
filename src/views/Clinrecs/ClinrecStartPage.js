@@ -31,6 +31,7 @@ const ClinrecStartPage = inject(
       render() {
         // console.log("state: ", this.state);
         const { clinicalGuidelinesExist } = this.props.clinrecs;
+        const diseases = this.props.patients.current.disease.map((d) => d.id);
         // console.log({ clinicalGuidelinesExist });
         const rednerTree = (data) => {
           // console.log({ data });
@@ -64,8 +65,10 @@ const ClinrecStartPage = inject(
                               },
                             });
                         }}
-                        checked={this.state.checked[data.id]}
-                        style={{ marginRight: "5px" }}
+                        readonly={diseases.includes(data.id)}
+                        disabled={diseases.includes(data.id)}
+                        checked={this.state.checked[data.id] || diseases.includes(data.id)}
+                        style={{ marginRight: "5px", fontSize: 16 }}
                         label={data.name}
                       />
                     )}
@@ -139,7 +142,7 @@ const ClinrecStartPage = inject(
               <Segment basic>
                 {clinicalGuidelinesExist &&
                   clinicalGuidelinesExist.map &&
-                  clinicalGuidelinesExist.map((item) => <List size={"big"}>{rednerTree(item)}</List>)}
+                  clinicalGuidelinesExist.map((item) => <List size={"massive"}>{rednerTree(item)}</List>)}
               </Segment>
             </div>
           </>
