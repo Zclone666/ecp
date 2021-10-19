@@ -68,7 +68,7 @@ const ClinrecStartPage = inject(
                         readonly={diseases.includes(data.id)}
                         disabled={diseases.includes(data.id)}
                         checked={this.state.checked[data.id] || diseases.includes(data.id)}
-                        style={{ marginRight: "5px" }}
+                        style={{ marginRight: "5px", fontSize: 16 }}
                         label={data.name}
                       />
                     )}
