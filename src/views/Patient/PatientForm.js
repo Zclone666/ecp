@@ -87,9 +87,14 @@ const PatientForm = inject(
             this.props.patients.current[name] = parseFloat(value);
           }
 
-          this.props.patients.current.masIndex = parseFloat(
-            (this.props.patients.current.weight / Math.pow(this.props.patients.current.growth / 100, 2)).toFixed(2)
-          );
+          this.props.patients.current.masIndex =
+            this.props.patients.current.weight && this.props.patients.current.growth
+              ? parseFloat(
+                  (this.props.patients.current.weight / Math.pow(this.props.patients.current.growth / 100, 2)).toFixed(
+                    2
+                  )
+                )
+              : 0;
         } else {
           this.props.patients.current[name] = value;
         }
