@@ -24,7 +24,7 @@ class Dosages {
   constructor({ stores }) {
     makeObservable(this, {
       ready: observable,
-      current: observable
+      current: observable,
     });
 
     this.stores = stores;
@@ -264,7 +264,7 @@ class Dosages {
     let { drug, form, methodform, names, nameshort } = drugDosage;
 
     let arr = [];
-
+    let noData = false;
     form[stepsData.form] &&
       form[stepsData.form].dosage.forEach((item, i) => {
         let itemDosage = null;
@@ -272,20 +272,23 @@ class Dosages {
         if (_.isObject(item.dosage) && !_.isArray(item.dosage)) itemDosage = [item.dosage];
 
         if (!itemDosage) {
-          arr.push({
-            dosage: { small: "нет данных", full: "Дозировка не указана", id: 248 },
-            pack: {
-              small: "",
-              full: "",
-              id: item.pack && item.pack[0] && item.pack[0].dosage ? item.pack[0].dosage.id_1 : null,
-            },
-            type: "simple",
-            value: [0],
-            obj: {
-              dosages: null,
-              pack: null,
-            },
-          });
+          if (_.findIndex(arr, (itm) => itm.dosage && itm.dosage.small == "нет данных") == -1) {
+            noData = true;
+            arr.push({
+              dosage: { small: "нет данных", full: "Дозировка не указана", id: 248 },
+              pack: {
+                small: "",
+                full: "",
+                id: item.pack && item.pack[0] && item.pack[0].dosage ? item.pack[0].dosage.id_1 : null,
+              },
+              type: "simple",
+              value: [0],
+              obj: {
+                dosages: null,
+                pack: null,
+              },
+            });
+          }
         } else {
           let currPack = {
             dosage: { small: "", full: "", id: itemDosage[0].id_1 },
@@ -365,6 +368,11 @@ class Dosages {
           }
         }
       });
+    if (noData && arr.length > 1) {
+      _.remove(arr, function (itm) {
+        return itm.dosage && itm.dosage.small == "нет данных";
+      });
+    }
     return arr;
   }
 
