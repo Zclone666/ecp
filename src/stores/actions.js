@@ -1142,6 +1142,7 @@ class Actions {
   }
 
   async getConfirm() {
+    this.getConfirmForm.key = AUTH_SERVICE_KEY;
     return POST({
       path: createCsServerUrl(`/api/registration/getconfirmemail`),
       data: this.getConfirmForm,
