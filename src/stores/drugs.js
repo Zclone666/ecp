@@ -1057,7 +1057,7 @@ class Drugs {
               short: "",
               full:
                 dosage[0] && dosage[0]?.id_1
-                  ? `${_.map(dosage, "value_1").join(" + ")} ${data.names[dosage[0].id_1]}`
+                  ? `${_.map(dosage, "value_1").join(" + ")} ${data.shortnames[dosage[0].id_1]}`
                   : "",
               id: null,
             },
