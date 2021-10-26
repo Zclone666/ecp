@@ -385,6 +385,8 @@ class Dosages {
     let { units, getUnitArr } = this.stores.tools;
 
     // console.log({ currDos });
+    // console.log({ currDos, dosages, drug });
+    const calcFromDrug = drug?.calc;
 
     let unit = (currDos.dosage && units[currDos.dosage.id]) || 248;
     let firstUnit = null;
@@ -408,8 +410,11 @@ class Dosages {
         secondUnit,
       },
       count: {
-        value: (pack && pack.dosage && pack.dosage.value_1) || 1,
-        unit: (currDos.pack && units[currDos.pack.id]) || units[248],
+        value: (pack && pack.dosage && pack.dosage.value_1) || calcFromDrug?.count || 1,
+        unit:
+          (currDos.pack && units[currDos.pack.id]) ||
+          (calcFromDrug?.countUnit && units[calcFromDrug.countUnit]) ||
+          units[248],
       },
     };
   }
