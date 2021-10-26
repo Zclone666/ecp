@@ -117,11 +117,26 @@ class Tools {
       data,
       success: async (data) => {
         let { names, nameshort, units, unitrefs } = data;
+        if (units) this.unitsPrimary = units;
         //this.setNames(names, nameshort)
       },
       fail: (alerts) => {},
       always: (data) => {},
     });
+  }
+
+  convertFromBaseUnitToUnit(baseUnitId, unitId, value) {
+    const units = this.unitsPrimary;
+    // console.log({ baseUnitId, unitId, value, units });
+    if (baseUnitId == unitId || !units || !baseUnitId || !unitId) return value;
+    const convertedValue =
+      value *
+      units[baseUnitId].find((u) => {
+        // console.log({ "u.id": u.id, unitId }, u.id == unitId);
+        return u.id == unitId;
+      }).value;
+    // console.log({ convertedValue });
+    return convertedValue;
   }
 
   async getUnitsComplex(units) {

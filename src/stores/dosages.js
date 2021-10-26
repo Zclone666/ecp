@@ -410,7 +410,14 @@ class Dosages {
         secondUnit,
       },
       count: {
-        value: (pack && pack.dosage && pack.dosage.value_1) || calcFromDrug?.count || 1,
+        value:
+          (pack && pack.dosage && pack.dosage.value_1) ||
+          this.stores.tools.convertFromBaseUnitToUnit(
+            calcFromDrug?.countBaseUnit,
+            calcFromDrug?.countUnit,
+            calcFromDrug?.count
+          ) ||
+          1,
         unit:
           (currDos.pack && units[currDos.pack.id]) ||
           (calcFromDrug?.countUnit && units[calcFromDrug.countUnit]) ||
@@ -422,7 +429,6 @@ class Dosages {
   setStepDosage = () => {
     // console.log('this.calcValues', this.calcValues);
     let vals = this.calcValues;
-    // console.log({ vals });
     let weight = this.stores.patients.current.weight || null;
 
     if (!vals.dosage.value) return;
