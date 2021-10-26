@@ -1102,10 +1102,12 @@ class Drugs {
         // await this.stores.tools.stepByStepLoading(this.stores.dosages.get, filteredDrugs);
       },
       fail: (alerts) => {
-        this.stores.actions.makeAlerts(data);
+        // this.stores.actions.makeAlerts(data);
+        this.stores.actions.loading = false;
       },
       always: (data) => {
-        // this.stores.actions.makeAlerts(data)
+        this.stores.actions.makeAlerts(data);
+        this.stores.actions.loading = false;
       },
     });
   }
