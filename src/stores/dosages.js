@@ -24,7 +24,7 @@ class Dosages {
   constructor({ stores }) {
     makeObservable(this, {
       ready: observable,
-      current: observable
+      current: observable,
     });
 
     this.stores = stores;
@@ -264,7 +264,7 @@ class Dosages {
     let { drug, form, methodform, names, nameshort } = drugDosage;
 
     let arr = [];
-
+    let noData = false;
     form[stepsData.form] &&
       form[stepsData.form].dosage.forEach((item, i) => {
         let itemDosage = null;
@@ -272,20 +272,23 @@ class Dosages {
         if (_.isObject(item.dosage) && !_.isArray(item.dosage)) itemDosage = [item.dosage];
 
         if (!itemDosage) {
-          arr.push({
-            dosage: { small: "нет данных", full: "Дозировка не указана", id: 248 },
-            pack: {
-              small: "",
-              full: "",
-              id: item.pack && item.pack[0] && item.pack[0].dosage ? item.pack[0].dosage.id_1 : null,
-            },
-            type: "simple",
-            value: [0],
-            obj: {
-              dosages: null,
-              pack: null,
-            },
-          });
+          if (_.findIndex(arr, (itm) => itm.dosage && itm.dosage.small == "нет данных") == -1) {
+            noData = true;
+            arr.push({
+              dosage: { small: "нет данных", full: "Дозировка не указана", id: 248 },
+              pack: {
+                small: "",
+                full: "",
+                id: item.pack && item.pack[0] && item.pack[0].dosage ? item.pack[0].dosage.id_1 : null,
+              },
+              type: "simple",
+              value: [0],
+              obj: {
+                dosages: null,
+                pack: null,
+              },
+            });
+          }
         } else {
           let currPack = {
             dosage: { small: "", full: "", id: itemDosage[0].id_1 },
@@ -365,6 +368,11 @@ class Dosages {
           }
         }
       });
+    if (noData && arr.length > 1) {
+      _.remove(arr, function (itm) {
+        return itm.dosage && itm.dosage.small == "нет данных";
+      });
+    }
     return arr;
   }
 
@@ -377,6 +385,8 @@ class Dosages {
     let { units, getUnitArr } = this.stores.tools;
 
     // console.log({ currDos });
+    // console.log({ currDos, dosages, drug });
+    const calcFromDrug = drug?.calc;
 
     let unit = (currDos.dosage && units[currDos.dosage.id]) || 248;
     let firstUnit = null;
@@ -400,8 +410,18 @@ class Dosages {
         secondUnit,
       },
       count: {
-        value: (pack && pack.dosage && pack.dosage.value_1) || 1,
-        unit: (currDos.pack && units[currDos.pack.id]) || units[248],
+        value:
+          (pack && pack.dosage && pack.dosage.value_1) ||
+          this.stores.tools.convertFromBaseUnitToUnit(
+            calcFromDrug?.countBaseUnit,
+            calcFromDrug?.countUnit,
+            calcFromDrug?.count
+          ) ||
+          1,
+        unit:
+          (currDos.pack && units[currDos.pack.id]) ||
+          (calcFromDrug?.countUnit && units[calcFromDrug.countUnit]) ||
+          units[248],
       },
     };
   }
@@ -409,7 +429,6 @@ class Dosages {
   setStepDosage = () => {
     // console.log('this.calcValues', this.calcValues);
     let vals = this.calcValues;
-    // console.log({ vals });
     let weight = this.stores.patients.current.weight || null;
 
     if (!vals.dosage.value) return;

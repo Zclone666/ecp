@@ -15,7 +15,7 @@ const privateKeyOnly = LOGIN == "privateKeyOnly";
 const createCsServerUrl = (url) =>
   !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
     ? "http://" + window.location.hostname + ":9999" + url
-    : "https://" + (window.location.href.includes(["com"]) ? "cs" : "csdev") + ".socmedica.com" + url;
+    : "https://" + (window.location.href.includes(["socmedica.com"]) ? "cs" : "csdev") + ".socmedica.com" + url;
 
 class Actions {
   view = false;
@@ -1109,7 +1109,7 @@ class Actions {
             ],
           });
         } else {
-          this.makeAlerts(data);
+          // this.makeAlerts(data);
         }
 
         // console.log('ALWAYS', data);
@@ -1142,6 +1142,7 @@ class Actions {
   }
 
   async getConfirm() {
+    this.getConfirmForm.key = AUTH_SERVICE_KEY;
     return POST({
       path: createCsServerUrl(`/api/registration/getconfirmemail`),
       data: this.getConfirmForm,

@@ -368,7 +368,11 @@ const Main = inject(
                       maxWidth="480"
                     >
                       <Menu.Item icon>
-                        <Icon name="clipboard list" size="large" />
+                        <Icon
+                          name="clipboard list"
+                          size="large"
+                          className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}
+                        />
                       </Menu.Item>
                     </Responsive>
                   )}

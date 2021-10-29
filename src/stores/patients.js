@@ -329,7 +329,7 @@ class Patients {
             // url: "",
             key: null,
             way: "lf",
-            step: 4,
+            step: "4",
             // mnn: false,
             // drugCache: null,
           };

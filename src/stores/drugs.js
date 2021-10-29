@@ -88,12 +88,11 @@ class Drugs {
     if (!drug || !drug.calc || !drug.calc.dosageUnit) return;
     let { units } = this.stores.tools;
     let count = (drug.helpers.pack && units[drug.helpers.pack.id]) || units[248];
-    // console.log({ count });
     let dosageBaseUnit = this.stores.tools.getBaseUnit(drug.calc.dosageUnit);
     let countBaseUnit = this.stores.tools.getBaseUnit(count.id);
     // console.log({ dosageBaseUnit, countBaseUnit });
     drug.calc.dosageBaseUnit = dosageBaseUnit;
-    drug.calc.countBaseUnit = countBaseUnit;
+    drug.calc.countBaseUnit = drug.calc.countBaseUnit ? drug.calc.countBaseUnit : countBaseUnit;
   };
 
   // service functions
@@ -314,6 +313,8 @@ class Drugs {
     let {
       dosage: dos,
       count,
+      countUnit,
+      countBaseUnit,
       dosageUnit,
       dayCount,
       fullDosage,
@@ -339,7 +340,7 @@ class Drugs {
     // console.log({dosageUnit});
     this.stores.actions.calculatorForm = {
       dosage: dos,
-      count,
+      count: this.stores.tools.convertFromBaseUnitToUnit(countBaseUnit, countUnit, count),
       dosageUnit,
       dayCount,
       fullDosage,
@@ -1057,7 +1058,7 @@ class Drugs {
               short: "",
               full:
                 dosage[0] && dosage[0]?.id_1
-                  ? `${_.map(dosage, "value_1").join(" + ")} ${data.names[dosage[0].id_1]}`
+                  ? `${_.map(dosage, "value_1").join(" + ")} ${data.shortnames[dosage[0].id_1]}`
                   : "",
               id: null,
             },
@@ -1102,10 +1103,12 @@ class Drugs {
         // await this.stores.tools.stepByStepLoading(this.stores.dosages.get, filteredDrugs);
       },
       fail: (alerts) => {
-        this.stores.actions.makeAlerts(data);
+        // this.stores.actions.makeAlerts(data);
+        this.stores.actions.loading = false;
       },
       always: (data) => {
-        // this.stores.actions.makeAlerts(data)
+        this.stores.actions.makeAlerts(data);
+        this.stores.actions.loading = false;
       },
     });
   }
