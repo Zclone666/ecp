@@ -577,18 +577,18 @@ const Main = inject(
                       Профиль
                     </Menu.Item>
                   )}
-                  {false && (
+                  {true && (
                     <div>
-                      <Menu.Item disabled>
+                      {/* <Menu.Item disabled>
                         <Icon name="list ul" />
                         Текущие назначения
                       </Menu.Item>
                       <Menu.Item disabled>
                         <Icon name="clipboard list" />
                         История назначений
-                      </Menu.Item>
+                      </Menu.Item> */}
                       <Dropdown
-                        disabled
+                        // disabled
                         item
                         text={
                           active_language == "ru" ? (
@@ -613,14 +613,14 @@ const Main = inject(
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
-                      <Menu.Item disabled>
+                      {/* <Menu.Item disabled>
                         <Icon name="book" />
                         Инструкция
                       </Menu.Item>
                       <Menu.Item disabled>
                         <Icon name="chat" />
                         Подсказки
-                      </Menu.Item>
+                      </Menu.Item> */}
                     </div>
                   )}
                   {/*<Menu.Item>
