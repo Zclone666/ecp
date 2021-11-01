@@ -577,9 +577,10 @@ const Main = inject(
                       Профиль
                     </Menu.Item>
                   )}
-                  {true && (
-                    <div>
-                      {/* <Menu.Item disabled>
+                  {true &&
+                    (window.location.href.includes("socmedica.dev") || window.location.href.includes("localhost")) && (
+                      <div>
+                        {/* <Menu.Item disabled>
                         <Icon name="list ul" />
                         Текущие назначения
                       </Menu.Item>
@@ -587,33 +588,33 @@ const Main = inject(
                         <Icon name="clipboard list" />
                         История назначений
                       </Menu.Item> */}
-                      <Dropdown
-                        // disabled
-                        item
-                        text={
-                          active_language == "ru" ? (
-                            <>
-                              Русский <Flag name="ru" />
-                            </>
-                          ) : (
-                            <>
-                              English <Flag name="gb" />
-                            </>
-                          )
-                        }
-                      >
-                        <Dropdown.Menu>
-                          <Dropdown.Item onClick={() => this.changeLang("en")}>
-                            <Flag name="gb" />
-                            English
-                          </Dropdown.Item>
-                          <Dropdown.Item onClick={() => this.changeLang("ru")}>
-                            <Flag name="ru" />
-                            Русский
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                      {/* <Menu.Item disabled>
+                        <Dropdown
+                          // disabled
+                          item
+                          text={
+                            active_language == "ru" ? (
+                              <>
+                                Русский <Flag name="ru" />
+                              </>
+                            ) : (
+                              <>
+                                English <Flag name="gb" />
+                              </>
+                            )
+                          }
+                        >
+                          <Dropdown.Menu>
+                            <Dropdown.Item onClick={() => this.changeLang("en")}>
+                              <Flag name="gb" />
+                              English
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={() => this.changeLang("ru")}>
+                              <Flag name="ru" />
+                              Русский
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                        {/* <Menu.Item disabled>
                         <Icon name="book" />
                         Инструкция
                       </Menu.Item>
@@ -621,8 +622,8 @@ const Main = inject(
                         <Icon name="chat" />
                         Подсказки
                       </Menu.Item> */}
-                    </div>
-                  )}
+                      </div>
+                    )}
                   {/*<Menu.Item>
               <Icon name='user' />
               Поделиться
