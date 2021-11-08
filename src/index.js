@@ -9,8 +9,8 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-// import "matchmedia-polyfill";
-// import "matchmedia-polyfill/matchMedia.addListener";
+import "matchmedia-polyfill";
+import "matchmedia-polyfill/matchMedia.addListener";
 
 ReactDOM.render(
   <React.StrictMode>
