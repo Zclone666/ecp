@@ -1,11 +1,15 @@
 import "react-app-polyfill/ie9";
 import "react-app-polyfill/stable";
 import "core-js/features/string/repeat";
+import "raf/polyfill";
 
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+
+require("matchmedia-polyfill");
+require("matchmedia-polyfill/matchMedia.addListener");
 
 ReactDOM.render(
   <React.StrictMode>
