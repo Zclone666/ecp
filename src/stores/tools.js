@@ -320,6 +320,8 @@ class Tools {
         // this.stores.actions.makeAlerts(res);
         this.stores.actions.loading = false;
         if (this.stores.patients.current) this.stores.patients.current.genpassport_exist = true;
+        if (this.stores.actions.drugStructure?.patient)
+          this.stores.actions.drugStructure.patient.genpassport_exist = true;
       },
       fail: (res) => {
         // this.stores.actions.makeAlerts(res);
