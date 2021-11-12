@@ -23,7 +23,7 @@ class DrugInfo {
     makeObservable(this, {
       ready: observable,
       current: observable,
-      names: observable
+      names: observable,
     });
 
     this.stores = stores;
@@ -50,6 +50,7 @@ class DrugInfo {
     };
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+    data.drug.helpers = null;
     return POST({
       path: `drugs/Info`,
       data,
