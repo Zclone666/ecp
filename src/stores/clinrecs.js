@@ -159,6 +159,11 @@ class Clinrecs {
     });
   }
 
+  getRootClinrecId(childId) {
+    const clinrec = this.clinrec[childId];
+    return !clinrec.parents ? childId : this.getRootClinrecId(clinrec.parents);
+  }
+
   async getByFG(child) {
     this.ready = false;
     this.stores.actions.loading = true;
@@ -255,7 +260,11 @@ class Clinrecs {
       // console.log(drug);
       // this.drugToClinrecHashset[drug.id] = clinrecId;
       _.keys(this.clinrec).forEach((id, i) => {
-        if (this.clinrec[id]?.drug?.id == drug.id) this.drugToClinrecHashset[drug.id] = id;
+        if (this.clinrec[id]?.drug?.id == drug.id) {
+          this.drugToClinrecHashset[drug.id] = id;
+          const rootId = this.getRootClinrecId(id);
+          this.drugToClinrecHashset["rootParentof" + id] = rootId;
+        }
       });
       setTimeout(() => this.stores.drugs.selectFromSearch(drug), this.iterator * 10);
       return;
