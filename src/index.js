@@ -12,6 +12,8 @@ import * as serviceWorker from "./serviceWorker";
 import "matchmedia-polyfill";
 import "matchmedia-polyfill/matchMedia.addListener";
 
+import "./i18n";
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

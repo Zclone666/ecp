@@ -9,6 +9,9 @@ import "./index.less";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// import { I18nextProvider } from "react-i18next";
+// import i18n from "./i18n";
+
 const App = observer(
   class App extends Component {
     componentDidMount() {
@@ -17,9 +20,11 @@ const App = observer(
     render() {
       return (
         <Provider {...stores}>
+          {/* <I18nextProvider i18n={i18n}> */}
           {/*<Spinner>*/}
           <Layout />
           {/*</Spinner>*/}
+          {/* </I18nextProvider> */}
         </Provider>
       );
     }

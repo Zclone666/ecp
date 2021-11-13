@@ -14,6 +14,8 @@ import Page from "../Page";
 
 import "./Main.css";
 
+import { withTranslation } from "react-i18next";
+
 import {
   Sidebar,
   Menu,
@@ -184,6 +186,8 @@ const Main = inject(
       };
 
       changeLang = (lang) => {
+        console.log({ lang });
+        this.props.i18n.changeLanguage(lang);
         this.props.actions.setLang(lang);
       };
 
@@ -283,6 +287,7 @@ const Main = inject(
             buttonTexts,
           },
           patients,
+          t,
         } = this.props;
         let selectedWarnings = warning[selectedDrug];
         let showPage = !!(this.props.router.values && this.props.router.values.page);
@@ -331,7 +336,7 @@ const Main = inject(
                   <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth="481">
                     <Menu.Item>
                       <Icon name={"bed"} className={patientId ? "" : " glowing"} />
-                      {fio || "Пациент не выбран"}
+                      {fio || t("Пациент не выбран")}
                     </Menu.Item>
                   </Responsive>
                   {!misDisabled && isDisease && (
@@ -411,7 +416,7 @@ const Main = inject(
                     onClose={() => this.setOpen(false, "openClearence")}
                     onOpen={() => this.setOpen(true, "openClearence")}
                     open={openClearence}
-                    trigger={<Menu.Item>Сбросить</Menu.Item>}
+                    trigger={<Menu.Item>{t("Сбросить")}</Menu.Item>}
                   >
                     <Modal.Header>{"Какие данные вы хотите очистить?"}</Modal.Header>
                     <Modal.Content>
@@ -441,7 +446,7 @@ const Main = inject(
                     </Modal.Actions>
                   </Modal>
                   <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
-                    Проверить
+                    {t("Проверить")}
                   </Menu.Item>
                   {listChanged ? (
                     cautionsTitle ? (
@@ -449,7 +454,7 @@ const Main = inject(
                         onClose={() => this.setOpen(false, "openCautions")}
                         onOpen={() => this.setOpen(true, "openCautions")}
                         open={openCautions}
-                        trigger={<Menu.Item>Назначить</Menu.Item>}
+                        trigger={<Menu.Item>{t("Назначить")}</Menu.Item>}
                       >
                         <Modal.Header>{cautionsTitle}</Modal.Header>
                         <Modal.Content>
@@ -476,10 +481,10 @@ const Main = inject(
                         </Modal.Actions>
                       </Modal>
                     ) : (
-                      <Menu.Item onClick={() => this.saveList()}>Назначить</Menu.Item>
+                      <Menu.Item onClick={() => this.saveList()}>{t("Назначить")}</Menu.Item>
                     )
                   ) : (
-                    <Menu.Item onClick={() => this.goRecipe()}>Выписать</Menu.Item>
+                    <Menu.Item onClick={() => this.goRecipe()}>{t("Выписать")}</Menu.Item>
                   )}
                 </Menu>
               )}
@@ -551,7 +556,7 @@ const Main = inject(
                 >
                   <Menu.Item as={RouterLink} to="/patient/list">
                     <Icon name="address book" />
-                    Пациенты
+                    {t("Пациенты")}
                   </Menu.Item>
                   {texts && texts.agreementheader && (
                     <Menu.Item as={RouterLink} to="/license-agreement">
@@ -630,7 +635,7 @@ const Main = inject(
             </Menu.Item>*/}
                   <Menu.Item onClick={this.logout}>
                     <Icon name="sign-out" />
-                    Выход
+                    {t("Выход")}
                   </Menu.Item>
                 </Sidebar>
               )}
@@ -649,7 +654,7 @@ const Main = inject(
                           loading={!searchReady}
                           onResultSelect={this.handleResultSelect}
                           onSearchChange={this.handleSearchChange}
-                          noResultsMessage="Ничего не найдено."
+                          noResultsMessage={t("Ничего не найдено.")}
                           results={searchRows}
                           value={searchQuery}
                           resultRenderer={this.resultRenderer}
@@ -683,12 +688,12 @@ const Main = inject(
                         <Segment basic>
                           <Message info>
                             <Icon name="info" />
-                            Внесите лекарственные препараты с помощью строки поиска наверху или&nbsp;{" "}
+                            {t("Внесите лекарственные препараты с помощью строки поиска наверху или")}&nbsp;{" "}
                             <a
                               style={{ cursor: "pointer", textDecoration: "underline" }}
                               onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
                             >
-                              напишите их свободным текстом
+                              {t("напишите их свободным текстом")}
                             </a>
                           </Message>
                         </Segment>
@@ -708,7 +713,7 @@ const Main = inject(
               onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
               open={this.state.manualDrugInputDialog}
             >
-              <Modal.Header>Введите препараты</Modal.Header>
+              <Modal.Header>{t("Введите препараты")}</Modal.Header>
               <Modal.Content>
                 <Form>
                   <TextArea
@@ -716,17 +721,19 @@ const Main = inject(
                     rows={4}
                     name="drugs"
                     value={this.state.manualDrugInputText}
-                    placeholder="Можно указать несколько препаратов с дозировками, система попытается их распознать"
+                    placeholder={t(
+                      "Можно указать несколько препаратов с дозировками, система попытается их распознать"
+                    )}
                     onChange={(e) => this.setState({ manualDrugInputText: e.target.value })}
                   />
                 </Form>
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ manualDrugInputDialog: false })}>
-                  Отмена
+                  {t("Отмена")}
                 </Button>
                 <Button color="blue" onClick={this.detectManualDrugInput}>
-                  Распознать
+                  {t("Распознать")}
                 </Button>
               </Modal.Actions>
             </Modal>
@@ -737,4 +744,4 @@ const Main = inject(
   )
 );
 
-export default Main;
+export default withTranslation()(Main);
