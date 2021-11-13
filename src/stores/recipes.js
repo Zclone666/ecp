@@ -404,7 +404,7 @@ class Recipes {
     data.key = this.stores.actions.privateKey;
 
     data.сlinical_guidelines = this.stores.clinrecs.drugToClinrecHashset;
-    data.checker = this.stores.clinrecs.checker;
+    data.checker = this.stores.actions.clinrecCheckerData; //this.stores.clinrecs.checker;
 
     return POST({
       path: "prescript/New", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
