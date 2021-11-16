@@ -207,9 +207,14 @@ const Drug = inject(
               <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
               <Responsive fireOnMount as={Button.Group} minWidth="481">
                 {!disabled && dosReady && (
-                  <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
-                    <Icon name="tint" />
-                  </Button>
+                  <Popup
+                    content="Дозировка"
+                    trigger={
+                      <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
+                        <Icon name="tint" />
+                      </Button>
+                    }
+                  />
                 )}
                 {!disabled && !dosReady && (
                   <Button disabled icon style={{ visibility: "hidden" }}>
@@ -218,32 +223,52 @@ const Drug = inject(
                 )}
 
                 {!disabled && (
-                  <Button
-                    disabled={drug.group !== 0}
-                    icon
-                    as={RouterLink}
-                    to={`/analog/${drug.key}`}
-                    onClick={this.getAnalog}
-                  >
-                    <Icon name="font" />
-                  </Button>
+                  <Popup
+                    content="Аналоги"
+                    trigger={
+                      <Button
+                        disabled={drug.group !== 0}
+                        icon
+                        as={RouterLink}
+                        to={`/analog/${drug.key}`}
+                        onClick={this.getAnalog}
+                      >
+                        <Icon name="font" />
+                      </Button>
+                    }
+                  />
                 )}
                 {!disabled && (
-                  <Button icon onClick={this.unselectDrug}>
-                    <Icon name="delete" />
-                  </Button>
+                  <Popup
+                    content="Удалить"
+                    trigger={
+                      <Button icon onClick={this.unselectDrug}>
+                        <Icon name="delete" />
+                      </Button>
+                    }
+                  />
                 )}
                 {!disabled && minus && (
-                  <Button icon onClick={onRemove}>
-                    <Icon name="minus" />
-                  </Button>
+                  <Popup
+                    content="Убрать из раствора"
+                    trigger={
+                      <Button icon onClick={onRemove}>
+                        <Icon name="minus" />
+                      </Button>
+                    }
+                  />
                 )}
               </Responsive>
               {!disabled && minus && (
                 <Responsive fireOnMount as={Button.Group} maxWidth="480">
-                  <Button icon onClick={onRemove}>
-                    <Icon name="minus" />
-                  </Button>
+                  <Popup
+                    content="Убрать из раствора"
+                    trigger={
+                      <Button icon onClick={onRemove}>
+                        <Icon name="minus" />
+                      </Button>
+                    }
+                  />
                 </Responsive>
               )}
             </List.Content>
