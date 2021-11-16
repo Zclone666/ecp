@@ -263,7 +263,9 @@ class Clinrecs {
       // this.drugToClinrecHashset[drug.id] = clinrecId;
       _.keys(this.clinrec).forEach((id, i) => {
         if (this.clinrec[id]?.drug?.id == drug.id) {
-          this.drugToClinrecHashset[drug.id] = [].push(id);
+          const idInArray = [];
+          idInArray.push(id);
+          this.drugToClinrecHashset[drug.id] = idInArray;
           const rootId = this.getRootClinrecId(id);
           this.drugToClinrecHashset["rootParentof" + id] = rootId;
         }
