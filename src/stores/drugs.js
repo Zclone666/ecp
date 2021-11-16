@@ -19,6 +19,7 @@ class Drugs {
   searchReady = true;
 
   listChanged = true;
+  drugsRemoved = false;
 
   selectedRows = [];
 
@@ -34,6 +35,7 @@ class Drugs {
       deletedLiquids: observable,
       searchReady: observable,
       listChanged: observable,
+      drugsRemoved: observable,
       selectedRows: observable,
       current: observable,
       currLiquid: observable,
@@ -138,6 +140,7 @@ class Drugs {
   async clearDeleted() {
     this.deletedRows = observable([]);
     this.deletedLiquids = observable([]);
+    this.drugsRemoved = true;
   }
 
   async MNNfromTN(drug) {

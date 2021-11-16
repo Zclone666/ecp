@@ -272,6 +272,7 @@ const Main = inject(
             deletedLiquids,
             deletedRows,
             listChanged,
+            drugsRemoved,
             checkLiquids,
           }, //drugs, drugsDosages, currDrug, setDosageParams
           dosages: { dosage },
@@ -313,6 +314,18 @@ const Main = inject(
         let showRevert = drug.size == 0 && deletedRows.length > 0;
 
         const texts = buttonTexts ? buttonTexts.text : null;
+
+        //check if have changes on list
+        let editedDrugs = false;
+        drug.forEach((item, i) => {
+          if (!(item.proto && !item.edit)) {
+            editedDrugs = true;
+          }
+        });
+        if (deletedRows.length > 0 || drugsRemoved) {
+          editedDrugs = true;
+        }
+        //end check if have changes on list
 
         if (topview_disabled) {
           document.querySelector(".ui.body > .pushable") &&
@@ -454,7 +467,7 @@ const Main = inject(
                         onClose={() => this.setOpen(false, "openCautions")}
                         onOpen={() => this.setOpen(true, "openCautions")}
                         open={openCautions}
-                        trigger={<Menu.Item>{t("Назначить")}</Menu.Item>}
+                        trigger={<Menu.Item className={editedDrugs ? "glowing" : ""}>{t("Назначить")}</Menu.Item>}
                       >
                         <Modal.Header>{cautionsTitle}</Modal.Header>
                         <Modal.Content>
@@ -481,7 +494,9 @@ const Main = inject(
                         </Modal.Actions>
                       </Modal>
                     ) : (
-                      <Menu.Item onClick={() => this.saveList()}>{t("Назначить")}</Menu.Item>
+                      <Menu.Item className={editedDrugs ? "glowing" : ""} onClick={() => this.saveList()}>
+                        {t("Назначить")}
+                      </Menu.Item>
                     )
                   ) : (
                     <Menu.Item onClick={() => this.goRecipe()}>{t("Выписать")}</Menu.Item>
@@ -554,10 +569,12 @@ const Main = inject(
                   vertical
                   size="huge"
                 >
-                  <Menu.Item as={RouterLink} to="/patient/list">
-                    <Icon name="address book" />
-                    {t("Пациенты")}
-                  </Menu.Item>
+                  {false && (
+                    <Menu.Item as={RouterLink} to="/patient/list">
+                      <Icon name="address book" />
+                      {t("Пациенты")}
+                    </Menu.Item>
+                  )}
                   {texts && texts.agreementheader && (
                     <Menu.Item as={RouterLink} to="/license-agreement">
                       <Icon name="file alternate" />
