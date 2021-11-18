@@ -159,9 +159,11 @@ class Clinrecs {
     });
   }
 
-  getRootClinrecId(childId) {
+  getRootClinrecId(childId, accumulator) {
+    const result = accumulator ? accumulator : [];
+    result.push(childId);
     const clinrec = this.clinrec[childId];
-    return !clinrec.parents ? childId : this.getRootClinrecId(clinrec.parents);
+    return !clinrec.parents ? result : this.getRootClinrecId(clinrec.parents, result);
   }
 
   async getByFG(child) {
@@ -261,7 +263,9 @@ class Clinrecs {
       // this.drugToClinrecHashset[drug.id] = clinrecId;
       _.keys(this.clinrec).forEach((id, i) => {
         if (this.clinrec[id]?.drug?.id == drug.id) {
-          this.drugToClinrecHashset[drug.id] = id;
+          const idInArray = [];
+          idInArray.push(id);
+          this.drugToClinrecHashset[drug.id] = idInArray;
           const rootId = this.getRootClinrecId(id);
           this.drugToClinrecHashset["rootParentof" + id] = rootId;
         }
