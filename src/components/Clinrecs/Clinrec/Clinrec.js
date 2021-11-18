@@ -380,12 +380,14 @@ const Clinrec = inject(
                         let course = clinrec[courseId];
                         if (!course) return null;
                         // console.log({item});
+                        let openMe = "calc" + courseId === opened || rec.childs.length == 1;
                         return (
                           <List.Item key={"calc" + i} style={{ cursor: "pointer" }}>
+                            {rec.childs.length > 1 && <List.Icon name={`angle ${openMe ? "down" : "right"}`} />}
                             <List.Content className="large">
                               <List.Header onClick={() => this.collapse("calc" + courseId)}>{course.name}</List.Header>
                               <Collapse isOpened={true} initialStyle={{ height: 0, overflow: "hidden" }}>
-                                {"calc" + courseId === opened && (
+                                {openMe && (
                                   <List.Item>
                                     <List.List>{this.renderRecoursive(course)}</List.List>
                                   </List.Item>
