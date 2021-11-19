@@ -315,6 +315,7 @@ class Patients {
           dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
           // console.log({ dosage });
           const { names, nameshort } = this.stores.tools.unitsPharm;
+          // console.log({ d });
           let helpers = {
             dosage: {
               short: "",
@@ -322,9 +323,9 @@ class Patients {
                 (dosage[0] && dosage[0]?.id_1
                   ? `${_.map(dosage, "value_1").join(" + ")} ${nameshort[dosage[0].id_1]}`
                   : "") || "",
-              id: null,
+              id: dosage[0]?.id_1,
             },
-            pack: { short: "", full: "", id: null },
+            pack: { short: "", full: "", id: d?.dosage?.pack?.dosage?.id_1 || d?.calc?.countUnit },
             type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
             // url: "",
             key: null,

@@ -384,11 +384,14 @@ class Dosages {
     let pack = this.stores.actions.stepsData.pack;
     let { units, getUnitArr } = this.stores.tools;
 
-    // console.log({ currDos });
+    // console.log({ stepsData: this.stores.actions.stepsData, pack });
     // console.log({ currDos, dosages, drug });
     const calcFromDrug = drug?.calc;
+    // console.log({ calcFromDrug, pack });
 
     let unit = (currDos.dosage && units[currDos.dosage.id]) || 248;
+    let packCountBaseUnit = pack && pack.dosage && pack.dosage.id_1 && units[pack.dosage.id_1]?.arr;
+    // console.log({ packCountBaseUnit });
     let firstUnit = null;
     let secondUnit = null;
 
@@ -401,6 +404,10 @@ class Dosages {
     // console.log({firstUnit, unit});
     let unitsArr = ((firstUnit || unit) && getUnitArr((firstUnit && firstUnit.id) || (unit && unit.id))) || {};
     // console.log('pack',pack);
+
+    const countIdFromHelpers = units[currDos?.pack?.id];
+    // console.log({ countIdFromHelpers });
+
     return {
       dosage: {
         value,
@@ -411,7 +418,13 @@ class Dosages {
       },
       count: {
         value:
-          (pack && pack.dosage && pack.dosage.value_1) ||
+          (pack && pack.dosage && pack.dosage.value_1) || //&& this.stores.tools.convertFromBaseUnitToUnit(packCountBaseUnit, pack.dosage.id_1, pack.dosage.value_1)) ||
+          (countIdFromHelpers &&
+            this.stores.tools.convertFromBaseUnitToUnit(
+              countIdFromHelpers.arr,
+              countIdFromHelpers.id,
+              calcFromDrug?.count
+            )) ||
           this.stores.tools.convertFromBaseUnitToUnit(
             calcFromDrug?.countBaseUnit,
             calcFromDrug?.countUnit,
