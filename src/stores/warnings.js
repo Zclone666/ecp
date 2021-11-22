@@ -69,7 +69,7 @@ class Warnings {
         color = colorPallette[1];
         group = 2;
         break;
-      case val > 0 && val <= 0.17:
+      case val > 0 && val <= 0.16:
         color = colorPallette[2];
         group = 3;
         break;
@@ -77,7 +77,7 @@ class Warnings {
       //   color = colorPallette[3]
       //   group = 4
       //   break;
-      case val > 0.17 && val <= 0.5:
+      case val > 0.16 && val <= 0.5:
         color = colorPallette[4];
         group = 5;
         break;
