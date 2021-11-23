@@ -133,17 +133,20 @@ const PatientForm = inject(
         const reader = new FileReader();
         reader.onload = (evt) => {
           const string = evt.target.result;
-          const parsedResult = string.split("\n").map((str) => {
-            const parsedString = str.split(";");
-            if (parsedString.length === 4)
-              return {
-                gene: parsedString[0],
-                code: parsedString[1],
-                reference: parsedString[2],
-                alleles: parsedString[3].split("/"),
-              };
-            return {};
-          });
+          const parsedResult = string
+            .replace("\r\n", "\n")
+            .split("\n")
+            .map((str) => {
+              const parsedString = str.split(";");
+              if (parsedString.length === 4)
+                return {
+                  gene: parsedString[0],
+                  code: parsedString[1],
+                  reference: parsedString[2],
+                  alleles: parsedString[3].split("/"),
+                };
+              return {};
+            });
           this.props.tools.loadGenPassport(id, parsedResult);
         };
         reader.readAsBinaryString(file);
