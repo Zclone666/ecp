@@ -404,7 +404,7 @@ class Recipes {
     data.key = this.stores.actions.privateKey;
 
     data.сlinical_guidelines = this.stores.clinrecs.drugToClinrecHashset;
-    data.checker = this.stores.clinrecs.checker;
+    data.checker = this.stores.actions.clinrecCheckerData; //this.stores.clinrecs.checker;
 
     return POST({
       path: "prescript/New", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
@@ -418,6 +418,38 @@ class Recipes {
         // proto_date: "2021_03"
 
         let { misproto, newdrugs, newliquids, proto, proto_date } = data;
+
+        //-----------
+        newdrugs = newdrugs.map((d) => {
+          if (d.helpers) return d;
+          let { dosage } = d;
+          dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
+          // console.log({ dosage });
+          const { names, nameshort } = this.stores.tools.unitsPharm;
+          let helpers = {
+            dosage: {
+              short: "",
+              full:
+                (dosage[0] && dosage[0]?.id_1
+                  ? `${_.map(dosage, "value_1").join(" + ")} ${nameshort[dosage[0].id_1]}`
+                  : "") || "",
+              id: null,
+            },
+            pack: { short: "", full: "", id: null },
+            type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
+            // url: "",
+            key: null,
+            way: "lf",
+            step: "4",
+            // mnn: false,
+            // drugCache: null,
+          };
+          return {
+            ...d,
+            helpers,
+          };
+        });
+        //-----------
 
         this.stores.drugs.listChanged = false;
         if (newdrugs && newdrugs.length > 0) {

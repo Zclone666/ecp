@@ -133,7 +133,7 @@ const PatientForm = inject(
         const reader = new FileReader();
         reader.onload = (evt) => {
           const string = evt.target.result;
-          const parsedResult = string.split("\r").map((str) => {
+          const parsedResult = string.split("\n").map((str) => {
             const parsedString = str.split(";");
             if (parsedString.length === 4)
               return {

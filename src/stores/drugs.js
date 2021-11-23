@@ -19,6 +19,7 @@ class Drugs {
   searchReady = true;
 
   listChanged = true;
+  drugsRemoved = false;
 
   selectedRows = [];
 
@@ -34,6 +35,7 @@ class Drugs {
       deletedLiquids: observable,
       searchReady: observable,
       listChanged: observable,
+      drugsRemoved: observable,
       selectedRows: observable,
       current: observable,
       currLiquid: observable,
@@ -84,15 +86,34 @@ class Drugs {
 
   setBaseDosages = async (key) => {
     let drug = await this.drug.get(key);
+    // console.log("setBaseDosages: ", { drug }, drug.calc.countBaseUnit);
+
     // console.log({ key, drug });
     if (!drug || !drug.calc || !drug.calc.dosageUnit) return;
     let { units } = this.stores.tools;
-    let count = (drug.helpers.pack && units[drug.helpers.pack.id]) || units[248];
+    const stepsData = this.stores.actions.stepsData;
+    // console.log("steps: ", { stepsData });
+    let count =
+      (drug.helpers.pack && units[drug.helpers.pack.id]) ||
+      units[stepsData?.pack?.dosage?.id_1] ||
+      units[stepsData?.helpers?.pack?.id]; //|| units[248];
+
     let dosageBaseUnit = this.stores.tools.getBaseUnit(drug.calc.dosageUnit);
-    let countBaseUnit = this.stores.tools.getBaseUnit(count.id);
-    // console.log({ dosageBaseUnit, countBaseUnit });
     drug.calc.dosageBaseUnit = dosageBaseUnit;
-    drug.calc.countBaseUnit = drug.calc.countBaseUnit ? drug.calc.countBaseUnit : countBaseUnit;
+    if (count) {
+      let countBaseUnit = this.stores.tools.getBaseUnit(count.id);
+      // console.log({ countBaseUnit });
+
+      drug.calc = { ...drug.calc, countBaseUnit, countUnit: count.id };
+      // drug.calc.countBaseUnit = countBaseUnit;
+      // drug.calc.countUnit = count.id;
+      return;
+    }
+    drug.calc.countBaseUnit = drug.calc.countBaseUnit || units[248].arr;
+    drug.calc.countUnit =
+      drug.calc.countUnit || Object.values(units).find((u) => u.arr == drug.calc.countBaseUnit).id || units[248].id;
+
+    //const countUnit = Object.values(units).find((unit) => unit.arr == drug.calc.countBaseUnit).id;
   };
 
   // service functions
@@ -138,6 +159,7 @@ class Drugs {
   async clearDeleted() {
     this.deletedRows = observable([]);
     this.deletedLiquids = observable([]);
+    this.drugsRemoved = true;
   }
 
   async MNNfromTN(drug) {
@@ -182,6 +204,7 @@ class Drugs {
   setDosageParams = async () => {
     let drugData = this.stores.actions.stepsData;
     let calcData = this.stores.actions.calculatorForm;
+    // console.log("setDosageParams this.stores.actions.calculatorForm", this.stores.actions.calculatorForm);
     let scheduleData = this.stores.actions.scheduleForm;
     let {
       router: { values },
@@ -231,6 +254,11 @@ class Drugs {
 
     let { dosage: dos, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage } = calcData;
 
+    let { countUnit, countBaseUnit } = currentDrug.calc;
+    // console.log("\n setting dosages params: \n", { countUnit, countBaseUnit });
+    count = this.stores.tools.convertFromUnitToBaseUnit(countUnit, countBaseUnit, count);
+    // console.log({ count });
+
     currentDrug.solute =
       currentDosages.form && currentDosages.form[form] ? currentDosages.form[form].solute : currentDrug.solute;
     // console.log({dosageUnit, fullDosage})
@@ -261,6 +289,7 @@ class Drugs {
     };
 
     currentDrug.calc = {
+      ...currentDrug.calc,
       dosage: dos,
       count,
       dosageUnit,
@@ -279,6 +308,7 @@ class Drugs {
   };
 
   getDosageParams = async () => {
+    // console.log("\n getting dosage params \n");
     let drugData = this.stores.actions.stepsData;
 
     let drug = this.current;
