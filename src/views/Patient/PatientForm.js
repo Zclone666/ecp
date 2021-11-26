@@ -601,7 +601,7 @@ const PatientForm = inject(
                   );
                 })}
               </List>
-              {!misDisabled && (
+              {!misDisabled && false && (
                 <Form.Group widths={1}>
                   <Form.Field width={16}>
                     <label>Лабораторные данные</label>

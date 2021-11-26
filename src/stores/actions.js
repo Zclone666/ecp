@@ -528,15 +528,25 @@ class Actions {
     // console.log({ el: this.elements, name, value });
     let text = "";
     this.elements[name].forEach((item, i) => {
-      if (item.to > 0) {
-        if ((item.from <= value && value < item.to) || item.to === value) {
+      if (Math.abs(item.to) > Math.abs(item.from)) {
+        if (item.from < value && value <= item.to) {
           text = item.name;
         }
-      } else if (item.to <= 0) {
-        if ((item.from < value && value <= item.to) || item.to === value) {
+      } else {
+        if (item.from <= value && value < item.to) {
           text = item.name;
         }
       }
+
+      // if (item.to > 0) {
+      //   if ((item.from < value && value <= item.to) || item.to === value) {
+      //     text = item.name;
+      //   }
+      // } else if (item.to <= 0) {
+      //   if ((item.from < value && value <= item.to) || item.to === value) {
+      //     text = item.name;
+      //   }
+      // }
     });
     // console.log({ text });
     return text;
