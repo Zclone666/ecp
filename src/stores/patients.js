@@ -606,14 +606,17 @@ class Patients {
       path: data.patient.id ? `tools/PatientUpdate` : "tools/PatientAdd",
       data,
       success: async (data) => {
+        // console.log({ data });
         if (data.patients) {
           let { doc, id, lpu, patients, names } = data;
           await this.makeList({ patients, names });
           await this.request(patients[0]);
+          await this.getPatient(patients[0]);
           return this.getById(patients[0]);
         }
         if (data.patient) {
           let { id } = data.patient;
+          this.getPatient(id);
           await this.request(id);
         }
         return data;

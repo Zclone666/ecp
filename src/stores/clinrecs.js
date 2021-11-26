@@ -84,6 +84,7 @@ class Clinrecs {
         } else {
           let pages = {};
           if (data && data.checker) {
+            let { shortnames } = this.stores.tools;
             this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
             _.keys(data.checker).forEach((id, i) => {
               let question = data.checker[id];
@@ -95,7 +96,10 @@ class Clinrecs {
                   name: data.names[id],
                   type: question.type,
                   unit: question.unitid
-                    ? data.shortnames[question.unitid] || data.names[question.unitid] || null
+                    ? shortnames[question.unitid] ||
+                      data.shortnames[question.unitid] ||
+                      data.names[question.unitid] ||
+                      null
                     : null,
                   unitid: question.unitid,
                   value: question.value,
