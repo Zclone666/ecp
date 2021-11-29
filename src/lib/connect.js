@@ -12,7 +12,7 @@ export const PRODUCTION = false;
 export const API_SERVER =
   !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
     ? "http://" + window.location.hostname + ":9004"
-    : SERVER === "prod"
+    : SERVER === "prod" || window.location.host.includes("socmedica.com")
     ? "https://service.socmedica.com:9004"
     : "https://service.socmedica.dev:9004";
 
