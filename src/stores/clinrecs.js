@@ -91,6 +91,7 @@ class Clinrecs {
               this.stores.actions.clinrecCheckerData[id].value =
                 question.type === "Binary" ? question.value || 0 : question.value;
               if (pages[question.page]) {
+                // console.log(question.unitid, shortnames[question.unitid]);
                 pages[question.page].arr.push({
                   id,
                   name: data.names[id],
@@ -114,7 +115,10 @@ class Clinrecs {
                       name: data.names[id],
                       type: question.type,
                       unit: question.unitid
-                        ? data.shortnames[question.unitid] || data.names[question.unitid] || null
+                        ? shortnames[question.unitid] ||
+                          data.shortnames[question.unitid] ||
+                          data.names[question.unitid] ||
+                          null
                         : null,
                       unitid: question.unitid,
                       value: question.value,
