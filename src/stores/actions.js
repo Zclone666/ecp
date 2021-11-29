@@ -535,9 +535,10 @@ class Actions {
       } else {
         if (item.from <= value && value < item.to) {
           text = item.name;
+        } else if (item.from == 0 && item.to == 0 && value == 0) {
+          text = item.name;
         }
       }
-
       // if (item.to > 0) {
       //   if ((item.from < value && value <= item.to) || item.to === value) {
       //     text = item.name;
