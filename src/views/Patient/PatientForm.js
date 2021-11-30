@@ -77,6 +77,7 @@ const PatientForm = inject(
           let { name, value } = e.target;
         }
         const { birthdate } = this.props.patients.current;
+        // console.log({ birthdate, value });
         let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
 
         if (name === "weight" || name === "growth") {
