@@ -157,8 +157,8 @@ class Drugs {
   }
 
   async clearDeleted() {
-    this.deletedRows = observable([]);
-    this.deletedLiquids = observable([]);
+    // this.deletedRows = observable([]);
+    // this.deletedLiquids = observable([]);
     this.drugsRemoved = true;
   }
 

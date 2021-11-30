@@ -95,6 +95,13 @@ const PatientForm = inject(
                   )
                 )
               : 0;
+          this.props.patients.current.squareIndex = parseFloat(
+            (
+              0.007184 *
+              Math.pow(this.props.patients.current.growth, 0.725) *
+              Math.pow(this.props.patients.current.weight, 0.425)
+            ).toFixed(2)
+          );
         } else {
           this.props.patients.current[name] = value;
         }
@@ -261,6 +268,7 @@ const PatientForm = inject(
           growth,
           weight,
           masIndex,
+          squareIndex,
           disease,
           co_disease,
           allergy,
@@ -360,7 +368,7 @@ const PatientForm = inject(
                 </Form.Field>
               </Form.Group>
               <Form.Group>
-                <Form.Field width={7}>
+                <Form.Field width={6}>
                   <label>Рост</label>
                   <Input
                     size="big"
@@ -372,7 +380,7 @@ const PatientForm = inject(
                     onChange={this.handleChange}
                   />
                 </Form.Field>
-                <Form.Field width={7}>
+                <Form.Field width={6}>
                   <label>Вес</label>
                   <Input
                     size="big"
@@ -387,6 +395,18 @@ const PatientForm = inject(
                 <Form.Field width={2}>
                   <label>ИМТ</label>
                   <Input size="big" name="masIndex" className="readonly" readonly="readonly" value={masIndex || ""}>
+                    <input readOnly="readonly" className="readonly" />
+                  </Input>
+                </Form.Field>
+                <Form.Field width={2}>
+                  <label>ППТ</label>
+                  <Input
+                    size="big"
+                    name="squareIndex"
+                    className="readonly"
+                    readonly="readonly"
+                    value={squareIndex || ""}
+                  >
                     <input readOnly="readonly" className="readonly" />
                   </Input>
                 </Form.Field>

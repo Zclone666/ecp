@@ -118,9 +118,11 @@ const DozeTypes = inject(
             {currDosagesArr.map((dose, i) => {
               let dosePack = "";
               if (dose.pack.full.length > 0) {
-                const prev = dose.pack.full;
-                const pos = prev.lastIndexOf(",");
-                dosePack = prev.substring(0, pos);
+                dosePack = dose.pack.full;
+                // strange logic here
+                // const prev = dose.pack.full;
+                // const pos = prev.lastIndexOf(",");
+                // dosePack = prev.substring(0, pos);
               }
               return (
                 <List.Item
