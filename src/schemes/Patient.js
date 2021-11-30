@@ -12,6 +12,7 @@ export default {
   growth: null,
   weight: null,
   masIndex: null,
+  squareIndex: null,
   disease: [],
   co_disease: [],
   allergy: [],

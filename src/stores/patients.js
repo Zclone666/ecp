@@ -55,6 +55,7 @@ class Patients {
     driving,
     alcohol,
     masIndex,
+    squareIndex,
     allergy,
     mutations,
     lastname,
@@ -69,6 +70,8 @@ class Patients {
   }) => {
     let patientTpl = _.cloneDeep(PatientScheme);
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
+    squareIndex = parseFloat((0.007184 * Math.pow(growth, 0.725) * Math.pow(weight, 0.425)).toFixed(2));
+    //parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
     await _.assignIn(this.current, patientTpl, {
       id,
       email,
@@ -90,6 +93,7 @@ class Patients {
       driving,
       alcohol,
       masIndex,
+      squareIndex,
       allergy,
       mutations,
       lastname,
@@ -184,7 +188,7 @@ class Patients {
         } = data.patient;
 
         let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
-
+        let squareIndex = parseFloat((0.007184 * Math.pow(growth, 0.725) * Math.pow(weight, 0.425)).toFixed(2));
         this.stores.actions.patientForm = {
           id,
           email,
@@ -207,6 +211,7 @@ class Patients {
           trimester,
           weight,
           masIndex,
+          squareIndex,
           mutations,
 
           lastname,

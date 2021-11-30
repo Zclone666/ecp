@@ -53,6 +53,7 @@ class BirthDate extends Component {
     this.setState({ date, birth: value });
   };
   handleChangeDate = (e, { value }) => {
+    // console.log({ value });
     let { onChange, name } = this.props;
     let years = moment().diff(moment(moment(value).toDate()), "years");
     let months = moment()
@@ -98,7 +99,7 @@ class BirthDate extends Component {
         <div className="birthdate">
           <AutoComplete value={birth} onChange={this.handleChangeBirth} />
           <Button basic icon="arrows alternate horizontal" />
-          <Calendar value={date} onChange={this.handleChangeDate} maxDate={new Date()}/>
+          <Calendar value={date} onChange={this.handleChangeDate} maxDate={new Date()} />
         </div>
       </Form.Field>
     );
