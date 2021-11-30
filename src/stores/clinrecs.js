@@ -150,7 +150,8 @@ class Clinrecs {
     data.key = this.stores.actions.privateKey;
     const patient = _.cloneDeep(this.stores.patients.current);
     // console.log("patient: ", this.stores.patients.current);
-    data.disease = patient?.disease;
+    data.disease = patient?.disease || [];
+    if (patient && patient.co_disease) data.disease = data.disease.concat(patient.co_disease);
 
     return POST({
       path: "tools/clinicalGuidelinesExist",
