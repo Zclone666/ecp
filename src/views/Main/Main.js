@@ -271,6 +271,8 @@ const Main = inject(
             drug,
             deletedLiquids,
             deletedRows,
+            unselectedRows,
+            unselectedLiquids,
             listChanged,
             drugsRemoved,
             checkLiquids,
@@ -401,9 +403,9 @@ const Main = inject(
             <Sidebar.Pushable
               className={`${disabled ? "disabled" : ""}${topview_disabled ? " no-pushable-padding" : ""}`}
             >
-              {deletedRows.length > 0 && (
+              {unselectedRows.length > 0 && (
                 <Menu secondary className={`bottom fixed`}>
-                  <Menu.Item>Удалено строк: {deletedRows.length}</Menu.Item>
+                  <Menu.Item>Удалено строк: {unselectedRows.length}</Menu.Item>
                   <Menu.Item onClick={this.returnDeleted}>
                     <Icon name="undo alternate" />
                     Вернуть
