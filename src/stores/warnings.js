@@ -6,7 +6,7 @@ import _ from "lodash";
 
 const colorPallette = [
   "#007b2b",
-  "#b0d512",
+  "#cccccc", //"#b0d512",
   "#54C8FF",
   "#fff42b",
   "#ffca2f",

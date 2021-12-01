@@ -28,6 +28,7 @@ import {
   Checkbox,
   Header,
   Dropdown,
+  Modal,
 } from "semantic-ui-react";
 
 import _ from "lodash";
@@ -58,6 +59,7 @@ const PatientForm = inject(
 
           search_patient: "",
           showPatientPassport: false,
+          showProtocol: false,
         };
         this.fileUploadRef = createRef();
       }
@@ -287,7 +289,8 @@ const PatientForm = inject(
         // console.log("current patient: ", this.props.patients.current);
         // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
-        let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport } = this.state;
+        let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport, showProtocol } =
+          this.state;
         let searchReady = true,
           searchRows = [],
           searchQuery = "";
@@ -335,9 +338,14 @@ const PatientForm = inject(
                     resultClassName="result-wrapper"
                   />
                 </Form.Field>
-                <Form.Field width={4}>
+                <Form.Field width={3}>
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
+                {this.props.patients.current.id && (
+                  <Form.Field width={2}>
+                    <Button onClick={() => this.setState({ showProtocol: !showProtocol })}>протокол</Button>
+                  </Form.Field>
+                )}
                 <Form.Field width={3}>
                   <Button onClick={() => this.setState({ showPatientPassport: !showPatientPassport })}>
                     {showPatientPassport
@@ -908,6 +916,27 @@ const PatientForm = inject(
                 )}
               </Responsive>
             </Form>
+            <Modal
+              style={{ height: "70%" }}
+              onClose={() => this.setState({ showProtocol: false })}
+              onOpen={() => this.setState({ showProtocol: true })}
+              open={showProtocol}
+            >
+              <Modal.Header>Заполните протокол и нажмите кнопку "печать" в конце</Modal.Header>
+              <Modal.Content style={{ height: "100%" }} scrolling>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  id="protocol"
+                  src="https://smartform.socmedica.dev/form/81/415"
+                ></iframe>
+              </Modal.Content>
+              <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
+                <Button color="red" onClick={() => this.setState({ showProtocol: false })}>
+                  Закрыть
+                </Button>
+              </Modal.Actions>
+            </Modal>
           </Segment>
         );
       }

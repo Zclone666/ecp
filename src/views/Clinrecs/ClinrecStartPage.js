@@ -31,7 +31,9 @@ const ClinrecStartPage = inject(
       render() {
         // console.log("state: ", this.state);
         const { clinicalGuidelinesExist } = this.props.clinrecs;
-        const diseases = this.props.patients.current.disease.map((d) => d.id);
+        const diseases = this.props.patients.current.disease
+          .map((d) => d.id)
+          .concat(this.props.patients.current.co_disease.map((d) => d.id));
         // console.log({ clinicalGuidelinesExist });
         const rednerTree = (data) => {
           // console.log({ data });
