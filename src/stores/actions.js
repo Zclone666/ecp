@@ -921,7 +921,7 @@ class Actions {
     this.loginForm.key = AUTH_SERVICE_KEY;
     this.loginForm.privateKey = data.args.key;
     const args = data.args;
-    this.stores.router.push("/");
+    // this.stores.router.push("/");
 
     this.drugStructure = {
       ...this.drugStructure,
