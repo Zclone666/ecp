@@ -13,6 +13,9 @@ class Drugs {
   ready = false;
   searchRows = [];
 
+  unselectedRows = [];
+  unselectedLiquids = [];
+
   deletedRows = [];
   deletedLiquids = [];
 
@@ -31,6 +34,8 @@ class Drugs {
     makeObservable(this, {
       ready: observable,
       searchRows: observable,
+      unselectedRows: observable,
+      unselectedLiquids: observable,
       deletedRows: observable,
       deletedLiquids: observable,
       searchReady: observable,
@@ -139,26 +144,33 @@ class Drugs {
     this.stores.actions.makeLiquids = false;
   }
   async returnList() {
-    this.deletedLiquids.forEach(async (liquid, i) => {
+    this.unselectedLiquids.forEach(async (liquid, i) => {
       if (liquid.group != null) {
         await this.liquid.set(liquid.group, liquid);
       } else {
-        this.deletedLiquids.push(liquid);
+        this.unselectedLiquids.push(liquid);
       }
     });
 
-    this.deletedRows.forEach(async (drug, i) => {
+    this.unselectedRows.forEach(async (drug, i) => {
       await this.selectFromSearch(drug, false, false);
     });
 
     await this.stores.tools.stepByStepLoading(this.stores.dosages.get, this.deletedRows);
-    this.deletedRows = observable([]);
-    this.deletedLiquids = observable([]);
+    this.unselectedRows = observable([]);
+    this.unselectedLiquids = observable([]);
   }
 
   async clearDeleted() {
-    // this.deletedRows = observable([]);
-    // this.deletedLiquids = observable([]);
+    this.unselectedRows.forEach((item, i) => {
+      this.deletedRows.push(item);
+    });
+    this.unselectedLiquids.forEach((item, i) => {
+      this.deletedLiquids.push(item);
+    });
+
+    this.unselectedRows = observable([]);
+    this.unselectedLiquids = observable([]);
     this.drugsRemoved = true;
   }
 
@@ -584,7 +596,8 @@ class Drugs {
     arr.forEach((item, i) => {
       let currLiquid = this.liquid.get(item) || {};
       if (currLiquid.proto) {
-        this.deletedLiquids.push(currLiquid);
+        this.unselectedLiquids.push(currLiquid);
+        // this.deletedLiquids.push(currLiquid);
       }
       this.liquid.delete(item);
     });
@@ -1030,7 +1043,8 @@ class Drugs {
 
   async unselectDrug(drug, onlyProto = true) {
     if (drug.proto || !onlyProto) {
-      this.deletedRows.push(drug);
+      // this.deletedRows.push(drug);
+      this.unselectedRows.push(drug);
     }
     if (drug.group != 0) {
       this.stores.actions.makeLiquids = true;

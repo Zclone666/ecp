@@ -204,7 +204,7 @@ const Clinrec = inject(
         // console.log(obj);
         if (!obj) return null;
         let { name, type } = obj.drug;
-        let { method, form, intervalpreset, schedulepreset, dosage } = obj;
+        let { method, form, intervalpreset, schedulepreset, dosage, comment } = obj;
         let helpers = {};
         if (dosage && dosage.length > 0) {
           helpers.dosage = {
@@ -240,6 +240,7 @@ const Clinrec = inject(
                         <sup>TM</sup>
                       </span>
                     )}
+                    <Feed.Date>{comment}</Feed.Date>
                     {/* Uncomment when Svetozavr is ready =) */}
                     {false && (
                       <Feed.Date>
