@@ -704,8 +704,8 @@ class Actions {
           this.drugStructure.clinic_id = (lpu && lpu[0]) || null;
           this.drugStructure.clinic_name = (lpu && lpu[0] && names[lpu[0]]) || null;
           this.clinic = {
-            id: lpu[0],
-            name: names[lpu[0]],
+            id: (lpu && lpu[0]) || null,
+            name: (lpu && lpu[0] && names[lpu[0]]) || null,
           };
         } else {
           this.clinic = {
