@@ -925,8 +925,9 @@ const PatientForm = inject(
               open={showProtocol}
             >
               <Modal.Header>Заполните протокол и нажмите кнопку "печать" в конце</Modal.Header>
-              <Modal.Content style={{ height: "100%" }} scrolling>
+              <Modal.Content style={{ height: "100%", padding: 0 }} scrolling>
                 <iframe
+                  frameborder="0"
                   width="100%"
                   height="100%"
                   id="protocol"
