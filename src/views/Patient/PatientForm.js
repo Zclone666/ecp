@@ -192,7 +192,7 @@ const PatientForm = inject(
         //let newName = name === 'co_disease' ? 'disease' : name
         await this.props.patients.request(result.id);
         this.setState({ [`search_${name}`]: "" });
-        this.props.router.push("/patient/info");
+        // this.props.router.push("/patient/info");
       };
 
       handlePatientSearchChange = (e, { name, value }) => {
@@ -289,8 +289,14 @@ const PatientForm = inject(
         // console.log("current patient: ", this.props.patients.current);
         // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
-        let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport, showProtocol } =
-          this.state;
+        let {
+          search_disease,
+          search_co_disease,
+          search_allergy,
+          misDisabled,
+          showPatientPassport,
+          showProtocol,
+        } = this.state;
         let searchReady = true,
           searchRows = [],
           searchQuery = "";
