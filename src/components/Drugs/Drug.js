@@ -65,7 +65,7 @@ const Drug = inject(
       selectDrug = (e, drugId) => {
         e.preventDefault();
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
+          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, misLinkLogin: misDisabled },
           drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
           dosages: { dosage },
           warnings: { warning, groups: warnGroups }, //warnings, warnGroups
@@ -136,7 +136,15 @@ const Drug = inject(
 
       render() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, disabled, topview_disabled },
+          actions: {
+            selectedDrug,
+            selectedConflict,
+            activeDrugs,
+            activeConflicts,
+            disabled,
+            topview_disabled,
+            misLinkLogin: misDisabled,
+          },
           drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
           dosages: { dosage: dose },
           warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
@@ -205,7 +213,7 @@ const Drug = inject(
           <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
             <List.Content floated="right">
               <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
-              <Responsive fireOnMount as={Button.Group} minWidth="481">
+              <Responsive fireOnMount as={Button.Group} minWidth={misDisabled ? "1" : "481"}>
                 {!disabled && dosReady && (
                   <Popup
                     content="Дозировка"
@@ -260,7 +268,7 @@ const Drug = inject(
                 )}
               </Responsive>
               {!disabled && minus && (
-                <Responsive fireOnMount as={Button.Group} maxWidth="480">
+                <Responsive fireOnMount as={Button.Group} maxWidth={misDisabled ? "0" : "480"}>
                   <Popup
                     content="Убрать из раствора"
                     trigger={
@@ -304,7 +312,7 @@ const Drug = inject(
               ) : (
                 <List.Icon name="warning circle" size="large" style={{ color: "transparent", textShadow: "unset" }} />
               ))}
-            <Responsive as={List.Content} className="ui feed large" fireOnMount minWidth="481">
+            <Responsive as={List.Content} className="ui feed large" fireOnMount minWidth={misDisabled ? "1" : "481"}>
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Summary>
@@ -333,7 +341,7 @@ const Drug = inject(
                 </Feed.Content>
               </Feed.Event>
             </Responsive>
-            <Responsive as={Fragment} maxWidth="480">
+            <Responsive as={Fragment} maxWidth={misDisabled ? "0" : "480"}>
               <List.Content
                 className="ui feed large"
                 as={Dropdown}

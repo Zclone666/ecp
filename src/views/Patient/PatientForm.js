@@ -343,7 +343,9 @@ const PatientForm = inject(
                 </Form.Field>
                 {this.props.patients.current.id && (
                   <Form.Field width={2}>
-                    <Button onClick={() => this.setState({ showProtocol: !showProtocol })}>протокол</Button>
+                    {(window.location.href.includes("socmedica.dev") || window.location.href.includes("localhost")) && (
+                      <Button onClick={() => this.setState({ showProtocol: !showProtocol })}>протокол</Button>
+                    )}
                   </Form.Field>
                 )}
                 <Form.Field width={3}>

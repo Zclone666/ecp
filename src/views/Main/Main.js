@@ -348,7 +348,7 @@ const Main = inject(
                 )}
 
                 <Menu.Menu position="right">
-                  <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth="481">
+                  <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>
                     <Menu.Item>
                       <Icon name={"bed"} className={patientId ? "" : " glowing"} />
                       {fio || t("Пациент не выбран")}
@@ -362,7 +362,7 @@ const Main = inject(
                       // onClick={this.getClinrec}
                       onClick={this.getClinrecExist}
                       fireOnMount
-                      minWidth="481"
+                      minWidth={misDisabled ? "1" : "481"}
                     >
                       <Menu.Item>
                         <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}>
@@ -372,7 +372,7 @@ const Main = inject(
                       </Menu.Item>
                     </Responsive>
                   )}
-                  <Responsive fireOnMount as={RouterLink} to="/patient/info" maxWidth="480">
+                  <Responsive fireOnMount as={RouterLink} to="/patient/info" maxWidth={misDisabled ? "0" : "480"}>
                     <Menu.Item icon>
                       <Icon name="bed" size="large" />
                     </Menu.Item>
@@ -385,7 +385,7 @@ const Main = inject(
                       onClick={this.getClinrecExist}
                       // to={`/clinrec/checker/${clinrecCheckerStep}`}
                       to="/crstartpage/default"
-                      maxWidth="480"
+                      maxWidth={misDisabled ? "0" : "480"}
                     >
                       <Menu.Item icon>
                         <Icon
