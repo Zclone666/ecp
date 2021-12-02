@@ -271,6 +271,8 @@ const Main = inject(
             drug,
             deletedLiquids,
             deletedRows,
+            unselectedRows,
+            unselectedLiquids,
             listChanged,
             drugsRemoved,
             checkLiquids,
@@ -346,7 +348,7 @@ const Main = inject(
                 )}
 
                 <Menu.Menu position="right">
-                  <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth="481">
+                  <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>
                     <Menu.Item>
                       <Icon name={"bed"} className={patientId ? "" : " glowing"} />
                       {fio || t("Пациент не выбран")}
@@ -360,7 +362,7 @@ const Main = inject(
                       // onClick={this.getClinrec}
                       onClick={this.getClinrecExist}
                       fireOnMount
-                      minWidth="481"
+                      minWidth={misDisabled ? "1" : "481"}
                     >
                       <Menu.Item>
                         <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}>
@@ -370,7 +372,7 @@ const Main = inject(
                       </Menu.Item>
                     </Responsive>
                   )}
-                  <Responsive fireOnMount as={RouterLink} to="/patient/info" maxWidth="480">
+                  <Responsive fireOnMount as={RouterLink} to="/patient/info" maxWidth={misDisabled ? "0" : "480"}>
                     <Menu.Item icon>
                       <Icon name="bed" size="large" />
                     </Menu.Item>
@@ -383,7 +385,7 @@ const Main = inject(
                       onClick={this.getClinrecExist}
                       // to={`/clinrec/checker/${clinrecCheckerStep}`}
                       to="/crstartpage/default"
-                      maxWidth="480"
+                      maxWidth={misDisabled ? "0" : "480"}
                     >
                       <Menu.Item icon>
                         <Icon
@@ -401,9 +403,9 @@ const Main = inject(
             <Sidebar.Pushable
               className={`${disabled ? "disabled" : ""}${topview_disabled ? " no-pushable-padding" : ""}`}
             >
-              {deletedRows.length > 0 && (
+              {unselectedRows.length > 0 && (
                 <Menu secondary className={`bottom fixed`}>
-                  <Menu.Item>Удалено строк: {deletedRows.length}</Menu.Item>
+                  <Menu.Item>Удалено строк: {unselectedRows.length}</Menu.Item>
                   <Menu.Item onClick={this.returnDeleted}>
                     <Icon name="undo alternate" />
                     Вернуть
