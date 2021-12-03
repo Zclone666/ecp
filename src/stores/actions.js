@@ -767,6 +767,8 @@ class Actions {
         this.stores.tools.getUnitsPrimary();
         this.stores.tools.getUnitsPharm();
         this.stores.tools.getUnitsSchedule();
+
+        this.stores.patients.getList();
         // this.stores.patients.request()
         // }else{
         //   this.makeAlerts({ alerts:[{
@@ -962,7 +964,7 @@ class Actions {
     this.stores.tools.getUnitsSchedule();
 
     await this.stores.patients.request(args.patient_id);
-
+    await this.stores.patients.getList();
     this.loading = false;
   }
 
