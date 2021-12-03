@@ -289,14 +289,8 @@ const PatientForm = inject(
         // console.log("current patient: ", this.props.patients.current);
         // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
-        let {
-          search_disease,
-          search_co_disease,
-          search_allergy,
-          misDisabled,
-          showPatientPassport,
-          showProtocol,
-        } = this.state;
+        let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport, showProtocol } =
+          this.state;
         let searchReady = true,
           searchRows = [],
           searchQuery = "";
@@ -931,12 +925,16 @@ const PatientForm = inject(
               open={showProtocol}
             >
               <Modal.Header>Заполните протокол и нажмите кнопку "печать" в конце</Modal.Header>
-              <Modal.Content style={{ height: "100%" }} scrolling>
+              <Modal.Content style={{ height: "100%", padding: 0 }} scrolling>
                 <iframe
+                  frameborder="0"
                   width="100%"
                   height="100%"
                   id="protocol"
-                  src="https://smartform.socmedica.dev/form/81/415"
+                  src={
+                    "https://smartform.socmedica.dev/form/81/415?patient?=" +
+                    JSON.stringify(this.props.patients.current)
+                  }
                 ></iframe>
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
