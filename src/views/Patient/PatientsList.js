@@ -93,7 +93,8 @@ const PatientsList = inject(
         this.props.patients.last.forEach((item, i) => {
           arr.push(item);
         });
-        return arr;
+
+        return _.orderBy(arr, ["date"], ["desc"]);
       }
 
       render() {
