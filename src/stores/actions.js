@@ -2,7 +2,7 @@ import { observable, action, autorun, makeObservable } from "mobx";
 import { GET, POST, PUT, PROJECT_TITLE, CREATE_API_URL } from "../lib/connect";
 import _ from "lodash";
 import moment from "moment";
-import { LOGIN } from "../constants";
+import { LOGIN, SERVER } from "../constants";
 
 import { StructureScheme, ProfileScheme } from "../schemes";
 
@@ -13,9 +13,10 @@ export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
 const createCsServerUrl = (url) =>
-  !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
-    ? "http://" + window.location.hostname + ":9999" + url
-    : "https://" + (window.location.href.includes(["socmedica.com"]) ? "cs" : "csdev") + ".socmedica.com" + url;
+  SERVER == "dev" ? "https://csdev.socmedica.com" + url : "https://cs.socmedica.com" + url;
+// !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
+//   ? "http://" + window.location.hostname + ":9999" + url
+//   : "https://" + (window.location.href.includes(["socmedica.com"]) ? "cs" : "csdev") + ".socmedica.com" + url;
 
 class Actions {
   view = false;

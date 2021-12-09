@@ -4,6 +4,7 @@ import { observer, inject } from "mobx-react";
 import Dozes from "../Dozes";
 import Patient from "../Patient";
 import Profile from "../Profile";
+import Settings from "../Settings";
 import Clinics from "../Clinics";
 import Warning from "../Warning";
 import Recipe from "../Recipe";
@@ -45,6 +46,7 @@ const Page = inject(
             concept: <Dozes />,
             patient: <Patient />,
             profile: <Profile />,
+            settings: <Settings />,
             clinics: <Clinics />,
             warning: <Warning />,
             recipe: <Recipe />,
