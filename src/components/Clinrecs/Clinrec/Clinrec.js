@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { inject, observer } from "mobx-react";
 
-import { Collapse } from "react-collapse";
+// import { Collapse } from "react-collapse";
+import AnimateHeight from "react-animate-height";
 
 import {
   // Menu,
@@ -46,6 +47,35 @@ const Clinrec = inject(
         } else {
           this.setState({ opened });
         }
+      };
+
+      checkRecoursive = (id, check) => {
+        if (this.props.clinrecs.clinrec[id].type == "Drug") {
+          this.props.clinrecs.clinrec[id].check = check;
+        }
+        let arr = _.cloneDeep(this.props.clinrecs.clinrec[id].childs);
+        if (this.props.clinrecs.clinrec[id].type == "OR" && arr[0]) {
+          arr.forEach((item, i) => {
+            if (i == 0) {
+              this.checkRecoursive(item, check);
+            } else {
+              this.checkRecoursive(item, false);
+            }
+          });
+        } else {
+          arr.forEach((item, i) => {
+            this.checkRecoursive(item, check);
+          });
+        }
+      };
+
+      check = (id) => {
+        let check = !_.cloneDeep(this.props.clinrecs.clinrec[id].check);
+        let arr = _.cloneDeep(this.props.clinrecs.clinrec[id].childs);
+        arr.forEach((item, i) => {
+          this.checkRecoursive(item, check);
+        });
+        this.props.clinrecs.clinrec[id].check = check;
       };
 
       renderCourse = (course) => {
@@ -183,11 +213,21 @@ const Clinrec = inject(
         );
       };
 
-      renderRegimen = (child) => {
+      renderRegimen = (child, childId) => {
         return (
           <List.Item>
+            <Checkbox
+              checked={child.check}
+              onClick={() => this.check(childId)}
+              label={{
+                children: (
+                  <List.Content className="large">
+                    <List.Header>{child.name}</List.Header>
+                  </List.Content>
+                ),
+              }}
+            />
             <List.Content className="large">
-              <List.Header>{child.name}</List.Header>
               <List.Item>
                 <List.List>{this.renderRecoursive(child)}</List.List>
               </List.Item>
@@ -305,7 +345,7 @@ const Clinrec = inject(
                 if (!child) return null;
                 if (child.type === "Drug") return this.renderDrug(child);
                 if (child.type === "GroupSeq") return this.renderGroup(child);
-                if (child.type === "Regimen") return this.renderRegimen(child);
+                if (child.type === "Regimen") return this.renderRegimen(child, childId);
                 if (child.type === "OR") return this.renderRadio(child, childId);
                 if (child.type === "FG") return this.renderFG(child, childId);
                 if (child.type === "AND") return this.renderCheck(child, childId);
@@ -338,7 +378,7 @@ const Clinrec = inject(
             return this.renderGroup(child);
             break;
           case "Regimen":
-            return this.renderRegimen(child);
+            return this.renderRegimen(child, childId);
             break;
           case "OR":
             return this.renderRadio(child, childId);
@@ -387,13 +427,14 @@ const Clinrec = inject(
                             {rec.childs.length > 1 && <List.Icon name={`angle ${openMe ? "down" : "right"}`} />}
                             <List.Content className="large">
                               <List.Header onClick={() => this.collapse("calc" + courseId)}>{course.name}</List.Header>
-                              <Collapse isOpened={true} initialStyle={{ height: 0, overflow: "hidden" }}>
-                                {openMe && (
-                                  <List.Item>
-                                    <List.List>{this.renderRecoursive(course)}</List.List>
-                                  </List.Item>
-                                )}
-                              </Collapse>
+                              <AnimateHeight
+                                duration={500}
+                                height={openMe ? "auto" : 0} // see props documentation below
+                              >
+                                <List.Item>
+                                  <List.List>{this.renderRecoursive(course)}</List.List>
+                                </List.Item>
+                              </AnimateHeight>
                             </List.Content>
                           </List.Item>
                         );
