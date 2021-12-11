@@ -571,12 +571,10 @@ const Main = inject(
                   vertical
                   size="huge"
                 >
-                  {false && (
-                    <Menu.Item as={RouterLink} to="/patient/list">
-                      <Icon name="address book" />
-                      {t("Пациенты")}
-                    </Menu.Item>
-                  )}
+                  <Menu.Item as={RouterLink} to="/patient/list">
+                    <Icon name="address book" />
+                    {t("Пациенты")}
+                  </Menu.Item>
                   {texts && texts.agreementheader && (
                     <Menu.Item as={RouterLink} to="/license-agreement">
                       <Icon name="file alternate" />
@@ -595,6 +593,10 @@ const Main = inject(
                       Клиники
                     </Menu.Item>
                   )}
+                  <Menu.Item as={RouterLink} to="/settings/my">
+                    <Icon name="user md" />
+                    Настройки
+                  </Menu.Item>
                   {false && (
                     <Menu.Item disabled as={RouterLink} to="/profile/show">
                       <Icon name="user md" />

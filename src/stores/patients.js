@@ -30,6 +30,7 @@ class Patients {
     this.router = stores.router;
 
     this.patient = observable.map({}, "patient");
+    this.last = observable.map({}, "last");
 
     autorun(() => {});
   }
@@ -136,6 +137,7 @@ class Patients {
       authkey: this.stores.actions.authkey,
       id,
       active_language,
+      doctor_id: (this.stores.actions.doctor && this.stores.actions.doctor.id) || null,
     };
     await this.stores.db.clearData(false, true);
     await this.stores.drugs.clearProto();
@@ -499,6 +501,51 @@ class Patients {
       },
       fail: (alerts) => {},
       always: (data) => {},
+    });
+  }
+
+  //Tools/GetLastPatients
+  async getList() {
+    this.searchReady = false;
+    let { active_language } = this.stores.actions;
+    let data = {
+      count: 30,
+      doctor_id: (this.stores.actions.doctor && this.stores.actions.doctor.id) || null,
+      // lib: '62, 52', //'61, 25' - заболевания
+      // service: "43",
+      // chain: 0
+      active_language,
+    };
+
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+
+    // this[`${saveTo}Rows`] = observable([]);
+
+    return POST({
+      path: `Tools/GetLastPatients`,
+      data,
+      success: async (data) => {
+        if (data.patients && data.patients.length > 0 && _.isArray(data.patients)) {
+          await data.patients.forEach((patient, i) => {
+            this.last.set(patient.id, patient);
+          });
+
+          // let pat = await _.unionWith(data.patients, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
+          // this.last.set(data.patients)
+          // this.searchReady = true;
+        } else {
+          // this.searchReady = true;
+          this.stores.actions.makeAlerts(data);
+        }
+      },
+      fail: (alerts) => {
+        this.searchReady = true;
+        // console.log('fail', alerts);
+      },
+      always: (data) => {
+        // this.stores.actions.makeAlerts(data)
+      },
     });
   }
 

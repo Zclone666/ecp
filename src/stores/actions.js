@@ -2,7 +2,7 @@ import { observable, action, autorun, makeObservable } from "mobx";
 import { GET, POST, PUT, PROJECT_TITLE, CREATE_API_URL } from "../lib/connect";
 import _ from "lodash";
 import moment from "moment";
-import { LOGIN } from "../constants";
+import { LOGIN, SERVER } from "../constants";
 
 import { StructureScheme, ProfileScheme } from "../schemes";
 
@@ -13,9 +13,10 @@ export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
 const createCsServerUrl = (url) =>
-  !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
-    ? "http://" + window.location.hostname + ":9999" + url
-    : "https://" + (window.location.href.includes(["socmedica.com"]) ? "cs" : "csdev") + ".socmedica.com" + url;
+  SERVER == "dev" ? "https://csdev.socmedica.com" + url : "https://cs.socmedica.com" + url;
+// !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
+//   ? "http://" + window.location.hostname + ":9999" + url
+//   : "https://" + (window.location.href.includes(["socmedica.com"]) ? "cs" : "csdev") + ".socmedica.com" + url;
 
 class Actions {
   view = false;
@@ -704,8 +705,8 @@ class Actions {
           this.drugStructure.clinic_id = (lpu && lpu[0]) || null;
           this.drugStructure.clinic_name = (lpu && lpu[0] && names[lpu[0]]) || null;
           this.clinic = {
-            id: lpu[0],
-            name: names[lpu[0]],
+            id: (lpu && lpu[0]) || null,
+            name: (lpu && lpu[0] && names[lpu[0]]) || null,
           };
         } else {
           this.clinic = {
@@ -767,6 +768,8 @@ class Actions {
         this.stores.tools.getUnitsPrimary();
         this.stores.tools.getUnitsPharm();
         this.stores.tools.getUnitsSchedule();
+
+        this.stores.patients.getList();
         // this.stores.patients.request()
         // }else{
         //   this.makeAlerts({ alerts:[{
@@ -921,7 +924,7 @@ class Actions {
     this.loginForm.key = AUTH_SERVICE_KEY;
     this.loginForm.privateKey = data.args.key;
     const args = data.args;
-    this.stores.router.push("/");
+    // this.stores.router.push("/");
 
     this.drugStructure = {
       ...this.drugStructure,
@@ -962,7 +965,7 @@ class Actions {
     this.stores.tools.getUnitsSchedule();
 
     await this.stores.patients.request(args.patient_id);
-
+    await this.stores.patients.getList();
     this.loading = false;
   }
 
