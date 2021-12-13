@@ -25,6 +25,7 @@ import {
   Form,
   Dropdown,
   Header,
+  Label,
   // Message,
   // List,
   // Feed,
@@ -50,6 +51,7 @@ const Prescript = inject(
           isFilled: false,
           code: null,
           search_clinic: "",
+          search_patient: "",
         };
         //this.contextRef = createRef()
         this.debouncedSearch = _.debounce(this.callSearchFunction, 500, {
@@ -152,6 +154,38 @@ const Prescript = inject(
         // this.handleChange({ target: { name: "lpuName", value: result.description } });
         this.setState({ [`search_clinic`]: result.description });
       };
+
+      handlePatientResultSelect = async (e, { name, result }) => {
+        //let newName = name === 'co_disease' ? 'disease' : name
+        await this.props.patients.request(result.id);
+        this.setState({ [`search_${name}`]: this.props.patients.current.fio });
+        // this.props.router.push("/patient/info");
+      };
+
+      handlePatientSearchChange = (e, { name, value }) => {
+        this.setState({ [`search_${name}`]: value });
+        if (value.length > 1) {
+          this.props.patients.searchReady = false;
+          this.props.patients.search(value);
+        }
+      };
+
+      get patientsListSearch() {
+        let arr = [];
+        this.props.patients.searchRows.forEach((item, i) => {
+          console.log({ item });
+          if (item.name) {
+            arr.push({
+              id: item.id,
+              title: item.name,
+              price: item.birthdate ? moment(item.birthdate, "x").format("DD.MM.YYYY") : "",
+              description: item.email,
+            });
+          }
+        });
+        return arr;
+      }
+
       componentDidMount() {
         this.handleResultSelect(null, {
           name: "clinic",
@@ -191,7 +225,7 @@ const Prescript = inject(
       }
 
       render() {
-        let { open, search_clinic } = this.state;
+        let { open, search_clinic, search_patient } = this.state;
         let {
           actions: {
             drugStructure: { doctor_name: doctor, clinic_id: clinic },
@@ -232,23 +266,21 @@ const Prescript = inject(
                   <Form.Group>
                     <Form.Field width={16}>
                       <label>Пациент</label>
-                      <Dropdown
-                        options={this.props.patients.arr.map((item) => {
-                          return {
-                            key: item.id,
-                            text: item.name,
-                            value: item.key,
-                          };
-                        })}
-                        placeholder="Иван Иванов"
-                        search
-                        name="patient"
-                        selection
+                      <Search
                         fluid
-                        value={patient.id}
-                        onAddItem={this.handleAddition}
-                        onChange={this.handleChange}
+                        size="big"
+                        name="patient"
+                        placeholder="Введите имя пациента"
+                        loading={!searchReady}
+                        onResultSelect={this.handlePatientResultSelect}
+                        onSearchChange={_.debounce(this.handlePatientSearchChange, 500, {
+                          leading: true,
+                        })}
+                        results={this.patientsListSearch}
+                        value={search_patient}
+                        resultClassName="result-wrapper"
                       />
+                      {patient && patient.fio && <Label>{patient.fio}</Label>}
                     </Form.Field>
                     <Form.Field>
                       <label>&nbsp;</label>
