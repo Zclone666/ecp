@@ -26,6 +26,7 @@ class Warnings {
   info = {
     names: observable({}),
     description: observable({}),
+    guidance: observable({}),
     literature: observable({}),
     outcome: observable({}),
     urls: observable({}),
@@ -164,6 +165,7 @@ class Warnings {
         if (data && data.warnings && _.isArray(data.warnings)) {
           this.info.names = _.clone(data.names);
           this.info.description = _.clone(data.description);
+          this.info.guidance = _.clone(data.guidance);
           this.info.literature = _.clone(data.literature);
           this.info.outcome = _.clone(data.outcome);
           this.info.urls = _.clone(data.urls);
@@ -274,6 +276,7 @@ class Warnings {
         if (data && data.warnings && _.isArray(data.warnings)) {
           this.info.names = _.clone(data.names);
           this.info.description = _.clone(data.description);
+          this.info.guidance = _.clone(data.guidance);
           this.info.literature = _.clone(data.literature);
           this.info.outcome = _.clone(data.outcome);
           this.info.urls = _.clone(data.urls);

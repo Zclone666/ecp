@@ -203,6 +203,20 @@ const WarningTab = inject(
                   </List>
                 )}
                 {tab.id && tab.id.length > 0 && (
+                  <List relaxed>
+                    {info.guidance[tab.id] && <b> Рекомендации: </b>}
+                    {info.guidance[tab.id] &&
+                      info.guidance[tab.id].map((guid, d) => {
+                        if (!info.names[guid]) return null;
+                        return (
+                          <List.Item key={`guid_${d}`}>
+                            <div dangerouslySetInnerHTML={{ __html: info.names[guid] }} />
+                          </List.Item>
+                        );
+                      })}
+                  </List>
+                )}
+                {tab.id && tab.id.length > 0 && (
                   <>
                     {info.literature[tab.id] && <Header as="h3">Источники</Header>}
                     {info.literature[tab.id] &&
