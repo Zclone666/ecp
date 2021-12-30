@@ -34,6 +34,8 @@ import {
 import _ from "lodash";
 import moment from "moment";
 
+const boxDisabled = !window.location.host.includes("socmedica") && !window.location.host.includes(["localhost"]);
+
 const PatientForm = inject(
   "router",
   "diseases",
@@ -65,13 +67,17 @@ const PatientForm = inject(
       }
 
       componentDidMount() {
-        const fileSelector = document.getElementById("genpassport-upload");
-        fileSelector.addEventListener("change", this.handleFileUpload);
+        if (!boxDisabled) {
+          const fileSelector = document.getElementById("genpassport-upload");
+          fileSelector.addEventListener("change", this.handleFileUpload);
+        }
       }
 
       componentWillUnmount() {
-        const fileSelector = document.getElementById("genpassport-upload");
-        fileSelector.removeEventListener("change", this.handleFileUpload);
+        if (!boxDisabled) {
+          const fileSelector = document.getElementById("genpassport-upload");
+          fileSelector.removeEventListener("change", this.handleFileUpload);
+        }
       }
 
       handleChange = (e, { name, value }) => {
@@ -289,14 +295,8 @@ const PatientForm = inject(
         // console.log("current patient: ", this.props.patients.current);
         // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
-        let {
-          search_disease,
-          search_co_disease,
-          search_allergy,
-          misDisabled,
-          showPatientPassport,
-          showProtocol,
-        } = this.state;
+        let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport, showProtocol } =
+          this.state;
         let searchReady = true,
           searchRows = [],
           searchQuery = "";
@@ -570,23 +570,25 @@ const PatientForm = inject(
                   </Form.Field>
                 </Form.Group>
               )}
-              <Form.Group widths={1}>
-                <Form.Field width={16}>
-                  <label>Генетический паспорт</label>
-                  <Button
-                    primary={genpassport_exist}
-                    disabled={!id}
-                    size="big"
-                    fluid
-                    labelPosition="left"
-                    icon="file"
-                    onClick={() => this.fileUploadRef.current.click()}
-                  >
-                    {genpassport_exist ? "Обновить генетический паспорт пациента" : "Загрузить генетический паспорт"}
-                  </Button>
-                  <input id="genpassport-upload" ref={this.fileUploadRef} type="file" hidden accept=".csv" />
-                </Form.Field>
-              </Form.Group>
+              {!boxDisabled && (
+                <Form.Group widths={1}>
+                  <Form.Field width={16}>
+                    <label>Генетический паспорт</label>
+                    <Button
+                      primary={genpassport_exist}
+                      disabled={!id}
+                      size="big"
+                      fluid
+                      labelPosition="left"
+                      icon="file"
+                      onClick={() => this.fileUploadRef.current.click()}
+                    >
+                      {genpassport_exist ? "Обновить генетический паспорт пациента" : "Загрузить генетический паспорт"}
+                    </Button>
+                    <input id="genpassport-upload" ref={this.fileUploadRef} type="file" hidden accept=".csv" />
+                  </Form.Field>
+                </Form.Group>
+              )}
               <List divided verticalAlign="middle">
                 {mutations &&
                   mutations.map((item, i) => {

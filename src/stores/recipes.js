@@ -174,7 +174,13 @@ class Recipes {
     // let data = this.stores.actions.structure;
     let data = {
       ...this.stores.actions.structure,
-      drugs: this.stores.actions.structure.drugs.filter((drug) => this.drugKeysForPrescription.includes(drug.key)),
+      drugs: this.stores.actions.structure.drugs
+        .filter((drug) => this.drugKeysForPrescription.includes(drug.key))
+        .map((d) => {
+          if (d?.dosage?.dosage?.length == 0 && d?.calc?.dosage?.[0] == 0) {
+            return { ...d, calc: { ...d.calc, count: null, countBaseUnit: null, countUnit: null, dayCount: null } };
+          } else return d;
+        }),
     };
     // let drugsFull = Array.from(this.stores.drugs.drug.values());
     // let liquidsFull = Array.from(this.stores.drugs.liquid.values());

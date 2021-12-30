@@ -28,6 +28,7 @@
     "rc-datepicker": "^5.0.16",
     "rc-swipeout": "^2.0.11",
     "react": "^16.13.1",
+    "react-animate-height": "^2.0.23",
     "react-app-polyfill": "^2.0.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-collapse": "^5.0.1",

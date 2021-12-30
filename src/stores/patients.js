@@ -337,7 +337,7 @@ class Patients {
             // url: "",
             key: null,
             way: "lf",
-            step: "4",
+            step: d?.dosage?.method && d?.dosage?.form ? "4" : "1",
             // mnn: false,
             // drugCache: null,
           };
