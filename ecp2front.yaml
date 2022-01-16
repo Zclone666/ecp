@@ -38,6 +38,6 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
-    nodePort: 30931
+    nodePort: 30909
   selector:
     k8s-app: ecp-front
