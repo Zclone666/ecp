@@ -38,6 +38,7 @@ const resources = {
       main_drugs_check: "Проверить",
       main_drugs_prescribe: "Назначить",
       main_drugs_write: "Выписать",
+      patinet_card_passport_label: "Заполнить паспортные данные",
     },
   },
 };

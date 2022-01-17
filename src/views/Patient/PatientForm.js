@@ -11,6 +11,8 @@ import PatientPassport from "./PatientPassport";
 
 import { checkDouble, clearDouble } from "../../lib/helpers";
 
+import { withTranslation } from "react-i18next";
+
 import {
   Sidebar,
   Menu,
@@ -263,6 +265,7 @@ const PatientForm = inject(
         return arr;
       }
       render() {
+        const { t } = this.props;
         const {
           id,
           key,
@@ -360,7 +363,7 @@ const PatientForm = inject(
                       ? "Свернуть паспортные данные"
                       : id
                       ? "Редактировать паспортные данные"
-                      : "Заполнить паспортные данные"}
+                      : t("patinet_card_passport_label")}
                   </Button>
                 </Form.Field>
                 <Form.Field width={2}>
@@ -966,4 +969,4 @@ const PatientForm = inject(
   )
 );
 
-export default PatientForm;
+export default withTranslation()(PatientForm);
