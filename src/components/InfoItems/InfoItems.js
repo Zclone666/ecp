@@ -119,9 +119,11 @@ const InfoItems = inject(
       }
       render() {
         let {
-          druginfo: { ready },t
+          druginfo: { ready },
           // router
         } = this.props;
+
+        const { t } = this.props.actions;
         let { opened } = this.state;
         // let drugKey = router.values && router.values.page
         let { calc, instr, drug } = this.items;

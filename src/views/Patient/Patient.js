@@ -169,7 +169,7 @@ const Patient = inject(
         }
       }
       render() {
-        const { t } = this.props;
+        const { t } = this.props.actions;
         let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
         let section = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
         let { step } = this.state;
@@ -204,17 +204,17 @@ const Patient = inject(
             {step === 0 && (
               <Menu className="bottom fixed menu two item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                {t("back")}
+                  {t("back")}
                 </Menu.Item>
                 <Menu.Item as={RouterLink} to="/patient/new" onClick={() => this.clearPatient()}>
-                {t("new")}
+                  {t("new")}
                 </Menu.Item>
               </Menu>
             )}
             {step === 1 && (
               <Menu className="bottom fixed menu three item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                {t("back")}
+                  {t("back")}
                 </Menu.Item>
                 <Menu.Item onClick={() => this.saveForm(false)}>{t("apply")}</Menu.Item>
                 {/* <Menu.Item onClick={this.newPatient}>Сохранить</Menu.Item> */}
@@ -237,10 +237,10 @@ const Patient = inject(
             {step === 2 && (
               <Menu className="bottom fixed menu two item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                {t("main_parser_cancel")}
+                  {t("main_parser_cancel")}
                 </Menu.Item>
                 <Menu.Item isLoading={this.state.pending} onClick={this.savePatient} disabled={!firstname || !lastname}>
-                {t("save")}
+                  {t("save")}
                 </Menu.Item>
               </Menu>
             )}

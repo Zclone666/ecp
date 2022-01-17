@@ -290,8 +290,9 @@ const Main = inject(
             buttonTexts,
           },
           patients,
-          t,
+          //t,
         } = this.props;
+        const { t } = this.props.actions;
         let selectedWarnings = warning[selectedDrug];
         let showPage = !!(this.props.router.values && this.props.router.values.page);
         // console.log({ showPage, values: this.props.router.values, page: this.props.router.values.page });
@@ -420,7 +421,7 @@ const Main = inject(
                 <Menu className={`bottom fixed menu three item huge main`}>
                   <Menu.Item onClick={() => this.handleResetAll("all")}>{t("main_drugs_reset")}</Menu.Item>
                   <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
-                  {t("main_drugs_check")}
+                    {t("main_drugs_check")}
                   </Menu.Item>
                 </Menu>
               )}
@@ -486,7 +487,7 @@ const Main = inject(
                         </Modal.Content>
                         <Modal.Actions>
                           <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
-                          {t("main_parser_cancel")}
+                            {t("main_parser_cancel")}
                           </Button>
                           <Button
                             content="Продолжить"
@@ -548,7 +549,7 @@ const Main = inject(
                 <Menu className="bottom fixed menu two item huge main">
                   <Menu.Item onClick={this.resetLiquids}>Сбросить растворы</Menu.Item>
                   <Menu.Item disabled={!isLiquidsOk} onClick={this.confirmLiquids}>
-                  {t("apply")}
+                    {t("apply")}
                   </Menu.Item>
                 </Menu>
               )}

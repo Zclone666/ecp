@@ -319,8 +319,9 @@ const Recipe = inject(
             special,
             spectext,
           },
-          patients: { current: patient },t
+          patients: { current: patient },
         } = this.props;
+        const { t } = this.props.actions;
         const {
           id,
           // name,
@@ -365,7 +366,7 @@ const Recipe = inject(
             {!!printType ? (
               <Menu className="bottom fixed menu four item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                {t("back")}
+                  {t("back")}
                 </Menu.Item>
                 {/* {!code && ( */}
                 <Menu.Item disabled={noEmail || !recipe_formid || this.state.savePending} onClick={this.save}>
@@ -387,7 +388,7 @@ const Recipe = inject(
             ) : (
               <Menu className="bottom fixed menu four item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                {t("main_parser_cancel")}
+                  {t("main_parser_cancel")}
                 </Menu.Item>
               </Menu>
             )}
@@ -883,7 +884,7 @@ const Recipe = inject(
                             </Modal.Content>
                             <Modal.Actions>
                               <Button color="black" onClick={() => this.setOpen(false)}>
-                              {t("main_parser_cancel")}
+                                {t("main_parser_cancel")}
                               </Button>
                               <Button
                                 content="Создать"
@@ -992,7 +993,7 @@ const Recipe = inject(
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ certificateSelectionDialog: false })}>
-                {t("main_parser_cancel")}
+                  {t("main_parser_cancel")}
                 </Button>
                 <Button color="blue" onClick={this.sign} disabled={this.state.selectedCertificate == null}>
                   Подписать

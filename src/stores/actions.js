@@ -6,6 +6,8 @@ import { LOGIN, SERVER } from "../constants";
 
 import { StructureScheme, ProfileScheme } from "../schemes";
 
+import i18n from "../i18n";
+
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
@@ -1255,5 +1257,13 @@ class Actions {
       },
     });
   }
+
+  t = (k) => {
+    const defaultTexts = i18n.res;
+    const ecptext = this?.UIText?.ecptext || {};
+    // console.log({ defaultTexts, ecptext });
+    const translation = { ...defaultTexts, ...ecptext };
+    return translation[k];
+  };
 }
 export default Actions;

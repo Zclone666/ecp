@@ -58,12 +58,13 @@ const Settings = inject(
 
       render() {
         const { zhnvlp_fed, zhnvlp_reg, protocol, rf_ban } = this.state; //this.props.actions.profile.settings || {};
-        const { t } = this.props;
+
+        const { t } = this.props.actions;
         return (
           <div className="h100">
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-              {t("back")}
+                {t("back")}
               </Menu.Item>
               <Menu.Item onClick={this.saveSettings}>{t("save")}</Menu.Item>
             </Menu>

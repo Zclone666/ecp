@@ -44,13 +44,13 @@ const resources = {
       protocol: "Протокол",
       patinet_card_passport_edit: "Редактировать паспортные данные",
       patinet_card_collapse_passport: "Свернуть паспортные данные",
-      new_patient: "Новый пациент", 
+      new_patient: "Новый пациент",
       sex: "Пол",
       male: "Мужчина",
       female: "Женщина",
       growth: "Рост",
       weight: "Вес",
-      body_mass_index: "ИМТ",      
+      body_mass_index: "ИМТ",
       body_surface_area: "ППТ",
 
       kg_m2: "кг/м²",
@@ -97,7 +97,7 @@ const resources = {
       remember_me: "Запомнить меня",
       personal_key: "Персональный ключ",
       password: "Пароль",
-      
+
       jump: "Перейти",
       go_to_login: "Перейдите на страницу авторизации.",
       you_already_registered: "Вы уже зарегистрированы в системе!",
@@ -111,7 +111,7 @@ const resources = {
       last_name: "Фамилия",
       middle_name: "Отчество",
       first_name: "Имя",
-      
+
       fill_passport_details: "Заполните необходимые паспортные данные чтобы сохранить нового пациента",
       new: "Новый",
       delete: "Удалить",
@@ -120,22 +120,21 @@ const resources = {
       no_analogues: "Нет аналогов",
       more: "Подробнее",
 
-      // 'day', 'день', 
-      //  'day','дня', 
+      // 'day', 'день',
+      //  'day','дня',
       //  'days','дней',
-      
-      //  'year','год', 
-      //  'of the year','года', 
+
+      //  'year','год',
+      //  'of the year','года',
       //  'years', 'лет',
 
-      //  'month', 'месяц', 
-      //  'month',  'месяца', 
+      //  'month', 'месяц',
+      //  'month',  'месяца',
       //  'months', 'месяцев',
 
-      //  'a week','неделя', 
-      //  'weeks', 'недели', 
-      //  'weeks', 'недель', 
-      
+      //  'a week','неделя',
+      //  'weeks', 'недели',
+      //  'weeks', 'недель',
     },
   },
 };
@@ -149,5 +148,7 @@ i18n
       escapeValue: false, // react already safes from xss
     },
   });
+
+i18n.res = resources.ru.translation;
 
 export default i18n;

@@ -66,7 +66,8 @@ const Analogs = inject(
       };
 
       render() {
-        let { analogs, router,t } = this.props;
+        let { analogs, router } = this.props;
+        const { t } = this.props.actions;
         let { opened } = this.state;
         let drugKey = router.values && router.values.page;
         let analogObj = analogs.analog.get(drugKey) || {};

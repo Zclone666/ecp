@@ -69,8 +69,10 @@ const WarningTab = inject(
           drugs: { drug, selectedRows },
           warnings: { info, warningInfo },
           router: { values },
-          tab,t
+          tab,
         } = this.props;
+
+        const { t } = this.props.actions;
 
         const getDrug = (item) => {
           if (item.type === "drug") {
@@ -244,13 +246,17 @@ const WarningTab = inject(
             <Segment vertical>
               {firstDrugInstruction && (
                 <Segment basic>
-                  <Header as="h3">{getDrug(arr.first[0]).name}. {t("instruction")}:</Header>
+                  <Header as="h3">
+                    {getDrug(arr.first[0]).name}. {t("instruction")}:
+                  </Header>
                   <div dangerouslySetInnerHTML={{ __html: firstDrugInstruction }}></div>
                 </Segment>
               )}
               {secondDrugInstruction && (
                 <Segment basic>
-                  <Header as="h3">{getDrug(arr.last[0]).name}. {t("instruction")}:</Header>
+                  <Header as="h3">
+                    {getDrug(arr.last[0]).name}. {t("instruction")}:
+                  </Header>
                   <div dangerouslySetInnerHTML={{ __html: secondDrugInstruction }}></div>
                 </Segment>
               )}

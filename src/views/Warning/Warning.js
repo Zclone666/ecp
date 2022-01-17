@@ -224,8 +224,9 @@ const Warning = inject(
 
       render() {
         let {
-          actions: { getElement },t
+          actions: { getElement },
         } = this.props;
+        const { t } = this.props.actions;
         let { activeIndex, open } = this.state;
         let widths = this.tabs.length ? (this.tabs.length < 13 ? this.tabs.length : 12) : 1;
         let warn = this.tabs[activeIndex];
@@ -237,7 +238,7 @@ const Warning = inject(
           <>
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-              {t("back")}
+                {t("back")}
               </Menu.Item>
               <Menu.Item onClick={this.openErrorTextDialog}>Сообщить об ошибке</Menu.Item>
             </Menu>

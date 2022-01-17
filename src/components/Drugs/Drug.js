@@ -153,8 +153,10 @@ const Drug = inject(
           style,
           minus,
           onRemove,
-          canDrag,t
+          canDrag,
         } = this.props;
+
+        const { t } = this.props.actions;
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
         let selectedWarnings = warnIcons[selectedDrug];
