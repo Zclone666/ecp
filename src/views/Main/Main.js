@@ -418,9 +418,9 @@ const Main = inject(
               )}
               {disabled && showMainBottomMenu && (
                 <Menu className={`bottom fixed menu three item huge main`}>
-                  <Menu.Item onClick={() => this.handleResetAll("all")}>Сбросить</Menu.Item>
+                  <Menu.Item onClick={() => this.handleResetAll("all")}>{t("main_drugs_reset")}</Menu.Item>
                   <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
-                    Проверить
+                  {t("main_drugs_check")}
                   </Menu.Item>
                 </Menu>
               )}
@@ -486,7 +486,7 @@ const Main = inject(
                         </Modal.Content>
                         <Modal.Actions>
                           <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
-                            Отмена
+                          {t("main_parser_cancel")}
                           </Button>
                           <Button
                             content="Продолжить"
@@ -548,7 +548,7 @@ const Main = inject(
                 <Menu className="bottom fixed menu two item huge main">
                   <Menu.Item onClick={this.resetLiquids}>Сбросить растворы</Menu.Item>
                   <Menu.Item disabled={!isLiquidsOk} onClick={this.confirmLiquids}>
-                    Применить
+                  {t("apply")}
                   </Menu.Item>
                 </Menu>
               )}
@@ -592,17 +592,17 @@ const Main = inject(
                   {false && (
                     <Menu.Item as={RouterLink} to="/clinics/list">
                       <Icon name="hospital" />
-                      Клиники
+                      {t("main_menu_clinics")}
                     </Menu.Item>
                   )}
                   <Menu.Item as={RouterLink} to="/settings/my">
                     <Icon name="user md" />
-                    Настройки
+                    {t("main_menu_settings")}
                   </Menu.Item>
                   {false && (
                     <Menu.Item disabled as={RouterLink} to="/profile/show">
                       <Icon name="user md" />
-                      Профиль
+                      {t("main_menu_profile")}
                     </Menu.Item>
                   )}
                   {true &&

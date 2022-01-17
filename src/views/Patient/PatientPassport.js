@@ -27,7 +27,7 @@ import {
   Header,
   Dropdown,
 } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const PatientPassport = inject("router", "diseases", "actions")(observer(class PatientPassport extends Component {
@@ -70,7 +70,8 @@ const PatientPassport = inject("router", "diseases", "actions")(observer(class P
       medcard_num,
       main_address,
     } = this.props.actions.patientPassport;
-
+    const { t } = this.props;
+    
     return (
       <Segment basic>
         <Form>
@@ -86,7 +87,7 @@ const PatientPassport = inject("router", "diseases", "actions")(observer(class P
               />
             </Form.Field> */}
             <Form.Field required>
-              <label>Фамилия</label>
+              <label>{t("last_name")}</label>
               <Input
                 size="big"
                 name="lastname"
@@ -96,7 +97,7 @@ const PatientPassport = inject("router", "diseases", "actions")(observer(class P
               />
             </Form.Field>
             <Form.Field required>
-              <label>Имя</label>
+              <label>{t("first_name")}</label>
               <Input
                 size="big"
                 name="firstname"
@@ -106,7 +107,7 @@ const PatientPassport = inject("router", "diseases", "actions")(observer(class P
               />
             </Form.Field>
             <Form.Field>
-              <label>Отчество</label>
+              <label>{t("middle_name")}</label>
               <Input
                 size="big"
                 name="patronymic"
@@ -206,4 +207,4 @@ const PatientPassport = inject("router", "diseases", "actions")(observer(class P
   }
 }));
 
-export default PatientPassport;
+export default withTranslation()(PatientPassport);

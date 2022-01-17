@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { List, Menu, Responsive, Segment, Checkbox } from "semantic-ui-react";
+import { withTranslation } from "react-i18next";
 
 const ClinrecStartPage = inject(
   "actions",
@@ -29,6 +30,7 @@ const ClinrecStartPage = inject(
         this.props.router.push(`/clinrec/checker/${clinrecCheckerStep}`);
       };
       render() {
+        const { t } = this.props;
         // console.log("state: ", this.state);
         const { clinicalGuidelinesExist } = this.props.clinrecs;
         const diseases = this.props.patients.current.disease
@@ -133,8 +135,8 @@ const ClinrecStartPage = inject(
         return (
           <>
             <Menu className="bottom fixed menu two item huge main">
-              <Menu.Item onClick={() => this.props.router.push("/")}>Назад</Menu.Item>
-              <Menu.Item onClick={this.proceedToClinrecs}>Применить</Menu.Item>
+              <Menu.Item onClick={() => this.props.router.push("/")}>{t("back")}</Menu.Item>
+              <Menu.Item onClick={this.proceedToClinrecs}>{t("apply")}</Menu.Item>
             </Menu>
             {/* <div>
               <div>clinrecs start page</div>
@@ -154,4 +156,4 @@ const ClinrecStartPage = inject(
   )
 );
 
-export default ClinrecStartPage;
+export default withTranslation()(ClinrecStartPage);

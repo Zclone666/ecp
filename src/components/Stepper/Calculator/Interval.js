@@ -15,7 +15,7 @@ import {
   Grid,
   Label
 } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import clarifications from '../../../constants/hardcode'
 
 import _ from 'lodash';
@@ -277,7 +277,7 @@ const Interval = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
         scheduleForm: { interval }
       },
       dosages: { current: { drug, form, methodform, names } },
-      router: { values }
+      router: { values },t
     } = this.props
 
     let concept_types = [
@@ -357,7 +357,7 @@ const Interval = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
               <Dropdown
                 className='primary button'
                 name={'concept'}
-                text={'Добавить'}
+                text={t("add")}
                 options={concept_types}
               />
             </Form.Field>
@@ -369,4 +369,4 @@ const Interval = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
 
 }));
 
-export default Interval
+export default withTranslation()(Interval)

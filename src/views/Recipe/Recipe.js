@@ -14,7 +14,7 @@ import { CREATE_API_URL } from "../../lib/connect";
 import PatientPassport from "../Patient/PatientPassport";
 
 import Calendar from "../../components/BirthDate/Calendar";
-
+import { withTranslation } from "react-i18next";
 import moment from "moment";
 import _ from "lodash";
 
@@ -319,7 +319,7 @@ const Recipe = inject(
             special,
             spectext,
           },
-          patients: { current: patient },
+          patients: { current: patient },t
         } = this.props;
         const {
           id,
@@ -365,7 +365,7 @@ const Recipe = inject(
             {!!printType ? (
               <Menu className="bottom fixed menu four item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                  Назад
+                {t("back")}
                 </Menu.Item>
                 {/* {!code && ( */}
                 <Menu.Item disabled={noEmail || !recipe_formid || this.state.savePending} onClick={this.save}>
@@ -387,7 +387,7 @@ const Recipe = inject(
             ) : (
               <Menu className="bottom fixed menu four item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                  Отмена
+                {t("main_parser_cancel")}
                 </Menu.Item>
               </Menu>
             )}
@@ -850,7 +850,7 @@ const Recipe = inject(
 
                       <Form.Group>
                         <Form.Field width={16}>
-                          <label>Пациент</label>
+                          <label>{t("patient")}</label>
                           <Dropdown
                             options={this.props.patients.arr.map((item) => {
                               return {
@@ -875,7 +875,7 @@ const Recipe = inject(
                             onClose={() => this.setOpen(false)}
                             onOpen={() => this.setOpen(true)}
                             open={open}
-                            trigger={<Button>Добавить</Button>}
+                            trigger={<Button>{t("add")}</Button>}
                           >
                             <Modal.Header>Создать пациента</Modal.Header>
                             <Modal.Content>
@@ -883,7 +883,7 @@ const Recipe = inject(
                             </Modal.Content>
                             <Modal.Actions>
                               <Button color="black" onClick={() => this.setOpen(false)}>
-                                Отмена
+                              {t("main_parser_cancel")}
                               </Button>
                               <Button
                                 content="Создать"
@@ -992,7 +992,7 @@ const Recipe = inject(
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ certificateSelectionDialog: false })}>
-                  Отмена
+                {t("main_parser_cancel")}
                 </Button>
                 <Button color="blue" onClick={this.sign} disabled={this.state.selectedCertificate == null}>
                   Подписать
@@ -1006,4 +1006,4 @@ const Recipe = inject(
   )
 );
 
-export default Recipe;
+export default withTranslation()(Recipe);

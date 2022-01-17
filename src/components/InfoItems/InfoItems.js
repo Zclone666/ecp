@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 
 // import RouterLink from '../../../router/a'
 import { Collapse } from "react-collapse";
-
+import { withTranslation } from "react-i18next";
 import "./InfoItems.css";
 
 import {
@@ -119,7 +119,7 @@ const InfoItems = inject(
       }
       render() {
         let {
-          druginfo: { ready },
+          druginfo: { ready },t
           // router
         } = this.props;
         let { opened } = this.state;
@@ -167,7 +167,7 @@ const InfoItems = inject(
               )}
               <Header as="h3" className="stretched">
                 <Icon name="book" />
-                <Header.Content>Инструкция</Header.Content>
+                <Header.Content>{t("instruction")}</Header.Content>
               </Header>
               {ready && instr.length > 0 && (
                 <List divided relaxed className="draginfo" verticalAlign="middle" size="large">
@@ -219,4 +219,4 @@ const InfoItems = inject(
   )
 );
 
-export default InfoItems;
+export default withTranslation()(InfoItems);

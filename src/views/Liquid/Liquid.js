@@ -20,7 +20,7 @@ import {
   Responsive,
   Grid
 } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 
 const Liquid = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(class Liquid extends Component {
   constructor(props){
@@ -62,16 +62,16 @@ const Liquid = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(c
     let showPage = !!(this.props.router.values && this.props.router.values.page)
     let liquid = !!(this.props.router.values && this.props.router.values.liquid)
     let {
-      drugs: { current }
+      drugs: { current },t
     } = this.props
     return (
       <Sidebar.Pushable>
         <Menu className="bottom fixed menu two item huge main">
           <Menu.Item color='red' onClick={this.back}>
-            Назад
+          {t("back")}
           </Menu.Item>
           <Menu.Item onClick={this.saveDoze}>
-            Сохранить
+          {t("save")}
           </Menu.Item>
         </Menu>
         <Sidebar
@@ -96,4 +96,4 @@ const Liquid = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(c
   }
 }));
 
-export default Liquid
+export default withTranslation()(Liquid)

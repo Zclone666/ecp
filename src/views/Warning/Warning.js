@@ -20,7 +20,7 @@ import {
   Form,
   TextArea,
 } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 function getLetter(value) {
@@ -224,7 +224,7 @@ const Warning = inject(
 
       render() {
         let {
-          actions: { getElement },
+          actions: { getElement },t
         } = this.props;
         let { activeIndex, open } = this.state;
         let widths = this.tabs.length ? (this.tabs.length < 13 ? this.tabs.length : 12) : 1;
@@ -237,7 +237,7 @@ const Warning = inject(
           <>
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-                Назад
+              {t("back")}
               </Menu.Item>
               <Menu.Item onClick={this.openErrorTextDialog}>Сообщить об ошибке</Menu.Item>
             </Menu>
@@ -297,4 +297,4 @@ const Warning = inject(
   )
 );
 
-export default Warning;
+export default withTranslation()(Warning);

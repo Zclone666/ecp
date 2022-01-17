@@ -6,7 +6,7 @@ import { Button, Form, Grid, Header, Image, Message, Segment, Link, Modal } from
 import Search from "../../components/Search";
 
 import RouterLink from "../../router/a";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const Signup = inject("router", "db", "actions", "tools")(observer(class Signup extends Component {
@@ -113,6 +113,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
     let { confirm_password, filled, checkPass, search_clinic } = this.state;
     let canInputPass = email.length > 1 && isEmailReg;
     let { searchReady, searchClinicRows } = this.props.tools;
+    const { t } = this.props;
     // console.log({isEmailReg, email});
     //relationCode
     return (
@@ -124,7 +125,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                 {projectTitle}
               </Header>
               <Header as="h3" color="grey" textAlign="center">
-                Регистрация
+              {t("registration")}
               </Header>
               <Form size="large" onSubmit={this.handleSignup}>
                 <Segment padded="very" className="no-border raised">
@@ -147,7 +148,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                       icon="user"
                       value={firstName}
                       iconPosition="left"
-                      placeholder="Имя"
+                      placeholder={t("first_name")}
                       onChange={this.handleChange}
                     />
                   </Form.Group>
@@ -159,7 +160,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                       icon="user"
                       value={middleName}
                       iconPosition="left"
-                      placeholder="Отчество"
+                      placeholder={t("middle_name")}
                       onChange={this.handleChange}
                     />
                     <Form.Input
@@ -169,7 +170,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                       icon="user"
                       value={lastName}
                       iconPosition="left"
-                      placeholder="Фамилия"
+                      placeholder={t("last_name")}
                       onChange={this.handleChange}
                     />
                   </Form.Group>
@@ -180,7 +181,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                           fluid
                           size="big"
                           name="clinic"
-                          placeholder="Введите наименование вашей клиники"
+                          placeholder={t("enter_name_clinic")}
                           loading={!searchReady}
                           onResultSelect={this.handleResultSelect}
                           onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -194,7 +195,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                     </Form.Group>
                   )}
                   {false && lpuName && lpuName.length > 0 && (
-                    <Message onDismiss={this.handleResultUnselect} header="Выбрана клиника" content={lpuName} />
+                    <Message onDismiss={this.handleResultUnselect} header={t("clinic_selected")} content={lpuName} />
                   )}
                   {false && (
                     <Form.Group widths="equal">
@@ -205,7 +206,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                         icon="lab"
                         value={department}
                         iconPosition="left"
-                        placeholder="Отделение"
+                        placeholder={t("department")}
                         onChange={this.handleChange}
                       />
                     </Form.Group>
@@ -219,7 +220,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                       error={!this.state.checkPass}
                       icon="lock"
                       iconPosition="left"
-                      placeholder="Пароль"
+                      placeholder={t("password")}
                       value={password}
                       type="password"
                       onChange={this.handleChange}
@@ -232,14 +233,14 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                       error={!this.state.checkPass}
                       icon="lock"
                       iconPosition="left"
-                      placeholder="Подтверждение пароля"
+                      placeholder={t("password_confirmation")}
                       value={confirm_password}
                       type="password"
                       onChange={this.handleChange}
                     />
                   </Form.Group>
                   <Message className="squared" size="tiny" hidden={!!this.state.filled && !!this.state.checkPass}>
-                    Пароль должен содержать не менее шести символов
+                  {t("password_six_characters")}
                   </Message>
                   <Button
                     disabled={!(this.state.filled && this.state.checkPass)}
@@ -248,12 +249,12 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                     color="grey"
                     onClick={this.handleSignup}
                   >
-                    Регистрация
+                    {t("registration")}
                   </Button>
                 </Segment>
               </Form>
               <Message className="squared">
-                Уже зарегистрированы? <RouterLink to="/login">Войти</RouterLink>
+              {t("already_registered")} <RouterLink to="/login">{t("login")}</RouterLink>
               </Message>
             </Segment>
           </Grid.Column>
@@ -268,11 +269,11 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
           // onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
           open={this.props.actions.signinForm.showUserAlreadyExistsDialog}
         >
-          <Modal.Header>Внимание!</Modal.Header>
+          <Modal.Header>{t("attention")}</Modal.Header>
           <Modal.Content>
             <Message warning>
               <Message.Header>
-                Вы уже зарегистрированы в системе! <br /> Перейдите на страницу авторизации.
+              {t("you_already_registered")} <br /> {t("go_to_login")}
               </Message.Header>
             </Message>
           </Modal.Content>
@@ -286,7 +287,7 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
                 this.props.actions.signinForm.email = "";
               }}
             >
-              Перейти
+              {t("jump")}
             </Button>
           </Modal.Actions>
         </Modal>
@@ -295,4 +296,4 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
   }
 }));
 
-export default Signup;
+export default withTranslation()(Signup);

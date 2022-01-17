@@ -15,7 +15,7 @@ import {
   Dimmer,
   Header,
 } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 // import _ from 'lodash';
 
 const Analogs = inject(
@@ -66,7 +66,7 @@ const Analogs = inject(
       };
 
       render() {
-        let { analogs, router } = this.props;
+        let { analogs, router,t } = this.props;
         let { opened } = this.state;
         let drugKey = router.values && router.values.page;
         let analogObj = analogs.analog.get(drugKey) || {};
@@ -138,7 +138,7 @@ const Analogs = inject(
                 <Dimmer active={true} inverted>
                   <Header as="h2" icon color="grey">
                     <Icon name="dont" />
-                    Нет аналогов
+                    {t("no_analogues")}
                   </Header>
                 </Dimmer>
               </Dimmer.Dimmable>
@@ -150,4 +150,4 @@ const Analogs = inject(
   )
 );
 
-export default Analogs;
+export default withTranslation()(Analogs);

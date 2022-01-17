@@ -3,7 +3,7 @@ import { observer, inject } from "mobx-react";
 
 import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Checkbox, Confirm } from "semantic-ui-react";
 import RouterLink from "../../router/a";
-
+import { withTranslation } from "react-i18next";
 import { LOGIN } from "../../constants";
 
 const Login = inject("router", "actions")(observer(class Login extends Component {
@@ -77,6 +77,7 @@ const Login = inject("router", "actions")(observer(class Login extends Component
       loginForm: { remember, email, password },
       projectTitle,
     } = this.props.actions;
+    const { t } = this.props;
     return (
       <div className="login-form height100perc">
         <Grid padded textAlign="center" style={{ height: "100%" }} verticalAlign="middle">
@@ -86,7 +87,7 @@ const Login = inject("router", "actions")(observer(class Login extends Component
                 {projectTitle}
               </Header>
               <Header as="h3" color="grey" textAlign="center">
-                Вход в систему
+                {t("login")}
               </Header>
               <Form size="large">
                 <Segment padded="very" className="no-border raised">
@@ -110,7 +111,7 @@ const Login = inject("router", "actions")(observer(class Login extends Component
                       value={password}
                       icon="lock"
                       iconPosition="left"
-                      placeholder="Пароль"
+                      placeholder={t("password")}
                       type="password"
                       onChange={this.handleChange}
                     />
@@ -122,7 +123,7 @@ const Login = inject("router", "actions")(observer(class Login extends Component
                       fluid
                       icon="key"
                       iconPosition="left"
-                      placeholder="Персональный ключ"
+                      placeholder={t("personal_key")}
                       onChange={this.handleChange}
                     />
                   )}
@@ -132,21 +133,21 @@ const Login = inject("router", "actions")(observer(class Login extends Component
                         value="remember"
                         name="remember"
                         checked={remember}
-                        label="Запомнить меня"
+                        label={t("remember_me")}
                         onChange={this.handleChecked}
                       />
                     </Form.Field>
                   )}
                   <Button loading={this.state.authPending} fluid size="huge" color="grey" onClick={this.handleLogin}>
-                    Вход
+                  {t("login")}
                   </Button>
                 </Segment>
               </Form>
               {!this.state.privateKeyOnly && (
                 <Message className="squared">
-                  Забыли пароль? <RouterLink to="/resetpass">Восстановить</RouterLink>. <br />
-                  <RouterLink to="/signup">Регистрация</RouterLink> в системе <br />
-                  <RouterLink to="/confirm">Подтвердить</RouterLink> E-mail
+                  {t("forgot_your_password")}? <RouterLink to="/resetpass">{t("restore")}</RouterLink>. <br />
+                  <RouterLink to="/signup">{t("registration")}</RouterLink> {t("in_system")} <br />
+                  <RouterLink to="/confirm">{t("confirm")}</RouterLink> E-mail
                 </Message>
               )}
             </Segment>
@@ -170,4 +171,4 @@ const Login = inject("router", "actions")(observer(class Login extends Component
   }
 }));
 
-export default Login;
+export default withTranslation()(Login);

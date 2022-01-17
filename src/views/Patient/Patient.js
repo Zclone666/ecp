@@ -24,7 +24,7 @@ import {
   Grid,
   Popup,
 } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const Patient = inject(
@@ -169,6 +169,7 @@ const Patient = inject(
         }
       }
       render() {
+        const { t } = this.props;
         let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
         let section = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
         let { step } = this.state;
@@ -203,31 +204,31 @@ const Patient = inject(
             {step === 0 && (
               <Menu className="bottom fixed menu two item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                  Назад
+                {t("back")}
                 </Menu.Item>
                 <Menu.Item as={RouterLink} to="/patient/new" onClick={() => this.clearPatient()}>
-                  Новый
+                {t("new")}
                 </Menu.Item>
               </Menu>
             )}
             {step === 1 && (
               <Menu className="bottom fixed menu three item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                  Назад
+                {t("back")}
                 </Menu.Item>
-                <Menu.Item onClick={() => this.saveForm(false)}>Применить</Menu.Item>
+                <Menu.Item onClick={() => this.saveForm(false)}>{t("apply")}</Menu.Item>
                 {/* <Menu.Item onClick={this.newPatient}>Сохранить</Menu.Item> */}
                 <Popup
                   disabled={!(!firstname || !lastname)}
                   position="top center"
-                  content="Заполните необходимые паспортные данные чтобы сохранить нового пациента"
+                  content={t("fill_passport_details")}
                   trigger={
                     <Menu.Item
                       onClick={this.savePatient}
                       isLoading={this.state.pending}
                       disabled={!firstname || !lastname}
                     >
-                      Сохранить
+                      {t("save")}
                     </Menu.Item>
                   }
                 />
@@ -236,10 +237,10 @@ const Patient = inject(
             {step === 2 && (
               <Menu className="bottom fixed menu two item huge main">
                 <Menu.Item color="red" onClick={this.back}>
-                  Отмена
+                {t("main_parser_cancel")}
                 </Menu.Item>
                 <Menu.Item isLoading={this.state.pending} onClick={this.savePatient} disabled={!firstname || !lastname}>
-                  Сохранить
+                {t("save")}
                 </Menu.Item>
               </Menu>
             )}
@@ -262,4 +263,4 @@ const Patient = inject(
   )
 );
 
-export default Patient;
+export default withTranslation()(Patient);

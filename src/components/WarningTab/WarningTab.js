@@ -2,6 +2,7 @@ import React, { Component, Fragment, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
 import { Segment, List, Message, Header, Icon, Popup, Divider } from "semantic-ui-react";
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const WarningTab = inject(
@@ -68,7 +69,7 @@ const WarningTab = inject(
           drugs: { drug, selectedRows },
           warnings: { info, warningInfo },
           router: { values },
-          tab,
+          tab,t
         } = this.props;
 
         const getDrug = (item) => {
@@ -243,13 +244,13 @@ const WarningTab = inject(
             <Segment vertical>
               {firstDrugInstruction && (
                 <Segment basic>
-                  <Header as="h3">{getDrug(arr.first[0]).name}. Инструкция:</Header>
+                  <Header as="h3">{getDrug(arr.first[0]).name}. {t("instruction")}:</Header>
                   <div dangerouslySetInnerHTML={{ __html: firstDrugInstruction }}></div>
                 </Segment>
               )}
               {secondDrugInstruction && (
                 <Segment basic>
-                  <Header as="h3">{getDrug(arr.last[0]).name}. Инструкция:</Header>
+                  <Header as="h3">{getDrug(arr.last[0]).name}. {t("instruction")}:</Header>
                   <div dangerouslySetInnerHTML={{ __html: secondDrugInstruction }}></div>
                 </Segment>
               )}
@@ -261,4 +262,4 @@ const WarningTab = inject(
   )
 );
 
-export default WarningTab;
+export default withTranslation()(WarningTab);

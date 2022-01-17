@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Segment, Header, Menu, Container } from 'semantic-ui-react';
+import { withTranslation } from "react-i18next";
 
 const LicenseAgreement = inject('actions', 'router')(observer(class LicenseAgreement extends Component {
   render() {
     const {
-      actions: { buttonTexts },
+      actions: { buttonTexts },t
     } = this.props;
 
     const texts = buttonTexts ? buttonTexts.text : null;
@@ -20,11 +21,11 @@ const LicenseAgreement = inject('actions', 'router')(observer(class LicenseAgree
         
       </Segment>
       <Menu className="bottom fixed menu one item huge main">
-          <Menu.Item onClick={() => this.props.router.push('/')}>Назад</Menu.Item>
+          <Menu.Item onClick={() => this.props.router.push('/')}>{t("back")}</Menu.Item>
         </Menu>
       </Container>      
     );
   }
 }));
 
-export default LicenseAgreement;
+export default withTranslation()(LicenseAgreement);

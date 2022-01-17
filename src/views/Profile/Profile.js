@@ -7,7 +7,7 @@ import Spinner from "../../components/Spinner";
 import Slider from "react-slick";
 
 import { Menu, Icon, Segment, List, Divider, Button, Form, Header, Input } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const Profile = inject("router", "db", "actions", "patients")(observer(class Profile extends Component {
@@ -43,7 +43,7 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
   render() {
     const { id, fio, firstname, lastname, patronymic, sex, snils, diploms, licenses, emails, phone } =
       this.props.actions.profile;
-
+      const { t } = this.props;
     let email = (emails.length > 0 && emails[0]) || "";
 
     const settings = {
@@ -60,10 +60,10 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
       <div className="h100">
         <Menu className="bottom fixed menu two item huge main">
           <Menu.Item color="red" onClick={this.back}>
-            Назад
+          {t("back")}
           </Menu.Item>
           <Menu.Item disabled onClick={this.savePatient}>
-            Сохранить
+          {t("save")}
           </Menu.Item>
         </Menu>
 
@@ -78,7 +78,7 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
               <Divider horizontal fitted />
               <Form.Group widths={2}>
                 <Form.Field>
-                  <label>Имя</label>
+                  <label>{t("first_name")}</label>
                   <Input
                     size="big"
                     name="firstname"
@@ -88,7 +88,7 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
                   />
                 </Form.Field>
                 <Form.Field>
-                  <label>Фамилия</label>
+                  <label>{t("last_name")}</label>
                   <Input
                     size="big"
                     name="lastname"
@@ -100,7 +100,7 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
               </Form.Group>
               <Form.Group widths={2}>
                 <Form.Field>
-                  <label>Отчество</label>
+                  <label>{t("middle_name")}</label>
                   <Input
                     size="big"
                     name="patronymic"
@@ -110,13 +110,13 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
                   />
                 </Form.Field>
                 <Form.Field>
-                  <label>Пол</label>
+                  <label>{t("sex")}</label>
                   <Button.Group size="big" fluid>
                     <Button primary={sex === "male"} onClick={this.handleChange} name="sex" value="male">
-                      Мужчина
+                    {t("male")}
                     </Button>
                     <Button primary={sex === "female"} onClick={this.handleChange} name="sex" value="female">
-                      Женщина
+                    {t("female")}
                     </Button>
                   </Button.Group>
                 </Form.Field>
@@ -151,7 +151,7 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
                   return (
                     <List.Item key={"analog" + i} onClick={() => this.delete("diploms", i)}>
                       <List.Content floated="right">
-                        <Button>Удалить</Button>
+                        <Button>{t("delete")}</Button>
                       </List.Content>
                       <List.Icon name="id badge" verticalAlign="middle" />
                       <List.Content className="large">
@@ -169,7 +169,7 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
                   return (
                     <List.Item key={"analog" + i} onClick={() => this.delete("diploms", i)}>
                       <List.Content floated="right">
-                        <Button>Удалить</Button>
+                        <Button>{t("delete")}</Button>
                       </List.Content>
                       <List.Icon name="file alternate" verticalAlign="middle" />
                       <List.Content className="large">
@@ -187,4 +187,4 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
   }
 }));
 
-export default Profile;
+export default withTranslation()(Profile);

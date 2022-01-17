@@ -10,7 +10,7 @@ import Search from "../../components/Search";
 import Drugs from "../../components/Drugs";
 
 import PatientPassport from "../Patient/PatientPassport";
-
+import { withTranslation } from "react-i18next";
 import moment from "moment";
 import _ from "lodash";
 
@@ -235,7 +235,7 @@ const Prescript = inject(
           },
           patients: { current: patient },
           recipes: { code },
-          tools: { searchReady, searchClinicRows },
+          tools: { searchReady, searchClinicRows },t
         } = this.props;
 
         doctor = doctor || doc.name;
@@ -248,10 +248,10 @@ const Prescript = inject(
           <>
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-                Назад
+              {t("back")}
               </Menu.Item>
               <Menu.Item disabled={!isPrescriptFilled} onClick={this.save}>
-                Назначить
+              {t("main_drugs_prescribe")}
               </Menu.Item>
             </Menu>
 
@@ -265,7 +265,7 @@ const Prescript = inject(
 
                   <Form.Group>
                     <Form.Field width={16}>
-                      <label>Пациент</label>
+                      <label>{t("patient")}</label>
                       <Search
                         fluid
                         size="big"
@@ -288,7 +288,7 @@ const Prescript = inject(
                         onClose={() => this.setOpen(false)}
                         onOpen={() => this.setOpen(true)}
                         open={open}
-                        trigger={<Button>Добавить</Button>}
+                        trigger={<Button>{t("add")}</Button>}
                       >
                         <Modal.Header>Создать пациента</Modal.Header>
                         <Modal.Content>
@@ -296,7 +296,7 @@ const Prescript = inject(
                         </Modal.Content>
                         <Modal.Actions>
                           <Button color="black" onClick={() => this.setOpen(false)}>
-                            Отмена
+                          {t("main_parser_cancel")}
                           </Button>
                           <Button
                             content="Создать"
@@ -343,4 +343,4 @@ const Prescript = inject(
   )
 );
 
-export default Prescript;
+export default withTranslation()(Prescript);

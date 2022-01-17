@@ -7,7 +7,7 @@ import Spinner from "../../components/Spinner";
 import Slider from "react-slick";
 
 import { Menu, Icon, Segment, List, Divider, Button, Form, Header, Input, Checkbox } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const Settings = inject(
@@ -58,14 +58,14 @@ const Settings = inject(
 
       render() {
         const { zhnvlp_fed, zhnvlp_reg, protocol, rf_ban } = this.state; //this.props.actions.profile.settings || {};
-
+        const { t } = this.props;
         return (
           <div className="h100">
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-                Назад
+              {t("back")}
               </Menu.Item>
-              <Menu.Item onClick={this.saveSettings}>Сохранить</Menu.Item>
+              <Menu.Item onClick={this.saveSettings}>{t("save")}</Menu.Item>
             </Menu>
 
             <div className="scrollwrapper bottomMenu">
@@ -73,7 +73,7 @@ const Settings = inject(
                 <Form>
                   <Form.Group>
                     <Form.Field>
-                      <Header as="h2" content={"Настройки"} subheader={"Установите параметры вывода"} />
+                      <Header as="h2" content={t("main_menu_settings")} subheader={t("set_output_options")} />
                     </Form.Field>
                   </Form.Group>
                   <Divider horizontal />
@@ -84,7 +84,7 @@ const Settings = inject(
                         name="zhnvlp_fed"
                         checked={!!zhnvlp_fed}
                         slider
-                        label="ЖНВЛП федеральный список"
+                        label={t("federal_list")}
                       />
                     </Form.Field>
                     <Form.Field>
@@ -104,7 +104,7 @@ const Settings = inject(
                         name="protocol"
                         checked={!!protocol}
                         slider
-                        label="Протокол"
+                        label={t("protocol")}
                       />
                     </Form.Field>
                     <Form.Field>
@@ -113,7 +113,7 @@ const Settings = inject(
                         name="rf_ban"
                         checked={!!rf_ban}
                         slider
-                        label="Не разрешено на территории РФ"
+                        label={t("not_allowed_rf")}
                       />
                     </Form.Field>
                   </Form.Group>
@@ -127,4 +127,4 @@ const Settings = inject(
   )
 );
 
-export default Settings;
+export default withTranslation()(Settings);

@@ -6,7 +6,7 @@ import { useDrag } from "react-dnd";
 import RouterLink from "../../router/a";
 
 import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown, Visibility } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 import moment from "moment";
@@ -153,7 +153,7 @@ const Drug = inject(
           style,
           minus,
           onRemove,
-          canDrag,
+          canDrag,t
         } = this.props;
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
@@ -238,7 +238,7 @@ const Drug = inject(
 
                 {!disabled && (
                   <Popup
-                    content="Аналоги"
+                    content={t("analogues")}
                     trigger={
                       <Button
                         disabled={drug.group !== 0}
@@ -254,7 +254,7 @@ const Drug = inject(
                 )}
                 {!disabled && (
                   <Popup
-                    content="Удалить"
+                    content={t("delete")}
                     trigger={
                       <Button icon onClick={this.unselectDrug}>
                         <Icon name="delete" />
@@ -414,13 +414,13 @@ const Drug = inject(
                       as={RouterLink}
                       to={`/analog/${drug.key}`}
                       onClick={this.getAnalog}
-                      text="Аналоги"
+                      text={t("analogues")}
                     />
                     <Dropdown.Item
                       icon="ellipsis horizontal"
                       as={RouterLink}
                       to={`/druginfo/${drug.key}`}
-                      text="Подробнее"
+                      text={t("more")}
                       onClick={this.getInfo}
                     />
                     <Dropdown.Item icon="delete" onClick={this.unselectDrug} text="Убрать из списка" />
@@ -447,4 +447,4 @@ const Drug = inject(
   )
 );
 
-export default Drug;
+export default withTranslation()(Drug);

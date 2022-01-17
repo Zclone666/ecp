@@ -10,7 +10,7 @@ import Analogs from '../../components/Analogs'
 import {
   Menu
 } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import _ from 'lodash';
 
 const Analog = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(class Analog extends Component {
@@ -43,12 +43,12 @@ const Analog = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(c
   };
 
   render() {
-
+    const { t } = this.props;
     return (
       <>
         <Menu className="bottom fixed menu two item huge main">
           <Menu.Item color='red' onClick={this.back}>
-            Назад
+          {t("back")}
           </Menu.Item>
         </Menu>
 
@@ -64,4 +64,4 @@ const Analog = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(c
   }
 }));
 
-export default Analog
+export default withTranslation()(Analog)

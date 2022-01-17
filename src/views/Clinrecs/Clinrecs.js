@@ -18,6 +18,7 @@ import {
   // Responsive,
   // Grid
 } from "semantic-ui-react";
+import { withTranslation } from "react-i18next";
 
 import _ from "lodash";
 
@@ -96,7 +97,7 @@ const Clinrecs = inject("router", "db", "actions", "drugs", "warnings", "clinrec
     let {
       // router: { values },
       clinrecs: { checker },
-      actions: { clinrecCheckerStep },
+      actions: { clinrecCheckerStep },t
     } = this.props;
     let { hasForward, hasBackward } = this.state;
     let currPage = checker[_.keys(checker)[clinrecCheckerStep - 1]] || {};
@@ -105,25 +106,25 @@ const Clinrecs = inject("router", "db", "actions", "drugs", "warnings", "clinrec
       <>
         <Menu className="bottom fixed menu three item huge main">
           <Menu.Item color="red" onClick={this.home}>
-            Отмена
+          {t("main_parser_cancel")}
           </Menu.Item>
           <Menu.Item disabled={!hasBackward} onClick={this.backward}>
-            Назад
+          {t("back")}
           </Menu.Item>
           {hasForward && (
             // <Menu.Item disabled={!currPage.isReady} onClick={this.forward}>
             //   Далее
             // </Menu.Item>
             <Menu.Item disabled={false} onClick={this.forward}>
-              Далее
+              {t("next")}
             </Menu.Item>
           )}
           {!hasForward && !haveResult && (
             <Menu.Item disabled={!currPage.isReady} as={RouterLink} to={"/clinrec/checker/result"}>
-              Результат
+              {t("result")}
             </Menu.Item>
           )}
-          {!hasForward && haveResult && <Menu.Item onClick={this.setClinrec}>Применить</Menu.Item>}
+          {!hasForward && haveResult && <Menu.Item onClick={this.setClinrec}>{t("apply")}</Menu.Item>}
         </Menu>
 
         <div className="scrollwrapper bottomMenu" style={{ overflow: "hidden" }}>
@@ -134,4 +135,4 @@ const Clinrecs = inject("router", "db", "actions", "drugs", "warnings", "clinrec
   }
 }));
 
-export default Clinrecs;
+export default withTranslation()(Clinrecs);
