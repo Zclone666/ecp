@@ -200,8 +200,6 @@ const resources = {
       speed_administration: "Скорость введения",
       duration_administration: "Длительность введения",
 
-
-
       // protocol_request_error: "Возникла ошибка запроса протокола."
 
       //  'day', 'день', 
@@ -212,14 +210,13 @@ const resources = {
       //  'of_the_year','года', 
       //  'years', 'лет',
 
-      //  'month', 'месяц', 
-      //  'month',  'месяца', 
+      //  'month', 'месяц',
+      //  'month',  'месяца',
       //  'months', 'месяцев',
 
-      //  'a_week','неделя', 
-      //  'weeks', 'недели', 
-      //  'week', 'недель', 
-
+      //  'a week','неделя',
+      //  'weeks', 'недели',
+      //  'weeks', 'недель',
     },
   },
 };
@@ -233,5 +230,7 @@ i18n
       escapeValue: false, // react already safes from xss
     },
   });
+
+i18n.res = resources.ru.translation;
 
 export default i18n;

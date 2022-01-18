@@ -9,291 +9,305 @@ import RouterLink from "../../router/a";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
-const Signup = inject("router", "db", "actions", "tools")(observer(class Signup extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      confirm_password: "",
-      checkPass: true,
-      filled: false,
-      search_clinic: "",
-    };
-  }
-  handleSignup = (e) => {
-    e.preventDefault();
-
-    this.props.actions.signin();
-  };
-  handleCheck = async (e) => {
-    let { name, value } = e.target;
-    if (name == "email") {
-      this.props.actions.checkUserUmkb();
-    }
-  };
-  handleChange = async (e) => {
-    let { name, value } = e.target;
-
-    if (name === "confirm_password") {
-      await this.setState({ confirm_password: value });
-    } else {
-      this.props.actions.signinForm[name] = value;
-    }
-
-    let filled =
-      this.props.actions.signinForm.email &&
-      this.props.actions.signinForm.email.length > 5 &&
-      this.props.actions.signinForm.password &&
-      this.props.actions.signinForm.password.length > 4 &&
-      // this.props.actions.signinForm.clinicEncryptedId &&
-      // this.props.actions.signinForm.clinicEncryptedId.length > 4 &&
-      this.state.confirm_password &&
-      this.state.confirm_password.length > 4;
-    this.setState({ filled: filled });
-
-    if (filled && (name === "confirm_password" || name === "password")) {
-      this.setState({ checkPass: this.props.actions.signinForm.password === this.state.confirm_password });
-    }
-  };
-
-  handleResultSelect = async (e, { name, result }) => {
-    // console.log({ name, result });
-    //let newName = name === 'co_disease' ? 'disease' : name
-    // this.props.actions.signinForm.relationCode = result.id;
-    this.handleChange({ target: { name: "clinicEncryptedId", value: result.id } });
-    this.handleChange({ target: { name: "lpuName", value: result.description } });
-    this.setState({ [`search_clinic`]: "" });
-  };
-
-  handleResultUnselect = () => {
-    this.props.actions.signinForm.clinicEncryptedId = null;
-    this.props.actions.signinForm.lpuName = null;
-    this.setState({ filled: false });
-  };
-
-  handleSearchChange = (e, { name, value }) => {
-    this.setState({ [`search_clinic`]: value });
-    if (value.length > 1) {
-      this.props.tools.searchReady = false;
-      this.props.tools.searchClinic(value);
-    }
-  };
-
-  get listSearch() {
-    let arr = [];
-    this.props.tools.searchClinicRows.forEach((item, i) => {
-      if (item.name) {
-        arr.push({
-          id: item.id,
-          key: i,
-          title: "",
-          // title: "Клиника", //item.name,
-          // price: moment(item.birthdate, "x").format("DD.MM.YYYY"),
-          description: item.name,
-        });
+const Signup = inject(
+  "router",
+  "db",
+  "actions",
+  "tools"
+)(
+  observer(
+    class Signup extends Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          confirm_password: "",
+          checkPass: true,
+          filled: false,
+          search_clinic: "",
+        };
       }
-    });
-    return arr;
-  }
+      handleSignup = (e) => {
+        e.preventDefault();
 
-  render() {
-    let {
-      projectTitle,
-      signinForm: {
-        isEmailReg,
-        email,
-        password,
-        lastName,
-        firstName,
-        middleName,
-        lpuName,
-        department,
-        clinicEncryptedId,
-      },t
-    } = this.props.actions;
-    let { confirm_password, filled, checkPass, search_clinic } = this.state;
-    let canInputPass = email.length > 1 && isEmailReg;
-    let { searchReady, searchClinicRows } = this.props.tools;
- 
-    // console.log({isEmailReg, email});
-    //relationCode
-    return (
-      <div className="login-form height100perc">
-        <Grid padded textAlign="center" style={{ height: "100%" }} verticalAlign="middle">
-          <Grid.Column style={{ maxWidth: 650 }}>
-            <Segment basic>
-              <Header as="h2" color="grey" textAlign="center">
-                {projectTitle}
-              </Header>
-              <Header as="h3" color="grey" textAlign="center">
-              {t("registration")}
-              </Header>
-              <Form size="large" onSubmit={this.handleSignup}>
-                <Segment padded="very" className="no-border raised">
-                  <Form.Group widths="equal">
-                    <Form.Input
-                      size="large"
-                      name="email"
-                      fluid
-                      icon="mail"
-                      value={email}
-                      iconPosition="left"
-                      placeholder="E-mail"
-                      onBlur={this.handleCheck}
-                      onChange={this.handleChange}
-                    />
-                    <Form.Input
-                      size="large"
-                      name="firstName"
-                      fluid
-                      icon="user"
-                      value={firstName}
-                      iconPosition="left"
-                      placeholder={t("first_name")}
-                      onChange={this.handleChange}
-                    />
-                  </Form.Group>
-                  <Form.Group widths="equal">
-                    <Form.Input
-                      size="large"
-                      name="middleName"
-                      fluid
-                      icon="user"
-                      value={middleName}
-                      iconPosition="left"
-                      placeholder={t("middle_name")}
-                      onChange={this.handleChange}
-                    />
-                    <Form.Input
-                      size="large"
-                      name="lastName"
-                      fluid
-                      icon="user"
-                      value={lastName}
-                      iconPosition="left"
-                      placeholder={t("last_name")}
-                      onChange={this.handleChange}
-                    />
-                  </Form.Group>
-                  {false && (
-                    <Form.Group widths="equal">
-                      <Form.Field width={16}>
-                        <Search
-                          fluid
-                          size="big"
-                          name="clinic"
-                          placeholder={t("enter_name_clinic")}
-                          loading={!searchReady}
-                          onResultSelect={this.handleResultSelect}
-                          onSearchChange={_.debounce(this.handleSearchChange, 500, {
-                            leading: true,
-                          })}
-                          results={this.listSearch}
-                          value={search_clinic}
-                          resultClassName="result-wrapper"
-                        />
-                      </Form.Field>
-                    </Form.Group>
-                  )}
-                  {false && lpuName && lpuName.length > 0 && (
-                    <Message onDismiss={this.handleResultUnselect} header={t("clinic_selected")} content={lpuName} />
-                  )}
-                  {false && (
-                    <Form.Group widths="equal">
-                      <Form.Input
-                        size="large"
-                        name="department"
-                        fluid
-                        icon="lab"
-                        value={department}
-                        iconPosition="left"
-                        placeholder={t("department")}
-                        onChange={this.handleChange}
-                      />
-                    </Form.Group>
-                  )}
-                  <Form.Group widths="equal">
-                    <Form.Input
-                      size="large"
-                      name="password"
-                      fluid
-                      disabled={!canInputPass}
-                      error={!this.state.checkPass}
-                      icon="lock"
-                      iconPosition="left"
-                      placeholder={t("password")}
-                      value={password}
-                      type="password"
-                      onChange={this.handleChange}
-                    />
-                    <Form.Input
-                      size="large"
-                      name="confirm_password"
-                      fluid
-                      disabled={!canInputPass}
-                      error={!this.state.checkPass}
-                      icon="lock"
-                      iconPosition="left"
-                      placeholder={t("password_confirmation")}
-                      value={confirm_password}
-                      type="password"
-                      onChange={this.handleChange}
-                    />
-                  </Form.Group>
-                  <Message className="squared" size="tiny" hidden={!!this.state.filled && !!this.state.checkPass}>
-                  {t("password_six_characters")}
-                  </Message>
-                  <Button
-                    disabled={!(this.state.filled && this.state.checkPass)}
-                    fluid
-                    size="large"
-                    color="grey"
-                    onClick={this.handleSignup}
-                  >
+        this.props.actions.signin();
+      };
+      handleCheck = async (e) => {
+        let { name, value } = e.target;
+        if (name == "email") {
+          this.props.actions.checkUserUmkb();
+        }
+      };
+      handleChange = async (e) => {
+        let { name, value } = e.target;
+
+        if (name === "confirm_password") {
+          await this.setState({ confirm_password: value });
+        } else {
+          this.props.actions.signinForm[name] = value;
+        }
+
+        let filled =
+          this.props.actions.signinForm.email &&
+          this.props.actions.signinForm.email.length > 5 &&
+          this.props.actions.signinForm.password &&
+          this.props.actions.signinForm.password.length > 4 &&
+          // this.props.actions.signinForm.clinicEncryptedId &&
+          // this.props.actions.signinForm.clinicEncryptedId.length > 4 &&
+          this.state.confirm_password &&
+          this.state.confirm_password.length > 4;
+        this.setState({ filled: filled });
+
+        if (filled && (name === "confirm_password" || name === "password")) {
+          this.setState({ checkPass: this.props.actions.signinForm.password === this.state.confirm_password });
+        }
+      };
+
+      handleResultSelect = async (e, { name, result }) => {
+        // console.log({ name, result });
+        //let newName = name === 'co_disease' ? 'disease' : name
+        // this.props.actions.signinForm.relationCode = result.id;
+        this.handleChange({ target: { name: "clinicEncryptedId", value: result.id } });
+        this.handleChange({ target: { name: "lpuName", value: result.description } });
+        this.setState({ [`search_clinic`]: "" });
+      };
+
+      handleResultUnselect = () => {
+        this.props.actions.signinForm.clinicEncryptedId = null;
+        this.props.actions.signinForm.lpuName = null;
+        this.setState({ filled: false });
+      };
+
+      handleSearchChange = (e, { name, value }) => {
+        this.setState({ [`search_clinic`]: value });
+        if (value.length > 1) {
+          this.props.tools.searchReady = false;
+          this.props.tools.searchClinic(value);
+        }
+      };
+
+      get listSearch() {
+        let arr = [];
+        this.props.tools.searchClinicRows.forEach((item, i) => {
+          if (item.name) {
+            arr.push({
+              id: item.id,
+              key: i,
+              title: "",
+              // title: "Клиника", //item.name,
+              // price: moment(item.birthdate, "x").format("DD.MM.YYYY"),
+              description: item.name,
+            });
+          }
+        });
+        return arr;
+      }
+
+      render() {
+        let {
+          projectTitle,
+          signinForm: {
+            isEmailReg,
+            email,
+            password,
+            lastName,
+            firstName,
+            middleName,
+            lpuName,
+            department,
+            clinicEncryptedId,
+          },
+        } = this.props.actions;
+        let { confirm_password, filled, checkPass, search_clinic } = this.state;
+        let canInputPass = email.length > 1 && isEmailReg;
+        let { searchReady, searchClinicRows } = this.props.tools;
+
+        const { t } = this.props.actions;
+        // console.log({isEmailReg, email});
+        //relationCode
+        return (
+          <div className="login-form height100perc">
+            <Grid padded textAlign="center" style={{ height: "100%" }} verticalAlign="middle">
+              <Grid.Column style={{ maxWidth: 650 }}>
+                <Segment basic>
+                  <Header as="h2" color="grey" textAlign="center">
+                    {projectTitle}
+                  </Header>
+                  <Header as="h3" color="grey" textAlign="center">
                     {t("registration")}
-                  </Button>
+                  </Header>
+                  <Form size="large" onSubmit={this.handleSignup}>
+                    <Segment padded="very" className="no-border raised">
+                      <Form.Group widths="equal">
+                        <Form.Input
+                          size="large"
+                          name="email"
+                          fluid
+                          icon="mail"
+                          value={email}
+                          iconPosition="left"
+                          placeholder="E-mail"
+                          onBlur={this.handleCheck}
+                          onChange={this.handleChange}
+                        />
+                        <Form.Input
+                          size="large"
+                          name="firstName"
+                          fluid
+                          icon="user"
+                          value={firstName}
+                          iconPosition="left"
+                          placeholder={t("first_name")}
+                          onChange={this.handleChange}
+                        />
+                      </Form.Group>
+                      <Form.Group widths="equal">
+                        <Form.Input
+                          size="large"
+                          name="middleName"
+                          fluid
+                          icon="user"
+                          value={middleName}
+                          iconPosition="left"
+                          placeholder={t("middle_name")}
+                          onChange={this.handleChange}
+                        />
+                        <Form.Input
+                          size="large"
+                          name="lastName"
+                          fluid
+                          icon="user"
+                          value={lastName}
+                          iconPosition="left"
+                          placeholder={t("last_name")}
+                          onChange={this.handleChange}
+                        />
+                      </Form.Group>
+                      {false && (
+                        <Form.Group widths="equal">
+                          <Form.Field width={16}>
+                            <Search
+                              fluid
+                              size="big"
+                              name="clinic"
+                              placeholder={t("enter_name_clinic")}
+                              loading={!searchReady}
+                              onResultSelect={this.handleResultSelect}
+                              onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                                leading: true,
+                              })}
+                              results={this.listSearch}
+                              value={search_clinic}
+                              resultClassName="result-wrapper"
+                            />
+                          </Form.Field>
+                        </Form.Group>
+                      )}
+                      {false && lpuName && lpuName.length > 0 && (
+                        <Message
+                          onDismiss={this.handleResultUnselect}
+                          header={t("clinic_selected")}
+                          content={lpuName}
+                        />
+                      )}
+                      {false && (
+                        <Form.Group widths="equal">
+                          <Form.Input
+                            size="large"
+                            name="department"
+                            fluid
+                            icon="lab"
+                            value={department}
+                            iconPosition="left"
+                            placeholder={t("department")}
+                            onChange={this.handleChange}
+                          />
+                        </Form.Group>
+                      )}
+                      <Form.Group widths="equal">
+                        <Form.Input
+                          size="large"
+                          name="password"
+                          fluid
+                          disabled={!canInputPass}
+                          error={!this.state.checkPass}
+                          icon="lock"
+                          iconPosition="left"
+                          placeholder={t("password")}
+                          value={password}
+                          type="password"
+                          onChange={this.handleChange}
+                        />
+                        <Form.Input
+                          size="large"
+                          name="confirm_password"
+                          fluid
+                          disabled={!canInputPass}
+                          error={!this.state.checkPass}
+                          icon="lock"
+                          iconPosition="left"
+                          placeholder={t("password_confirmation")}
+                          value={confirm_password}
+                          type="password"
+                          onChange={this.handleChange}
+                        />
+                      </Form.Group>
+                      <Message className="squared" size="tiny" hidden={!!this.state.filled && !!this.state.checkPass}>
+                        {t("password_six_characters")}
+                      </Message>
+                      <Button
+                        disabled={!(this.state.filled && this.state.checkPass)}
+                        fluid
+                        size="large"
+                        color="grey"
+                        onClick={this.handleSignup}
+                      >
+                        {t("registration")}
+                      </Button>
+                    </Segment>
+                  </Form>
+                  <Message className="squared">
+                    {t("already_registered")} <RouterLink to="/login">{t("login")}</RouterLink>
+                  </Message>
                 </Segment>
-              </Form>
-              <Message className="squared">
-              {t("already_registered")} <RouterLink to="/login">{t("login")}</RouterLink>
-              </Message>
-            </Segment>
-          </Grid.Column>
-        </Grid>
-        <Modal
-          size={"tiny"}
-          closeOnEscape={true}
-          closeOnDimmerClick={true}
-          onClose={() => {
-            this.props.actions.signinForm.showUserAlreadyExistsDialog = false;
-          }}
-          // onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
-          open={this.props.actions.signinForm.showUserAlreadyExistsDialog}
-        >
-          <Modal.Header>{t("attention")}</Modal.Header>
-          <Modal.Content>
-            <Message warning>
-              <Message.Header>
-              {t("you_already_registered")} <br /> {t("go_to_login")}
-              </Message.Header>
-            </Message>
-          </Modal.Content>
-          <Modal.Actions>
-            <Button
-              // color="black"
-              onClick={() => {
+              </Grid.Column>
+            </Grid>
+            <Modal
+              size={"tiny"}
+              closeOnEscape={true}
+              closeOnDimmerClick={true}
+              onClose={() => {
                 this.props.actions.signinForm.showUserAlreadyExistsDialog = false;
-                this.props.router.push("/login");
-                // this.loginForm.email = this.signinForm.email;
-                this.props.actions.signinForm.email = "";
               }}
+              // onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
+              open={this.props.actions.signinForm.showUserAlreadyExistsDialog}
             >
-              {t("jump")}
-            </Button>
-          </Modal.Actions>
-        </Modal>
-      </div>
-    );
-  }
-}));
+              <Modal.Header>{t("attention")}</Modal.Header>
+              <Modal.Content>
+                <Message warning>
+                  <Message.Header>
+                    {t("you_already_registered")} <br /> {t("go_to_login")}
+                  </Message.Header>
+                </Message>
+              </Modal.Content>
+              <Modal.Actions>
+                <Button
+                  // color="black"
+                  onClick={() => {
+                    this.props.actions.signinForm.showUserAlreadyExistsDialog = false;
+                    this.props.router.push("/login");
+                    // this.loginForm.email = this.signinForm.email;
+                    this.props.actions.signinForm.email = "";
+                  }}
+                >
+                  {t("jump")}
+                </Button>
+              </Modal.Actions>
+            </Modal>
+          </div>
+        );
+      }
+    }
+  )
+);
 
 export default withTranslation()(Signup);

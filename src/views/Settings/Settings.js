@@ -63,7 +63,7 @@ const Settings = inject(
           <div className="h100">
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-              {t("back")}
+                {t("back")}
               </Menu.Item>
               <Menu.Item onClick={this.saveSettings}>{t("save")}</Menu.Item>
             </Menu>

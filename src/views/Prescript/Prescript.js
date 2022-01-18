@@ -235,8 +235,9 @@ const Prescript = inject(
           },
           patients: { current: patient },
           recipes: { code },
-          tools: { searchReady, searchClinicRows },t
+          tools: { searchReady, searchClinicRows },
         } = this.props;
+        const { t } = this.props.actions;
 
         doctor = doctor || doc.name;
 
@@ -248,10 +249,10 @@ const Prescript = inject(
           <>
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-              {t("back")}
+                {t("back")}
               </Menu.Item>
               <Menu.Item disabled={!isPrescriptFilled} onClick={this.save}>
-              {t("main_drugs_prescribe")}
+                {t("main_drugs_prescribe")}
               </Menu.Item>
             </Menu>
 
@@ -296,7 +297,7 @@ const Prescript = inject(
                         </Modal.Content>
                         <Modal.Actions>
                           <Button color="black" onClick={() => this.setOpen(false)}>
-                          {t("main_parser_cancel")}
+                            {t("main_parser_cancel")}
                           </Button>
                           <Button
                             content={t("create")}

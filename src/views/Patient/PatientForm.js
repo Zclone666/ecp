@@ -365,7 +365,7 @@ const PatientForm = inject(
                 <Form.Field>
                   <label>{t("sex")}</label>
                   <Button.Group size="big">
-                    <Button primary={sex === "male"} onClick={this.handleChange} name="sex" value="male">                     
+                    <Button primary={sex === "male"} onClick={this.handleChange} name="sex" value="male">
                       {t("male")}
                     </Button>
                     <Button primary={sex === "female"} onClick={this.handleChange} name="sex" value="female">
@@ -701,7 +701,7 @@ const PatientForm = inject(
                   <Form.Field>
                     <Button.Group size="big" fluid>
                       <Button disabled active>
-                      {t("trimester")}
+                        {t("trimester")}
                       </Button>
                       <Button
                         primary={trimester == 1}
@@ -824,7 +824,7 @@ const PatientForm = inject(
                   <Form.Field>
                     <Button.Group size="big" fluid>
                       <Button disabled active>
-                      {t("trimester")}
+                        {t("trimester")}
                       </Button>
                       <Button
                         primary={trimester == 1}
@@ -871,7 +871,7 @@ const PatientForm = inject(
                           value: i + 1,
                         };
                       })}
-                      text={t("week")+" " + (gestation || "")}
+                      text={t("week") + " " + (gestation || "")}
                     />
                   </Form.Field>
                 </Responsive>
@@ -945,7 +945,7 @@ const PatientForm = inject(
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ showProtocol: false })}>
-                {t("close")}
+                  {t("close")}
                 </Button>
               </Modal.Actions>
             </Modal>
