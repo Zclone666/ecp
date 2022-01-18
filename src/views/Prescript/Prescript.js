@@ -214,9 +214,7 @@ const Prescript = inject(
             arr.push({
               id: item.id,
               key: i,
-              title: "",
-              // title: "Клиника", //item.name,
-              // price: moment(item.birthdate, "x").format("DD.MM.YYYY"),
+              title: "",         
               description: item.name,
             });
           }
@@ -271,7 +269,7 @@ const Prescript = inject(
                         fluid
                         size="big"
                         name="patient"
-                        placeholder="Введите имя пациента"
+                        placeholder={t("patinet_card_name_patient")}
                         loading={!searchReady}
                         onResultSelect={this.handlePatientResultSelect}
                         onSearchChange={_.debounce(this.handlePatientSearchChange, 500, {
@@ -325,7 +323,7 @@ const Prescript = inject(
                       fluid
                       size="big"
                       name="clinic"
-                      placeholder="Введите наименование вашей клиники"
+                      placeholder={t("enter_name_clinic")}
                       loading={!searchReady}
                       onResultSelect={this.handleResultSelect}
                       onSearchChange={this.handleSearchChange}

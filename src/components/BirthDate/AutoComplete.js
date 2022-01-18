@@ -110,7 +110,8 @@ class AutoComplete extends Component {
   }
   render() {
     const { isLoading, searchQuery, results } = this.state
-    const { value,t } = this.props
+    const { value } = this.props
+    const { t } = this.props.actions
     return (
       <MySearch
         size='big'

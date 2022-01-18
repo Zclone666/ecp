@@ -502,14 +502,14 @@ const Recipe = inject(
                     )}
                     {tags.includes("CategoryCode") && (
                       <Form.Field>
-                        <label>Код категории граждан</label>
+                        <label>{t("code_category_code")}</label>
                         <Input name="citizenCategory" value={citizenCategory} onChange={this.handleChange} />
                       </Form.Field>
                     )}
                     {tags.includes("CodeMKB10") && (
                       <Form.Group>
                         <Form.Field width={10}>
-                          <label>Выберите заболевание для определения кода нозологической формы (по МКБ)</label>
+                          <label>{t("choose_determine_nosological_form_code")}</label>
                           <Dropdown
                             size="big"
                             options={diseases.map((x) => ({ key: x.id, text: x.name, value: x.id }))}
@@ -522,25 +522,25 @@ const Recipe = inject(
                           />
                         </Form.Field>
                         <Form.Field width={6}>
-                          <label>Код нозологической формы (по МКБ)</label>
+                          <label>{t("nonological_form_code")}</label>
                           <Input
                             name="mkb10code"
                             value={mkb10code}
                             onChange={this.handleChange}
-                            readOnly={recipeDiseaseId != "ручной ввод кода"}
+                            readOnly={recipeDiseaseId != t("manual_input_code")}
                           />
                         </Form.Field>
                       </Form.Group>
                     )}
                     {tags.includes("SourceOfFinancing") && (
                       <Form.Field>
-                        <label>Источник финансирования</label>
+                        <label>{t("source_financing")}</label>
                         <Dropdown
                           size="big"
                           options={[
-                            "Федеральный бюджет",
-                            "Бюджет субъекта Российской Федерации",
-                            "Муниципальный бюджет",
+                            t("federal_budget"),
+                            t("budget_subject_russian_federation"),
+                            t("municipal_budget"),
                           ].map((x) => ({ key: x, text: x, value: x }))}
                           placeholder={t("choose")}
                           name="financingSource"
@@ -553,7 +553,7 @@ const Recipe = inject(
                     )}
                     {tags.includes("PercentageOfPayment") && (
                       <Form.Field>
-                        <label>% Оплаты</label>
+                        <label>{t("percent_payment")}</label>
                         <Dropdown
                           size="big"
                           options={["50%", "100%"].map((x) => ({ key: x, text: x, value: x }))}
@@ -568,7 +568,7 @@ const Recipe = inject(
                     )}
                     {tags.includes("SNILS") && (
                       <Form.Field>
-                        <label>СНИЛС</label>
+                        <label>{t("SNILS")}</label>
                         <Input
                           size="big"
                           children={
@@ -585,7 +585,7 @@ const Recipe = inject(
                     )}
                     {tags.includes("MedCardNumber") && (
                       <Form.Field>
-                        <label>Номер медицинской карты пациента</label>
+                        <label>{t("patient_medical_map_number")}</label>
                         <Input
                           size="big"
                           name="medcard_num"
@@ -597,7 +597,7 @@ const Recipe = inject(
                     )}
                     {tags.includes("AdressOrMedCardNumber") && (
                       <Form.Field>
-                        <label>Адрес места жительства</label>
+                        <label>{t("residence_address")}</label>
                         <Input
                           size="big"
                           name="main_address"
@@ -609,7 +609,7 @@ const Recipe = inject(
                     )}
                     {tags.includes("PolicyNumber") && (
                       <Form.Field>
-                        <label>Полис ОМС</label>
+                        <label>{t("polis_oms")}</label>
                         <Input
                           size="big"
                           children={
@@ -664,7 +664,7 @@ const Recipe = inject(
                         <Checkbox
                           name="special"
                           checked={special}
-                          label="По специальному назначению"
+                          label={t("according_special_purpose")}
                           onChange={this.handleRecipeDataChange}
                         />
                       </Form.Field>
@@ -672,13 +672,13 @@ const Recipe = inject(
                     {tags.includes("SpecNazTime") && special && (
                       <Form.Group>
                         <Form.Field width={6}>
-                          <label>Выберите периодичность отпуска</label>
+                          <label>{t("choose_vacation_frequency")}</label>
                           <Dropdown
                             size="big"
                             options={[
-                              { key: 1, text: "ежедневно", value: 1 },
-                              { key: 2, text: "ежемесячно", value: 2 },
-                              { key: 3, text: "иной период", value: 3 },
+                              { key: 1, text: t("daily"), value: 1 },
+                              { key: 2, text: t("monthly"), value: 2 },
+                              { key: 3, text: t("other_period"), value: 3 },
                             ]}
                             placeholder={t("choose")}
                             name="spectextPrompt"
@@ -690,7 +690,7 @@ const Recipe = inject(
                         </Form.Field>
                         {this.state.spectextPrompt == "3" && (
                           <Form.Field width={10}>
-                            <label>Укажите другую периодичность отпуска</label>
+                            <label>{t("indicate_vacation_frequency")}</label>
                             <Input
                               name="spectext"
                               value={spectext || ""}
@@ -701,118 +701,7 @@ const Recipe = inject(
                         )}
                       </Form.Group>
                     )}
-                    {/* {recipe_formid == "2ApW9Ve9l7XXlXy5/59EUg==" && (
-                <div>
-                  <Form.Field>
-                    <label>Код категории граждан</label>
-                    <Input name="citizenCategory" value={citizenCategory} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Group>
-                    <Form.Field width={10}>
-                      <label>Выберите заболевание для определения кода нозологической формы (по МКБ)</label>
-                      <Dropdown
-                        size="big"
-                        options={diseases.map((x) => ({ key: x.id, text: x.name, value: x.id }))}
-                        placeholder="Выберите"
-                        name="recipeDiseaseId"
-                        selection
-                        fluid
-                        value={recipeDiseaseId}
-                        onChange={this.handleChange}
-                      />
-                    </Form.Field>
-                    <Form.Field width={6}>
-                      <label>Код нозологической формы (по МКБ)</label>
-                      <Input
-                        name="mkb10code"
-                        value={mkb10code}
-                        onChange={this.handleChange}
-                        readOnly={recipeDiseaseId != "ручной ввод кода"}
-                      />
-                    </Form.Field>
-                  </Form.Group>
-                  <Form.Field>
-                    <label>Источник финансирования</label>
-                    <Dropdown
-                      size="big"
-                      options={[
-                        "Федеральный бюджет",
-                        "Бюджет субъекта Российской Федерации",
-                        "Муниципальный бюджет",
-                      ].map((x) => ({ key: x, text: x, value: x }))}
-                      placeholder="Выберите"
-                      name="financingSource"
-                      selection
-                      fluid
-                      value={financingSource}
-                      onChange={this.handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>% Оплаты</label>
-                    <Dropdown
-                      size="big"
-                      options={["50%", "100%"].map((x) => ({ key: x, text: x, value: x }))}
-                      placeholder="Выберите"
-                      name="compensation"
-                      selection
-                      fluid
-                      value={compensation}
-                      onChange={this.handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Group>
-                    <Form.Field width={12}>
-                      <label>ФИО пациента</label>
-                      <Input name="fio" value={patient.fio} readOnly />
-                    </Form.Field>
-                    <Form.Field width={4}>
-                      <label>Дата рождения</label>
-                      <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly />
-                    </Form.Field>
-                  </Form.Group>
-                  <Form.Field>
-                    <label>СНИЛС</label>
-                    <Input name="snils" value={snils} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>№ полиса ОМС</label>
-                    <Input name="insuranceNumber" value={insuranceNumber} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>
-                      Номер медицинской карты пациента, получающего медицинскую помощь в амбулаторных условиях
-                    </label>
-                    <Input name="patientCard" value={patientCard} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>ФИО врача</label>
-                    <Input name="docName" value={docName} readOnly />
-                  </Form.Field>
-                </div>
-              )}
-              {recipe_formid == "sqmNTYpmbqXh9bhNZBQpDQ==" && (
-                <div>
-                  <Form.Group>
-                    <Form.Field width={12}>
-                      <label>ФИО пациента</label>
-                      <Input name="fio" value={patient.fio} readOnly />
-                    </Form.Field>
-                    <Form.Field width={4}>
-                      <label>Дата рождения</label>
-                      <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly />
-                    </Form.Field>
-                  </Form.Group>
-                  <Form.Field>
-                    <label>Адрес места жительства или № медицинской карты амбулаторного пациента</label>
-                    <TextArea size="big" fluid name="patientCard" value={patientCard} onChange={this.handleChange} />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>ФИО врача</label>
-                    <Input name="docName" value={docName} readOnly />
-                  </Form.Field>
-                </div>
-              )} */}
+                  
                     {recipe_formid && (
                       <Form.Field>
                         <label>{t("comment_prescription")}</label>
@@ -907,7 +796,7 @@ const Recipe = inject(
                         />
                       </Form.Field>
                       <Form.Field required>
-                        <label>ЛПУ</label>
+                        <label>{t("health_care_facility")}</label>
                         <Dropdown
                           options={checkData.lpu.map((item) => {
                             return {

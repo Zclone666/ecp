@@ -6,9 +6,9 @@ import { withTranslation } from "react-i18next";
 const LicenseAgreement = inject('actions', 'router')(observer(class LicenseAgreement extends Component {
   render() {
     const {
-      actions: { buttonTexts },t
+      actions: { buttonTexts }
     } = this.props;
-
+    const { t } = this.props.actions;
     const texts = buttonTexts ? buttonTexts.text : null;
 
     return (

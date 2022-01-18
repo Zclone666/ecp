@@ -201,9 +201,9 @@ const Schedule = inject(
               <Form.Group>
                 <Form.Field width={4}>
                   <label>
-                    Начало приема (
+                  {t("home_accepts")} (
                     <span className="link" onClick={this.setTomorrow}>
-                      завтра
+                    {t("tomorrow")}
                     </span>
                     ):
                   </label>
@@ -224,7 +224,7 @@ const Schedule = inject(
                   />
                 </Form.Field>
                 <Form.Field width={7}>
-                  <label>Окончание приема:</label>
+                  <label>{t("end_reception")}:</label>
                   <Input action>
                     <DatePickerInput
                       ref={this.dateFinish}
@@ -264,9 +264,9 @@ const Schedule = inject(
                       name="finishAlternate"
                       value="lQ9LkaNuaG/IgjrmfEhzOQ=="
                     >
-                      До отмены
+                      {t("before_canceling")}
                     </Button>
-                    {/*<Button primary={sex === 'female'} onClick={this.handleChange} name='sex' value='female'>До улучшения</Button>*/}
+
                   </Responsive>
                   <Responsive as={Button.Group} fluid maxWidth={480}>
                     <Button
@@ -275,9 +275,9 @@ const Schedule = inject(
                       name="finishAlternate"
                       value="lQ9LkaNuaG/IgjrmfEhzOQ=="
                     >
-                      До отмены
+                      {t("before_canceling")}
                     </Button>
-                    {/*<Button primary={sex === 'female'} onClick={this.handleChange} name='sex' value='female'>До улучшения</Button>*/}
+               
                   </Responsive>
                 </Form.Field>
               </Form.Group>
@@ -285,7 +285,7 @@ const Schedule = inject(
               {false && (
                 <Form.Group>
                   <Form.Field className="fluid">
-                    <label>Условия приема</label>
+                    <label>{t("terms_accepted")}</label>
                     <Responsive as={Button.Group} fluid widths={3} minWidth={481}>
                       <Button
                         primary={format === "interval"}
@@ -293,15 +293,15 @@ const Schedule = inject(
                         name="format"
                         value="interval"
                       >
-                        По расписанию
+                        {t("select")}
                       </Button>
                       <Button primary={format === "once"} onClick={this.handleChange} name="format" value="once">
-                        Однократно
+                        {t("single")}
                       </Button>
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
-                        По дням недели
+                        {t("by_day_week")}
                       </Button>
-                      {/*<Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>*/}
+               
                     </Responsive>
                     <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
                       <Button
@@ -310,17 +310,16 @@ const Schedule = inject(
                         name="format"
                         value="interval"
                       >
-                        По расписанию
+                        {t("single")}
                       </Button>
                       <Button primary={format === "once"} onClick={this.handleChange} name="format" value="once">
-                        Однократно
+                        {t("single")}
                       </Button>
                     </Responsive>
                     <Responsive as={Button.Group} fluid widths={1} maxWidth={480}>
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
-                        По дням недели
+                        {t("by_day_week")}
                       </Button>
-                      {/*<Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>*/}
                     </Responsive>
                   </Form.Field>
                 </Form.Group>

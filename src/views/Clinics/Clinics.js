@@ -7,7 +7,7 @@ import Spinner from "../../components/Spinner";
 import Slider from "react-slick";
 
 import { Segment, List, Button } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const Clinics = inject("router", "db", "actions", "patients")(observer(class Clinics extends Component {
@@ -42,6 +42,7 @@ const Clinics = inject("router", "db", "actions", "patients")(observer(class Cli
         drugStructure: { clinic_id },
       },
     } = this.props;
+    const { t } = this.props.actions;
     return (
       <Segment basic>
         <List divided relaxed verticalAlign="middle" size="large">

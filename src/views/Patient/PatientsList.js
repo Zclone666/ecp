@@ -12,7 +12,7 @@ import PatientPassport from "./PatientPassport";
 import Search from "../../components/Search";
 
 import { Segment, List, Button, Form, Input, Icon, Header } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 import moment from "moment";
 
@@ -109,7 +109,7 @@ const PatientsList = inject(
           //   patientPassport: { id, email, fio },
           // },
         } = this.props;
-
+        const { t } = this.props.actions;
         let { search_patient } = this.state;
         return (
           <Segment basic>
@@ -120,7 +120,7 @@ const PatientsList = inject(
                     fluid
                     size="big"
                     name="patient"
-                    placeholder="Введите имя пациента"
+                    placeholder={t("patinet_card_name_patient")}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -134,7 +134,7 @@ const PatientsList = inject(
               </Form.Group>
               <Form.Group widths={2}>
                 <Form.Field>
-                  <label>ФИО</label>
+                  <label>{t("full_name")}</label>
                   <Input
                     disabled
                     size="big"
@@ -162,7 +162,7 @@ const PatientsList = inject(
                     <Button
                       size="big"
                       fluid
-                      content="Очистить"
+                      content={t("clear")}
                       labelPosition="right"
                       icon="delete"
                       negative
@@ -177,7 +177,7 @@ const PatientsList = inject(
                       fluid
                       as={RouterLink}
                       to={"/patient/info"}
-                      content="Данные пациента"
+                      content={t("patient_data")}
                       labelPosition="right"
                       icon="clipboard"
                       primary
@@ -186,7 +186,7 @@ const PatientsList = inject(
                 </Form.Field>
               </Form.Group>
             </Form>
-            <Header>Последние выбранные</Header>
+            <Header>{t("latest_selected")}</Header>
             <List animated divided selection className="dozelist" verticalAlign="middle" size="large">
               {this.last.map((pat, i) => {
                 return (
@@ -211,4 +211,4 @@ const PatientsList = inject(
   )
 );
 
-export default PatientsList;
+export default withTranslation()(PatientsList);

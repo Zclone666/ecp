@@ -308,49 +308,35 @@ const Interval = inject(
         let concept_types = [
           {
             key: 1,
-            text: "Повтор",
+            text: t("repeat"),
             value: "every",
-            description: "(каждые Х дней)",
+            description: t("every_x_days"),
             onClick: this.handleAddConcept,
           },
           {
             key: 2,
-            text: "Период",
+            text: t("period"),
             value: "period",
-            description: "(Х дней)",
+            description: t("x_days"),
             onClick: this.handleAddConcept,
           },
-          // {
-          //   key: 3,
-          //   text: 'Период + промежуток',
-          //   value: 'period_in',
-          //   description: '(Х дней через Y дней)',
-          //   onClick: this.handleAddConcept
-          // },
           {
             key: 4,
-            text: "Промежуток",
+            text: t("gap"),
             value: "in",
-            description: "(через Х дней)",
+            description: t("through_x_days"),
             onClick: this.handleAddConcept,
           },
           {
             key: 5,
-            text: "Количество",
+            text: t("quantity"),
             value: "count",
-            description: "(Х раз в день)",
+            description: t("x_every_day"),
             onClick: this.handleAddConcept,
           },
-          // {
-          //   key: 6,
-          //   text: 'Количество с перерывом',
-          //   value: 'count_every',
-          //   description: '(Х раз в день с перерывом в 3 часа)',
-          //   onClick: this.handleAddConcept
-          // },
           {
             key: 7,
-            text: "Время приема",
+            text: t("time_receipt"),
             value: "time",
             description: "(7:30)",
             onClick: this.handleAddConcept,
@@ -360,13 +346,13 @@ const Interval = inject(
           <>
             <Form.Group>
               <Form.Field inline className="fluid">
-                <label>Кратность приема:</label>
-                <Dropdown inline name={"presets"} text={"Выбрать"} options={this.renderPresets()} />
+                <label>{t("multiplicity_reception")}:</label>
+                <Dropdown inline name={"presets"} text={t("select")} options={this.renderPresets()} />
               </Form.Field>
             </Form.Group>
             <Form.Group>
               <Form.Field className="fluid">
-                <label>Или создайте свой:</label>
+                <label>{t("or_create_own")}:</label>
               </Form.Field>
             </Form.Group>
             <div className="concept_container">

@@ -112,7 +112,7 @@ const WarningTab = inject(
 
         let needIcon = tab.id && tab.id.length > 0 && info.outcome[tab.id];
         let icon = tab.icon || "info";
-        let popupText = icon === "syringe" ? "Фармокологическое взаимодействие" : "Взаимодействие на уровне ферментов";
+        let popupText = icon === "syringe" ? t("pharmocheological_interaction") : t("interaction_level_enzymes");
         // syringe - Фармокологическое взаимодействие
         // cloud upload - Взаимодействие на уровне ферментов
 

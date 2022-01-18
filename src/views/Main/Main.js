@@ -163,7 +163,6 @@ const Main = inject(
       handleResetAll = (type) => {
         this.props.actions.resetAll(type);
         this.setOpen(false, "openClearence");
-        // if (window.confirm("Сбросить все?")) this.props.actions.resetAll();
       };
       returnDeleted = () => {
         this.props.drugs.returnList();
@@ -434,26 +433,26 @@ const Main = inject(
                     open={openClearence}
                     trigger={<Menu.Item>{t("main_drugs_reset")}</Menu.Item>}
                   >
-                    <Modal.Header>{"Какие данные вы хотите очистить?"}</Modal.Header>
+                    <Modal.Header>{t("what_data_clean")}</Modal.Header>
                     <Modal.Content>
-                      <Header as="h3" content="Можно очистить:" />
+                      <Header as="h3" content={t("can_cleaned")} />
                       <List>
-                        <List.Item>Только данные по пациенту, включая текущий лист назначений и анамнез</List.Item>
-                        <List.Item>Лист назначений полностью</List.Item>
-                        <List.Item>Все выбранные данные, включая клинику, пациента и лист назначений</List.Item>
+                        <List.Item>{t("only_patient_data")}</List.Item>
+                        <List.Item>{t("sheet_appointments_completely")}</List.Item>
+                        <List.Item>{t("all_selected_data")}</List.Item>
                       </List>
                     </Modal.Content>
                     <Modal.Actions>
-                      <Button content="Очистить все" onClick={() => this.handleResetAll("all")} negative />
+                      <Button content={t("clear_all")} onClick={() => this.handleResetAll("all")} negative />
                       <Button
-                        content="Лист назначений"
+                        content={t("sheet_appointments")}
                         labelPosition="right"
                         icon="list"
                         onClick={() => this.handleResetAll("list")}
                         color="black"
                       />
                       <Button
-                        content="Данные пациента"
+                        content={t("patient_data")}
                         labelPosition="right"
                         icon="user"
                         onClick={() => this.handleResetAll("patient")}
@@ -490,7 +489,7 @@ const Main = inject(
                             {t("main_parser_cancel")}
                           </Button>
                           <Button
-                            content="Продолжить"
+                            content={t("continue")}
                             labelPosition="right"
                             icon="checkmark"
                             onClick={() => this.saveList()}
@@ -510,7 +509,7 @@ const Main = inject(
               )}
 
               <Modal open={false && !drugStructure.clinic_id}>
-                <Modal.Header>Выберите клинику</Modal.Header>
+                <Modal.Header>{t("choose_clinic")}</Modal.Header>
                 <Modal.Content>
                   <Form>
                     <Form.Field>
@@ -547,7 +546,7 @@ const Main = inject(
 
               {(makeLiquids || !checkLiquids) && !bottomview_disabled && (
                 <Menu className="bottom fixed menu two item huge main">
-                  <Menu.Item onClick={this.resetLiquids}>Сбросить растворы</Menu.Item>
+                  <Menu.Item onClick={this.resetLiquids}>{t("relieve_solutions")}</Menu.Item>
                   <Menu.Item disabled={!isLiquidsOk} onClick={this.confirmLiquids}>
                     {t("apply")}
                   </Menu.Item>

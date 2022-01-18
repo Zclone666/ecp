@@ -121,10 +121,7 @@ const Clinrecs = inject(
               <Menu.Item disabled={!hasBackward} onClick={this.backward}>
                 {t("back")}
               </Menu.Item>
-              {hasForward && (
-                // <Menu.Item disabled={!currPage.isReady} onClick={this.forward}>
-                //   Далее
-                // </Menu.Item>
+              {hasForward && (              
                 <Menu.Item disabled={false} onClick={this.forward}>
                   {t("next")}
                 </Menu.Item>

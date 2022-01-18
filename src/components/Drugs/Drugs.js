@@ -177,9 +177,9 @@ const Drugs = inject("db", "actions", "drugs", "dosages", "warnings", "tools")(o
       drugs: { drug: drugs, liquid: liquidList, checkLiquids },
       warnings: { warning }, //warnings, warnGroups
       dosages: { dosage },
-      isRecipe,t
+      isRecipe
     } = this.props;
-
+    const { t } = this.props.actions;
     let { groups, grouped, iterator, canDrag } = this.drugsWithGroups;
 
     let warnDrugs = this.warnDrugs;

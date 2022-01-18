@@ -5,7 +5,7 @@ import moment from "moment";
 import { List, Icon, Form, Segment, Input, Button, Dropdown, Responsive, Checkbox } from "semantic-ui-react";
 
 import Day from "./Day";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const Schedule = inject("db", "actions", "router", "drugs", "dosages")(observer(class Schedule extends Component {
@@ -33,14 +33,15 @@ const Schedule = inject("db", "actions", "router", "drugs", "dosages")(observer(
       },
       router: { values },
     } = this.props;
+    let {t} = this.props.actions;
 
     let weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
     return (
       <Form.Group>
         <Form.Field className="fluid">
-          <label>Выберите дни недели:</label>
+          <label>{t("choose_days_week")}:</label>
           <Checkbox
-            label="Ежедневно"
+            label={t("daily")}
             onChange={() => this.handleChange(null, { name: "all" })}
             checked={this.state.checked}
           />
@@ -60,4 +61,4 @@ const Schedule = inject("db", "actions", "router", "drugs", "dosages")(observer(
   }
 }));
 
-export default Schedule;
+export default withTranslation()(Schedule);

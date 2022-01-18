@@ -200,6 +200,80 @@ const resources = {
       speed_administration: "Скорость введения",
       duration_administration: "Длительность введения",
 
+      home_accepts: "Начало приема",
+      tomorrow: "завтра",
+      end_reception: "Окончание приема",
+      before_canceling: "До отмены",
+      by_day_week: "По дням недели",
+      single: "Однократно",
+      scheduled: "По расписанию",
+
+      terms_accepted: "Условия приема",
+      all_selected_data: "Все выбранные данные, включая клинику, пациента и лист назначений",
+      sheet_appointments_completely: "Лист назначений полностью",
+      only_patient_data: "Только данные по пациенту, включая текущий лист назначений и анамнез",
+      what_data_clean: "Какие данные вы хотите очистить?",
+
+      can_cleaned: "Можно очистить:",
+      clear_all: "Очистить все",
+      clear: "Очистить",
+      choose_clinic: "Выберите клинику",
+      patient_data: "Данные пациента",
+      sheet_appointments: "Лист назначений",
+      continue: "Продолжить",
+      relieve_solutions: "Сбросить растворы",
+      full_name: "ФИО",
+      latest_selected: "Последние выбранные",
+      // enter_patient_name: "Введите имя пациента",
+
+      time_receipt: "Время приема",
+      x_every_day: "(Х раз в день)",
+      quantity: "Количество",
+      through_x_days: "(через Х дней)",
+      gap: "Промежуток",
+      x_days: "(Х дней)",
+      period: "Период",
+      every_x_days: "(каждые Х дней)",
+      repeat: "Повтор",
+
+      or_create_own: "Или создайте свой",
+      according_special_purpose: "По специальному назначению",
+      choose_vacation_frequency: "Выберите периодичность отпуска",
+
+      other_period: "иной период", 
+      monthly: "ежемесячно", 
+      daily: "ежедневно",
+      indicate_vacation_frequency: "Укажите другую периодичность отпуска",
+      health_care_facility: "ЛПУ",
+      time: "Время",
+
+      code_category_code: "Код категории граждан",
+      patient_medical_map_number: "Номер медицинской карты пациента",
+      SNILS: "СНИЛС",
+      percent_payment: "% Оплаты",
+      municipal_budget:"Муниципальный бюджет",
+      budget_subject_russian_federation: "Бюджет субъекта Российской Федерации",
+      federal_budget: "Федеральный бюджет",
+      source_financing: "Источник финансирования",
+      manual_input_code: "ручной ввод кода", 
+      nonological_form_code: "Код нозологической формы (по МКБ)",
+      choose_determine_nosological_form_code: "Выберите заболевание для определения кода нозологической формы (по МКБ)",
+      polis_oms: "Полис ОМС",
+      residence_address: "Адрес места жительства",
+
+      interaction_level_enzymes: "Взаимодействие на уровне ферментов",
+      pharmocheological_interaction: "Фармокологическое взаимодействие",
+      jnvlp_regional_list: "ЖНВЛП региональный список",
+      to: "до",
+      by: "от",
+      choose_days_week: "Выберите дни недели",
+
+      //
+
+      report_an_error: "Сообщить об ошибке", /// //// ///
+      notify_about_error: "Сообщите об ошибке",
+      enter_message_text: "Введите текст сообщения",
+
       // protocol_request_error: "Возникла ошибка запроса протокола."
 
       //  'day', 'день', 

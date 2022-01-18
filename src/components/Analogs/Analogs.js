@@ -83,7 +83,7 @@ const Analogs = inject(
                           <List.Content floated="right">
                             {analog.min && (
                               <>
-                                от <Label color="green">{analog.min} ₽</Label> до{" "}
+                                {t("by")} <Label color="green">{analog.min} ₽</Label> {t("to")}{" "}
                               </>
                             )}
                             {analog.max && <Label color="orange">{analog.max} ₽</Label>}
@@ -113,7 +113,7 @@ const Analogs = inject(
                                           <Table.Cell collapsing textAlign="right">
                                             {analogItem.min && (
                                               <>
-                                                от <Label color="green">{analogItem.min} ₽</Label> до{" "}
+                                                {t("federal_list")} <Label color="green">{analogItem.min} ₽</Label> {t("to")}{" "}
                                               </>
                                             )}
                                           </Table.Cell>

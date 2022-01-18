@@ -29,8 +29,9 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
   }
   render(){
     let {
-      router: { values },t
+      router: { values }
     } = this.props
+    const { t } = this.props.actions;
     let url = !values.liquid ? '/concept/dozes' : `/liquid/calc/${values.liquid}/dozes`
     let { viewType } = this.state
 

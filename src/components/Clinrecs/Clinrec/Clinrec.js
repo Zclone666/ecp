@@ -105,8 +105,9 @@ const Clinrec = inject(
 
       renderCheck = (childs, id) => {
         let {
-          clinrecs: { clinrec },t
+          clinrecs: { clinrec }
         } = this.props;
+        const { t } = this.props.actions;
         return (
           <List.Item>
             <List.Content className="large">
@@ -135,8 +136,9 @@ const Clinrec = inject(
 
       renderRadio = (childs, id) => {
         let {
-          clinrecs: { clinrec },t
+          clinrecs: { clinrec }
         } = this.props;
+        const { t } = this.props.actions;
         return (
           <List.Item>
             <List.Content className="large">
@@ -380,8 +382,9 @@ const Clinrec = inject(
       render() {
         let {
           router,
-          clinrecs: { clinrec, ready },t
+          clinrecs: { clinrec, ready }
         } = this.props;
+        const { t } = this.props.actions;
         let { opened } = this.state;
 
         return (

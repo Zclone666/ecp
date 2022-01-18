@@ -254,8 +254,9 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
       tools: { round, units, unitarrs },
       dosages: { getFromBase },
       router: { values },
-      isLiquid,t
+      isLiquid
     } = this.props;
+    const { t } = this.props.actions;
     let { timeUnits, currTimeUnitName } = this.timeUnits;
     let { weightUnits, currWeightUnitName } = this.weightUnits;
     let { currUnit, currDurationUnit } = this.state;

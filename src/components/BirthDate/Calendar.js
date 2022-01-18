@@ -32,7 +32,8 @@ class Calendar extends Component {
     this.handleChange(moment().toDate().format("x"));
   };
   render() {
-    let { value, maxDate, size, name,t } = this.props;
+    let { value, maxDate, size, name } = this.props;
+    const { t } = this.props.actions;
     let date = Math.abs(parseInt(value)) > 0 ? moment(parseInt(value) || moment().toDate()).format("DD.MM.YYYY") : "";
     //console.log({value});
     return (

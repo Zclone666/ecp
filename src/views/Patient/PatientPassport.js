@@ -81,17 +81,7 @@ const PatientPassport = inject(
         return (
           <Segment basic>
             <Form>
-              <Form.Group widths={3}>
-                {/* <Form.Field>
-              <label>ФИО</label>
-              <Input
-                size="big"
-                name="fio"
-                value={fio || ""}
-                placeholder="Иванов Иван Иванович"
-                onChange={this.handleChange}
-              />
-            </Form.Field> */}
+              <Form.Group widths={3}>          
                 <Form.Field required>
                   <label>{t("last_name")}</label>
                   <Input

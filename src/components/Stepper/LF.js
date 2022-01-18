@@ -27,12 +27,12 @@ const LF = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class 
         activeDrugs,
         activeConflicts,
         stepsData,
-      },t,
+      },
       drugs: { current }, //drugs, currDrug, setDosageParams
       dosages: { dosage }, //drugsDosages
       router: { values }
     } = this.props
-
+    const { t } = this.props.actions;
     let way = values.way || 'lf'
     let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`
     let currStep = parseInt(values.step || 0)

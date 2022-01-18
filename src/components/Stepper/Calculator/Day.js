@@ -70,10 +70,10 @@ const Schedule = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
       },
       dosages: { current: { drug, form, methodform, names } },
       router: { values },
-      day, index,t
+      day, index
     } = this.props
     let { active, time, interval } = this.state
-
+    const { t } = this.props.actions;
     return (
       <Segment
         className='day'
@@ -181,7 +181,7 @@ const Schedule = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
                     value: (i === 0 || !(i%2)) ? parseInt(i/2) + '.00' : parseInt(i/2) + '.30'
                   }
                 })}
-                text={'Время'}
+                text={t("time")}
               />
             </Form.Field>
 

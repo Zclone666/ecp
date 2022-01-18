@@ -323,7 +323,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="patient"
-                    placeholder={t("patinet_card_name_patient")} // "Введите имя пациента"
+                    placeholder={t("patinet_card_name_patient")} 
                     loading={!searchReady}
                     onResultSelect={this.handlePatientResultSelect}
                     onSearchChange={_.debounce(this.handlePatientSearchChange, 500, {

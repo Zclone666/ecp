@@ -17,7 +17,7 @@ import {
     Step,
     Responsive
 } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import _ from 'lodash';
 
 const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(observer(class Steps extends Component {
@@ -57,6 +57,7 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
       router: { values },
       viewType
     } = this.props
+    const { t } = this.props.actions;
     let way = values.way || 'lf'
 
     let drugsDosage = dosage.get(current.id)
@@ -78,8 +79,8 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
             url = ''
           } else {
             chosedName = {
-              lf: 'Лекарственная форма',
-              methods: 'Способ применения',
+              lf: t("dosage_form"),
+              methods: t("mode_application"),
               '': ''
             }[way]
           }
@@ -106,4 +107,4 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
 
 }));
 
-export default Steps
+export default withTranslation()(Steps)

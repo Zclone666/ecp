@@ -273,8 +273,9 @@ const Calculator = inject(
           patients: {
             current: { weight },
           },
-          isLiquid,t
+          isLiquid
         } = this.props;
+        const { t } = this.props.actions;
         let { currUnit } = this.state;
         let freqFirst = _.keys(unitsSchedule.freq)[0];
         let weights = [];

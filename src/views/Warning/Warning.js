@@ -240,7 +240,7 @@ const Warning = inject(
               <Menu.Item color="red" onClick={this.back}>
                 {t("back")}
               </Menu.Item>
-              <Menu.Item onClick={this.openErrorTextDialog}>Сообщить об ошибке</Menu.Item>
+              <Menu.Item onClick={this.openErrorTextDialog}>{t("report_an_error")}</Menu.Item>
             </Menu>
 
             <div className="scrollwrapper">

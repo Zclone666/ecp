@@ -99,9 +99,9 @@ const Stepper = inject("db", "actions", "router", "drugs", "warnings", "dosages"
       actions: { clinrecCheckerStep, clinrecCheckerData },
       patients: {
         current: { disease },
-      },t
+      }
     } = this.props;
-
+    const { t } = this.props.actions;
     let currPage = checker[_.keys(checker)[clinrecCheckerStep - 1]] || {}; //page id is not equal array index!
 
     const settings = {

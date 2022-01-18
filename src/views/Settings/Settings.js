@@ -93,7 +93,7 @@ const Settings = inject(
                         name="zhnvlp_reg"
                         checked={!!zhnvlp_reg}
                         slider
-                        label="ЖНВЛП региональный список"
+                        label={t("jnvlp_regional_list")}
                       />
                     </Form.Field>
                   </Form.Group>

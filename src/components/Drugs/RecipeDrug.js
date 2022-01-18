@@ -101,9 +101,9 @@ const RecipeDrug = inject(
           tools: { names, shortnames, round },
           drugs,
           drugKey: key,
-          actions: { UIText },t
+          actions: { UIText }
         } = this.props;
-
+        const { t } = this.props.actions;
         let arr = [];
 
         let drug = drugs.drug.get(key) || {};
@@ -213,9 +213,9 @@ const RecipeDrug = inject(
           drugKey: key,
           drugs,
           active,
-          recipes: { drugKeysForPrescription, maxcount },t
+          recipes: { drugKeysForPrescription, maxcount }
         } = this.props;
-
+        const { t } = this.props.actions;
         let { edit, text, from } = this.state;
 
         // console.log({ drugKeysForPrescription });
