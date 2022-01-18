@@ -75,9 +75,8 @@ const Login = inject("router", "actions")(observer(class Login extends Component
     let { filled, filledCode, showCode } = this.state;
     let {
       loginForm: { remember, email, password },
-      projectTitle,
+      projectTitle, t
     } = this.props.actions;
-    const { t } = this.props;
     return (
       <div className="login-form height100perc">
         <Grid padded textAlign="center" style={{ height: "100%" }} verticalAlign="middle">

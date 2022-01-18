@@ -9,7 +9,7 @@ import {
   Icon,
   Segment
 } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 // import _ from 'lodash';
 
 const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observer(class WayChoice extends Component {
@@ -29,7 +29,7 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
   }
   render(){
     let {
-      router: { values }
+      router: { values },t
     } = this.props
     let url = !values.liquid ? '/concept/dozes' : `/liquid/calc/${values.liquid}/dozes`
     let { viewType } = this.state
@@ -53,8 +53,8 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
                         <Icon name='pills' />
                       </div>
                       <Card.Content>
-                        <Card.Header>Лекарственная форма</Card.Header>
-                        <Card.Meta>Сначала выбрать лекарственную форму, потом способ применения</Card.Meta>
+                        <Card.Header>{t("dosage_form")}</Card.Header>
+                        <Card.Meta>{t("choose_dosage_form_method")}</Card.Meta>
                       </Card.Content>
                     </Card>
                   </Grid.Column>
@@ -76,8 +76,8 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
                         <Icon name='syringe' />
                       </div>
                       <Card.Content>
-                        <Card.Header>Способ применения</Card.Header>
-                        <Card.Meta>Сначала выбрать способ применения, потом лекарственную форму</Card.Meta>
+                        <Card.Header>{t("mode_application")}</Card.Header>
+                        <Card.Meta>{t("choose_method_dosage_form")}</Card.Meta>
                       </Card.Content>
                     </Card>
                   </Grid.Column>
@@ -102,8 +102,8 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
                         <Icon name='pills' />
                       </div>
                       <Card.Content>
-                        <Card.Header>Лекарственная форма</Card.Header>
-                        <Card.Meta>Сначала выбрать лекарственную форму, потом способ применения</Card.Meta>
+                        <Card.Header>{t("dosage_form")}</Card.Header>
+                        <Card.Meta>{t("choose_dosage_form_method")}</Card.Meta>
                       </Card.Content>
                     </Card>
                   </Grid.Column>
@@ -123,8 +123,8 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
                         <Icon name='syringe' />
                       </div>
                       <Card.Content>
-                        <Card.Header>Способ применения</Card.Header>
-                        <Card.Meta>Сначала выбрать способ применения, потом лекарственную форму</Card.Meta>
+                        <Card.Header>{t("mode_application")}</Card.Header>
+                        <Card.Meta>{t("choose_method_dosage_form")}</Card.Meta>
                       </Card.Content>
                     </Card>
                   </Grid.Column>
@@ -139,4 +139,4 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
 
 }));
 
-export default WayChoice
+export default withTranslation()(WayChoice)

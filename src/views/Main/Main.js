@@ -521,7 +521,7 @@ const Main = inject(
                             value: item.id,
                           };
                         })}
-                        placeholder="Клиника"
+                        placeholder={t("clinic")}
                         search
                         name="clinic"
                         selection
@@ -534,7 +534,7 @@ const Main = inject(
                 </Modal.Content>
                 <Modal.Actions>
                   <Button
-                    content="Выбрать"
+                    content={t("select")}
                     labelPosition="right"
                     disabled={!clinic}
                     icon="checkmark"

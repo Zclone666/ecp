@@ -30,7 +30,7 @@ const ClinrecStartPage = inject(
         this.props.router.push(`/clinrec/checker/${clinrecCheckerStep}`);
       };
       render() {
-        const { t } = this.props;
+        const { t } = this.props.actions;
         // console.log("state: ", this.state);
         const { clinicalGuidelinesExist } = this.props.clinrecs;
         const diseases = this.props.patients.current.disease

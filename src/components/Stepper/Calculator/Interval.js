@@ -295,13 +295,7 @@ const Interval = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
         description: '(Х дней)',
         onClick: this.handleAddConcept
       },
-      // {
-      //   key: 3,
-      //   text: 'Период + промежуток',
-      //   value: 'period_in',
-      //   description: '(Х дней через Y дней)',
-      //   onClick: this.handleAddConcept
-      // },
+    
       {
         key: 4,
         text: 'Промежуток',
@@ -316,13 +310,7 @@ const Interval = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
         description: '(Х раз в день)',
         onClick: this.handleAddConcept
       },
-      // {
-      //   key: 6,
-      //   text: 'Количество с перерывом',
-      //   value: 'count_every',
-      //   description: '(Х раз в день с перерывом в 3 часа)',
-      //   onClick: this.handleAddConcept
-      // },
+    
       {
         key: 7,
         text: 'Время приема',
@@ -335,11 +323,11 @@ const Interval = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
       <>
         <Form.Group>
           <Form.Field inline className='fluid'>
-            <label>Кратность приема:</label>
+            <label>{t("multiplicity_reception")}:</label>
             <Dropdown
               inline
               name={'presets'}
-              text={'Выбрать'}
+              text={t("select")}
               options={this.renderPresets()}
             />
 

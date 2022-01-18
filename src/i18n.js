@@ -44,13 +44,13 @@ const resources = {
       protocol: "Протокол",
       patinet_card_passport_edit: "Редактировать паспортные данные",
       patinet_card_collapse_passport: "Свернуть паспортные данные",
-      new_patient: "Новый пациент", 
+      new_patient: "Новый пациент",
       sex: "Пол",
       male: "Мужчина",
       female: "Женщина",
       growth: "Рост",
       weight: "Вес",
-      body_mass_index: "ИМТ",      
+      body_mass_index: "ИМТ",
       body_surface_area: "ППТ",
 
       kg_m2: "кг/м²",
@@ -97,7 +97,7 @@ const resources = {
       remember_me: "Запомнить меня",
       personal_key: "Персональный ключ",
       password: "Пароль",
-      
+
       jump: "Перейти",
       go_to_login: "Перейдите на страницу авторизации.",
       you_already_registered: "Вы уже зарегистрированы в системе!",
@@ -111,7 +111,7 @@ const resources = {
       last_name: "Фамилия",
       middle_name: "Отчество",
       first_name: "Имя",
-      
+
       fill_passport_details: "Заполните необходимые паспортные данные чтобы сохранить нового пациента",
       new: "Новый",
       delete: "Удалить",
@@ -119,23 +119,107 @@ const resources = {
       analogues: "Аналоги",
       no_analogues: "Нет аналогов",
       more: "Подробнее",
+      
+      //18.01
 
-      // 'day', 'день', 
+      age_enter_number: "Возраст (введите число)",
+      age_date_birth: "Возраст/дата рождения",
+      remove_from_solution: "Убрать из раствора",
+      dosage: "Дозировка",
+      date_birth: "Дата рождения",
+      choose_one_or_more_options: "Выберите один или несколько вариантов",
+      choose_one_options: "Выберите один из вариантов",
+      show: "Показать",
+      name_patient: "ФИО пациента",
+      name_doctor: "ФИО врача",
+
+      council_minutes: "Протокол консилиума",
+      writing_recipe: "Выписать рецепт",
+      resuscitation_appointment_list: "Реанимационный лист назначений",
+      stationary_appointment_list: "Стационарный лист назначений",
+      outpatient_appointment_list: "Амбулаторный лист назначений",
+      choose_form: "Выберите форму бланка",
+      choose: "Выберите",
+      signed: "Подписано",
+      subscribe: "Подписать",
+      print: "Печать",
+      send: "Отправить",
+      send_mail: "Отправить письмо",
+      send_by_mail: "Отправить по E-mail",
+
+      recipe_form: "Форма рецептурного бланка",
+      recipe_state_time: "Время действия рецепта",
+      comment_prescription: "Комментарий к рецепту",
+
+      print_recipe: "Печать рецепта",
+      code_pharmacy: "Ваш код для аптеки",
+      clinic: "Клиника",
+      mail_patient: "E-mail пациента",
+      create: "Создать",
+      create_patient: "Создать пациента",
+      doctor: "Врач",
+      explanation_recipe: "Пояснения к рецепту",
+      available_certificates: "доступные сертификаты",
+      select_certificate_for_signature: "Выберите сертификат для подписи",
+
+      no_information: "Нет информации",
+      free_information: "Сводная информация",
+      clinical_recommendations_for_diagnosis: "Клинические рекомендации по диагнозу",
+      clinical_recommendations: "Клинические рекоммендации",
+      remove_from_list: "Убрать из списка",
+      solution: "Раствор",
+      drag_two_components_for_solution: "Перетащите сюда не менее двух составляющих для раствора",
+      add_one_element: "Добавьте еще хотя бы один элемент",
+      cancellation_prescription: "отменить изменения предписания",
+      special_instructions: "Особые указания",
+      suitable_for_solutions: "Подходит для раствора",
+
+      mode_application: "Способ применения",
+      dosage_form: "Лекарственная форма",
+      choose_dosage_form_method: "Сначала выбрать лекарственную форму, потом способ применения",
+      choose_method_dosage_form: "Сначала выбрать способ применения, потом лекарственную форму",
+      once_day: "Раза в день",
+      or: "или",
+
+      kg_weight_day: "На кг веса в сутки",
+      daily_dose: "Суточная доза",
+      multiplicity_reception: "Кратность приема",
+      kg_body_weight: "На кг массы тела",
+      body_mass: "Масса тела",
+      motherwise_dose: "Разовая доза",
+      components_solution: "Составляющие раствора",
+
+      // 
+
+      select: "Выбрать",
+      first_specify_dosage_components_solution: "Сначала укажите дозировку для всех составляющих раствора!",
+
+      speed_in_ml:"Скорость в мл",
+      speed_in_drops: "Скорость в каплях",
+      speed_introduction_by_kg: "Скорость введения на кг",
+      speed_administration: "Скорость введения",
+      duration_administration: "Длительность введения",
+
+
+
+      // protocol_request_error: "Возникла ошибка запроса протокола."
+
+      //  'day', 'день', 
       //  'day','дня', 
       //  'days','дней',
-      
+
       //  'year','год', 
-      //  'of the year','года', 
+      //  'of_the_year','года', 
       //  'years', 'лет',
 
       //  'month', 'месяц', 
       //  'month',  'месяца', 
       //  'months', 'месяцев',
 
-      //  'a week','неделя', 
+      //  'a_week','неделя', 
       //  'weeks', 'недели', 
-      //  'weeks', 'недель', 
-      
+      //  'week', 'недель', 
+
     },
   },
 };

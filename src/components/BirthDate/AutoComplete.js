@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
 import cx from 'classnames'
 import { Search, SearchResults, Input } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import _ from 'lodash';
 
 function declension(forms, val) {
@@ -110,11 +110,11 @@ class AutoComplete extends Component {
   }
   render() {
     const { isLoading, searchQuery, results } = this.state
-    const { value } = this.props
+    const { value,t } = this.props
     return (
       <MySearch
         size='big'
-        placeholder='Возраст (введите число)'
+        placeholder={t("age_enter_number")}
         loading={isLoading}
         onResultSelect={this.handleResultSelect}
         onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -128,4 +128,4 @@ class AutoComplete extends Component {
     );
   }
 };
-export default AutoComplete
+export default withTranslation()(AutoComplete)

@@ -169,7 +169,7 @@ const Patient = inject(
         }
       }
       render() {
-        const { t } = this.props;
+        const { t } = this.props.actions;
         let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
         let section = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
         let { step } = this.state;

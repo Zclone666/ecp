@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import RouterLink from '../../router/a';
 
 
@@ -31,7 +31,7 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
   }
 
   render() {
-    let { projectTitle, confirmForm: { code, email, service } } = this.props.actions
+    let { projectTitle, confirmForm: { code, email, service }, t } = this.props.actions
     return (
 
 
@@ -84,7 +84,7 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
               </Form>
               <Message className='squared'>
                 Уже зарегистрированы? <RouterLink to='/login'>Войти</RouterLink><br />
-                Или <RouterLink to="/getconfirm" >выслать</RouterLink> повторный код подтверждения
+                {t("or")} <RouterLink to="/getconfirm" >выслать</RouterLink> повторный код подтверждения
               </Message>
             </Segment>
           </Grid.Column>
@@ -95,4 +95,4 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
 
 }));
 
-export default Confirm;
+export default withTranslation()(Confirm);

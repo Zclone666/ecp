@@ -4,7 +4,7 @@ import { inject, observer } from "mobx-react";
 import RouterLink from "../../router/a";
 
 import { Menu, List, Feed, Button, Responsive, Icon, Popup, Input, TextArea, Form, Checkbox } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const RecipeDrug = inject(
@@ -101,7 +101,7 @@ const RecipeDrug = inject(
           tools: { names, shortnames, round },
           drugs,
           drugKey: key,
-          actions: { UIText },
+          actions: { UIText },t
         } = this.props;
 
         let arr = [];
@@ -213,7 +213,7 @@ const RecipeDrug = inject(
           drugKey: key,
           drugs,
           active,
-          recipes: { drugKeysForPrescription, maxcount },
+          recipes: { drugKeysForPrescription, maxcount },t
         } = this.props;
 
         let { edit, text, from } = this.state;
@@ -258,7 +258,7 @@ const RecipeDrug = inject(
               <Button.Group color="blue">
                 {false && (
                   <Button
-                    title="отменить изменения предписания"
+                    title={t("cancellation_prescription")}
                     icon
                     onClick={this.undo}
                     icon
@@ -280,9 +280,7 @@ const RecipeDrug = inject(
               <List.Content>
                 <List.Header>
                   <span className="underlined">{mnnname}</span>
-                  {/* <span className='underlined'>{name}</span>{type === 'TN' && <span><sup>TM</sup></span>}{' '}
-              {!(helpers && helpers.mnn) && <label><span className='link' onClick={this.getMNN}>Заменить на МНН</span></label>}
-              {(helpers && helpers.mnn) && <label><span className='link' onClick={this.getMNN}>Вернуть</span></label>} */}
+                 
                 </List.Header>
                 <List.Description>{inputValue}</List.Description>
                 <List.Description>{!edit && specials}</List.Description>
@@ -295,13 +293,10 @@ const RecipeDrug = inject(
                   fluid
                   name="text"
                   value={text || ""}
-                  placeholder="Особые указания"
+                  placeholder={t("special_instructions")}
                   onChange={this.handleChange}
                 />
-                {/*<Input value={inputValue} size='small' fluid onChange={this.handleChange}>
-              <input />
-              <Button onClick={this.undo} icon disabled={from === 'dosage'}><Icon name='undo' /></Button>
-            </Input>*/}
+      
               </Form>
             )}
           </List.Item>
@@ -311,4 +306,4 @@ const RecipeDrug = inject(
   )
 );
 
-export default RecipeDrug;
+export default withTranslation()(RecipeDrug);

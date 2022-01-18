@@ -49,7 +49,7 @@ const Clinics = inject("router", "db", "actions", "patients")(observer(class Cli
             return (
               <List.Item key={"analog" + i} onClick={() => this.chose(lpu)}>
                 <List.Content floated="right">
-                  <Button>Выбрать</Button>
+                  <Button>{t("select")}</Button>
                 </List.Content>
                 <List.Icon
                   name={clinic_id == lpu.id ? "check square outline" : "square outline"}
@@ -67,4 +67,4 @@ const Clinics = inject("router", "db", "actions", "patients")(observer(class Cli
   }
 }));
 
-export default Clinics;
+export default withTranslation()(Clinics);

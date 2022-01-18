@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 
 import RouterLink from "../../../router/a";
 import { List, Icon, Form, Label, Segment, Input, Button, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import clarifications from "../../../constants/hardcode";
 
 import { checkDouble, clearDouble } from "../../../lib/helpers";
@@ -254,7 +254,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
       tools: { round, units, unitarrs },
       dosages: { getFromBase },
       router: { values },
-      isLiquid,
+      isLiquid,t
     } = this.props;
     let { timeUnits, currTimeUnitName } = this.timeUnits;
     let { weightUnits, currWeightUnitName } = this.weightUnits;
@@ -272,7 +272,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
       <Segment basic>
         {isLiquid && (
           <div className="liquiddrugs" style={{ marginBottom: "15px" }}>
-            <Header>Составляющие раствора</Header>
+            <Header>{t("components_solution")}</Header>
             <Drugs liquid={liquid} />
           </div>
         )}
@@ -280,7 +280,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
           <Form>
             <Form.Group>
               <Form.Field width={4}>
-                <label>Дозировка:</label>
+                <label>{t("dosage")}:</label>
                 <Input
                   size="big"
                   name="dosage"
@@ -315,7 +315,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 />
               </Form.Field>
               <Form.Field width={3}>
-                <label>Разовая доза:</label>
+                <label>{t("motherwise_dose")}:</label>
                 <Input
                   size="big"
                   name="fullDosage"
@@ -330,7 +330,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 </Input>
               </Form.Field>
               <Form.Field width={3}>
-                <label>Масса тела:</label>
+                <label>{t("body_mass")}:</label>
                 <Input
                   disabled={disableAll}
                   size="big"
@@ -343,7 +343,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 />
               </Form.Field>
               <Form.Field width={3}>
-                <label>На кг массы тела:</label>
+                <label>{t("kg_body_weight")}:</label>
                 <Input
                   size="big"
                   name="weightDosage"
@@ -360,7 +360,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
             </Form.Group>
             <Form.Group>
               <Form.Field width={4}>
-                <label>Кратность приема:</label>
+                <label>{t("multiplicity_reception")}:</label>
                 <Dropdown
                   disabled={disableAll}
                   selection
@@ -368,13 +368,13 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                   value={freq || null}
                   className="input big"
                   name={"dayCount"}
-                  placeholder={"Выбрать"}
+                  placeholder={t("select")}
                   onChange={this.setPreset}
                   options={this.renderPresets()}
                 />
               </Form.Field>
               <Form.Field width={4}>
-                <label>Суточная доза:</label>
+                <label>{t("daily_dose")}:</label>
                 <Input
                   size="big"
                   name="dayDosage"
@@ -389,7 +389,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 </Input>
               </Form.Field>
               <Form.Field width={4}>
-                <label>На кг веса в сутки:</label>
+                <label>{t("kg_weight_day")}:</label>
                 <Input
                   size="big"
                   name="dayWeightDosage"
@@ -404,7 +404,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 </Input>
               </Form.Field>
               <Form.Field width={4}>
-                <label>Длительность введения:</label>
+                <label>{t("duration_administration")}:</label>
                 <Input
                   disabled={disableAll}
                   size="big"
@@ -426,7 +426,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
             </Form.Group>
             <Form.Group>
               <Form.Field width={4}>
-                <label>Скорость введения:</label>
+                <label>{t("speed_administration")}:</label>
                 <Input
                   size="big"
                   name="fullSpeed"
@@ -441,7 +441,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 </Input>
               </Form.Field>
               <Form.Field width={4}>
-                <label>Скорость введения на кг:</label>
+                <label>{t("speed_introduction_by_kg")}:</label>
                 <Input
                   size="big"
                   name="weightSpeed"
@@ -455,7 +455,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 </Input>
               </Form.Field>
               <Form.Field width={4}>
-                <label>Скорость в каплях:</label>
+                <label>{t("speed_in_drops")}:</label>
                 <Input
                   size="big"
                   name="tintSpeed"
@@ -467,7 +467,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 />
               </Form.Field>
               <Form.Field width={4}>
-                <label>Скорость в мл:</label>
+                <label>{t("speed_in_ml")}:</label>
                 <Input
                   size="big"
                   name="liquidSpeed"
@@ -488,7 +488,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                   size="big"
                   name="specials"
                   value={specials || ""}
-                  placeholder="Особые указания"
+                  placeholder={t("special_instructions")}
                   onChange={this.handleChange}
                 />
               </Form.Field>
@@ -497,7 +497,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
           <Dimmer inverted active={disableAll}>
             <Header as="h2" icon color="grey">
               <Icon name="external square alternate" />
-              Сначала укажите дозировку для всех составляющих раствора!
+              {t("first_specify_dosage_components_solution")}
             </Header>
           </Dimmer>
         </Dimmer.Dimmable>
@@ -506,4 +506,4 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
   }
 }));
 
-export default LiquidCalculator;
+export default withTranslation()(LiquidCalculator);

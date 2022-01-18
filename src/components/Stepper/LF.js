@@ -6,7 +6,7 @@ import {
   List,
   Icon,
 } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import _ from 'lodash';
 
 const LF = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class LF extends Component {
@@ -27,7 +27,7 @@ const LF = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class 
         activeDrugs,
         activeConflicts,
         stepsData,
-      },
+      },t,
       drugs: { current }, //drugs, currDrug, setDosageParams
       dosages: { dosage }, //drugsDosages
       router: { values }
@@ -67,7 +67,7 @@ const LF = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class 
               <List.Content className='large'>
                 <List.Header>{names[lfid]} {lfItem.solute && <Icon name='lab' />}</List.Header>
                 {(false && lfItem.solute) && <List.Description>
-                  Подходит для раствора
+                  {t("suitable_for_solutions")}
                 </List.Description>}
               </List.Content>
 
@@ -81,4 +81,4 @@ const LF = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class 
 
 }));
 
-export default LF
+export default withTranslation()(LF)

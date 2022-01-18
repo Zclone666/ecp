@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
 import { Button, Form, Grid, Header, Image, Message, Segment, Modal, Icon } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import RouterLink from "../../router/a";
 
 const NewPass = inject("router", "actions")(observer(class NewPass extends Component {
@@ -49,6 +49,7 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
       projectTitle,
       newPassForm: { recoveryCode, email, newPassword },
     } = this.props.actions;
+    let {t} = this.props;
     let { openResend } = this.state;
     return (
       <div className="login-form height100perc">
@@ -101,7 +102,7 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
               <Message className="squared">
                 Уже зарегистрированы? <RouterLink to="/login">Войти</RouterLink>
                 <br />
-                Или <RouterLink to="/resetpass">выслать</RouterLink> повторный код подтверждения
+                {t("or")} <RouterLink to="/resetpass">выслать</RouterLink> повторный код подтверждения
               </Message>
             </Segment>
           </Grid.Column>
@@ -114,10 +115,10 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
           </Modal.Content>
           <Modal.Actions>
             <Button color="red" onClick={() => this.setOpen(false)}>
-              <Icon name="remove" /> Отмена
+              <Icon name="remove" /> {t("main_parser_cancel")}
             </Button>
             <Button color="green" onClick={() => this.handleResetPass()}>
-              <Icon name="checkmark" /> Отправить письмо
+              <Icon name="checkmark" /> {t("send_mail")}
             </Button>
           </Modal.Actions>
         </Modal>
@@ -126,4 +127,4 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
   }
 }));
 
-export default NewPass;
+export default withTranslation()(NewPass);

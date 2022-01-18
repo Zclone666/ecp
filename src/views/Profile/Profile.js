@@ -43,7 +43,7 @@ const Profile = inject("router", "db", "actions", "patients")(observer(class Pro
   render() {
     const { id, fio, firstname, lastname, patronymic, sex, snils, diploms, licenses, emails, phone } =
       this.props.actions.profile;
-      const { t } = this.props;
+      const { t } = this.props.actions;
     let email = (emails.length > 0 && emails[0]) || "";
 
     const settings = {

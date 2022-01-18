@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import RouterLink from '../../router/a';
 
 
@@ -24,6 +24,7 @@ const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass ext
 
   render () {
     let { projectTitle, resetPassForm: { email } } = this.props.actions
+    let {t} = this.props;
     return (
       <div className='login-form height100perc'>
 
@@ -59,7 +60,7 @@ const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass ext
                     fluid size='huge' color='grey'
                     onClick={this.handleResetPass}
                   >
-                    Отправить
+                    {t("send")}
                   </Button>
                 </Segment>
               </Form>
@@ -75,4 +76,4 @@ const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass ext
   }
 }));
 
-export default ResetPass
+export default withTranslation()(ResetPass)

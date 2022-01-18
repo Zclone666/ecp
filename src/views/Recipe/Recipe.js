@@ -369,18 +369,18 @@ const Recipe = inject(
                 </Menu.Item>
                 {/* {!code && ( */}
                 <Menu.Item disabled={noEmail || !recipe_formid || this.state.savePending} onClick={this.save}>
-                  Отправить
+                {t("send")}
                 </Menu.Item>
                 {/* )} */}
                 {/* {code && ( */}
                 <Menu.Item disabled={noEmail || !code} onClick={this.print}>
-                  Печать
+                {t("print")}
                 </Menu.Item>
                 <Menu.Item
                   disabled={noEmail || !recipe_formid || this.state.wasSigned}
                   onClick={this.initiateSigningProcess}
                 >
-                  <span>{this.state.wasSigned ? "Подписано" : "Подписать"}</span>
+                  <span>{this.state.wasSigned ? t("signed") : t("subscribe")}</span>
                 </Menu.Item>
                 {/* )} */}
               </Menu>
@@ -395,32 +395,32 @@ const Recipe = inject(
               <div className="scrollwrapper">
                 <Grid as={Segment} basic verticalAlign="middle" stackable textAlign="center">
                   <Grid.Column width={16}>
-                    <Header>Выберите форму бланка</Header>
+                    <Header>{t("choose_form")}</Header>
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("ambulance_list")} size="big" color="blue" fluid>
-                      Амбулаторный лист назначений
+                    {t("outpatient_appointment_list")}
                     </Button>{" "}
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("station_list")} size="big" color="blue" fluid>
-                      Стационарный лист назначений
+                    {t("stationary_appointment_list")}
                     </Button>{" "}
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("reanim_list")} size="big" color="blue" fluid>
-                      Реанимационный лист назначений
+                    {t("resuscitation_appointment_list")}
                     </Button>{" "}
                   </Grid.Column>
 
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("recipe")} size="big" color="purple" fluid>
-                      Выписать рецепт
+                    {t("writing_recipe")}
                     </Button>{" "}
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("protocol")} size="big" color="orange" fluid>
-                      Протокол консилиума
+                    {t("council_minutes")}
                     </Button>{" "}
                   </Grid.Column>
                 </Grid>
@@ -429,7 +429,7 @@ const Recipe = inject(
                 <Segment basic>
                   <Form>
                     <Form.Field>
-                      <label>Форма рецептурного бланка</label>
+                      <label>{t("recipe_form")}</label>
                       <Dropdown
                         size="big"
                         options={Object.entries(recipeData.items).map(([id, value]) => {
@@ -439,7 +439,7 @@ const Recipe = inject(
                             value: id,
                           };
                         })}
-                        placeholder="Выберите"
+                        placeholder={t("choose")}
                         name="recipe_formid"
                         selection
                         fluid
@@ -449,7 +449,7 @@ const Recipe = inject(
                     </Form.Field>
                     {recipe_formid && (
                       <Form.Field>
-                        <label>Время действия рецепта</label>
+                        <label>{t("recipe_state_time")}</label>
                         <Dropdown
                           size="big"
                           options={
@@ -463,7 +463,7 @@ const Recipe = inject(
                                   };
                                 })
                           }
-                          placeholder="Выберите"
+                          placeholder={t("choose")}
                           name="recipe_endtimeitem"
                           selection
                           fluid
@@ -475,13 +475,13 @@ const Recipe = inject(
                     <Form.Group>
                       {tags.includes("PatientFIO") && (
                         <Form.Field width={12}>
-                          <label>ФИО пациента</label>
+                          <label>{t("name_patient")}</label>
                           <Input name="fio" value={patient.fio} readOnly />
                         </Form.Field>
                       )}
                       {tags.includes("DayOfBirth") && tags.includes("MonthOfBirth") && tags.includes("YearOfBirth") && (
                         <Form.Field width={4}>
-                          <label>Дата рождения</label>
+                          <label>{t("date_birth")}</label>
                           <Calendar
                             name="birthdate"
                             value={moment(patient.birthdate).format("x")}
@@ -495,7 +495,7 @@ const Recipe = inject(
                     </Form.Group>
                     {tags.includes("DoctorFIO") && (
                       <Form.Field>
-                        <label>ФИО врача</label>
+                        <label>{t("name_doctor")}</label>
                         <Input name="docName" value={docName} readOnly />
                       </Form.Field>
                     )}
@@ -512,7 +512,7 @@ const Recipe = inject(
                           <Dropdown
                             size="big"
                             options={diseases.map((x) => ({ key: x.id, text: x.name, value: x.id }))}
-                            placeholder="Выберите"
+                            placeholder={t("choose")}
                             name="recipeDiseaseId"
                             selection
                             fluid
@@ -541,7 +541,7 @@ const Recipe = inject(
                             "Бюджет субъекта Российской Федерации",
                             "Муниципальный бюджет",
                           ].map((x) => ({ key: x, text: x, value: x }))}
-                          placeholder="Выберите"
+                          placeholder={t("choose")}
                           name="financingSource"
                           selection
                           fluid
@@ -556,7 +556,7 @@ const Recipe = inject(
                         <Dropdown
                           size="big"
                           options={["50%", "100%"].map((x) => ({ key: x, text: x, value: x }))}
-                          placeholder="Выберите"
+                          placeholder={t("choose")}
                           name="compensation"
                           selection
                           fluid
@@ -679,7 +679,7 @@ const Recipe = inject(
                               { key: 2, text: "ежемесячно", value: 2 },
                               { key: 3, text: "иной период", value: 3 },
                             ]}
-                            placeholder="Выберите"
+                            placeholder={t("choose")}
                             name="spectextPrompt"
                             selection
                             fluid
@@ -814,10 +814,10 @@ const Recipe = inject(
               )} */}
                     {recipe_formid && (
                       <Form.Field>
-                        <label>Комментарий к рецепту</label>
+                        <label>{t("comment_prescription")}</label>
                         <TextArea
                           size="big"
-                          placeholder="Пояснения к рецепту"
+                          placeholder={t("explanation_recipe")}
                           name="recipe_text"
                           fluid
                           value={recipe_text}
@@ -829,7 +829,7 @@ const Recipe = inject(
                   {false && (
                     <Form>
                       <Form.Field>
-                        <label>Врач</label>
+                        <label>{t("doctor")}</label>
                         <Dropdown
                           options={checkData.doctor.map((item) => {
                             return {
@@ -877,7 +877,7 @@ const Recipe = inject(
                             open={open}
                             trigger={<Button>{t("add")}</Button>}
                           >
-                            <Modal.Header>Создать пациента</Modal.Header>
+                            <Modal.Header>{t("create_patient")}</Modal.Header>
                             <Modal.Content>
                               <PatientPassport />
                             </Modal.Content>
@@ -886,7 +886,7 @@ const Recipe = inject(
                               {t("main_parser_cancel")}
                               </Button>
                               <Button
-                                content="Создать"
+                                content={t("create")}
                                 labelPosition="right"
                                 icon="checkmark"
                                 onClick={() => this.savePatient()}
@@ -897,7 +897,7 @@ const Recipe = inject(
                         </Form.Field>
                       </Form.Group>
                       <Form.Field error={patient.key && noEmail}>
-                        <label>E-mail пациента</label>
+                        <label>{t("mail_patient")}</label>
                         <Input
                           name="email"
                           value={patient.email}
@@ -915,7 +915,7 @@ const Recipe = inject(
                               value: item.id,
                             };
                           })}
-                          placeholder="Клиника"
+                          placeholder={t("clinic")}
                           search
                           name="clinic"
                           selection
@@ -932,20 +932,20 @@ const Recipe = inject(
             </Slider>
 
             <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
-              <Modal.Header>Ваш код для аптеки</Modal.Header>
+              <Modal.Header>{t("code_pharmacy")}</Modal.Header>
               <Modal.Content>
                 <Header as="h1">{code}</Header>
               </Modal.Content>
               <Modal.Actions>
                 <Button
-                  content="Печать рецепта"
+                  content={t("print_recipe")}
                   labelPosition="right"
                   primary
                   icon="file alternate outline"
                   onClick={() => this.print()}
                 />
                 <Button
-                  content="Отправить по E-mail"
+                  content={t("send_by_mail")}
                   labelPosition="right"
                   primary
                   icon="mail"
@@ -966,11 +966,11 @@ const Recipe = inject(
               onOpen={() => this.setState({ certificateSelectionDialog: true })}
               open={this.state.certificateSelectionDialog}
             >
-              <Modal.Header>Выберите сертификат для подписи</Modal.Header>
+              <Modal.Header>{t("select_certificate_for_signature")}</Modal.Header>
               <Modal.Content>
                 <Form>
                   <Form.Field>
-                    <label>доступные сертификаты</label>
+                    <label>{t("available_certificates")}</label>
                     <Dropdown
                       size="big"
                       options={this.state.certificates.map((cert) => {
@@ -995,7 +995,7 @@ const Recipe = inject(
                 {t("main_parser_cancel")}
                 </Button>
                 <Button color="blue" onClick={this.sign} disabled={this.state.selectedCertificate == null}>
-                  Подписать
+                {t("subscribe")}
                 </Button>
               </Modal.Actions>
             </Modal>

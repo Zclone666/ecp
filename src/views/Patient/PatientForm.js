@@ -265,7 +265,7 @@ const PatientForm = inject(
         return arr;
       }
       render() {
-        const { t } = this.props;
+        const { t } = this.props.actions;
         const {
           id,
           key,
@@ -317,20 +317,7 @@ const PatientForm = inject(
           <Segment basic>
             <Form>
               <Form.Group>
-                {/* {!misDisabled && (
-                  <Form.Field width={6}>
-                    <Button
-                      size="big"
-                      fluid
-                      as={RouterLink}
-                      to={"/patient/list"}
-                      content={`Выбрать${fio ? " другого" : ""} пациента`}
-                      labelPosition="left"
-                      icon="chevron left"
-                      primary
-                    />
-                  </Form.Field>
-                )} */}
+               
                 <Form.Field width={7}>
                   <Search
                     fluid

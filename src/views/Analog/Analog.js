@@ -43,7 +43,7 @@ const Analog = inject('router', 'db', 'actions', 'drugs', 'warnings')(observer(c
   };
 
   render() {
-    const { t } = this.props;
+    const { t } = this.props.actions;
     return (
       <>
         <Menu className="bottom fixed menu two item huge main">

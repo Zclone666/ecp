@@ -108,12 +108,12 @@ const Signup = inject("router", "db", "actions", "tools")(observer(class Signup 
         lpuName,
         department,
         clinicEncryptedId,
-      },
+      },t
     } = this.props.actions;
     let { confirm_password, filled, checkPass, search_clinic } = this.state;
     let canInputPass = email.length > 1 && isEmailReg;
     let { searchReady, searchClinicRows } = this.props.tools;
-    const { t } = this.props;
+ 
     // console.log({isEmailReg, email});
     //relationCode
     return (

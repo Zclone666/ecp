@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 import { DatePickerInput } from "rc-datepicker";
-
+import { withTranslation } from "react-i18next";
 import "./Calendar.css";
 
 import moment from "moment";
@@ -32,7 +32,7 @@ class Calendar extends Component {
     this.handleChange(moment().toDate().format("x"));
   };
   render() {
-    let { value, maxDate, size, name } = this.props;
+    let { value, maxDate, size, name,t } = this.props;
     let date = Math.abs(parseInt(value)) > 0 ? moment(parseInt(value) || moment().toDate()).format("DD.MM.YYYY") : "";
     //console.log({value});
     return (
@@ -48,11 +48,11 @@ class Calendar extends Component {
         validationFormat="DD.MM.YYYY"
         onClear={this.onClear}
         className={`ui fluid ${size || "big"} input`}
-        placeholder="Дата рождения"
+        placeholder={t("date_birth")}
         locale="ru"
         maxDate={maxDate}
       />
     );
   }
 }
-export default Calendar;
+export default withTranslation()(Calendar);

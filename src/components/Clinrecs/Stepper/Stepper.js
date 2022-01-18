@@ -116,7 +116,7 @@ const Stepper = inject("db", "actions", "router", "drugs", "warnings", "dosages"
     };
 
     const headerMessage =
-      disease.length === 1 ? `Клинические рекомендации по диагнозу "${disease[0].name}"` : "Клинические рекоммендации";
+      disease.length === 1 ? `${t("clinical_recommendations_for_diagnosis")} "${disease[0].name}"` : t("clinical_recommendations");
     // console.log({checker, clinrecCheckerStep});
     return (
       <>

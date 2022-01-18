@@ -119,9 +119,11 @@ const InfoItems = inject(
       }
       render() {
         let {
-          druginfo: { ready },t
+          druginfo: { ready },
           // router
         } = this.props;
+
+        const { t } = this.props.actions;
         let { opened } = this.state;
         // let drugKey = router.values && router.values.page
         let { calc, instr, drug } = this.items;
@@ -131,7 +133,7 @@ const InfoItems = inject(
             <Segment basic>
               <Header as="h3" className="stretched">
                 <Icon name="unordered list" />
-                <Header.Content>{(drug && drug.name) || "Сводная информация"}</Header.Content>
+                <Header.Content>{(drug && drug.name) || t("free_information")}</Header.Content>
               </Header>
               {ready && calc.length > 0 && (
                 <List divided relaxed className="draginfo" verticalAlign="middle" size="large">
@@ -207,7 +209,7 @@ const InfoItems = inject(
                 <Dimmer active={true} inverted>
                   <Header as="h2" icon color="grey">
                     <Icon name="dont" />
-                    Нет информации
+                    {t("no_information")}
                   </Header>
                 </Dimmer>
               </Dimmer.Dimmable>

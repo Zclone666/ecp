@@ -70,7 +70,7 @@ const PatientPassport = inject("router", "diseases", "actions")(observer(class P
       medcard_num,
       main_address,
     } = this.props.actions.patientPassport;
-    const { t } = this.props;
+    const { t } = this.props.actions;
     
     return (
       <Segment basic>

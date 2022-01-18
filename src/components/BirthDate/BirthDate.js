@@ -3,7 +3,7 @@ import { Form, Icon, Button } from "semantic-ui-react";
 
 import AutoComplete from "./AutoComplete";
 import Calendar from "./Calendar";
-
+import { withTranslation } from "react-i18next";
 import moment from "moment";
 
 function declension(forms, val) {
@@ -93,9 +93,10 @@ class BirthDate extends Component {
   }
   render() {
     let { birth, date } = this.state;
+    let {t} = this.props;
     return (
       <Form.Field width={16}>
-        <label>Возраст/дата рождения</label>
+        <label>{t("age_date_birth")}</label>
         <div className="birthdate">
           <AutoComplete value={birth} onChange={this.handleChangeBirth} />
           <Button basic icon="arrows alternate horizontal" />
@@ -105,4 +106,4 @@ class BirthDate extends Component {
     );
   }
 }
-export default BirthDate;
+export default withTranslation()(BirthDate);

@@ -259,7 +259,7 @@ const Prescript = inject(
               <Segment basic>
                 <Form>
                   <Form.Field>
-                    <label>Врач</label>
+                    <label>{t("doctor")}</label>
                     <Input name="doctor" value={doctor} readOnly className="readonly" />
                   </Form.Field>
 
@@ -290,7 +290,7 @@ const Prescript = inject(
                         open={open}
                         trigger={<Button>{t("add")}</Button>}
                       >
-                        <Modal.Header>Создать пациента</Modal.Header>
+                        <Modal.Header>{t("create_patient")}</Modal.Header>
                         <Modal.Content>
                           <PatientPassport />
                         </Modal.Content>
@@ -299,7 +299,7 @@ const Prescript = inject(
                           {t("main_parser_cancel")}
                           </Button>
                           <Button
-                            content="Создать"
+                            content={t("create")}
                             labelPosition="right"
                             icon="checkmark"
                             onClick={() => this.savePatient()}
@@ -310,7 +310,7 @@ const Prescript = inject(
                     </Form.Field>
                   </Form.Group>
                   <Form.Field error={patient.key && noEmail}>
-                    <label>E-mail пациента</label>
+                    <label>{t("mail_patient")}</label>
                     <Input
                       name="email"
                       value={patient.email}
