@@ -366,7 +366,7 @@ const Calculator = inject(
                     />
                   </Form.Field>
                   <Form.Field width={3}>
-                    <label>Кол-во доз:</label>
+                    <label>{t("number_dose")}:</label>
                     <Input
                       disabled={disableAll}
                       size="big"

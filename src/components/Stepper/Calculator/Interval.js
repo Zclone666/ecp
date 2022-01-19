@@ -140,6 +140,7 @@ const Interval = inject(
       }
       renderEvery(i, concept) {
         let { type, x, timesx } = concept;
+        const { t } = this.props.actions;
         return (
           <Form.Field inline>
             <label> каждые </label>
@@ -165,11 +166,12 @@ const Interval = inject(
       }
       renderPeriodIn(i, concept) {
         let { type, x, y, timesx, timesy } = concept;
+        const { t } = this.props.actions;
         return (
           <Form.Field inline>
             {this.renderNums({ x: 24, name: "x", index: i, type, currvalue: x })}
             {this.renderTimes({ num: x || 0, name: "timesx", index: i, type, currvalue: timesx })}
-            <label> через </label>
+            <label> {t("across")} </label>
             {this.renderNums({ x: 24, name: "y", index: i, type, currvalue: y })}
             {this.renderTimes({ num: y || 0, name: "timesy", index: i, type, currvalue: timesy })}
             <Button icon onClick={() => this.removeConcept(i)}>
@@ -180,10 +182,11 @@ const Interval = inject(
       }
       renderCount(i, concept) {
         let { type, x, timesx } = concept;
+        const { t } = this.props.actions;
         return (
           <Form.Field inline>
             {this.renderNums({ x: 24, name: "x", index: i, type, currvalue: x })}
-            <label> {declension(ref_times, x || 0)} в </label>
+            <label> {declension(ref_times, x || 0)} {t("in")} </label>
             {this.renderTimes({ num: 1, name: "timesx", index: i, type, currvalue: timesx })}
             <Button icon onClick={() => this.removeConcept(i)}>
               <Icon name="delete" />
@@ -193,12 +196,13 @@ const Interval = inject(
       }
       renderCountEvery(i, concept) {
         let { type, x, y, timesx, timesy } = concept;
+        const { t } = this.props.actions;
         return (
           <Form.Field inline>
             {this.renderNums({ x: 24, name: "x", index: i, type, currvalue: x })}
-            <label> {declension(ref_times, x || 0)} в </label>
+            <label> {declension(ref_times, x || 0)} {t("in")} </label>
             {this.renderTimes({ num: 1, name: "timesx", index: i, type, currvalue: timesx })}
-            <label> с перерывами </label>
+            <label> {t("with_breaks")} </label>
             {this.renderNums({ x: 24, name: "y", index: i, type, currvalue: y })}
             {this.renderTimes({ num: y || 0, name: "timesy", index: i, type, currvalue: timesy })}
             <Button icon onClick={() => this.removeConcept(i)}>
@@ -209,9 +213,10 @@ const Interval = inject(
       }
       renderIn(i, concept) {
         let { type, x, timesx } = concept;
+        const { t } = this.props.actions;
         return (
           <Form.Field inline>
-            <label>через</label>
+            <label>{t("across")}</label>
             {this.renderNums({ x: 24, name: "x", index: i, type, currvalue: x })}
             {this.renderTimes({ num: x || 0, name: "timesx", index: i, type, currvalue: timesx })}
             <Button icon onClick={() => this.removeConcept(i)}>
@@ -222,13 +227,14 @@ const Interval = inject(
       }
       renderTime(i, concept) {
         let { type, time } = concept;
+        const { t } = this.props.actions;
         return (
           <Form.Field inline>
             <Dropdown
               name={"time"}
               selection
               value={time}
-              placeholder={"время"}
+              placeholder={t("time")}
               onChange={(e, { name, value }) => this.handleChange(e, { name, type, value, index: i })}
               options={_.map(Array(48), (item, i) => {
                 return {

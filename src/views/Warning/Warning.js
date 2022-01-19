@@ -269,7 +269,7 @@ const Warning = inject(
               onOpen={() => this.setState({ errorTextDialog: true, errorText: "" })}
               open={this.state.errorTextDialog}
             >
-              <Modal.Header>Сообщите об ошибке</Modal.Header>
+              <Modal.Header>{t("notify_about_error")}</Modal.Header>
               <Modal.Content>
                 <Form>
                   <TextArea
@@ -277,17 +277,17 @@ const Warning = inject(
                     rows={4}
                     name="drugs"
                     value={this.state.errorText}
-                    placeholder="Введите текст сообщения"
+                    placeholder={t("enter_message_text")}
                     onChange={(e) => this.setState({ errorText: e.target.value })}
                   />
                 </Form>
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ errorTextDialog: false, errorText: "" })}>
-                  Отменить
+                {t("cancel")}
                 </Button>
                 <Button color="blue" onClick={this.sendErrorText} disabled={this.state.errorText.length == 0}>
-                  Сообщить
+                {t("to_report")}
                 </Button>
               </Modal.Actions>
             </Modal>

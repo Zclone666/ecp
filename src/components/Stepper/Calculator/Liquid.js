@@ -302,7 +302,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 </Input>
               </Form.Field>
               <Form.Field width={3}>
-                <label>Кол-во доз:</label>
+                <label>{t("number_dose")}:</label>
                 <Input
                   disabled={disableAll}
                   size="big"

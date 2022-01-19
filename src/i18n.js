@@ -273,6 +273,15 @@ const resources = {
       report_an_error: "Сообщить об ошибке", /// //// ///
       notify_about_error: "Сообщите об ошибке",
       enter_message_text: "Введите текст сообщения",
+      to_report: "Сообщить",
+      cancel: "Отменить",
+      number_dose: "Кол-во доз",
+
+      measurements: "ед. измерения",     
+      across: "через",
+      in: "в",
+      with_breaks: "с перерывами",
+      everyone: "каждые",
 
       // protocol_request_error: "Возникла ошибка запроса протокола."
 
