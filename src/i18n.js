@@ -283,6 +283,16 @@ const resources = {
       with_breaks: "с перерывами",
       everyone: "каждые",
 
+      form_input: 'Форма ввода' ,
+      // dosage_form: 'Лекарственная форма' ,
+     // dosage: 'Дозировка' ,
+    //  mode_application mode_application: "Способ применения",
+      // Mode of application: 'Способ применения' 
+  
+     
+    
+
+    
       // protocol_request_error: "Возникла ошибка запроса протокола."
 
       //  'day', 'день', 

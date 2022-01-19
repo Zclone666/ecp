@@ -29,22 +29,22 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
   }
   steps = {
     lf: [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' },
-      { name: 'method', text: 'Способ применения' }
+      { name: 'type', text: 'form_input' },
+      { name: 'lf', text: 'dosage_form' },
+      { name: 'dosage', text: 'dosage' },
+      { name: 'method', text: 'mode_application' }
     ],
     methods: [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'method', text: 'Способ применения' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' }
+      { name: 'type', text: 'form_input' },
+      { name: 'method', text: 'mode_application' },
+      { name: 'lf', text: 'dosage_form' },
+      { name: 'dosage', text: 'dosage' }
     ],
     '': [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' },
-      { name: 'method', text: 'Способ применения' }
+      { name: 'type', text: 'form_input' },
+      { name: 'lf', text: 'dosage_form' },
+      { name: 'dosage', text: 'dosage' },
+      { name: 'method', text: 'mode_application' }
     ],
   }
   render() {
@@ -94,7 +94,7 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
             <Step completed={currStep > i} key={'st'+i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
               { ( currStep == i || viewType == 'pc' ) &&
               <Step.Content>
-                <Step.Title>{step.text}</Step.Title>
+                <Step.Title>{t(step.text)}</Step.Title>
                 <Step.Description>{chosedName}</Step.Description>
               </Step.Content>
               }
