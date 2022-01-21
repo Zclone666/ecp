@@ -735,7 +735,7 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: `Здравствуйте, ${this.doctor.name}`,
+                title: `${this.t("welcome") || "Здравствуйте"}, ${this.doctor.name}`,
                 message: "",
                 level: "info",
                 sticky: false,
@@ -949,7 +949,7 @@ class Actions {
       this.makeAlerts({
         alerts: [
           {
-            title: `Здравствуйте, ${this.doctor.name}`,
+            title: `${this.t("welcome") || "Здравствуйте"}, ${this.doctor.name}`,
             message: "",
             level: "info",
             sticky: false,
@@ -1114,7 +1114,7 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: `Внимание!`,
+                title: this.t("attention") || `Внимание!`,
                 message: "Вы уже зарегистрированы в системе! Перейдите на страницу авторизации.",
                 button: {
                   text: "Перейти",

@@ -284,32 +284,46 @@ const resources = {
       everyone: "каждые",
 
       form_input: 'Форма ввода' ,
-      // dosage_form: 'Лекарственная форма' ,
-     // dosage: 'Дозировка' ,
-    //  mode_application mode_application: "Способ применения",
-      // Mode of application: 'Способ применения' 
-  
-     
-    
+      
+      diplomas: "Дипломы",
+      licenses: "Лицензии",
 
-    
-      // protocol_request_error: "Возникла ошибка запроса протокола."
+      minute: "минуту", 
+      minutes: "минуты", 
+      minut: "минут",
+      
+      hour: "час", 
+      o_clock: "часа", 
+      hours: "часов",
 
-      //  'day', 'день', 
-      //  'day','дня', 
-      //  'days','дней',
+      day: 'день', 
+      a_day: 'дня', 
+      days: 'дней',
 
-      //  'year','год', 
-      //  'of_the_year','года', 
-      //  'years', 'лет',
+      year: 'год', 
+      of_the_year: 'года', 
+      years: 'лет',
 
-      //  'month', 'месяц',
-      //  'month',  'месяца',
-      //  'months', 'месяцев',
+      month: 'месяц',
+      a_month:  'месяца',
+      months: 'месяцев',
 
-      //  'a week','неделя',
-      //  'weeks', 'недели',
-      //  'weeks', 'недель',
+      a_week: 'неделя',
+      weeks: 'недели',
+      week_min: 'недель',
+      week_time: "неделю",
+
+      once: "раз", 
+      times: "раза", 
+
+      year_birth: "года рождения",
+      birth: "рождения",
+      birth_min : "р.",
+      year_birth_min : "г.р.",
+
+      welcome: "Здравствуйте",
+
+
     },
   },
 };

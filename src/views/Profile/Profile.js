@@ -130,7 +130,7 @@ const Profile = inject(
                   </Form.Group>
                   <Form.Group>
                     <Form.Field width={8}>
-                      <label>СНИЛС</label>
+                      <label>{t("SNILS")}</label>
                       <Input
                         size="big"
                         name="snils"
@@ -151,7 +151,7 @@ const Profile = inject(
                     </Form.Field>
                   </Form.Group>
                 </Form>
-                <Header as="h3" content="Дипломы" />
+                <Header as="h3" content={t("diplomas")} />
                 {diploms && diploms.length > 0 && (
                   <List divided relaxed verticalAlign="middle" size="large">
                     {diploms.map((item, i) => {
@@ -169,7 +169,7 @@ const Profile = inject(
                     })}
                   </List>
                 )}
-                <Header as="h3" content="Лицензии" />
+                <Header as="h3" content={t("licenses")} />
                 {licenses && licenses.length > 0 && (
                   <List divided relaxed verticalAlign="middle" size="large">
                     {licenses.map((item, i) => {

@@ -125,7 +125,7 @@ const PatientPassport = inject(
                   />
                 </Form.Field>
                 <Form.Field>
-                  <label>СНИЛС</label>
+                  <label>{t("SNILS")}</label>
                   <Input
                     size="big"
                     children={
@@ -140,7 +140,7 @@ const PatientPassport = inject(
                   />
                 </Form.Field>
                 <Form.Field>
-                  <label>Полис ОМС</label>
+                  <label>{t("polis_oms")}</label>
                   <Input
                     size="big"
                     children={
@@ -177,7 +177,7 @@ const PatientPassport = inject(
               </Form.Group>
               <Form.Group widths={2}>
                 <Form.Field>
-                  <label>Номер медицинской карты пациента</label>
+                  <label>{t("patient_medical_map_number")}</label>
                   <Input
                     size="big"
                     name="medcard_num"
@@ -187,7 +187,7 @@ const PatientPassport = inject(
                   />
                 </Form.Field>
                 <Form.Field>
-                  <label>Адрес места жительства</label>
+                  <label>{t("residence_address")}</label>
                   <Input
                     size="big"
                     name="main_address"

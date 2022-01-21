@@ -25,13 +25,13 @@ function declension(forms, val) {
   return forms[val % 100 > 4 && val % 100 < 20 ? 2 : cases[val % 10 < 5 ? val % 10 : 5]];
 }
 
-const ref_minutes = ["минуту", "минуты", "минут"],
-  ref_hours = ["час", "часа", "часов"],
-  ref_days = ["день", "дня", "дней"],
-  ref_weeks = ["неделю", "недели", "недель"],
-  ref_months = ["месяц", "месяца", "месяцев"],
-  ref_years = ["год", "года", "лет"],
-  ref_times = ["раз", "раза", "раз"];
+const ref_minutes = ["minute", "minutes", "minut"],
+  ref_hours = ["hour", "o_clock", "hours"],
+  ref_days = ["day", "a_day", "days"],
+  ref_weeks = ["week_time", "weeks", "week_min"],
+  ref_months = ["month", "a_month", "months"],
+  ref_years = ["year", "of_the_year", "years"],
+  ref_times = ["once", "times", "once"];
 
 const Interval = inject(
   "db",
@@ -82,37 +82,38 @@ const Interval = inject(
         // this.setState({ concepts })
       };
       renderTimes({ num, name, index, type, currvalue }) {
+        const { t } = this.props.actions;
         return (
           <Dropdown
             name={name}
             selection
             value={currvalue}
             onChange={(e, { name, value }) => this.handleChange(e, { name, type, value, index })}
-            placeholder={"ед. измерения"}
+            placeholder={t("measurements")}
             options={[
               {
                 key: "minutes",
-                text: declension(ref_minutes, num),
+                text: declension(t(ref_minutes), num),
                 value: "minutes",
               },
               {
                 key: "hours",
-                text: declension(ref_hours, num),
+                text: declension(t(ref_hours), num),
                 value: "hours",
               },
               {
                 key: "days",
-                text: declension(ref_days, num),
+                text: declension(t(ref_days), num),
                 value: "days",
               },
               {
                 key: "weeks",
-                text: declension(ref_weeks, num),
+                text: declension(t(ref_weeks), num),
                 value: "weeks",
               },
               {
                 key: "months",
-                text: declension(ref_months, num),
+                text: declension(t(ref_months), num),
                 value: "months",
               },
             ]}
@@ -143,7 +144,7 @@ const Interval = inject(
         const { t } = this.props.actions;
         return (
           <Form.Field inline>
-            <label> каждые </label>
+            <label> {t("everyone")} </label>
             {this.renderNums({ x: 60, name: "x", index: i, type, currvalue: x })}
             {this.renderTimes({ num: x || 0, name: "timesx", index: i, type, currvalue: timesx })}
             <Button icon onClick={() => this.removeConcept(i)}>

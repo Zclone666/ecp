@@ -11,10 +11,15 @@ function declension(forms, val) {
   return forms[val % 100 > 4 && val % 100 < 20 ? 2 : cases[val % 10 < 5 ? val % 10 : 5]];
 }
 
-const ref_days = ["день", "дня", "дней"],
-  ref_weeks = ["неделя", "недели", "недель"],
-  ref_months = ["месяц", "месяца", "месяцев"],
-  ref_years = ["год", "года", "лет"];
+const ref_days = ["day", "a_day", "days"],
+  ref_weeks = ["week_time", "weeks", "week_min"],
+  ref_months = ["month", "a_month", "months"],
+  ref_years = ["year", "of_the_year", "years"];
+
+// const ref_days = ["день", "дня", "дней"],
+//   ref_weeks = ["неделя", "недели", "недель"],
+//   ref_months = ["месяц", "месяца", "месяцев"],
+//   ref_years = ["год", "года", "лет"];
 
 class BirthDate extends Component {
   constructor(props) {
@@ -26,6 +31,7 @@ class BirthDate extends Component {
   }
   handleChangeBirth = (e, { value }) => {
     let { onChange, name } = this.props;
+    const { t } = this.props.actions;
     let year = 0,
       month = 0,
       week = 0,
@@ -40,8 +46,8 @@ class BirthDate extends Component {
       if (ref_months.includes(val)) month = parseInt(resArr[i - 1]);
       if (ref_weeks.includes(val)) week = parseInt(resArr[i - 1]);
       if (ref_days.includes(val)) day = parseInt(resArr[i - 1]);
-      if (val == "рождения" || val == "р.") birthyear = parseInt(resArr[i - 2]);
-      if (val == "г.р.") birthyear = parseInt(resArr[i - 1]);
+      if (val == t("birth") || val == t("birth_min")) birthyear = parseInt(resArr[i - 2]);
+      if (val == t("year_birth_min")) birthyear = parseInt(resArr[i - 1]);
     });
     // console.log({ year, month, week, day });
     // console.log(moment().format('DD.MM.YYYY'));
@@ -55,6 +61,7 @@ class BirthDate extends Component {
   handleChangeDate = (e, { value }) => {
     // console.log({ value });
     let { onChange, name } = this.props;
+    const { t } = this.props.actions;
     let years = moment().diff(moment(moment(value).toDate()), "years");
     let months = moment()
       .add({ years: -years })
@@ -67,10 +74,10 @@ class BirthDate extends Component {
       .diff(moment(moment(value).toDate()), "days");
 
     let arr = [];
-    if (years > 0) arr.push(years, declension(ref_years, years));
-    if (months > 0) arr.push(months, declension(ref_months, months));
-    if (weeks > 0) arr.push(weeks, declension(ref_weeks, weeks));
-    if (days > 0) arr.push(days, declension(ref_days, days));
+    if (years > 0) arr.push(years, declension(t(ref_years), years));
+    if (months > 0) arr.push(months, declension(t(ref_months), months));
+    if (weeks > 0) arr.push(weeks, declension(t(ref_weeks), weeks));
+    if (days > 0) arr.push(days, declension(t(ref_days), days));
 
     onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
     this.setState({ birth: arr.join(" "), date: moment(value).format("x") });
