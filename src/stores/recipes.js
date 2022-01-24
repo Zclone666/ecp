@@ -257,8 +257,8 @@ class Recipes {
           this.stores.actions.makeAlerts({
             alerts: [
               {
-                title: `Рецепт выписан!`,
-                message: `Теперь вы можете распечатать его, или отправить на почту.`,
+                title: this.stores.actions.t("recipe_discharged"),
+                message: this.stores.actions.t("you_print_send_mail"),
                 level: "success",
                 sticky: false,
               },
@@ -356,8 +356,8 @@ class Recipes {
         this.stores.actions.makeAlerts({
           alerts: [
             {
-              title: `Готово!`,
-              message: `Рецепт отправлен на ${this.stores.actions.patientForm.email}`,
+              title: this.stores.actions.t("ready"),
+              message: `${this.stores.actions.t("recipe_shipped_by")} ${this.stores.actions.patientForm.email}`,
               level: "success",
               sticky: false,
             },

@@ -17,10 +17,6 @@ const ref_days = ["day", "a_day", "days"],
   ref_months = ["month", "a_month", "months"],
   ref_years = ["year", "of_the_year", "years"];
 
-// const ref_days = ["день", "дня", "дней"],
-//   ref_weeks = ["неделя", "недели", "недель"],
-//   ref_months = ["месяц", "месяца", "месяцев"],
-//   ref_years = ["год", "года", "лет"];
 const BirthDate = inject(
   "actions",
 )(

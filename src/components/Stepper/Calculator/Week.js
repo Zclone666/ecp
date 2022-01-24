@@ -34,8 +34,8 @@ const Schedule = inject("db", "actions", "router", "drugs", "dosages")(observer(
       router: { values },
     } = this.props;
     let {t} = this.props.actions;
-
-    let weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+    
+    let weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];
     return (
       <Form.Group>
         <Form.Field className="fluid">
@@ -47,12 +47,12 @@ const Schedule = inject("db", "actions", "router", "drugs", "dosages")(observer(
           />
           <Responsive as={Segment.Group} horizontal fluid widths={7} minWidth={768}>
             {weekdays.map((day, i) => {
-              return <Day day={day} index={i} key={"day" + i} onChange={this.handleChange} />;
+              return <Day day={t(day)} index={i} key={"day" + i} onChange={this.handleChange} />;
             })}
           </Responsive>
           <Responsive as={Segment.Group} vertical fluid maxWidth={767}>
             {weekdays.map((day, i) => {
-              return <Day day={day} index={i} key={"day" + i} onChange={this.handleChange} />;
+              return <Day day={t(day)} index={i} key={"day" + i} onChange={this.handleChange} />;
             })}
           </Responsive>
         </Form.Field>

@@ -216,8 +216,7 @@ const Patient = inject(
                 <Menu.Item color="red" onClick={this.back}>
                   {t("back")}
                 </Menu.Item>
-                <Menu.Item onClick={() => this.saveForm(false)}>{t("apply")}</Menu.Item>
-                {/* <Menu.Item onClick={this.newPatient}>Сохранить</Menu.Item> */}
+                <Menu.Item onClick={() => this.saveForm(false)}>{t("apply")}</Menu.Item>                
                 <Popup
                   disabled={!(!firstname || !lastname)}
                   position="top center"

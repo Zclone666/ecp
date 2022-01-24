@@ -36,7 +36,7 @@ const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends
                 {projectTitle}
               </Header>
               <Header as="h3" color="grey" textAlign="center">
-                ЗАПРОС КОДА РЕГИСТРАЦИИ
+                {t("request_registration_code")}
               </Header>
               <Form size="large" onSubmit={this.handleGetConfirm}>
                 <Segment padded="very" className="no-border raised">
@@ -57,9 +57,9 @@ const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends
                 </Segment>
               </Form>
               <Message className="squared">
-                Уже зарегистрированы? <RouterLink to="/login">Войти</RouterLink>
+              {t("already_registered")} <RouterLink to="/login">{t("come_in")}</RouterLink>
                 <br />
-                Уже есть код? <RouterLink to="/confirm">Подтвердить</RouterLink>
+                {t("already_have_code")} <RouterLink to="/confirm">{t("confirm")}</RouterLink>
               </Message>
             </Segment>
           </Grid.Column>

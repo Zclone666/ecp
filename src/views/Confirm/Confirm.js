@@ -34,7 +34,6 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
     let { projectTitle, confirmForm: { code, email, service }, t } = this.props.actions
     return (
 
-
       <div className='login-form height100perc'>
 
         <Grid
@@ -49,7 +48,7 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
                 {projectTitle}
               </Header>
               <Header as='h3' color='grey' textAlign='center'>
-                ПОДТВЕРЖДЕНИЕ РЕГИСТРАЦИИ
+                {t("confirmation_registration")}
               </Header>
               <Form size='large' onSubmit={this.handleConfirm}>
                 <Segment padded='very' className='no-border raised'>
@@ -70,7 +69,7 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
                     icon='lock'
                     value={code || ''}
                     iconPosition='left'
-                    placeholder='Код подтверждения'
+                    placeholder={t("confirmation_code")}
                     onChange={this.handleChange}
                   />
                   <Button
@@ -78,13 +77,13 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
                     fluid size='huge' color='grey'
                     onClick={this.handleConfirm}
                   >
-                    Подтвердить
+                    {t("confirm")}
                   </Button>
                 </Segment>
               </Form>
               <Message className='squared'>
-                Уже зарегистрированы? <RouterLink to='/login'>Войти</RouterLink><br />
-                {t("or")} <RouterLink to="/getconfirm" >выслать</RouterLink> повторный код подтверждения
+                {t("already_registered")} <RouterLink to='/login'>{t("come_in")}</RouterLink><br />
+                {t("or")} <RouterLink to="/getconfirm" >{t("send")}</RouterLink> {t("re_code_confirmation")}
               </Message>
             </Segment>
           </Grid.Column>

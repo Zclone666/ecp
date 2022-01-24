@@ -36,6 +36,7 @@ const Login = inject(
         if (this.state.authPending) return;
         this.setState({ authPending: true });
         let { showCode, privateKeyOnly } = this.state;
+        const { t } = this.props.actions;
         if (privateKeyOnly) {
           this.setState({ autofillAsk: false });
           this.props.actions.fakePrivateKeylogin();
@@ -48,7 +49,7 @@ const Login = inject(
           const autofill = localStorage.getItem("autofill");
           // console.log({ autofill });
           if (isOk && autofill != "yes") {
-            const autofillAsk = window.confirm("запомнить ваш email и пароль?");
+            const autofillAsk = window.confirm(t("remember_your_email_password"));
             if (autofillAsk) {
               localStorage.setItem("autofillEmail", email);
               localStorage.setItem("autofillPassword", password);
@@ -163,19 +164,7 @@ const Login = inject(
                 </Segment>
               </Grid.Column>
             </Grid>
-            {/* <Confirm
-          open={this.state.autofillConfirm}
-          content=""
-          header="запомнить email и пароль?"
-          cancelButton="не запоминать"
-          confirmButton="да"
-          onCancel={() => {
-            this.setState({ autofillConfirm: false });
-            localStorage.setItem("autofill", "no");
-            this.handleLogin();
-          }}
-          onConfirm={this.handleConfirm}
-        /> */}
+      
           </div>
         );
       }

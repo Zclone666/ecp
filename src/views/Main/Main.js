@@ -405,14 +405,14 @@ const Main = inject(
             >
               {unselectedRows.length > 0 && (
                 <Menu secondary className={`bottom fixed`}>
-                  <Menu.Item>Удалено строк: {unselectedRows.length}</Menu.Item>
+                  <Menu.Item>{t("removed_string")}: {unselectedRows.length}</Menu.Item>
                   <Menu.Item onClick={this.returnDeleted}>
                     <Icon name="undo alternate" />
-                    Вернуть
+                    {t("return")}
                   </Menu.Item>
                   <Menu.Item onClick={this.clearDeleted}>
                     <Icon name="delete" />
-                    Удалить насовсем
+                    {t("remove_nasovsev")}                    
                   </Menu.Item>
                 </Menu>
               )}

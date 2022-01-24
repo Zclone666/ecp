@@ -90,7 +90,7 @@ const Profile = inject(
                         size="big"
                         name="firstname"
                         value={firstname || ""}
-                        placeholder="Иван"
+                        placeholder={t("ivan")}
                         onChange={this.handleChange}
                       />
                     </Form.Field>
@@ -100,7 +100,7 @@ const Profile = inject(
                         size="big"
                         name="lastname"
                         value={lastname || ""}
-                        placeholder="Иванов"
+                        placeholder={t("ivanov")}
                         onChange={this.handleChange}
                       />
                     </Form.Field>
@@ -112,7 +112,7 @@ const Profile = inject(
                         size="big"
                         name="patronymic"
                         value={patronymic || ""}
-                        placeholder="Иванович"
+                        placeholder={t("ivanovich")}
                         onChange={this.handleChange}
                       />
                     </Form.Field>

@@ -272,10 +272,10 @@ class Dosages {
         if (_.isObject(item.dosage) && !_.isArray(item.dosage)) itemDosage = [item.dosage];
 
         if (!itemDosage) {
-          if (_.findIndex(arr, (itm) => itm.dosage && itm.dosage.small == "нет данных") == -1) {
+          if (_.findIndex(arr, (itm) => itm.dosage && itm.dosage.small == this.stores.actions.t("no_data")) == -1) {
             noData = true;
             arr.push({
-              dosage: { small: "нет данных", full: "Дозировка не указана", id: 248 },
+              dosage: { small: this.stores.actions.t("no_data"), full: this.stores.actions.t("dosage_not_specified"), id: 248 },
               pack: {
                 small: "",
                 full: "",
@@ -370,7 +370,7 @@ class Dosages {
       });
     if (noData && arr.length > 1) {
       _.remove(arr, function (itm) {
-        return itm.dosage && itm.dosage.small == "нет данных";
+        return itm.dosage && itm.dosage.small == this.stores.actions.t("no_data");
       });
     }
     return arr;

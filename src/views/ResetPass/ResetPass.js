@@ -40,7 +40,7 @@ const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass ext
                 {projectTitle}
               </Header>
               <Header as='h3' color='grey' textAlign='center'>
-                СБРОС ПАРОЛЯ
+                {t("password_reset")}
               </Header>
               <Form size='large' onSubmit={this.handleResetPass}>
                 <Segment padded='very' className='no-border raised'>
@@ -65,8 +65,8 @@ const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass ext
                 </Segment>
               </Form>
               <Message className='squared'>
-                Уже зарегистрированы? <RouterLink to='/login'>Войти</RouterLink><br />
-                Уже есть код? <RouterLink to="/newpass" >Задать</RouterLink> новый пароль
+                {t("already_registered")} <RouterLink to='/login'>{t("come_in")}</RouterLink><br />
+                {t("already_have_code")} <RouterLink to="/newpass" >{t("set")}</RouterLink> {t("new_password")}
               </Message>
             </Segment>
           </Grid.Column>

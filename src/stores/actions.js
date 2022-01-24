@@ -735,7 +735,7 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: `${this.t("welcome") || "Здравствуйте"}, ${this.doctor.name}`,
+                title: `${this.t("welcome")}, ${this.doctor.name}`,
                 message: "",
                 level: "info",
                 sticky: false,
@@ -746,8 +746,8 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: `Внимание! Врач не указан.`,
-                message: "Обратитесь к администратору.",
+                title: this.t("attention_doctor_not_specified"),
+                message: this.t("contact_administrator"),
                 level: "warning",
                 sticky: false,
               },
@@ -1114,10 +1114,10 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: this.t("attention") || `Внимание!`,
-                message: "Вы уже зарегистрированы в системе! Перейдите на страницу авторизации.",
+                title: this.t("attention"),
+                message: this.t("you_already_registered")+" "+this.t("go_to_login"),
                 button: {
-                  text: "Перейти",
+                  text: this.t("jump"),
                   action: () => {
                     this.stores.router.push("/login");
                     // this.loginForm.email = this.signinForm.email;

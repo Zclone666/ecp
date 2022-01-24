@@ -140,7 +140,7 @@ const PatientsList = inject(
                     size="big"
                     name="fio"
                     value={fio || ""}
-                    placeholder="Иванов Иван Иванович"
+                    placeholder={t("ivan")+" "+t("ivanov")+ " "+t("ivanovich")}
                     onChange={this.handleChange}
                   />
                 </Form.Field>

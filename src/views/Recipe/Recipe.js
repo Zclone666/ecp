@@ -164,6 +164,7 @@ const Recipe = inject(
 
       handleRecipeDataChange = (e, { name, value }) => {
         // console.log({ name, value, e });
+        const { t } = this.props.actions;
         this.resetSign();
         if (!name && !value) {
           let { name, value } = e.target;
@@ -176,10 +177,10 @@ const Recipe = inject(
         if (name == "spectextPrompt") {
           this.setState({ spectextPrompt: value });
           if (value == 1) {
-            this.props.recipes["spectext"] = "еженедельно";
+            this.props.recipes["spectext"] = t("weekly");
           }
           if (value == 2) {
-            this.props.recipes["spectext"] = "ежемесячно";
+            this.props.recipes["spectext"] = t("monthly");
           }
           if (value == 3) {
             this.props.recipes["spectext"] = "";
@@ -244,7 +245,8 @@ const Recipe = inject(
         const data = this.props.recipes.getDataToSign();
         const stringifiedData = JSON.stringify(data);
         const cert = this.state.selectedCertificate;
-        // console.log({ cert, data });
+        const { t } = this.props.actions;
+
         const certBase64 = await cert.exportBase64();
         await createHash(stringifiedData).then((hashedDataToSign) =>
           createDetachedSignature(this.state.selectedCertificate.thumbprint, hashedDataToSign).then((result) => {
@@ -270,7 +272,7 @@ const Recipe = inject(
         this.props.actions.makeAlerts({
           alerts: [
             {
-              title: `Рецепт был успешно подписан цифровой подписью.`,
+              title: t("recipe_successfully_signed_digital_signature"),
               message: "",
               level: "success",
               sticky: false,
@@ -340,7 +342,7 @@ const Recipe = inject(
         const diseases = [
           ...patient.co_disease,
           ...patient.disease,
-          { name: "ручной ввод кода", id: "ручной ввод кода" },
+          { name: t("manual_input_code"), id: t("manual_input_code") },
         ];
         doctor = doctor || doc.name;
 
@@ -728,7 +730,7 @@ const Recipe = inject(
                               value: item.id,
                             };
                           })}
-                          placeholder="Иван Иванов"
+                          placeholder={t("ivan")+" "+t("ivanov")}
                           search
                           name="doctor"
                           selection
@@ -749,7 +751,7 @@ const Recipe = inject(
                                 value: item.key,
                               };
                             })}
-                            placeholder="Иван Иванов"
+                            placeholder={t("ivan")+" "+t("ivanov")}
                             search={false}
                             name="patient"
                             selection

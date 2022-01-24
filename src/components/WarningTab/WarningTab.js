@@ -207,7 +207,7 @@ const WarningTab = inject(
                 )}
                 {tab.id && tab.id.length > 0 && (
                   <List relaxed>
-                    {info.guidance[tab.id] && <b> Рекомендации: </b>}
+                    {info.guidance[tab.id] && <b> {t("recommendations")}: </b>}
                     {info.guidance[tab.id] &&
                       info.guidance[tab.id].map((guid, d) => {
                         if (!info.names[guid]) return null;
