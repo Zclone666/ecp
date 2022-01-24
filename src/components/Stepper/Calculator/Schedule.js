@@ -42,6 +42,7 @@ const Schedule = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
+        const { t } = this.props.actions;
         // console.log('HERE');
         // console.log({ name, value });
         if (name === "dateStart" || name === "dateFinish") {
@@ -62,7 +63,7 @@ const Schedule = inject(
             "days"
           );
           duration_num = duration_num == 0 ? 1 : duration_num;
-          this.props.drugs.current.duration = duration_num + " " + declension(ref_days, duration_num);
+          this.props.drugs.current.duration = duration_num + " " + t(declension(ref_days, duration_num));
           this.props.drugs.current.duration_id = null;
           // console.log(moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true));
           // console.log({ value: moment(value).format('x') } );

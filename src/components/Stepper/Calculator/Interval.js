@@ -93,27 +93,27 @@ const Interval = inject(
             options={[
               {
                 key: "minutes",
-                text: declension(t(ref_minutes), num),
+                text: t(declension(ref_minutes, num)),
                 value: "minutes",
               },
               {
                 key: "hours",
-                text: declension(t(ref_hours), num),
+                text: t(declension(ref_hours, num)),
                 value: "hours",
               },
               {
                 key: "days",
-                text: declension(t(ref_days), num),
+                text: t(declension(ref_days, num)),
                 value: "days",
               },
               {
                 key: "weeks",
-                text: declension(t(ref_weeks), num),
+                text: t(declension(ref_weeks, num)),
                 value: "weeks",
               },
               {
                 key: "months",
-                text: declension(t(ref_months), num),
+                text: t(declension(ref_months, num)),
                 value: "months",
               },
             ]}

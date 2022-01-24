@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form, Icon, Button } from "semantic-ui-react";
-
+import { inject, observer } from 'mobx-react';
 import AutoComplete from "./AutoComplete";
 import Calendar from "./Calendar";
 import { withTranslation } from "react-i18next";
@@ -8,6 +8,7 @@ import moment from "moment";
 
 function declension(forms, val) {
   const cases = [2, 0, 1, 1, 1, 2];
+  console.log(forms, val, val % 100 > 4 && val % 100 < 20 ? 2 : cases[val % 10 < 5 ? val % 10 : 5]);
   return forms[val % 100 > 4 && val % 100 < 20 ? 2 : cases[val % 10 < 5 ? val % 10 : 5]];
 }
 
@@ -20,7 +21,10 @@ const ref_days = ["day", "a_day", "days"],
 //   ref_weeks = ["неделя", "недели", "недель"],
 //   ref_months = ["месяц", "месяца", "месяцев"],
 //   ref_years = ["год", "года", "лет"];
-
+const BirthDate = inject(
+  "actions",
+)(
+  observer(
 class BirthDate extends Component {
   constructor(props) {
     super(props);
@@ -72,12 +76,12 @@ class BirthDate extends Component {
     let days = moment()
       .add({ years: -years, months: -months, weeks: -weeks })
       .diff(moment(moment(value).toDate()), "days");
-
+// console.log(ref_years,t(ref_years));
     let arr = [];
-    if (years > 0) arr.push(years, declension(t(ref_years), years));
-    if (months > 0) arr.push(months, declension(t(ref_months), months));
-    if (weeks > 0) arr.push(weeks, declension(t(ref_weeks), weeks));
-    if (days > 0) arr.push(days, declension(t(ref_days), days));
+    if (years > 0) arr.push(years, t(declension(ref_years, years)));
+    if (months > 0) arr.push(months, t(declension(ref_months, months)));
+    if (weeks > 0) arr.push(weeks, t(declension(ref_weeks, weeks)));
+    if (days > 0) arr.push(days, t(declension(ref_days, days)));
 
     onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
     this.setState({ birth: arr.join(" "), date: moment(value).format("x") });
@@ -112,5 +116,5 @@ class BirthDate extends Component {
       </Form.Field>
     );
   }
-}
+}))
 export default withTranslation()(BirthDate);

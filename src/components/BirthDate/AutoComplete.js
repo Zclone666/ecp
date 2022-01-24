@@ -2,6 +2,7 @@ import React, { Component, createRef } from 'react';
 import cx from 'classnames'
 import { Search, SearchResults, Input } from 'semantic-ui-react'
 import { withTranslation } from "react-i18next";
+import { inject, observer } from 'mobx-react';
 import _ from 'lodash';
 
 function declension(forms, val) {
@@ -13,6 +14,7 @@ const ref_days = ["day", "a_day", "days"],
   ref_weeks = ["week_time", "weeks", "week_min"],
   ref_months = ["month", "a_month", "months"],
   ref_years = ["year", "of_the_year", "years"]
+
 
 class MySearch extends Search {
   constructor(props){
@@ -52,6 +54,10 @@ class MySearch extends Search {
 
 
 };
+const AutoComplete = inject(
+  "actions",
+)(
+  observer(
 class AutoComplete extends Component {
   constructor(props){
     super(props)
@@ -72,7 +78,7 @@ class AutoComplete extends Component {
   }
 
   handleSearchChange = (e, { value }) => {
-    let { onChange } = this.props
+    let { onChange } = this.props;
     const { t } = this.props.actions;
     if (value.length < 1) {
       this.setState({results: [], isLoading: false, searchQuery: ''});
@@ -97,10 +103,10 @@ class AutoComplete extends Component {
 
       //let num = parseInt(value)
       if( value.length === 4 ) results.push({ id: '1', title: `${value} ${t("year_birth")}` })
-      if( num < 121 && !noYears ) results.push({ id: '2', title: `${value} ${declension(t(ref_years), num)}` })
-      if( num <= 12 && !noMonths ) results.push({ id: '3', title: `${value} ${declension(t(ref_months), num)}` })
-      if( num <= 44 && !noWeeks ) results.push({ id: '4', title: `${value} ${declension(t(ref_weeks), num)}` })
-      if( num <= 31 && !noDays ) results.push({ id: '5', title: `${value} ${declension(t(ref_days), num)}` })
+      if( num < 121 && !noYears ) results.push({ id: '2', title: `${value} ${t(declension(ref_years, num))}` })
+      if( num <= 12 && !noMonths ) results.push({ id: '3', title: `${value} ${t(declension(ref_months, num))}` })
+      if( num <= 44 && !noWeeks ) results.push({ id: '4', title: `${value} ${t(declension(ref_weeks, num))}` })
+      if( num <= 31 && !noDays ) results.push({ id: '5', title: `${value} ${t(declension(ref_days, num))}` })
       this.setState({ results })
     })
   }
@@ -128,5 +134,6 @@ class AutoComplete extends Component {
       />
     );
   }
-};
+}
+));
 export default withTranslation()(AutoComplete)
