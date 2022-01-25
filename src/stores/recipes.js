@@ -242,7 +242,7 @@ class Recipes {
       key: this.stores.actions.privateKey,
       authkey: this.stores.actions.authkey,
       active_language: active_language,
-      message: this.stringifiedSignData,
+      message: JSON.stringify(data), //this.stringifiedSignData,
       certificate: this.certificateBase64,
       signed_data: this.digitallySignedRecipe,
     };
