@@ -119,7 +119,7 @@ const resources = {
       analogues: "Аналоги",
       no_analogues: "Нет аналогов",
       more: "Подробнее",
-      
+
       //18.01
 
       age_enter_number: "Возраст (введите число)",
@@ -189,12 +189,12 @@ const resources = {
       motherwise_dose: "Разовая доза",
       components_solution: "Составляющие раствора",
 
-      // 
+      //
 
       select: "Выбрать",
       first_specify_dosage_components_solution: "Сначала укажите дозировку для всех составляющих раствора!",
 
-      speed_in_ml:"Скорость в мл",
+      speed_in_ml: "Скорость в мл",
       speed_in_drops: "Скорость в каплях",
       speed_introduction_by_kg: "Скорость введения на кг",
       speed_administration: "Скорость введения",
@@ -240,8 +240,8 @@ const resources = {
       according_special_purpose: "По специальному назначению",
       choose_vacation_frequency: "Выберите периодичность отпуска",
 
-      other_period: "иной период", 
-      monthly: "ежемесячно", 
+      other_period: "иной период",
+      monthly: "ежемесячно",
       daily: "ежедневно",
       indicate_vacation_frequency: "Укажите другую периодичность отпуска",
       health_care_facility: "ЛПУ",
@@ -251,11 +251,11 @@ const resources = {
       patient_medical_map_number: "Номер медицинской карты пациента",
       SNILS: "СНИЛС",
       percent_payment: "% Оплаты",
-      municipal_budget:"Муниципальный бюджет",
+      municipal_budget: "Муниципальный бюджет",
       budget_subject_russian_federation: "Бюджет субъекта Российской Федерации",
       federal_budget: "Федеральный бюджет",
       source_financing: "Источник финансирования",
-      manual_input_code: "ручной ввод кода", 
+      manual_input_code: "ручной ввод кода",
       nonological_form_code: "Код нозологической формы (по МКБ)",
       choose_determine_nosological_form_code: "Выберите заболевание для определения кода нозологической формы (по МКБ)",
       polis_oms: "Полис ОМС",
@@ -277,49 +277,49 @@ const resources = {
       cancel: "Отменить",
       number_dose: "Кол-во доз",
 
-      measurements: "ед. измерения",     
+      measurements: "ед. измерения",
       across: "через",
       in: "в",
       with_breaks: "с перерывами",
       everyone: "каждые",
 
-      form_input: 'Форма ввода' ,
-      
+      form_input: "Форма ввода",
+
       diplomas: "Дипломы",
       licenses: "Лицензии",
 
-      minute: "минуту", 
-      minutes: "минуты", 
+      minute: "минуту",
+      minutes: "минуты",
       minut: "минут",
-      
-      hour: "час", 
-      o_clock: "часа", 
+
+      hour: "час",
+      o_clock: "часа",
       hours: "часов",
 
-      day: 'день', 
-      a_day: 'дня', 
-      days: 'дней',
+      day: "день",
+      a_day: "дня",
+      days: "дней",
 
-      year: 'год', 
-      of_the_year: 'года', 
-      years: 'лет',
+      year: "год",
+      of_the_year: "года",
+      years: "лет",
 
-      month: 'месяц',
-      a_month:  'месяца',
-      months: 'месяцев',
+      month: "месяц",
+      a_month: "месяца",
+      months: "месяцев",
 
-      a_week: 'неделя',
-      weeks: 'недели',
-      week_min: 'недель',
+      a_week: "неделя",
+      weeks: "недели",
+      week_min: "недель",
       week_time: "неделю",
 
-      once: "раз", 
-      times: "раза", 
+      once: "раз",
+      times: "раза",
 
       year_birth: "года рождения",
       birth: "рождения",
-      birth_min : "р.",
-      year_birth_min : "г.р.",
+      birth_min: "р.",
+      year_birth_min: "г.р.",
 
       welcome: "Здравствуйте",
 
@@ -340,10 +340,11 @@ const resources = {
       // send: "выслать",
       code_invalid: "Код недействителен",
       code_for_changing_password_invalid: "Этот код для смены пароля недействителен.",
-      change_password_must_send_new_confirmation_code: "Чтобы сменить пароль, необходимо повторно отправить письмо с новым кодом подтверждения.",
+      change_password_must_send_new_confirmation_code:
+        "Чтобы сменить пароль, необходимо повторно отправить письмо с новым кодом подтверждения.",
       enter_new_password: "Введите новый пароль",
       recommendations: "Рекомендации",
-      
+
       confirmation_registration: "ПОДТВЕРЖДЕНИЕ РЕГИСТРАЦИИ",
       request_registration_code: "ЗАПРОС КОДА РЕГИСТРАЦИИ",
       password_reset: "СБРОС ПАРОЛЯ",
@@ -356,11 +357,11 @@ const resources = {
       recipe_successfully_signed_digital_signature: "Рецепт был успешно подписан цифровой подписью.",
       contact_administrator: "Обратитесь к администратору.",
       attention_doctor_not_specified: "Внимание! Врач не указан.",
-      no_data: "нет данных", 
+      no_data: "нет данных",
       dosage_not_specified: "Дозировка не указана",
       recipe_discharged: "Рецепт выписан!",
       you_print_send_mail: "Теперь вы можете распечатать его, или отправить на почту.",
-      
+
       ready: "Готово",
       recipe_shipped_by: "Рецепт отправлен на",
       percent: "процент",
@@ -369,17 +370,18 @@ const resources = {
       weekly: "еженедельно",
 
       mo: "Пн",
-      tu: "Вт", 
+      tu: "Вт",
       we: "Ср",
-      th: "Чт", 
-      fr: "Пт", 
-      sa: "Сб", 
+      th: "Чт",
+      fr: "Пт",
+      sa: "Сб",
       su: "Вс",
 
       ivanov: "Иванов",
       ivan: "Иван",
       ivanovich: "Иванович",
 
+      concentration: "концентрация",
     },
   },
 };

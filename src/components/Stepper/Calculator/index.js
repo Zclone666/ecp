@@ -273,7 +273,7 @@ const Calculator = inject(
           patients: {
             current: { weight },
           },
-          isLiquid
+          isLiquid,
         } = this.props;
         const { t } = this.props.actions;
         let { currUnit } = this.state;
@@ -334,6 +334,13 @@ const Calculator = inject(
         //   dayWeightDosage
         // });
         // console.log({dosage: getFromBase((currUnit || def), dosage).join(' + ')});
+        const concetrationNeeded = ["/ml", "/мл"].some((u) =>
+          weights
+            .map((w) => w.text)
+            .join(" ")
+            .includes(u)
+        );
+        //
         return (
           <Segment basic>
             {isLiquid && (
@@ -346,7 +353,7 @@ const Calculator = inject(
               <Form>
                 <Form.Group>
                   <Form.Field width={4}>
-                    <label>{t("dosage")}:</label>
+                    <label>{concetrationNeeded ? t("concentration") : t("dosage")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}
                       size="big"
@@ -361,7 +368,7 @@ const Calculator = inject(
                         />
                       }
                       labelPosition="right"
-                      placeholder="500"
+                      // placeholder="500"
                       onChange={this.handleChange}
                     />
                   </Form.Field>
