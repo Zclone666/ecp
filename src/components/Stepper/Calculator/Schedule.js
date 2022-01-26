@@ -6,7 +6,7 @@ import RouterLink from "../../../router/a";
 import { List, Icon, Form, Segment, Input, Button, Dropdown, Responsive } from "semantic-ui-react";
 
 import { DatePickerInput } from "rc-datepicker";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 import Week from "./Week";
@@ -42,6 +42,7 @@ const Schedule = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
+        const { t } = this.props.actions;
         // console.log('HERE');
         // console.log({ name, value });
         if (name === "dateStart" || name === "dateFinish") {
@@ -62,7 +63,7 @@ const Schedule = inject(
             "days"
           );
           duration_num = duration_num == 0 ? 1 : duration_num;
-          this.props.drugs.current.duration = duration_num + " " + declension(ref_days, duration_num);
+          this.props.drugs.current.duration = duration_num + " " + t(declension(ref_days, duration_num));
           this.props.drugs.current.duration_id = null;
           // console.log(moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true));
           // console.log({ value: moment(value).format('x') } );
@@ -184,7 +185,7 @@ const Schedule = inject(
           },
           router: { values },
         } = this.props;
-
+        let {t} = this.props.actions;
         let { timeFromStart } = this.state;
         // console.log({dateStart});
         //
@@ -201,9 +202,9 @@ const Schedule = inject(
               <Form.Group>
                 <Form.Field width={4}>
                   <label>
-                    Начало приема (
+                  {t("home_accepts")} (
                     <span className="link" onClick={this.setTomorrow}>
-                      завтра
+                    {t("tomorrow")}
                     </span>
                     ):
                   </label>
@@ -224,7 +225,7 @@ const Schedule = inject(
                   />
                 </Form.Field>
                 <Form.Field width={7}>
-                  <label>Окончание приема:</label>
+                  <label>{t("end_reception")}:</label>
                   <Input action>
                     <DatePickerInput
                       ref={this.dateFinish}
@@ -250,13 +251,13 @@ const Schedule = inject(
                       disabled={!dateStart || dateStart.length < 1}
                       className="button"
                       name={"durations"}
-                      text={timeFromStart || "Выбрать"}
+                      text={timeFromStart || t("select")}
                       options={this.renderDurations()}
                     />
                   </Input>
                 </Form.Field>
                 <Form.Field width={5}>
-                  <label>Или</label>
+                  <label>{t("or")}</label>
                   <Responsive as={Button.Group} fluid size="big" minWidth={481}>
                     <Button
                       primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
@@ -264,9 +265,9 @@ const Schedule = inject(
                       name="finishAlternate"
                       value="lQ9LkaNuaG/IgjrmfEhzOQ=="
                     >
-                      До отмены
+                      {t("before_canceling")}
                     </Button>
-                    {/*<Button primary={sex === 'female'} onClick={this.handleChange} name='sex' value='female'>До улучшения</Button>*/}
+
                   </Responsive>
                   <Responsive as={Button.Group} fluid maxWidth={480}>
                     <Button
@@ -275,9 +276,9 @@ const Schedule = inject(
                       name="finishAlternate"
                       value="lQ9LkaNuaG/IgjrmfEhzOQ=="
                     >
-                      До отмены
+                      {t("before_canceling")}
                     </Button>
-                    {/*<Button primary={sex === 'female'} onClick={this.handleChange} name='sex' value='female'>До улучшения</Button>*/}
+               
                   </Responsive>
                 </Form.Field>
               </Form.Group>
@@ -285,7 +286,7 @@ const Schedule = inject(
               {false && (
                 <Form.Group>
                   <Form.Field className="fluid">
-                    <label>Условия приема</label>
+                    <label>{t("terms_accepted")}</label>
                     <Responsive as={Button.Group} fluid widths={3} minWidth={481}>
                       <Button
                         primary={format === "interval"}
@@ -293,15 +294,15 @@ const Schedule = inject(
                         name="format"
                         value="interval"
                       >
-                        По расписанию
+                        {t("select")}
                       </Button>
                       <Button primary={format === "once"} onClick={this.handleChange} name="format" value="once">
-                        Однократно
+                        {t("single")}
                       </Button>
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
-                        По дням недели
+                        {t("by_day_week")}
                       </Button>
-                      {/*<Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>*/}
+               
                     </Responsive>
                     <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
                       <Button
@@ -310,17 +311,16 @@ const Schedule = inject(
                         name="format"
                         value="interval"
                       >
-                        По расписанию
+                        {t("single")}
                       </Button>
                       <Button primary={format === "once"} onClick={this.handleChange} name="format" value="once">
-                        Однократно
+                        {t("single")}
                       </Button>
                     </Responsive>
                     <Responsive as={Button.Group} fluid widths={1} maxWidth={480}>
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
-                        По дням недели
+                        {t("by_day_week")}
                       </Button>
-                      {/*<Button primary={format === 'calendar'} onClick={this.handleChange} name='format' value='calendar'>По календарю</Button>*/}
                     </Responsive>
                   </Form.Field>
                 </Form.Group>
@@ -333,25 +333,7 @@ const Schedule = inject(
                   //'calendar': <Calendar />
                 }[format]
               }
-              {/*<Form.Group>
-            <Form.Field className='fluid'>
-              <label>Дополнительно</label>
-              <Responsive as={Button.Group} fluid widths={4} minWidth={480}>
-                <Button primary={sex === 'male'} onClick={this.handleChange} name='sex' value='male'>Перед едой</Button>
-                <Button primary={sex === 'female'} onClick={this.handleChange} name='sex' value='female'>После еды</Button>
-                <Button primary={sex === 'male'} onClick={this.handleChange} name='sex' value='male'>Во время еды</Button>
-                <Button primary={sex === 'female'} onClick={this.handleChange} name='sex' value='female'>Перед сном</Button>
-              </Responsive>
-              <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
-                <Button primary={sex === 'male'} onClick={this.handleChange} name='sex' value='male'>Перед едой</Button>
-                <Button primary={sex === 'female'} onClick={this.handleChange} name='sex' value='female'>После еды</Button>
-              </Responsive>
-              <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
-                <Button primary={sex === 'male'} onClick={this.handleChange} name='sex' value='male'>Во время еды</Button>
-                <Button primary={sex === 'female'} onClick={this.handleChange} name='sex' value='female'>Перед сном</Button>
-              </Responsive>
-            </Form.Field>
-          </Form.Group>*/}
+          
             </Form>
           </Segment>
         );
@@ -360,4 +342,4 @@ const Schedule = inject(
   )
 );
 
-export default Schedule;
+export default withTranslation()(Schedule);

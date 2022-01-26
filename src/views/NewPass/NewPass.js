@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
 import { Button, Form, Grid, Header, Image, Message, Segment, Modal, Icon } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import RouterLink from "../../router/a";
 
 const NewPass = inject("router", "actions")(observer(class NewPass extends Component {
@@ -49,6 +49,7 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
       projectTitle,
       newPassForm: { recoveryCode, email, newPassword },
     } = this.props.actions;
+    let {t} = this.props;
     let { openResend } = this.state;
     return (
       <div className="login-form height100perc">
@@ -59,7 +60,8 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
                 {projectTitle}
               </Header>
               <Header as="h3" color="grey" textAlign="center">
-                ЗАДАТЬ НОВЫЙ ПАРОЛЬ
+                {t("set")+" "+t("new_password")}
+                {/* ЗАДАТЬ НОВЫЙ ПАРОЛЬ */}
               </Header>
               <Form size="large" onSubmit={this.handleNewPass}>
                 <Segment padded="very" className="no-border raised">
@@ -80,7 +82,7 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
                     icon="lock"
                     value={recoveryCode || ""}
                     iconPosition="left"
-                    placeholder="Код подтверждения"
+                    placeholder={t("confirmation_code")}
                     onChange={this.handleChange}
                   />
                   <Form.Input
@@ -89,35 +91,35 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
                     fluid
                     icon="key"
                     iconPosition="left"
-                    placeholder="Введите новый пароль"
+                    placeholder={t("enter_new_password")}
                     type="password"
                     onChange={this.handleChange}
                   />
                   <Button disabled={!this.state.filled} fluid size="huge" color="grey" onClick={this.handleNewPass}>
-                    Подтвердить
+                  {t("confirm")}
                   </Button>
                 </Segment>
               </Form>
               <Message className="squared">
-                Уже зарегистрированы? <RouterLink to="/login">Войти</RouterLink>
+              {t("already_registered")} <RouterLink to="/login">{t("come_in")}</RouterLink>
                 <br />
-                Или <RouterLink to="/resetpass">выслать</RouterLink> повторный код подтверждения
+                {t("or")} <RouterLink to="/resetpass">{t("send")}</RouterLink> {t("re_code_confirmation")}
               </Message>
             </Segment>
           </Grid.Column>
         </Grid>
         <Modal closeIcon open={openResend} onClose={() => this.setOpen(false)} onOpen={() => this.setOpen(true)}>
-          <Header content="Код недействителен" />
+          <Header content={t("code_invalid")} />
           <Modal.Content>
-            <p>Этот код для смены пароля недействителен.</p>
-            <p>Чтобы сменить пароль, необходимо повторно отправить письмо с новым кодом подтверждения.</p>
+            <p>{t("code_for_changing_password_invalid")}</p>
+            <p>{t("change_password_must_send_new_confirmation_code")}</p>
           </Modal.Content>
           <Modal.Actions>
             <Button color="red" onClick={() => this.setOpen(false)}>
-              <Icon name="remove" /> Отмена
+              <Icon name="remove" /> {t("main_parser_cancel")}
             </Button>
             <Button color="green" onClick={() => this.handleResetPass()}>
-              <Icon name="checkmark" /> Отправить письмо
+              <Icon name="checkmark" /> {t("send_mail")}
             </Button>
           </Modal.Actions>
         </Modal>
@@ -126,4 +128,4 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
   }
 }));
 
-export default NewPass;
+export default withTranslation()(NewPass);

@@ -15,7 +15,7 @@ import {
   Dimmer,
   Header,
 } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 // import _ from 'lodash';
 
 const Analogs = inject(
@@ -67,6 +67,7 @@ const Analogs = inject(
 
       render() {
         let { analogs, router } = this.props;
+        const { t } = this.props.actions;
         let { opened } = this.state;
         let drugKey = router.values && router.values.page;
         let analogObj = analogs.analog.get(drugKey) || {};
@@ -82,7 +83,7 @@ const Analogs = inject(
                           <List.Content floated="right">
                             {analog.min && (
                               <>
-                                от <Label color="green">{analog.min} ₽</Label> до{" "}
+                                {t("by")} <Label color="green">{analog.min} ₽</Label> {t("to")}{" "}
                               </>
                             )}
                             {analog.max && <Label color="orange">{analog.max} ₽</Label>}
@@ -112,7 +113,7 @@ const Analogs = inject(
                                           <Table.Cell collapsing textAlign="right">
                                             {analogItem.min && (
                                               <>
-                                                от <Label color="green">{analogItem.min} ₽</Label> до{" "}
+                                                {t("federal_list")} <Label color="green">{analogItem.min} ₽</Label> {t("to")}{" "}
                                               </>
                                             )}
                                           </Table.Cell>
@@ -138,7 +139,7 @@ const Analogs = inject(
                 <Dimmer active={true} inverted>
                   <Header as="h2" icon color="grey">
                     <Icon name="dont" />
-                    Нет аналогов
+                    {t("no_analogues")}
                   </Header>
                 </Dimmer>
               </Dimmer.Dimmable>
@@ -150,4 +151,4 @@ const Analogs = inject(
   )
 );
 
-export default Analogs;
+export default withTranslation()(Analogs);

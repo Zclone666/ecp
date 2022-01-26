@@ -5,7 +5,7 @@ import RouterLink from "../../../router/a";
 import { List, Icon, Form, Segment, Input, Button, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
 
 import clarifications from "../../../constants/hardcode";
-
+import { withTranslation } from "react-i18next";
 import { checkDouble, clearDouble } from "../../../lib/helpers";
 
 import Schedule from "./Schedule";
@@ -275,6 +275,7 @@ const Calculator = inject(
           },
           isLiquid,
         } = this.props;
+        const { t } = this.props.actions;
         let { currUnit } = this.state;
         let freqFirst = _.keys(unitsSchedule.freq)[0];
         let weights = [];
@@ -333,11 +334,18 @@ const Calculator = inject(
         //   dayWeightDosage
         // });
         // console.log({dosage: getFromBase((currUnit || def), dosage).join(' + ')});
+        const concetrationNeeded = ["/ml", "/мл"].some((u) =>
+          weights
+            .map((w) => w.text)
+            .join(" ")
+            .includes(u)
+        );
+        //
         return (
           <Segment basic>
             {isLiquid && (
               <div className="liquiddrugs" style={{ marginBottom: "15px" }}>
-                <Header>Составляющие раствора</Header>
+                <Header>{t("components_solution")}</Header>
                 <Drugs liquid={liquid} />
               </div>
             )}
@@ -345,7 +353,7 @@ const Calculator = inject(
               <Form>
                 <Form.Group>
                   <Form.Field width={4}>
-                    <label>Дозировка:</label>
+                    <label>{concetrationNeeded ? t("concentration") : t("dosage")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}
                       size="big"
@@ -360,12 +368,12 @@ const Calculator = inject(
                         />
                       }
                       labelPosition="right"
-                      placeholder="500"
+                      // placeholder="500"
                       onChange={this.handleChange}
                     />
                   </Form.Field>
                   <Form.Field width={3}>
-                    <label>Кол-во доз:</label>
+                    <label>{t("number_dose")}:</label>
                     <Input
                       disabled={disableAll}
                       size="big"
@@ -379,39 +387,39 @@ const Calculator = inject(
                     />
                   </Form.Field>
                   <Form.Field width={3}>
-                    <label>Разовая доза:</label>
+                    <label>{t("motherwise_dose")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}
                       size="big"
                       name="fullDosage"
                       value={getFromBase(currUnit || def, fullDosage).join(" + ") || ""}
-                      label={{ basic: true, content: secondName || "мг" }}
+                      label={{ basic: true, content: secondName || t("mg") }}
                       labelPosition="right"
                       placeholder="500"
                       onChange={this.handleChange}
                     />
                   </Form.Field>
                   <Form.Field width={3}>
-                    <label>Масса тела:</label>
+                    <label>{t("body_mass")}:</label>
                     <Input
                       disabled={disableAll}
                       size="big"
                       name="patient.weight"
                       value={weight || ""}
-                      label={{ basic: true, content: "кг" }}
+                      label={{ basic: true, content: t("kg") }}
                       labelPosition="right"
                       placeholder="60.5"
                       onChange={this.handleChange}
                     />
                   </Form.Field>
                   <Form.Field width={3}>
-                    <label>На кг массы тела:</label>
+                    <label>{t("kg_body_weight")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}
                       size="big"
                       name="weightDosage"
                       value={getFromBase(currUnit || def, weightDosage, 4).join(" + ") || ""}
-                      label={{ basic: true, content: `${secondName || "мг"}/кг` }}
+                      label={{ basic: true, content: `${secondName || t("mg")}/${t("kg")}` }}
                       labelPosition="right"
                       placeholder="0"
                       onChange={this.handleChange}
@@ -421,7 +429,7 @@ const Calculator = inject(
                 <Form.Group>
                   {!liquid && (
                     <Form.Field width={4}>
-                      <label>Кратность приема:</label>
+                      <label>{t("multiplicity_reception")}:</label>
                       <Dropdown
                         disabled={disableAll}
                         selection
@@ -429,33 +437,33 @@ const Calculator = inject(
                         value={current?.freq}
                         className="input big"
                         name={"dayCount"}
-                        placeholder={"Выбрать"}
+                        placeholder={t("select")}
                         onChange={this.setPreset}
                         options={this.renderPresets()}
                       />
                     </Form.Field>
                   )}
                   <Form.Field width={6}>
-                    <label>Суточная доза:</label>
+                    <label>{t("daily_dose")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}
                       size="big"
                       name="dayDosage"
                       value={getFromBase(currUnit || def, dayDosage).join(" + ") || ""}
-                      label={{ basic: true, content: secondName || "мг" }}
+                      label={{ basic: true, content: secondName || t("mg") }}
                       labelPosition="right"
                       placeholder="500"
                       onChange={this.handleChange}
                     />
                   </Form.Field>
                   <Form.Field width={6}>
-                    <label>На кг веса в сутки:</label>
+                    <label>{t("kg_weight_day")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}
                       size="big"
                       name="dayWeightDosage"
                       value={getFromBase(currUnit || def, dayWeightDosage).join(" + ") || ""}
-                      label={{ basic: true, content: `${secondName || "мг"}/кг` }}
+                      label={{ basic: true, content: `${secondName || t("mg")}/${t("kg")}` }}
                       labelPosition="right"
                       placeholder="0"
                       onChange={this.handleChange}
@@ -471,7 +479,7 @@ const Calculator = inject(
                       size="big"
                       name="specials"
                       value={specials || ""}
-                      placeholder="Особые указания"
+                      placeholder={t("special_instructions")}
                       onChange={this.handleChange}
                     />
                   </Form.Field>
@@ -480,7 +488,7 @@ const Calculator = inject(
               <Dimmer inverted active={disableAll}>
                 <Header as="h2" icon color="grey">
                   <Icon name="external square alternate" />
-                  Сначала укажите дозировку для всех составляющих раствора!
+                  {t("first_specify_dosage_components_solution")}
                 </Header>
               </Dimmer>
             </Dimmer.Dimmable>
@@ -491,4 +499,4 @@ const Calculator = inject(
   )
 );
 
-export default Calculator;
+export default withTranslation()(Calculator);

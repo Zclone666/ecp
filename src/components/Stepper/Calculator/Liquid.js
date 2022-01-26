@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 
 import RouterLink from "../../../router/a";
 import { List, Icon, Form, Label, Segment, Input, Button, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import clarifications from "../../../constants/hardcode";
 
 import { checkDouble, clearDouble } from "../../../lib/helpers";
@@ -254,8 +254,9 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
       tools: { round, units, unitarrs },
       dosages: { getFromBase },
       router: { values },
-      isLiquid,
+      isLiquid
     } = this.props;
+    const { t } = this.props.actions;
     let { timeUnits, currTimeUnitName } = this.timeUnits;
     let { weightUnits, currWeightUnitName } = this.weightUnits;
     let { currUnit, currDurationUnit } = this.state;
@@ -272,7 +273,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
       <Segment basic>
         {isLiquid && (
           <div className="liquiddrugs" style={{ marginBottom: "15px" }}>
-            <Header>Составляющие раствора</Header>
+            <Header>{t("components_solution")}</Header>
             <Drugs liquid={liquid} />
           </div>
         )}
@@ -280,7 +281,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
           <Form>
             <Form.Group>
               <Form.Field width={4}>
-                <label>Дозировка:</label>
+                <label>{t("dosage")}:</label>
                 <Input
                   size="big"
                   name="dosage"
@@ -301,7 +302,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 </Input>
               </Form.Field>
               <Form.Field width={3}>
-                <label>Кол-во доз:</label>
+                <label>{t("number_dose")}:</label>
                 <Input
                   disabled={disableAll}
                   size="big"
@@ -315,52 +316,52 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                 />
               </Form.Field>
               <Form.Field width={3}>
-                <label>Разовая доза:</label>
+                <label>{t("motherwise_dose")}:</label>
                 <Input
                   size="big"
                   name="fullDosage"
                   value={getFromBase(currUnit || def, fullDosage).join(" + ") || ""}
-                  label={{ basic: true, content: currWeightUnitName || "мг" }}
+                  label={{ basic: true, content: currWeightUnitName || t("mg") }}
                   labelPosition="right"
                   placeholder="500"
                   onChange={this.handleChange}
                 >
                   <input readonly="readonly" className="readonly" />
-                  <Label basic>{currWeightUnitName || "мг"}</Label>
+                  <Label basic>{currWeightUnitName || t("mg")}</Label>
                 </Input>
               </Form.Field>
               <Form.Field width={3}>
-                <label>Масса тела:</label>
+                <label>{t("body_mass")}:</label>
                 <Input
                   disabled={disableAll}
                   size="big"
                   name="patient.weight"
                   value={weight?.weight || ""}
-                  label={{ basic: true, content: "кг" }}
+                  label={{ basic: true, content: t("kg") }}
                   labelPosition="right"
                   placeholder="60.5"
                   onChange={this.handleChange}
                 />
               </Form.Field>
               <Form.Field width={3}>
-                <label>На кг массы тела:</label>
+                <label>{t("kg_body_weight")}:</label>
                 <Input
                   size="big"
                   name="weightDosage"
                   value={getFromBase(currUnit || def, weightDosage, 4).join(" + ") || ""}
-                  label={{ basic: true, content: `${currWeightUnitName || "мг"}/кг` }}
+                  label={{ basic: true, content: `${currWeightUnitName || t("mg")}/${t("kg")}` }}
                   labelPosition="right"
                   placeholder="0"
                   onChange={this.handleChange}
                 >
                   <input readonly="readonly" className="readonly" />
-                  <Label basic>{`${currWeightUnitName || "мг"}/кг`}</Label>
+                  <Label basic>{`${currWeightUnitName || t("mg")}/${t("kg")}`}</Label>
                 </Input>
               </Form.Field>
             </Form.Group>
             <Form.Group>
               <Form.Field width={4}>
-                <label>Кратность приема:</label>
+                <label>{t("multiplicity_reception")}:</label>
                 <Dropdown
                   disabled={disableAll}
                   selection
@@ -368,43 +369,43 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                   value={freq || null}
                   className="input big"
                   name={"dayCount"}
-                  placeholder={"Выбрать"}
+                  placeholder={t("select")}
                   onChange={this.setPreset}
                   options={this.renderPresets()}
                 />
               </Form.Field>
               <Form.Field width={4}>
-                <label>Суточная доза:</label>
+                <label>{t("daily_dose")}:</label>
                 <Input
                   size="big"
                   name="dayDosage"
                   value={getFromBase(currUnit || def, dayDosage).join(" + ") || ""}
-                  label={{ basic: true, content: currWeightUnitName || "мг" }}
+                  label={{ basic: true, content: currWeightUnitName || t("mg") }}
                   labelPosition="right"
                   placeholder="500"
                   onChange={this.handleChange}
                 >
                   <input readonly="readonly" className="readonly" />
-                  <Label basic>{currWeightUnitName || "мг"}</Label>
+                  <Label basic>{currWeightUnitName || t("mg")}</Label>
                 </Input>
               </Form.Field>
               <Form.Field width={4}>
-                <label>На кг веса в сутки:</label>
+                <label>{t("kg_weight_day")}:</label>
                 <Input
                   size="big"
                   name="dayWeightDosage"
                   value={getFromBase(currUnit || def, dayWeightDosage).join(" + ") || ""}
-                  label={{ basic: true, content: `${currWeightUnitName || "мг"}/кг/сут` }}
+                  label={{ basic: true, content: `${currWeightUnitName || t("mg")}/${t("kg")}/${t("sut")}` }}
                   labelPosition="right"
                   placeholder="0"
                   onChange={this.handleChange}
                 >
                   <input readonly="readonly" className="readonly" />
-                  <Label basic>{`${currWeightUnitName || "мг"}/кг`}</Label>
+                  <Label basic>{`${currWeightUnitName || t("mg")}/${t("kg")}`}</Label>
                 </Input>
               </Form.Field>
               <Form.Field width={4}>
-                <label>Длительность введения:</label>
+                <label>{t("duration_administration")}:</label>
                 <Input
                   disabled={disableAll}
                   size="big"
@@ -426,22 +427,22 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
             </Form.Group>
             <Form.Group>
               <Form.Field width={4}>
-                <label>Скорость введения:</label>
+                <label>{t("speed_administration")}:</label>
                 <Input
                   size="big"
                   name="fullSpeed"
                   value={getFromBase(currUnit || def, fullSpeed).join(" + ") || ""}
-                  label={{ basic: true, content: `${currWeightUnitName || "мг"}/${currTimeUnitName}` }}
+                  label={{ basic: true, content: `${currWeightUnitName || t("mg")}/${currTimeUnitName}` }}
                   labelPosition="right"
                   placeholder="0"
                   onChange={this.handleChange}
                 >
                   <input readonly="readonly" className="readonly" />
-                  <Label basic>{`${currWeightUnitName || "мг"}/${currTimeUnitName}`}</Label>
+                  <Label basic>{`${currWeightUnitName || t("mg")}/${currTimeUnitName}`}</Label>
                 </Input>
               </Form.Field>
               <Form.Field width={4}>
-                <label>Скорость введения на кг:</label>
+                <label>{t("speed_introduction_by_kg")}:</label>
                 <Input
                   size="big"
                   name="weightSpeed"
@@ -451,28 +452,28 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                   onChange={this.handleChange}
                 >
                   <input readonly="readonly" className="readonly" />
-                  <Label basic>{`${currWeightUnitName || "мг"}/кг/${currTimeUnitName}`}</Label>
+                  <Label basic>{`${currWeightUnitName || t("mg")}/${t("kg")}/${currTimeUnitName}`}</Label>
                 </Input>
               </Form.Field>
               <Form.Field width={4}>
-                <label>Скорость в каплях:</label>
+                <label>{t("speed_in_drops")}:</label>
                 <Input
                   size="big"
                   name="tintSpeed"
                   value={tintSpeed || ""}
-                  label={{ basic: true, content: `кап/${currTimeUnitName}` }}
+                  label={{ basic: true, content: `${t("cap")}/${currTimeUnitName}` }}
                   labelPosition="right"
                   placeholder="500"
                   onChange={this.handleChange}
                 />
               </Form.Field>
               <Form.Field width={4}>
-                <label>Скорость в мл:</label>
+                <label>{t("speed_in_ml")}:</label>
                 <Input
                   size="big"
                   name="liquidSpeed"
                   value={liquidSpeed || ""}
-                  label={{ basic: true, content: `мл/${currTimeUnitName}` }}
+                  label={{ basic: true, content: `${t("ml")}/${currTimeUnitName}` }}
                   labelPosition="right"
                   placeholder="0"
                   onChange={this.handleChange}
@@ -488,7 +489,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
                   size="big"
                   name="specials"
                   value={specials || ""}
-                  placeholder="Особые указания"
+                  placeholder={t("special_instructions")}
                   onChange={this.handleChange}
                 />
               </Form.Field>
@@ -497,7 +498,7 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
           <Dimmer inverted active={disableAll}>
             <Header as="h2" icon color="grey">
               <Icon name="external square alternate" />
-              Сначала укажите дозировку для всех составляющих раствора!
+              {t("first_specify_dosage_components_solution")}
             </Header>
           </Dimmer>
         </Dimmer.Dimmable>
@@ -506,4 +507,4 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
   }
 }));
 
-export default LiquidCalculator;
+export default withTranslation()(LiquidCalculator);

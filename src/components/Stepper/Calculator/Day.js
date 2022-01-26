@@ -14,7 +14,7 @@ import {
   Responsive,
   Divider
 } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import _ from 'lodash';
 
 const Schedule = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class Schedule extends Component {
@@ -73,7 +73,7 @@ const Schedule = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
       day, index
     } = this.props
     let { active, time, interval } = this.state
-
+    const { t } = this.props.actions;
     return (
       <Segment
         className='day'
@@ -132,10 +132,10 @@ const Schedule = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
             <Label
               size='tiny' className='fluid'
             >
-              Раза в день
+              {t("once_day")}
             </Label>
           </Form.Field>
-          <Divider horizontal>или</Divider>
+          <Divider horizontal>{t("or")}</Divider>
 
           {time.map(( item, x ) => {
             return(
@@ -181,7 +181,7 @@ const Schedule = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
                     value: (i === 0 || !(i%2)) ? parseInt(i/2) + '.00' : parseInt(i/2) + '.30'
                   }
                 })}
-                text={'Время'}
+                text={t("time")}
               />
             </Form.Field>
 
@@ -194,4 +194,4 @@ const Schedule = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(
 
 }));
 
-export default Schedule
+export default withTranslation()(Schedule)

@@ -9,7 +9,7 @@ import Value from "../Checker/Value";
 import Clinrec from "../Clinrec";
 
 import { Transition, Accordion, Icon, Step, Responsive, List, Header } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 import "./Stepper.css";
 
@@ -99,9 +99,9 @@ const Stepper = inject("db", "actions", "router", "drugs", "warnings", "dosages"
       actions: { clinrecCheckerStep, clinrecCheckerData },
       patients: {
         current: { disease },
-      },
+      }
     } = this.props;
-
+    const { t } = this.props.actions;
     let currPage = checker[_.keys(checker)[clinrecCheckerStep - 1]] || {}; //page id is not equal array index!
 
     const settings = {
@@ -116,7 +116,7 @@ const Stepper = inject("db", "actions", "router", "drugs", "warnings", "dosages"
     };
 
     const headerMessage =
-      disease.length === 1 ? `Клинические рекомендации по диагнозу "${disease[0].name}"` : "Клинические рекоммендации";
+      disease.length === 1 ? `${t("clinical_recommendations_for_diagnosis")} "${disease[0].name}"` : t("clinical_recommendations");
     // console.log({checker, clinrecCheckerStep});
     return (
       <>
@@ -127,7 +127,7 @@ const Stepper = inject("db", "actions", "router", "drugs", "warnings", "dosages"
               {headerMessage}
               <Header.Subheader>
                 {clinrecCheckerStep <= _.keys(checker).length && `${clinrecCheckerStep}/${_.keys(checker).length}`}
-                {clinrecCheckerStep > _.keys(checker).length && "Результат"}{" "}
+                {clinrecCheckerStep > _.keys(checker).length && t("result")}{" "}
                 {clinrecCheckerStep <= _.keys(checker).length && currPage.name}
               </Header.Subheader>
             </Header.Content>
@@ -176,4 +176,4 @@ const Stepper = inject("db", "actions", "router", "drugs", "warnings", "dosages"
   }
 }));
 
-export default Stepper;
+export default withTranslation()(Stepper);

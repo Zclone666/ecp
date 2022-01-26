@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { inject, observer } from "mobx-react";
-
+import { withTranslation } from "react-i18next";
 // import { Collapse } from "react-collapse";
 import AnimateHeight from "react-animate-height";
 
@@ -79,28 +79,7 @@ const Clinrec = inject(
       };
 
       renderCourse = (course) => {
-        // check: null
-        // childs: ["1i/z3fg1gP6Tr5TKlg+IQg==", "7NYRZMZPBxOQOW4BwDXDSw==", "Ilv0pGwya9+HyFgV1WljPw==",…]
-        // 0: "1i/z3fg1gP6Tr5TKlg+IQg=="
-        // 1: "7NYRZMZPBxOQOW4BwDXDSw=="
-        // 2: "Ilv0pGwya9+HyFgV1WljPw=="
-        // 3: "Qh/pMznIJMRgKd2FZSLnNQ=="
-        // 4: "fqsmaVvunAmIhALINE6hPA=="
-        // comment: ""
-        // concept: null
-        // dosage: []
-        // drug: null
-        // efficiency: null
-        // form: []
-        // intervalpreset: []
-        // method: []
-        // name: "симптоматическая терапия"
-        // parents: "FcnCCLq3ZiMW50R2nGTiNQ=="
-        // schedulepreset: []
-        // trust: 0.5
-        // type: "Regimen"
-        // warning: 1
-        // let { name, type, childs }
+    
         return null;
       };
 
@@ -126,12 +105,13 @@ const Clinrec = inject(
 
       renderCheck = (childs, id) => {
         let {
-          clinrecs: { clinrec },
+          clinrecs: { clinrec }
         } = this.props;
+        const { t } = this.props.actions;
         return (
           <List.Item>
             <List.Content className="large">
-              <List.Description>Выберите один или несколько вариантов:</List.Description>
+              <List.Description>{t("choose_one_or_more_options")}:</List.Description>
               <List.List>
                 {childs.childs &&
                   childs.childs.map((childId) => {
@@ -156,12 +136,13 @@ const Clinrec = inject(
 
       renderRadio = (childs, id) => {
         let {
-          clinrecs: { clinrec },
+          clinrecs: { clinrec }
         } = this.props;
+        const { t } = this.props.actions;
         return (
           <List.Item>
             <List.Content className="large">
-              <List.Description>Выберите один из вариантов:</List.Description>
+              <List.Description>{t("choose_one_options")}:</List.Description>
               <List.List>
                 {childs.childs &&
                   childs.childs.map((childId) => {
@@ -197,13 +178,14 @@ const Clinrec = inject(
       };
 
       renderFG = (child, childId) => {
+        let {t} = this.props;
         return (
           <List.Item>
             <List.Content className="large">
               <List.Description>
                 <strong>{child.name}</strong>
                 <span className="underlined" onClick={() => this.getByFG(child, childId)}>
-                  Показать
+                {t("show")}
                 </span>
               </List.Description>
               {child.comment && <List.Description>{child.comment}</List.Description>}
@@ -400,8 +382,9 @@ const Clinrec = inject(
       render() {
         let {
           router,
-          clinrecs: { clinrec, ready },
+          clinrecs: { clinrec, ready }
         } = this.props;
+        const { t } = this.props.actions;
         let { opened } = this.state;
 
         return (
@@ -449,7 +432,7 @@ const Clinrec = inject(
                 <Dimmer active={true} inverted>
                   <Header as="h2" icon color="grey">
                     <Icon name="dont" />
-                    Нет информации
+                    {t("no_information")}
                   </Header>
                 </Dimmer>
               </Dimmer.Dimmable>
@@ -461,4 +444,4 @@ const Clinrec = inject(
   )
 );
 
-export default Clinrec;
+export default withTranslation()(Clinrec);

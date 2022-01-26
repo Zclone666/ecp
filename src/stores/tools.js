@@ -71,7 +71,7 @@ class Tools {
         // kostyl
         // if(units[99])
         if (units[250 || units[99]]) {
-          names[99] = "процент";
+          names[99] = this.stores.actions.t("percent");
           nameshort[99] = "%";
           unitpharm.push(99);
           units[99] = _.cloneDeep(units[250]);

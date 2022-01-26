@@ -242,7 +242,7 @@ class Recipes {
       key: this.stores.actions.privateKey,
       authkey: this.stores.actions.authkey,
       active_language: active_language,
-      message: this.stringifiedSignData,
+      message: JSON.stringify(data), //this.stringifiedSignData,
       certificate: this.certificateBase64,
       signed_data: this.digitallySignedRecipe,
     };
@@ -257,8 +257,8 @@ class Recipes {
           this.stores.actions.makeAlerts({
             alerts: [
               {
-                title: `Рецепт выписан!`,
-                message: `Теперь вы можете распечатать его, или отправить на почту.`,
+                title: this.stores.actions.t("recipe_discharged"),
+                message: this.stores.actions.t("you_print_send_mail"),
                 level: "success",
                 sticky: false,
               },
@@ -356,8 +356,8 @@ class Recipes {
         this.stores.actions.makeAlerts({
           alerts: [
             {
-              title: `Готово!`,
-              message: `Рецепт отправлен на ${this.stores.actions.patientForm.email}`,
+              title: this.stores.actions.t("ready"),
+              message: `${this.stores.actions.t("recipe_shipped_by")} ${this.stores.actions.patientForm.email}`,
               level: "success",
               sticky: false,
             },

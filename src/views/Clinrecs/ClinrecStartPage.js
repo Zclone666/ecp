@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { List, Menu, Responsive, Segment, Checkbox } from "semantic-ui-react";
+import { withTranslation } from "react-i18next";
 
 const ClinrecStartPage = inject(
   "actions",
@@ -29,6 +30,7 @@ const ClinrecStartPage = inject(
         this.props.router.push(`/clinrec/checker/${clinrecCheckerStep}`);
       };
       render() {
+        const { t } = this.props.actions;
         // console.log("state: ", this.state);
         const { clinicalGuidelinesExist } = this.props.clinrecs;
         const diseases = this.props.patients.current.disease
@@ -81,60 +83,60 @@ const ClinrecStartPage = inject(
             // </List>
           );
         };
-        const sampleData = {
-          alert: { code: "200", level: "success", sticky: false },
-          result: [
-            { id: "tDZ/lbIl+J157GZPZTaOVg==", name: "геморрой", exist: true, items: [] },
-            {
-              id: "5NPEFYebJgtVHkehexj0Zg==",
-              name: "рак молочной железы",
-              exist: false,
-              items: [
-                {
-                  id: "PRMJNmMVi/itNBxcxsrHEA==",
-                  name: "рак молочной железы, нелюминальный, Her2-позитивный подтип",
-                  exist: true,
-                  items: [],
-                },
-                {
-                  id: "eTzyRIrUlRWaRnJcW3hL2Q==",
-                  name: "рак молочной железы, тройной негативный подтип",
-                  exist: true,
-                  items: [],
-                },
-                {
-                  id: "bqMNSYx7aQB9Hgz4ojzfOQ==",
-                  name: "рак молочной железы люминальный B подтип",
-                  exist: true,
-                  items: [],
-                },
-                {
-                  id: "TA1WbJpm4A1iv7dEWfusRg==",
-                  name: "рак молочной железы люминальный А подтип",
-                  exist: true,
-                  items: [],
-                },
-              ],
-              route: "down",
-            },
-            {
-              id: "x9iOERvHhEvz6n5XoXwrCw==",
-              name: "коронавирусная инфекция COVID-19",
-              exist: false,
-              items: [
-                { id: "MuDqACqRNOyqAplclOi/+A==", name: "COVID-19 лёгкой степени тяжести", exist: true, items: [] },
-                { id: "NdsfYEdQNcaxHYWH9sdqwA==", name: "COVID-19 средней степени тяжести", exist: true, items: [] },
-                { id: "yTuSKeawAW+Wc3tVhF+B2w==", name: "COVID-19 тяжёлой степени тяжести", exist: true, items: [] },
-              ],
-              route: "down",
-            },
-          ],
-        };
+        // const sampleData = {
+        //   alert: { code: "200", level: "success", sticky: false },
+        //   result: [
+        //     { id: "tDZ/lbIl+J157GZPZTaOVg==", name: "геморрой", exist: true, items: [] },
+        //     {
+        //       id: "5NPEFYebJgtVHkehexj0Zg==",
+        //       name: "рак молочной железы",
+        //       exist: false,
+        //       items: [
+        //         {
+        //           id: "PRMJNmMVi/itNBxcxsrHEA==",
+        //           name: "рак молочной железы, нелюминальный, Her2-позитивный подтип",
+        //           exist: true,
+        //           items: [],
+        //         },
+        //         {
+        //           id: "eTzyRIrUlRWaRnJcW3hL2Q==",
+        //           name: "рак молочной железы, тройной негативный подтип",
+        //           exist: true,
+        //           items: [],
+        //         },
+        //         {
+        //           id: "bqMNSYx7aQB9Hgz4ojzfOQ==",
+        //           name: "рак молочной железы люминальный B подтип",
+        //           exist: true,
+        //           items: [],
+        //         },
+        //         {
+        //           id: "TA1WbJpm4A1iv7dEWfusRg==",
+        //           name: "рак молочной железы люминальный А подтип",
+        //           exist: true,
+        //           items: [],
+        //         },
+        //       ],
+        //       route: "down",
+        //     },
+        //     {
+        //       id: "x9iOERvHhEvz6n5XoXwrCw==",
+        //       name: "коронавирусная инфекция COVID-19",
+        //       exist: false,
+        //       items: [
+        //         { id: "MuDqACqRNOyqAplclOi/+A==", name: "COVID-19 лёгкой степени тяжести", exist: true, items: [] },
+        //         { id: "NdsfYEdQNcaxHYWH9sdqwA==", name: "COVID-19 средней степени тяжести", exist: true, items: [] },
+        //         { id: "yTuSKeawAW+Wc3tVhF+B2w==", name: "COVID-19 тяжёлой степени тяжести", exist: true, items: [] },
+        //       ],
+        //       route: "down",
+        //     },
+        //   ],
+        // };
         return (
           <>
             <Menu className="bottom fixed menu two item huge main">
-              <Menu.Item onClick={() => this.props.router.push("/")}>Назад</Menu.Item>
-              <Menu.Item onClick={this.proceedToClinrecs}>Применить</Menu.Item>
+              <Menu.Item onClick={() => this.props.router.push("/")}>{t("back")}</Menu.Item>
+              <Menu.Item onClick={this.proceedToClinrecs}>{t("apply")}</Menu.Item>
             </Menu>
             {/* <div>
               <div>clinrecs start page</div>
@@ -154,4 +156,4 @@ const ClinrecStartPage = inject(
   )
 );
 
-export default ClinrecStartPage;
+export default withTranslation()(ClinrecStartPage);

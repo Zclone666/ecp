@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 
 // import RouterLink from '../../../router/a'
 import { Collapse } from "react-collapse";
-
+import { withTranslation } from "react-i18next";
 import "./InfoItems.css";
 
 import {
@@ -122,6 +122,8 @@ const InfoItems = inject(
           druginfo: { ready },
           // router
         } = this.props;
+
+        const { t } = this.props.actions;
         let { opened } = this.state;
         // let drugKey = router.values && router.values.page
         let { calc, instr, drug } = this.items;
@@ -131,7 +133,7 @@ const InfoItems = inject(
             <Segment basic>
               <Header as="h3" className="stretched">
                 <Icon name="unordered list" />
-                <Header.Content>{(drug && drug.name) || "Сводная информация"}</Header.Content>
+                <Header.Content>{(drug && drug.name) || t("free_information")}</Header.Content>
               </Header>
               {ready && calc.length > 0 && (
                 <List divided relaxed className="draginfo" verticalAlign="middle" size="large">
@@ -167,7 +169,7 @@ const InfoItems = inject(
               )}
               <Header as="h3" className="stretched">
                 <Icon name="book" />
-                <Header.Content>Инструкция</Header.Content>
+                <Header.Content>{t("instruction")}</Header.Content>
               </Header>
               {ready && instr.length > 0 && (
                 <List divided relaxed className="draginfo" verticalAlign="middle" size="large">
@@ -207,7 +209,7 @@ const InfoItems = inject(
                 <Dimmer active={true} inverted>
                   <Header as="h2" icon color="grey">
                     <Icon name="dont" />
-                    Нет информации
+                    {t("no_information")}
                   </Header>
                 </Dimmer>
               </Dimmer.Dimmable>
@@ -219,4 +221,4 @@ const InfoItems = inject(
   )
 );
 
-export default InfoItems;
+export default withTranslation()(InfoItems);

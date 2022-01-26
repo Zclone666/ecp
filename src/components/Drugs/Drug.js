@@ -6,7 +6,7 @@ import { useDrag } from "react-dnd";
 import RouterLink from "../../router/a";
 
 import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown, Visibility } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 import moment from "moment";
@@ -155,15 +155,19 @@ const Drug = inject(
           onRemove,
           canDrag,
         } = this.props;
+
+        const { t } = this.props.actions;
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
         let selectedWarnings = warnIcons[selectedDrug];
+
         const drugWarnings = _.orderBy(
           Array.from(warning.values()),
           ["step", "value", "trust"],
-          ["desc", "desc", "desc"]
+          ["asc", "desc", "desc"]
         );
         const arrowColor = drugWarnings?.length > 0 ? drugWarnings[0].color : false;
+        console.log({ arrowColor, warnings: Array.from(warning.values()), drugWarnings });
         // console.log({ drug });
         let { key, name, level, tn, type, dosage, helpers, specials, date } = drug;
         const dateOfPrescription = date ? moment(date, "x").format("DD.MM.YYYY") : "";
@@ -222,7 +226,7 @@ const Drug = inject(
               <Responsive fireOnMount as={Button.Group} minWidth={misDisabled ? "1" : "481"}>
                 {!disabled && dosReady && (
                   <Popup
-                    content="Дозировка"
+                    content={t("dosage")}
                     trigger={
                       <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
                         <Icon name="tint" />
@@ -238,7 +242,7 @@ const Drug = inject(
 
                 {!disabled && (
                   <Popup
-                    content="Аналоги"
+                    content={t("analogues")}
                     trigger={
                       <Button
                         disabled={drug.group !== 0}
@@ -254,7 +258,7 @@ const Drug = inject(
                 )}
                 {!disabled && (
                   <Popup
-                    content="Удалить"
+                    content={t("delete")}
                     trigger={
                       <Button icon onClick={this.unselectDrug}>
                         <Icon name="delete" />
@@ -264,7 +268,7 @@ const Drug = inject(
                 )}
                 {!disabled && minus && (
                   <Popup
-                    content="Убрать из раствора"
+                    content={t("remove_from_solution")}
                     trigger={
                       <Button icon onClick={onRemove}>
                         <Icon name="minus" />
@@ -276,7 +280,7 @@ const Drug = inject(
               {!disabled && minus && (
                 <Responsive fireOnMount as={Button.Group} maxWidth={misDisabled ? "0" : "480"}>
                   <Popup
-                    content="Убрать из раствора"
+                    content={t("remove_from_solution")}
                     trigger={
                       <Button icon onClick={onRemove}>
                         <Icon name="minus" />
@@ -401,11 +405,11 @@ const Drug = inject(
                         as={RouterLink}
                         to={url}
                         onClick={this.getLF}
-                        text="Дозировка"
+                        text={t("dosage")}
                       />
                     )}
                     {!dosReady && (
-                      <Dropdown.Item disabled icon={<Icon loading name="circle notch" />} text="Дозировка" />
+                      <Dropdown.Item disabled icon={<Icon loading name="circle notch" />} text={t("dosage")} />
                     )}
 
                     <Dropdown.Item
@@ -414,16 +418,16 @@ const Drug = inject(
                       as={RouterLink}
                       to={`/analog/${drug.key}`}
                       onClick={this.getAnalog}
-                      text="Аналоги"
+                      text={t("analogues")}
                     />
                     <Dropdown.Item
                       icon="ellipsis horizontal"
                       as={RouterLink}
                       to={`/druginfo/${drug.key}`}
-                      text="Подробнее"
+                      text={t("more")}
                       onClick={this.getInfo}
                     />
-                    <Dropdown.Item icon="delete" onClick={this.unselectDrug} text="Убрать из списка" />
+                    <Dropdown.Item icon="delete" onClick={this.unselectDrug} text={t("remove_from_list")} />
                   </Dropdown.Menu>
                 )}
               </List.Content>
@@ -447,4 +451,4 @@ const Drug = inject(
   )
 );
 
-export default Drug;
+export default withTranslation()(Drug);

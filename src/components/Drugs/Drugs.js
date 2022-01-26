@@ -6,7 +6,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import RouterLink from "../../router/a";
 
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-
+import { withTranslation } from "react-i18next";
 import Drug from "./Drug";
 import RecipeDrug from "./RecipeDrug";
 
@@ -177,9 +177,9 @@ const Drugs = inject("db", "actions", "drugs", "dosages", "warnings", "tools")(o
       drugs: { drug: drugs, liquid: liquidList, checkLiquids },
       warnings: { warning }, //warnings, warnGroups
       dosages: { dosage },
-      isRecipe,
+      isRecipe
     } = this.props;
-
+    const { t } = this.props.actions;
     let { groups, grouped, iterator, canDrag } = this.drugsWithGroups;
 
     let warnDrugs = this.warnDrugs;
@@ -269,7 +269,7 @@ const Drugs = inject("db", "actions", "drugs", "dosages", "warnings", "tools")(o
                             {...prov.droppableProps}
                           >
                             {!grouped[liquid] && (
-                              <div className={"abstext"}>Перетащите сюда не менее двух составляющих для раствора</div>
+                              <div className={"abstext"}>{t("drag_two_components_for_solution")}</div>
                             )}
                             {grouped[liquid] && (
                               <div
@@ -292,7 +292,7 @@ const Drugs = inject("db", "actions", "drugs", "dosages", "warnings", "tools")(o
                                     <Icon name="lab" className="right floated" />
                                   </RouterLink>
                                 )}
-                                Раствор {liquid}
+                                {t("solution")} {liquid}
                               </div>
                             )}
 
@@ -324,7 +324,7 @@ const Drugs = inject("db", "actions", "drugs", "dosages", "warnings", "tools")(o
                               })}
                             {prov.placeholder}
                             {grouped[liquid] && grouped[liquid].length === 1 && (
-                              <div className={"bottomtext"}>Добавьте еще хотя бы один элемент</div>
+                              <div className={"bottomtext"}>{t("add_one_element")}</div>
                             )}
                           </div>
                         );
@@ -371,4 +371,4 @@ const Drugs = inject("db", "actions", "drugs", "dosages", "warnings", "tools")(o
   }
 }));
 
-export default Drugs;
+export default withTranslation()(Drugs);

@@ -11,6 +11,8 @@ import PatientPassport from "./PatientPassport";
 
 import { checkDouble, clearDouble } from "../../lib/helpers";
 
+import { withTranslation } from "react-i18next";
+
 import {
   Sidebar,
   Menu,
@@ -263,6 +265,7 @@ const PatientForm = inject(
         return arr;
       }
       render() {
+        const { t } = this.props.actions;
         const {
           id,
           key,
@@ -314,26 +317,13 @@ const PatientForm = inject(
           <Segment basic>
             <Form>
               <Form.Group>
-                {/* {!misDisabled && (
-                  <Form.Field width={6}>
-                    <Button
-                      size="big"
-                      fluid
-                      as={RouterLink}
-                      to={"/patient/list"}
-                      content={`Выбрать${fio ? " другого" : ""} пациента`}
-                      labelPosition="left"
-                      icon="chevron left"
-                      primary
-                    />
-                  </Form.Field>
-                )} */}
+               
                 <Form.Field width={7}>
                   <Search
                     fluid
                     size="big"
                     name="patient"
-                    placeholder="Введите имя пациента"
+                    placeholder={t("patinet_card_name_patient")} 
                     loading={!searchReady}
                     onResultSelect={this.handlePatientResultSelect}
                     onSearchChange={_.debounce(this.handlePatientSearchChange, 500, {
@@ -350,21 +340,21 @@ const PatientForm = inject(
                 {this.props.patients.current.id && (
                   <Form.Field width={2}>
                     {(window.location.href.includes("socmedica.dev") || window.location.href.includes("localhost")) && (
-                      <Button onClick={() => this.setState({ showProtocol: !showProtocol })}>протокол</Button>
+                      <Button onClick={() => this.setState({ showProtocol: !showProtocol })}>{t("protocol")}</Button>
                     )}
                   </Form.Field>
                 )}
                 <Form.Field width={3}>
                   <Button onClick={() => this.setState({ showPatientPassport: !showPatientPassport })}>
                     {showPatientPassport
-                      ? "Свернуть паспортные данные"
+                      ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
                       : id
-                      ? "Редактировать паспортные данные"
-                      : "Заполнить паспортные данные"}
+                      ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
+                      : t("patinet_card_passport_label")}
                   </Button>
                 </Form.Field>
                 <Form.Field width={2}>
-                  <Button onClick={() => this.clearPatient()}>{id ? "Новый пациент" : "Сбросить"}</Button>
+                  <Button onClick={() => this.clearPatient()}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
                 </Form.Field>
               </Form.Group>
               <Divider horizontal fitted />
@@ -373,44 +363,44 @@ const PatientForm = inject(
               <Form.Group>
                 <BirthDate name="birthdate" value={birthdate} onChange={this.handleChange} />
                 <Form.Field>
-                  <label>Пол</label>
+                  <label>{t("sex")}</label>
                   <Button.Group size="big">
                     <Button primary={sex === "male"} onClick={this.handleChange} name="sex" value="male">
-                      Мужчина
+                      {t("male")}
                     </Button>
                     <Button primary={sex === "female"} onClick={this.handleChange} name="sex" value="female">
-                      Женщина
+                      {t("female")}
                     </Button>
                   </Button.Group>
                 </Form.Field>
               </Form.Group>
               <Form.Group>
                 <Form.Field width={5}>
-                  <label>Рост</label>
+                  <label>{t("growth")}</label>
                   <Input
                     size="big"
                     name="growth"
                     value={growth || ""}
-                    label={{ basic: true, content: "см" }}
+                    label={{ basic: true, content: t("sm") }}
                     labelPosition="right"
                     placeholder="178.5"
                     onChange={this.handleChange}
                   />
                 </Form.Field>
                 <Form.Field width={5}>
-                  <label>Вес</label>
+                  <label>{t("weight")}</label>
                   <Input
                     size="big"
                     name="weight"
                     value={weight || ""}
-                    label={{ basic: true, content: "кг" }}
+                    label={{ basic: true, content: t("kg") }}
                     labelPosition="right"
                     placeholder="60.5"
                     onChange={this.handleChange}
                   />
                 </Form.Field>
                 <Form.Field width={3}>
-                  <label>ИМТ</label>
+                  <label>{t("body_mass_index")}</label>
                   <Input
                     size="big"
                     name="masIndex"
@@ -419,11 +409,11 @@ const PatientForm = inject(
                     value={masIndex || ""}
                   >
                     <input readOnly="readonly" className="readonly" />
-                    <div className="ui basic label">кг/м²</div>
+                    <div className="ui basic label">{t("kg_m2")}</div>
                   </Input>
                 </Form.Field>
                 <Form.Field width={3}>
-                  <label>ППТ</label>
+                  <label>{t("body_surface_area")}</label>
                   <Input
                     size="big"
                     name="squareIndex"
@@ -432,13 +422,13 @@ const PatientForm = inject(
                     value={squareIndex || ""}
                   >
                     <input readOnly="readonly" className="readonly" />
-                    <div className="ui basic label">м²</div>
+                    <div className="ui basic label">{t("m2")}</div>
                   </Input>
                 </Form.Field>
               </Form.Group>
               <Form.Group widths={1}>
                 <Form.Field width={16}>
-                  <label>Основное заболевание</label>
+                  <label>{t("underlying_disease")}</label>
                   <Search
                     fluid
                     size="big"
@@ -472,7 +462,7 @@ const PatientForm = inject(
               </List>
               <Form.Group widths={1}>
                 <Form.Field width={16}>
-                  <label>Сопутствующие заболевания</label>
+                  <label>{t("accompanying_illnesses")}</label>
                   <Search
                     fluid
                     size="big"
@@ -511,7 +501,7 @@ const PatientForm = inject(
               {!misDisabled && (
                 <Form.Group style={{ "align-items": "flex-end" }} widths={1}>
                   <Form.Field width={4}>
-                    <label>Мутация гена</label>
+                    <label>{t("gene_mutation")}</label>
                     {/* number: {mutations.length} gene: {this.state.mutation.gene} allele1:{" "}
               {this.state.mutation.allele1} allele2: {this.state.mutation.allele2} */}
                     <Input
@@ -525,7 +515,7 @@ const PatientForm = inject(
                     />
                   </Form.Field>
                   <Form.Field width={4}>
-                    <label>Аллель 1</label>
+                    <label>{t("allele")} 1</label>
                     <Input
                       disabled={this.state.mutation.gene.trim().length === 0}
                       fluid
@@ -543,7 +533,7 @@ const PatientForm = inject(
                     />
                   </Form.Field>
                   <Form.Field width={4}>
-                    <label>Аллель 2</label>
+                    <label>{t("allele")} 2</label>
                     <Input
                       disabled={this.state.mutation.gene.trim().length === 0}
                       fluid
@@ -564,7 +554,7 @@ const PatientForm = inject(
                       labelPosition="right"
                       onClick={this.handleAddMutation}
                     >
-                      Добавить
+                      {t("add")}
                       <Icon name="plus" />
                     </Button>
                   </Form.Field>
@@ -573,7 +563,7 @@ const PatientForm = inject(
               {!boxDisabled && (
                 <Form.Group widths={1}>
                   <Form.Field width={16}>
-                    <label>Генетический паспорт</label>
+                    <label>{t("genetic_passport")}</label>
                     <Button
                       primary={genpassport_exist}
                       disabled={!id}
@@ -583,7 +573,7 @@ const PatientForm = inject(
                       icon="file"
                       onClick={() => this.fileUploadRef.current.click()}
                     >
-                      {genpassport_exist ? "Обновить генетический паспорт пациента" : "Загрузить генетический паспорт"}
+                      {genpassport_exist ? t("update_patient_genetic_passport") : t("download_genetic_passport")}
                     </Button>
                     <input id="genpassport-upload" ref={this.fileUploadRef} type="file" hidden accept=".csv" />
                   </Form.Field>
@@ -609,7 +599,7 @@ const PatientForm = inject(
               </List>
               <Form.Group widths={1}>
                 <Form.Field width={16}>
-                  <label>Аллергия</label>
+                  <label>{t("allergy")}</label>
                   <Search
                     fluid
                     size="big"
@@ -651,7 +641,7 @@ const PatientForm = inject(
               {!misDisabled && false && (
                 <Form.Group widths={1}>
                   <Form.Field width={16}>
-                    <label>Лабораторные данные</label>
+                    <label>{t("laboratory_data")}</label>
                     <Input
                       fluid
                       size="big"
@@ -660,7 +650,7 @@ const PatientForm = inject(
                       action={{
                         labelPosition: "right",
                         icon: "plus",
-                        content: "Добавить",
+                        content: t("add"),
                         onClick: this.handleAddLabData,
                       }}
                       onChange={(e) => {
@@ -705,13 +695,13 @@ const PatientForm = inject(
                       value="pregnancy"
                     >
                       <Icon name={!!pregnancy ? "check square" : "square outline"} />
-                      Беременность
+                      {t("pregnancy")}
                     </Button>
                   </Form.Field>
                   <Form.Field>
                     <Button.Group size="big" fluid>
                       <Button disabled active>
-                        Триместр
+                        {t("trimester")}
                       </Button>
                       <Button
                         primary={trimester == 1}
@@ -759,7 +749,7 @@ const PatientForm = inject(
                           value: i + 1,
                         };
                       })}
-                      text={"Неделя " + (gestation || "")}
+                      text={t("week") + " " + (gestation || "")}
                     />
                   </Form.Field>
                 </Responsive>
@@ -778,7 +768,7 @@ const PatientForm = inject(
                     value="driving"
                   >
                     <Icon name={!!driving ? "check square" : "square outline"} />
-                    Вождение авто
+                    {t("car_driving")}
                   </Button>
                 </Form.Field>
                 <Form.Field>
@@ -793,7 +783,7 @@ const PatientForm = inject(
                     value="alcohol"
                   >
                     <Icon name={!!alcohol ? "check square" : "square outline"} />
-                    Алкоголь
+                    {t("alcohol")}
                   </Button>
                 </Form.Field>
                 {isWoman && !veryOld && (
@@ -810,7 +800,7 @@ const PatientForm = inject(
                       value="lactation"
                     >
                       <Icon name={!!lactation ? "check square" : "square outline"} />
-                      Кормление грудью
+                      {t("lactation")}
                     </Button>
                   </Form.Field>
                 )}
@@ -828,13 +818,13 @@ const PatientForm = inject(
                       value="pregnancy"
                     >
                       <Icon name={!!pregnancy ? "check square" : "square outline"} />
-                      Беременность
+                      {t("pregnancy")}
                     </Button>
                   </Form.Field>
                   <Form.Field>
                     <Button.Group size="big" fluid>
                       <Button disabled active>
-                        Триместр
+                        {t("trimester")}
                       </Button>
                       <Button
                         primary={trimester == 1}
@@ -881,7 +871,7 @@ const PatientForm = inject(
                           value: i + 1,
                         };
                       })}
-                      text={"Неделя " + (gestation || "")}
+                      text={t("week") + " " + (gestation || "")}
                     />
                   </Form.Field>
                 </Responsive>
@@ -898,7 +888,7 @@ const PatientForm = inject(
                     value="driving"
                   >
                     <Icon name={!!driving ? "check square" : "square outline"} />
-                    Вождение авто
+                    {t("car_driving")}
                   </Button>
                 </Form.Field>
                 <Form.Field>
@@ -912,7 +902,7 @@ const PatientForm = inject(
                     value="alcohol"
                   >
                     <Icon name={!!alcohol ? "check square" : "square outline"} />
-                    Алкоголь
+                    {t("alcohol")}
                   </Button>
                 </Form.Field>
                 {isWoman && !veryOld && (
@@ -928,7 +918,7 @@ const PatientForm = inject(
                       value="lactation"
                     >
                       <Icon name={!!lactation ? "check square" : "square outline"} />
-                      Кормление грудью
+                      {t("lactation")}
                     </Button>
                   </Form.Field>
                 )}
@@ -940,7 +930,7 @@ const PatientForm = inject(
               onOpen={() => this.setState({ showProtocol: true })}
               open={showProtocol}
             >
-              <Modal.Header>Заполните протокол и нажмите кнопку "печать" в конце</Modal.Header>
+              <Modal.Header>{t("fill_out_protocol")}</Modal.Header>
               <Modal.Content style={{ height: "100%", padding: 0 }} scrolling>
                 <iframe
                   frameborder="0"
@@ -955,7 +945,7 @@ const PatientForm = inject(
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ showProtocol: false })}>
-                  Закрыть
+                  {t("close")}
                 </Button>
               </Modal.Actions>
             </Modal>
@@ -966,4 +956,4 @@ const PatientForm = inject(
   )
 );
 
-export default PatientForm;
+export default withTranslation()(PatientForm);

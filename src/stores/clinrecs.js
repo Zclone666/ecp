@@ -203,7 +203,7 @@ class Clinrecs {
             form: [],
             intervalpreset: [],
             method: [],
-            name: "выберите одну из схем лечения", //"группировка признаков с условием - ИЛИ",
+            name: this.stores.actions.t("choose_one_treatment_schemes"), //"группировка признаков с условием - ИЛИ", 
             parents: child.id,
             schedulepreset: [],
             trust: child.trust,

@@ -533,9 +533,9 @@ class Patients {
 
           // let pat = await _.unionWith(data.patients, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
           // this.last.set(data.patients)
-          // this.searchReady = true;
+          this.searchReady = true;
         } else {
-          // this.searchReady = true;
+          this.searchReady = true;
           this.stores.actions.makeAlerts(data);
         }
       },
@@ -586,12 +586,6 @@ class Patients {
   }
 
   async search(text, saveTo = "search") {
-    // {
-    //   "key":"",
-    //   "authkey":"ауткей",
-    //   "doctor_id":"MQLoOvfAe/jDj984HuPKXw==",
-    //   "text":"тут текст для поиска"
-    // }
     this.searchReady = false;
     let { active_language } = this.stores.actions;
     let data = {

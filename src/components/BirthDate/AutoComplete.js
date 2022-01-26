@@ -1,7 +1,8 @@
 import React, { Component, createRef } from 'react';
 import cx from 'classnames'
 import { Search, SearchResults, Input } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
+import { inject, observer } from 'mobx-react';
 import _ from 'lodash';
 
 function declension(forms, val) {
@@ -9,10 +10,10 @@ function declension(forms, val) {
   return forms[(val % 100 > 4 && val % 100 < 20) ? 2 : cases[(val % 10 < 5) ? val % 10 : 5]];
 }
 
-const ref_days = [ 'день', 'дня', 'дней' ],
-ref_weeks = [ 'неделя', 'недели', 'недель' ],
-ref_months = [ 'месяц', 'месяца', 'месяцев' ],
-ref_years = [ 'год', 'года', 'лет' ]
+const ref_days = ["day", "a_day", "days"],
+  ref_weeks = ["week_time", "weeks", "week_min"],
+  ref_months = ["month", "a_month", "months"],
+  ref_years = ["year", "of_the_year", "years"]
 
 
 class MySearch extends Search {
@@ -53,6 +54,10 @@ class MySearch extends Search {
 
 
 };
+const AutoComplete = inject(
+  "actions",
+)(
+  observer(
 class AutoComplete extends Component {
   constructor(props){
     super(props)
@@ -73,7 +78,8 @@ class AutoComplete extends Component {
   }
 
   handleSearchChange = (e, { value }) => {
-    let { onChange } = this.props
+    let { onChange } = this.props;
+    const { t } = this.props.actions;
     if (value.length < 1) {
       this.setState({results: [], isLoading: false, searchQuery: ''});
       onChange && onChange(this, { value: '' })
@@ -96,11 +102,11 @@ class AutoComplete extends Component {
       })
 
       //let num = parseInt(value)
-      if( value.length === 4 ) results.push({ id: '1', title: `${value} года рождения` })
-      if( num < 121 && !noYears ) results.push({ id: '2', title: `${value} ${declension(ref_years, num)}` })
-      if( num <= 12 && !noMonths ) results.push({ id: '3', title: `${value} ${declension(ref_months, num)}` })
-      if( num <= 44 && !noWeeks ) results.push({ id: '4', title: `${value} ${declension(ref_weeks, num)}` })
-      if( num <= 31 && !noDays ) results.push({ id: '5', title: `${value} ${declension(ref_days, num)}` })
+      if( value.length === 4 ) results.push({ id: '1', title: `${value} ${t("year_birth")}` })
+      if( num < 121 && !noYears ) results.push({ id: '2', title: `${value} ${t(declension(ref_years, num))}` })
+      if( num <= 12 && !noMonths ) results.push({ id: '3', title: `${value} ${t(declension(ref_months, num))}` })
+      if( num <= 44 && !noWeeks ) results.push({ id: '4', title: `${value} ${t(declension(ref_weeks, num))}` })
+      if( num <= 31 && !noDays ) results.push({ id: '5', title: `${value} ${t(declension(ref_days, num))}` })
       this.setState({ results })
     })
   }
@@ -111,10 +117,11 @@ class AutoComplete extends Component {
   render() {
     const { isLoading, searchQuery, results } = this.state
     const { value } = this.props
+    const { t } = this.props.actions
     return (
       <MySearch
         size='big'
-        placeholder='Возраст (введите число)'
+        placeholder={t("age_enter_number")}
         loading={isLoading}
         onResultSelect={this.handleResultSelect}
         onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -127,5 +134,6 @@ class AutoComplete extends Component {
       />
     );
   }
-};
-export default AutoComplete
+}
+));
+export default withTranslation()(AutoComplete)

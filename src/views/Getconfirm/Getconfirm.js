@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
 import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import RouterLink from "../../router/a";
 
 const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends Component {
@@ -26,6 +26,7 @@ const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends
       projectTitle,
       getConfirmForm: { code, email, service },
     } = this.props.actions;
+    let {t} = this.props;
     return (
       <div className="login-form height100perc">
         <Grid padded textAlign="center" style={{ height: "100%" }} verticalAlign="middle">
@@ -35,7 +36,7 @@ const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends
                 {projectTitle}
               </Header>
               <Header as="h3" color="grey" textAlign="center">
-                ЗАПРОС КОДА РЕГИСТРАЦИИ
+                {t("request_registration_code")}
               </Header>
               <Form size="large" onSubmit={this.handleGetConfirm}>
                 <Segment padded="very" className="no-border raised">
@@ -51,14 +52,14 @@ const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends
                   />
 
                   <Button disabled={!this.state.filled} fluid size="huge" color="grey" onClick={this.handleGetConfirm}>
-                    Отправить
+                  {t("send")}
                   </Button>
                 </Segment>
               </Form>
               <Message className="squared">
-                Уже зарегистрированы? <RouterLink to="/login">Войти</RouterLink>
+              {t("already_registered")} <RouterLink to="/login">{t("come_in")}</RouterLink>
                 <br />
-                Уже есть код? <RouterLink to="/confirm">Подтвердить</RouterLink>
+                {t("already_have_code")} <RouterLink to="/confirm">{t("confirm")}</RouterLink>
               </Message>
             </Segment>
           </Grid.Column>
@@ -68,4 +69,4 @@ const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends
   }
 }));
 
-export default Getconfirm;
+export default withTranslation()(Getconfirm);

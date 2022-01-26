@@ -2,6 +2,7 @@ import React, { Component, Fragment, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
 import { Segment, List, Message, Header, Icon, Popup, Divider } from "semantic-ui-react";
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 const WarningTab = inject(
@@ -71,6 +72,8 @@ const WarningTab = inject(
           tab,
         } = this.props;
 
+        const { t } = this.props.actions;
+
         const getDrug = (item) => {
           if (item.type === "drug") {
             return drug.get(item.drugkey);
@@ -109,7 +112,7 @@ const WarningTab = inject(
 
         let needIcon = tab.id && tab.id.length > 0 && info.outcome[tab.id];
         let icon = tab.icon || "info";
-        let popupText = icon === "syringe" ? "Фармокологическое взаимодействие" : "Взаимодействие на уровне ферментов";
+        let popupText = icon === "syringe" ? t("pharmocheological_interaction") : t("interaction_level_enzymes");
         // syringe - Фармокологическое взаимодействие
         // cloud upload - Взаимодействие на уровне ферментов
 
@@ -204,7 +207,7 @@ const WarningTab = inject(
                 )}
                 {tab.id && tab.id.length > 0 && (
                   <List relaxed>
-                    {info.guidance[tab.id] && <b> Рекомендации: </b>}
+                    {info.guidance[tab.id] && <b> {t("recommendations")}: </b>}
                     {info.guidance[tab.id] &&
                       info.guidance[tab.id].map((guid, d) => {
                         if (!info.names[guid]) return null;
@@ -243,13 +246,17 @@ const WarningTab = inject(
             <Segment vertical>
               {firstDrugInstruction && (
                 <Segment basic>
-                  <Header as="h3">{getDrug(arr.first[0]).name}. Инструкция:</Header>
+                  <Header as="h3">
+                    {getDrug(arr.first[0]).name}. {t("instruction")}:
+                  </Header>
                   <div dangerouslySetInnerHTML={{ __html: firstDrugInstruction }}></div>
                 </Segment>
               )}
               {secondDrugInstruction && (
                 <Segment basic>
-                  <Header as="h3">{getDrug(arr.last[0]).name}. Инструкция:</Header>
+                  <Header as="h3">
+                    {getDrug(arr.last[0]).name}. {t("instruction")}:
+                  </Header>
                   <div dangerouslySetInnerHTML={{ __html: secondDrugInstruction }}></div>
                 </Segment>
               )}
@@ -261,4 +268,4 @@ const WarningTab = inject(
   )
 );
 
-export default WarningTab;
+export default withTranslation()(WarningTab);

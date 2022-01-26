@@ -163,7 +163,6 @@ const Main = inject(
       handleResetAll = (type) => {
         this.props.actions.resetAll(type);
         this.setOpen(false, "openClearence");
-        // if (window.confirm("Сбросить все?")) this.props.actions.resetAll();
       };
       returnDeleted = () => {
         this.props.drugs.returnList();
@@ -290,8 +289,9 @@ const Main = inject(
             buttonTexts,
           },
           patients,
-          t,
+          //t,
         } = this.props;
+        const { t } = this.props.actions;
         let selectedWarnings = warning[selectedDrug];
         let showPage = !!(this.props.router.values && this.props.router.values.page);
         // console.log({ showPage, values: this.props.router.values, page: this.props.router.values.page });
@@ -351,7 +351,7 @@ const Main = inject(
                   <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>
                     <Menu.Item>
                       <Icon name={"bed"} className={patientId ? "" : " glowing"} />
-                      {fio || t("Пациент не выбран")}
+                      {fio || t("patient_notSelected")}
                     </Menu.Item>
                   </Responsive>
                   {!misDisabled && isDisease && (
@@ -405,22 +405,22 @@ const Main = inject(
             >
               {unselectedRows.length > 0 && (
                 <Menu secondary className={`bottom fixed`}>
-                  <Menu.Item>Удалено строк: {unselectedRows.length}</Menu.Item>
+                  <Menu.Item>{t("removed_string")}: {unselectedRows.length}</Menu.Item>
                   <Menu.Item onClick={this.returnDeleted}>
                     <Icon name="undo alternate" />
-                    Вернуть
+                    {t("return")}
                   </Menu.Item>
                   <Menu.Item onClick={this.clearDeleted}>
                     <Icon name="delete" />
-                    Удалить насовсем
+                    {t("remove_nasovsev")}                    
                   </Menu.Item>
                 </Menu>
               )}
               {disabled && showMainBottomMenu && (
                 <Menu className={`bottom fixed menu three item huge main`}>
-                  <Menu.Item onClick={() => this.handleResetAll("all")}>Сбросить</Menu.Item>
+                  <Menu.Item onClick={() => this.handleResetAll("all")}>{t("main_drugs_reset")}</Menu.Item>
                   <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
-                    Проверить
+                    {t("main_drugs_check")}
                   </Menu.Item>
                 </Menu>
               )}
@@ -431,28 +431,28 @@ const Main = inject(
                     onClose={() => this.setOpen(false, "openClearence")}
                     onOpen={() => this.setOpen(true, "openClearence")}
                     open={openClearence}
-                    trigger={<Menu.Item>{t("Сбросить")}</Menu.Item>}
+                    trigger={<Menu.Item>{t("main_drugs_reset")}</Menu.Item>}
                   >
-                    <Modal.Header>{"Какие данные вы хотите очистить?"}</Modal.Header>
+                    <Modal.Header>{t("what_data_clean")}</Modal.Header>
                     <Modal.Content>
-                      <Header as="h3" content="Можно очистить:" />
+                      <Header as="h3" content={t("can_cleaned")} />
                       <List>
-                        <List.Item>Только данные по пациенту, включая текущий лист назначений и анамнез</List.Item>
-                        <List.Item>Лист назначений полностью</List.Item>
-                        <List.Item>Все выбранные данные, включая клинику, пациента и лист назначений</List.Item>
+                        <List.Item>{t("only_patient_data")}</List.Item>
+                        <List.Item>{t("sheet_appointments_completely")}</List.Item>
+                        <List.Item>{t("all_selected_data")}</List.Item>
                       </List>
                     </Modal.Content>
                     <Modal.Actions>
-                      <Button content="Очистить все" onClick={() => this.handleResetAll("all")} negative />
+                      <Button content={t("clear_all")} onClick={() => this.handleResetAll("all")} negative />
                       <Button
-                        content="Лист назначений"
+                        content={t("sheet_appointments")}
                         labelPosition="right"
                         icon="list"
                         onClick={() => this.handleResetAll("list")}
                         color="black"
                       />
                       <Button
-                        content="Данные пациента"
+                        content={t("patient_data")}
                         labelPosition="right"
                         icon="user"
                         onClick={() => this.handleResetAll("patient")}
@@ -461,7 +461,7 @@ const Main = inject(
                     </Modal.Actions>
                   </Modal>
                   <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
-                    {t("Проверить")}
+                    {t("main_drugs_check")}
                   </Menu.Item>
                   {listChanged ? (
                     cautionsTitle ? (
@@ -469,7 +469,9 @@ const Main = inject(
                         onClose={() => this.setOpen(false, "openCautions")}
                         onOpen={() => this.setOpen(true, "openCautions")}
                         open={openCautions}
-                        trigger={<Menu.Item className={editedDrugs ? "glowing" : ""}>{t("Назначить")}</Menu.Item>}
+                        trigger={
+                          <Menu.Item className={editedDrugs ? "glowing" : ""}>{t("main_drugs_prescribe")}</Menu.Item>
+                        }
                       >
                         <Modal.Header>{cautionsTitle}</Modal.Header>
                         <Modal.Content>
@@ -484,10 +486,10 @@ const Main = inject(
                         </Modal.Content>
                         <Modal.Actions>
                           <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
-                            Отмена
+                            {t("main_parser_cancel")}
                           </Button>
                           <Button
-                            content="Продолжить"
+                            content={t("continue")}
                             labelPosition="right"
                             icon="checkmark"
                             onClick={() => this.saveList()}
@@ -497,17 +499,17 @@ const Main = inject(
                       </Modal>
                     ) : (
                       <Menu.Item className={editedDrugs ? "glowing" : ""} onClick={() => this.saveList()}>
-                        {t("Назначить")}
+                        {t("main_drugs_prescribe")}
                       </Menu.Item>
                     )
                   ) : (
-                    <Menu.Item onClick={() => this.goRecipe()}>{t("Выписать")}</Menu.Item>
+                    <Menu.Item onClick={() => this.goRecipe()}>{t("main_drugs_write")}</Menu.Item>
                   )}
                 </Menu>
               )}
 
               <Modal open={false && !drugStructure.clinic_id}>
-                <Modal.Header>Выберите клинику</Modal.Header>
+                <Modal.Header>{t("choose_clinic")}</Modal.Header>
                 <Modal.Content>
                   <Form>
                     <Form.Field>
@@ -519,7 +521,7 @@ const Main = inject(
                             value: item.id,
                           };
                         })}
-                        placeholder="Клиника"
+                        placeholder={t("clinic")}
                         search
                         name="clinic"
                         selection
@@ -532,7 +534,7 @@ const Main = inject(
                 </Modal.Content>
                 <Modal.Actions>
                   <Button
-                    content="Выбрать"
+                    content={t("select")}
                     labelPosition="right"
                     disabled={!clinic}
                     icon="checkmark"
@@ -544,9 +546,9 @@ const Main = inject(
 
               {(makeLiquids || !checkLiquids) && !bottomview_disabled && (
                 <Menu className="bottom fixed menu two item huge main">
-                  <Menu.Item onClick={this.resetLiquids}>Сбросить растворы</Menu.Item>
+                  <Menu.Item onClick={this.resetLiquids}>{t("relieve_solutions")}</Menu.Item>
                   <Menu.Item disabled={!isLiquidsOk} onClick={this.confirmLiquids}>
-                    Применить
+                    {t("apply")}
                   </Menu.Item>
                 </Menu>
               )}
@@ -573,7 +575,7 @@ const Main = inject(
                 >
                   <Menu.Item as={RouterLink} to="/patient/list">
                     <Icon name="address book" />
-                    {t("Пациенты")}
+                    {t("patient_patients")}
                   </Menu.Item>
                   {texts && texts.agreementheader && (
                     <Menu.Item as={RouterLink} to="/license-agreement">
@@ -590,17 +592,17 @@ const Main = inject(
                   {false && (
                     <Menu.Item as={RouterLink} to="/clinics/list">
                       <Icon name="hospital" />
-                      Клиники
+                      {t("main_menu_clinics")}
                     </Menu.Item>
                   )}
                   <Menu.Item as={RouterLink} to="/settings/my">
                     <Icon name="user md" />
-                    Настройки
+                    {t("main_menu_settings")}
                   </Menu.Item>
                   {false && (
                     <Menu.Item disabled as={RouterLink} to="/profile/show">
                       <Icon name="user md" />
-                      Профиль
+                      {t("main_menu_profile")}
                     </Menu.Item>
                   )}
                   {true &&
@@ -656,7 +658,7 @@ const Main = inject(
             </Menu.Item>*/}
                   <Menu.Item onClick={this.logout}>
                     <Icon name="sign-out" />
-                    {t("Выход")}
+                    {t("main_menu_exit")}
                   </Menu.Item>
                 </Sidebar>
               )}
@@ -675,7 +677,7 @@ const Main = inject(
                           loading={!searchReady}
                           onResultSelect={this.handleResultSelect}
                           onSearchChange={this.handleSearchChange}
-                          noResultsMessage={t("Ничего не найдено.")}
+                          noResultsMessage={t("main_search_notFound")}
                           results={searchRows}
                           value={searchQuery}
                           resultRenderer={this.resultRenderer}
@@ -709,12 +711,12 @@ const Main = inject(
                         <Segment basic>
                           <Message info>
                             <Icon name="info" />
-                            {t("Внесите лекарственные препараты с помощью строки поиска наверху или")}&nbsp;{" "}
+                            {t("main_search_tip")}&nbsp;{" "}
                             <a
                               style={{ cursor: "pointer", textDecoration: "underline" }}
                               onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
                             >
-                              {t("напишите их свободным текстом")}
+                              {t("main_parser_tip")}
                             </a>
                           </Message>
                         </Segment>
@@ -734,7 +736,7 @@ const Main = inject(
               onOpen={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
               open={this.state.manualDrugInputDialog}
             >
-              <Modal.Header>{t("Введите препараты")}</Modal.Header>
+              <Modal.Header>{t("main_parser_header")}</Modal.Header>
               <Modal.Content>
                 <Form>
                   <TextArea
@@ -742,19 +744,17 @@ const Main = inject(
                     rows={4}
                     name="drugs"
                     value={this.state.manualDrugInputText}
-                    placeholder={t(
-                      "Можно указать несколько препаратов с дозировками, система попытается их распознать"
-                    )}
+                    placeholder={t("main_parser_tip2")}
                     onChange={(e) => this.setState({ manualDrugInputText: e.target.value })}
                   />
                 </Form>
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ manualDrugInputDialog: false })}>
-                  {t("Отмена")}
+                  {t("main_parser_cancel")}
                 </Button>
                 <Button color="blue" onClick={this.detectManualDrugInput}>
-                  {t("Распознать")}
+                  {t("main_parser_parse")}
                 </Button>
               </Modal.Actions>
             </Modal>

@@ -350,8 +350,8 @@ class Warnings {
         this.stores.actions.makeAlerts({
           alerts: [
             {
-              title: "Ошибка!",
-              message: "Возникла ошибка запроса протокола.",
+              title: this.stores.actions.t("error"),
+              message: this.stores.actions.t("protocol_request_error_occurred"),
               level: "error",
               sticky: true,
             },

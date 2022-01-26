@@ -6,6 +6,8 @@ import { LOGIN, SERVER } from "../constants";
 
 import { StructureScheme, ProfileScheme } from "../schemes";
 
+import i18n from "../i18n";
+
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
 export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
@@ -733,7 +735,7 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: `Здравствуйте, ${this.doctor.name}`,
+                title: `${this.t("welcome")}, ${this.doctor.name}`,
                 message: "",
                 level: "info",
                 sticky: false,
@@ -744,8 +746,8 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: `Внимание! Врач не указан.`,
-                message: "Обратитесь к администратору.",
+                title: this.t("attention_doctor_not_specified"),
+                message: this.t("contact_administrator"),
                 level: "warning",
                 sticky: false,
               },
@@ -947,7 +949,7 @@ class Actions {
       this.makeAlerts({
         alerts: [
           {
-            title: `Здравствуйте, ${this.doctor.name}`,
+            title: `${this.t("welcome") || "Здравствуйте"}, ${this.doctor.name}`,
             message: "",
             level: "info",
             sticky: false,
@@ -1112,10 +1114,10 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: `Внимание!`,
-                message: "Вы уже зарегистрированы в системе! Перейдите на страницу авторизации.",
+                title: this.t("attention"),
+                message: this.t("you_already_registered")+" "+this.t("go_to_login"),
                 button: {
-                  text: "Перейти",
+                  text: this.t("jump"),
                   action: () => {
                     this.stores.router.push("/login");
                     // this.loginForm.email = this.signinForm.email;
@@ -1255,5 +1257,13 @@ class Actions {
       },
     });
   }
+
+  t = (k) => {
+    const defaultTexts = i18n.res;
+    const ecptext = this?.UIText?.ecptext || {};
+    // console.log({ defaultTexts, ecptext });
+    const translation = { ...defaultTexts, ...ecptext };
+    return translation[k];
+  };
 }
 export default Actions;

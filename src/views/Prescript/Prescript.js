@@ -10,7 +10,7 @@ import Search from "../../components/Search";
 import Drugs from "../../components/Drugs";
 
 import PatientPassport from "../Patient/PatientPassport";
-
+import { withTranslation } from "react-i18next";
 import moment from "moment";
 import _ from "lodash";
 
@@ -88,10 +88,12 @@ const Prescript = inject(
       };
       savePatient = async () => {
         let res = await this.props.patients.save();
-
+      
         if (res) {
           this.setOpen(false);
           this.handleChange(null, { name: "patient", value: res.key });
+
+          // this.setState({ [`search_patient`]: res.fio });
         }
       };
       // handleAddition = async (e, { name, value }) => {
@@ -110,7 +112,7 @@ const Prescript = inject(
           // console.log({ value });
           let patient = this.props.patients.current;
           let curr = await this.props.patients.patient.get(value);
-          if (curr.id) await this.props.patients.request(curr.id);
+          if (curr?.id) await this.props.patients.request(curr.id);
           // if ((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id);
           // curr = curr || {};
           // this.props.patients.current = _.extend(patient, {
@@ -173,7 +175,7 @@ const Prescript = inject(
       get patientsListSearch() {
         let arr = [];
         this.props.patients.searchRows.forEach((item, i) => {
-          console.log({ item });
+          // console.log({ item });
           if (item.name) {
             arr.push({
               id: item.id,
@@ -214,9 +216,7 @@ const Prescript = inject(
             arr.push({
               id: item.id,
               key: i,
-              title: "",
-              // title: "Клиника", //item.name,
-              // price: moment(item.birthdate, "x").format("DD.MM.YYYY"),
+              title: "",         
               description: item.name,
             });
           }
@@ -237,21 +237,22 @@ const Prescript = inject(
           recipes: { code },
           tools: { searchReady, searchClinicRows },
         } = this.props;
+        const { t } = this.props.actions;
 
         doctor = doctor || doc.name;
 
         // let noEmail = !(this.props.patients.current.email && this.props.patients.current.email.length > 0)
         let noEmail = false;
-        // console.log({ doctor, clinic, patient });
+        // console.log( patient );
 
         return (
           <>
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-                Назад
+                {t("back")}
               </Menu.Item>
               <Menu.Item disabled={!isPrescriptFilled} onClick={this.save}>
-                Назначить
+                {t("main_drugs_prescribe")}
               </Menu.Item>
             </Menu>
 
@@ -259,28 +260,28 @@ const Prescript = inject(
               <Segment basic>
                 <Form>
                   <Form.Field>
-                    <label>Врач</label>
+                    <label>{t("doctor")}</label>
                     <Input name="doctor" value={doctor} readOnly className="readonly" />
                   </Form.Field>
 
                   <Form.Group>
                     <Form.Field width={16}>
-                      <label>Пациент</label>
+                      <label>{t("patient")}</label>
                       <Search
                         fluid
                         size="big"
                         name="patient"
-                        placeholder="Введите имя пациента"
+                        placeholder={t("patinet_card_name_patient")}
                         loading={!searchReady}
                         onResultSelect={this.handlePatientResultSelect}
                         onSearchChange={_.debounce(this.handlePatientSearchChange, 500, {
                           leading: true,
                         })}
                         results={this.patientsListSearch}
-                        value={search_patient}
+                        value={search_patient || patient?.fio}
                         resultClassName="result-wrapper"
                       />
-                      {patient && patient.fio && <Label>{patient.fio}</Label>}
+                      {/* {patient && patient.fio && <Label>{patient.fio}</Label>} */}
                     </Form.Field>
                     <Form.Field>
                       <label>&nbsp;</label>
@@ -288,18 +289,18 @@ const Prescript = inject(
                         onClose={() => this.setOpen(false)}
                         onOpen={() => this.setOpen(true)}
                         open={open}
-                        trigger={<Button>Добавить</Button>}
+                        trigger={<Button>{t("add")}</Button>}
                       >
-                        <Modal.Header>Создать пациента</Modal.Header>
+                        <Modal.Header>{t("create_patient")}</Modal.Header>
                         <Modal.Content>
                           <PatientPassport />
                         </Modal.Content>
                         <Modal.Actions>
                           <Button color="black" onClick={() => this.setOpen(false)}>
-                            Отмена
+                            {t("main_parser_cancel")}
                           </Button>
                           <Button
-                            content="Создать"
+                            content={t("create")}
                             labelPosition="right"
                             icon="checkmark"
                             onClick={() => this.savePatient()}
@@ -310,7 +311,7 @@ const Prescript = inject(
                     </Form.Field>
                   </Form.Group>
                   <Form.Field error={patient.key && noEmail}>
-                    <label>E-mail пациента</label>
+                    <label>{t("mail_patient")}</label>
                     <Input
                       name="email"
                       value={patient.email}
@@ -324,7 +325,7 @@ const Prescript = inject(
                       fluid
                       size="big"
                       name="clinic"
-                      placeholder="Введите наименование вашей клиники"
+                      placeholder={t("enter_name_clinic")}
                       loading={!searchReady}
                       onResultSelect={this.handleResultSelect}
                       onSearchChange={this.handleSearchChange}
@@ -343,4 +344,4 @@ const Prescript = inject(
   )
 );
 
-export default Prescript;
+export default withTranslation()(Prescript);

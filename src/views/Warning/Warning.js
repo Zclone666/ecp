@@ -20,7 +20,7 @@ import {
   Form,
   TextArea,
 } from "semantic-ui-react";
-
+import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
 function getLetter(value) {
@@ -114,7 +114,11 @@ const Warning = inject(
         let subjFrom = false;
         let subjTo = false;
 
-        let warnArr = _.orderBy(Array.from(warning.values()), ["group", "step"], ["desc", "asc"]);
+        let warnArr = _.orderBy(
+          Array.from(warning.values()),
+          ["group", "step", "value", "trust"],
+          ["desc", "asc", "desc", "desc"]
+        );
         let isConflict = !!_.find(groups, { type: values.page });
         //console.log({isConflict, selectedDrug});
         warnArr.forEach((warn, i) => {
@@ -141,7 +145,7 @@ const Warning = inject(
           //console.log({ subjFrom, subjTo });
           if (subjFrom && subjTo) tabs.push(warn);
         });
-        //console.log({tabs});
+        console.log({ tabs });
         return tabs;
       }
 
@@ -157,43 +161,31 @@ const Warning = inject(
         // console.log({length: this.tabs.length});
         let arr = this.tabs.length > 13 ? this.tabs.slice(0, 10) : this.tabs.slice(0, 11);
 
-        return arr
-          .sort((a, b) => {
-            if (a.step > b.step) return -1;
-            if (a.step < b.step) return 1;
-            if (a.step == b.step) {
-              if (a.value > b.value) return -1;
-              if (a.value < b.value) return 1;
-              if (a.value == b.value) {
-                if (a.trust > b.trust) return -1;
-                if (a.trust < b.trust) return 1;
-              }
-            }
-          })
-          .map((warn, i) => {
-            let interaction = getElement("interaction", warn.value);
-            let trust = getElement("trust", warn.trust);
-            return (
-              <Menu.Item
-                key={"tab" + i}
-                active={i === activeIndex}
-                style={{ backgroundColor: warn.color }}
-                onClick={() => this.handleTabChange(null, { activeIndex: i })}
-              >
-                {getLetter(warn.trust)}
-              </Menu.Item>
-            );
-            // render: () => (
-            // <Tab.Pane style={{ backgroundColor: warn.color, textAlign: 'center' }}>
-            //   <Statistic inverted size='small'>
-            //     <Statistic.Label>{interaction}</Statistic.Label>
-            //     <Statistic.Value text>
-            //       {trust}
-            //     </Statistic.Value>
-            //   </Statistic>
-            // </Tab.Pane>
-            // )
-          });
+        //_.orderBy(arr, ["step", "value", "trust"], ["asc", "desc", "desc"])
+        return arr.map((warn, i) => {
+          let interaction = getElement("interaction", warn.value);
+          let trust = getElement("trust", warn.trust);
+          return (
+            <Menu.Item
+              key={"tab" + i}
+              active={i === activeIndex}
+              style={{ backgroundColor: warn.color }}
+              onClick={() => this.handleTabChange(null, { activeIndex: i })}
+            >
+              {getLetter(warn.trust)}
+            </Menu.Item>
+          );
+          // render: () => (
+          // <Tab.Pane style={{ backgroundColor: warn.color, textAlign: 'center' }}>
+          //   <Statistic inverted size='small'>
+          //     <Statistic.Label>{interaction}</Statistic.Label>
+          //     <Statistic.Value text>
+          //       {trust}
+          //     </Statistic.Value>
+          //   </Statistic>
+          // </Tab.Pane>
+          // )
+        });
       }
       renderMenuItems() {
         let {
@@ -226,6 +218,7 @@ const Warning = inject(
         let {
           actions: { getElement },
         } = this.props;
+        const { t } = this.props.actions;
         let { activeIndex, open } = this.state;
         let widths = this.tabs.length ? (this.tabs.length < 13 ? this.tabs.length : 12) : 1;
         let warn = this.tabs[activeIndex];
@@ -237,9 +230,9 @@ const Warning = inject(
           <>
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item color="red" onClick={this.back}>
-                Назад
+                {t("back")}
               </Menu.Item>
-              <Menu.Item onClick={this.openErrorTextDialog}>Сообщить об ошибке</Menu.Item>
+              <Menu.Item onClick={this.openErrorTextDialog}>{t("report_an_error")}</Menu.Item>
             </Menu>
 
             <div className="scrollwrapper">
@@ -268,7 +261,7 @@ const Warning = inject(
               onOpen={() => this.setState({ errorTextDialog: true, errorText: "" })}
               open={this.state.errorTextDialog}
             >
-              <Modal.Header>Сообщите об ошибке</Modal.Header>
+              <Modal.Header>{t("notify_about_error")}</Modal.Header>
               <Modal.Content>
                 <Form>
                   <TextArea
@@ -276,17 +269,17 @@ const Warning = inject(
                     rows={4}
                     name="drugs"
                     value={this.state.errorText}
-                    placeholder="Введите текст сообщения"
+                    placeholder={t("enter_message_text")}
                     onChange={(e) => this.setState({ errorText: e.target.value })}
                   />
                 </Form>
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ errorTextDialog: false, errorText: "" })}>
-                  Отменить
+                  {t("cancel")}
                 </Button>
                 <Button color="blue" onClick={this.sendErrorText} disabled={this.state.errorText.length == 0}>
-                  Сообщить
+                  {t("to_report")}
                 </Button>
               </Modal.Actions>
             </Modal>
@@ -297,4 +290,4 @@ const Warning = inject(
   )
 );
 
-export default Warning;
+export default withTranslation()(Warning);

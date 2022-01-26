@@ -17,7 +17,7 @@ import {
     Step,
     Responsive
 } from 'semantic-ui-react'
-
+import { withTranslation } from "react-i18next";
 import _ from 'lodash';
 
 const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(observer(class Steps extends Component {
@@ -29,22 +29,22 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
   }
   steps = {
     lf: [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' },
-      { name: 'method', text: 'Способ применения' }
+      { name: 'type', text: 'form_input' },
+      { name: 'lf', text: 'dosage_form' },
+      { name: 'dosage', text: 'dosage' },
+      { name: 'method', text: 'mode_application' }
     ],
     methods: [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'method', text: 'Способ применения' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' }
+      { name: 'type', text: 'form_input' },
+      { name: 'method', text: 'mode_application' },
+      { name: 'lf', text: 'dosage_form' },
+      { name: 'dosage', text: 'dosage' }
     ],
     '': [
-      { name: 'type', text: 'Форма ввода' },
-      { name: 'lf', text: 'Лекарственная форма' },
-      { name: 'dosage', text: 'Дозировка' },
-      { name: 'method', text: 'Способ применения' }
+      { name: 'type', text: 'form_input' },
+      { name: 'lf', text: 'dosage_form' },
+      { name: 'dosage', text: 'dosage' },
+      { name: 'method', text: 'mode_application' }
     ],
   }
   render() {
@@ -57,6 +57,7 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
       router: { values },
       viewType
     } = this.props
+    const { t } = this.props.actions;
     let way = values.way || 'lf'
 
     let drugsDosage = dosage.get(current.id)
@@ -78,8 +79,8 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
             url = ''
           } else {
             chosedName = {
-              lf: 'Лекарственная форма',
-              methods: 'Способ применения',
+              lf: t("dosage_form"),
+              methods: t("mode_application"),
               '': ''
             }[way]
           }
@@ -93,7 +94,7 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
             <Step completed={currStep > i} key={'st'+i} active={currStep == i} as={ ( i <= currStep ) ? RouterLink : Step } to={url}>
               { ( currStep == i || viewType == 'pc' ) &&
               <Step.Content>
-                <Step.Title>{step.text}</Step.Title>
+                <Step.Title>{t(step.text)}</Step.Title>
                 <Step.Description>{chosedName}</Step.Description>
               </Step.Content>
               }
@@ -106,4 +107,4 @@ const Steps = inject('db', 'actions', 'router', 'drugs', 'warnings', 'dosages')(
 
 }));
 
-export default Steps
+export default withTranslation()(Steps)
