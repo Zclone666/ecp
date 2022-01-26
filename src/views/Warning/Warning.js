@@ -114,7 +114,11 @@ const Warning = inject(
         let subjFrom = false;
         let subjTo = false;
 
-        let warnArr = _.orderBy(Array.from(warning.values()), ["group", "step"], ["desc", "asc"]);
+        let warnArr = _.orderBy(
+          Array.from(warning.values()),
+          ["group", "step", "value", "trust"],
+          ["desc", "asc", "desc", "desc"]
+        );
         let isConflict = !!_.find(groups, { type: values.page });
         //console.log({isConflict, selectedDrug});
         warnArr.forEach((warn, i) => {
@@ -141,7 +145,7 @@ const Warning = inject(
           //console.log({ subjFrom, subjTo });
           if (subjFrom && subjTo) tabs.push(warn);
         });
-        //console.log({tabs});
+        console.log({ tabs });
         return tabs;
       }
 
@@ -157,43 +161,31 @@ const Warning = inject(
         // console.log({length: this.tabs.length});
         let arr = this.tabs.length > 13 ? this.tabs.slice(0, 10) : this.tabs.slice(0, 11);
 
-        return arr
-          .sort((a, b) => {
-            if (a.step > b.step) return -1;
-            if (a.step < b.step) return 1;
-            if (a.step == b.step) {
-              if (a.value > b.value) return -1;
-              if (a.value < b.value) return 1;
-              if (a.value == b.value) {
-                if (a.trust > b.trust) return -1;
-                if (a.trust < b.trust) return 1;
-              }
-            }
-          })
-          .map((warn, i) => {
-            let interaction = getElement("interaction", warn.value);
-            let trust = getElement("trust", warn.trust);
-            return (
-              <Menu.Item
-                key={"tab" + i}
-                active={i === activeIndex}
-                style={{ backgroundColor: warn.color }}
-                onClick={() => this.handleTabChange(null, { activeIndex: i })}
-              >
-                {getLetter(warn.trust)}
-              </Menu.Item>
-            );
-            // render: () => (
-            // <Tab.Pane style={{ backgroundColor: warn.color, textAlign: 'center' }}>
-            //   <Statistic inverted size='small'>
-            //     <Statistic.Label>{interaction}</Statistic.Label>
-            //     <Statistic.Value text>
-            //       {trust}
-            //     </Statistic.Value>
-            //   </Statistic>
-            // </Tab.Pane>
-            // )
-          });
+        //_.orderBy(arr, ["step", "value", "trust"], ["asc", "desc", "desc"])
+        return arr.map((warn, i) => {
+          let interaction = getElement("interaction", warn.value);
+          let trust = getElement("trust", warn.trust);
+          return (
+            <Menu.Item
+              key={"tab" + i}
+              active={i === activeIndex}
+              style={{ backgroundColor: warn.color }}
+              onClick={() => this.handleTabChange(null, { activeIndex: i })}
+            >
+              {getLetter(warn.trust)}
+            </Menu.Item>
+          );
+          // render: () => (
+          // <Tab.Pane style={{ backgroundColor: warn.color, textAlign: 'center' }}>
+          //   <Statistic inverted size='small'>
+          //     <Statistic.Label>{interaction}</Statistic.Label>
+          //     <Statistic.Value text>
+          //       {trust}
+          //     </Statistic.Value>
+          //   </Statistic>
+          // </Tab.Pane>
+          // )
+        });
       }
       renderMenuItems() {
         let {
@@ -284,10 +276,10 @@ const Warning = inject(
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ errorTextDialog: false, errorText: "" })}>
-                {t("cancel")}
+                  {t("cancel")}
                 </Button>
                 <Button color="blue" onClick={this.sendErrorText} disabled={this.state.errorText.length == 0}>
-                {t("to_report")}
+                  {t("to_report")}
                 </Button>
               </Modal.Actions>
             </Modal>
