@@ -163,8 +163,8 @@ const Drug = inject(
 
         const drugWarnings = _.orderBy(
           Array.from(warning.values()),
-          ["step", "value", "trust"],
-          ["asc", "desc", "desc"]
+          ["group", "step", "value", "trust"],
+          ["desc", "asc", "desc", "desc"]
         );
         const arrowColor = drugWarnings?.length > 0 ? drugWarnings[0].color : false;
         console.log({ arrowColor, warnings: Array.from(warning.values()), drugWarnings });
@@ -297,7 +297,8 @@ const Drug = inject(
                 <RouterLink
                   to={"/warning/" + drug.key}
                   className="left floated content arrowBg"
-                  style={{ backgroundColor: arrowColor ? arrowColor : currWarning.color }}
+                  //style={{ backgroundColor: arrowColor ? arrowColor : currWarning.color }}
+                  style={{ backgroundColor: currWarning.color }}
                 >
                   <List.Icon
                     name="arrow alternate circle right"
