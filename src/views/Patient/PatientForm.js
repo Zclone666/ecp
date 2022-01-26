@@ -317,13 +317,12 @@ const PatientForm = inject(
           <Segment basic>
             <Form>
               <Form.Group>
-               
                 <Form.Field width={7}>
                   <Search
                     fluid
                     size="big"
                     name="patient"
-                    placeholder={t("patinet_card_name_patient")} 
+                    placeholder={t("patinet_card_name_patient")}
                     loading={!searchReady}
                     onResultSelect={this.handlePatientResultSelect}
                     onSearchChange={_.debounce(this.handlePatientSearchChange, 500, {
@@ -361,7 +360,7 @@ const PatientForm = inject(
 
               {showPatientPassport && <PatientPassport />}
               <Form.Group>
-                <BirthDate name="birthdate" value={birthdate} onChange={this.handleChange} />
+                <BirthDate name="birthdate" value={birthdate} onChange={this.handleChange} trans={t} />
                 <Form.Field>
                   <label>{t("sex")}</label>
                   <Button.Group size="big">
