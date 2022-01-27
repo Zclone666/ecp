@@ -454,6 +454,7 @@ const Calculator = inject(
                       labelPosition="right"
                       placeholder="500"
                       onChange={this.handleChange}
+                      readOnly={true}
                     />
                   </Form.Field>
                   <Form.Field width={6}>
