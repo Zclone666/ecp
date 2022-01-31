@@ -251,6 +251,7 @@ class Clinrecs {
       always: (data) => {},
     });
   }
+
   iterator = 1;
   recursiveGetDrugs = (child = null, clinrecId = null) => {
     // console.log("checker: ", this.checker);
@@ -301,11 +302,12 @@ class Clinrecs {
         if (!item.parents) {
           item && this.recursiveGetDrugs(item, id);
         }
-        if (this.courses && this.courses[id] && this.courses[id].length) {
-          _.keys(this.courses[id]).forEach((drugid, i) => {
-            let drugitem = this.courses[id][drugid];
-            console.log({ drugitem, drugid });
-            this.recursiveGetDrugs(drugitem, drugid);
+        if (this.cources && this.cources[id] && this.cources[id].length) {
+          _.keys(this.cources[id]).forEach((drugid, i) => {
+            let drugitem = this.cources[id][drugid];
+            // console.log({ drugitem, drugid });
+            // this.recursiveGetDrugs(drugitem, drugid);
+            setTimeout(() => this.stores.drugs.selectFromSearch(drugitem), this.iterator * 10);
           });
         }
       });
