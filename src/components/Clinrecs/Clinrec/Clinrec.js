@@ -92,6 +92,7 @@ const Clinrec = inject(
         });
         this.props.clinrecs.clinrec[name].check = true;
       };
+
       handleChangeCheckbox = ({ name }) => {
         if (this.props.clinrecs.clinrec[name]) {
           this.props.clinrecs.clinrec[name].check = !this.props.clinrecs.clinrec[name].check;
@@ -216,7 +217,7 @@ const Clinrec = inject(
               />
               <List.Content className="large">
                 <List.Item>
-                  <Table>
+                  <Table celled>
                     <Table.Header>
                       <Table.Row>
                         <Table.HeaderCell singleLine>Название</Table.HeaderCell>

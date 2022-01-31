@@ -301,6 +301,13 @@ class Clinrecs {
         if (!item.parents) {
           item && this.recursiveGetDrugs(item, id);
         }
+        if (this.courses && this.courses[id] && this.courses[id].length) {
+          _.keys(this.courses[id]).forEach((drugid, i) => {
+            let drugitem = this.courses[id][drugid];
+            console.log({ drugitem, drugid });
+            this.recursiveGetDrugs(drugitem, drugid);
+          });
+        }
       });
     }
   };
