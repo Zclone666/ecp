@@ -253,7 +253,7 @@ class Clinrecs {
   }
 
   iterator = 1;
-  recursiveGetDrugs = (child = null, clinrecId = null) => {
+  recursiveGetDrugs = (child = null, clinrecId = null, childId = null) => {
     // console.log("checker: ", this.checker);
     // console.log("drugToClinrecHashset ", this.drugToClinrecHashset);
     // console.log({ child });
@@ -291,8 +291,20 @@ class Clinrecs {
       if (child.childs && child.childs.length > 0) {
         child.childs.forEach((id, i) => {
           let item = this.clinrec[id];
-          item && this.recursiveGetDrugs(item, clinrecId);
+          item && this.recursiveGetDrugs(item, clinrecId, id);
         });
+      } else if (child.cource) {
+        // console.log("here 1");
+        // console.log({ child, clinrecId });
+        if (this.cources && this.cources[childId] && this.cources[childId].length) {
+          // console.log("here 2");
+          _.keys(this.cources[childId]).forEach((drugid, i) => {
+            let drugitem = this.cources[childId][drugid];
+            // console.log({ drugitem, drugid });
+            // this.recursiveGetDrugs(drugitem, drugid);
+            setTimeout(() => this.stores.drugs.selectFromSearch(drugitem), this.iterator * 10);
+          });
+        }
       }
     } else {
       // this.stores.db.clearData(true);
@@ -301,14 +313,6 @@ class Clinrecs {
         let item = this.clinrec[id];
         if (!item.parents) {
           item && this.recursiveGetDrugs(item, id);
-        }
-        if (this.cources && this.cources[id] && this.cources[id].length) {
-          _.keys(this.cources[id]).forEach((drugid, i) => {
-            let drugitem = this.cources[id][drugid];
-            // console.log({ drugitem, drugid });
-            // this.recursiveGetDrugs(drugitem, drugid);
-            setTimeout(() => this.stores.drugs.selectFromSearch(drugitem), this.iterator * 10);
-          });
         }
       });
     }
