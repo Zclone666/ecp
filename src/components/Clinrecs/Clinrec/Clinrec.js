@@ -29,7 +29,8 @@ const Clinrec = inject(
   "router",
   "drugs",
   "clinrecs",
-  "warnings"
+  "warnings",
+  "tools"
 )(
   observer(
     class Clinrec extends Component {
@@ -79,7 +80,6 @@ const Clinrec = inject(
       };
 
       renderCourse = (course) => {
-    
         return null;
       };
 
@@ -105,7 +105,7 @@ const Clinrec = inject(
 
       renderCheck = (childs, id) => {
         let {
-          clinrecs: { clinrec }
+          clinrecs: { clinrec },
         } = this.props;
         const { t } = this.props.actions;
         return (
@@ -136,7 +136,7 @@ const Clinrec = inject(
 
       renderRadio = (childs, id) => {
         let {
-          clinrecs: { clinrec }
+          clinrecs: { clinrec },
         } = this.props;
         const { t } = this.props.actions;
         return (
@@ -178,14 +178,14 @@ const Clinrec = inject(
       };
 
       renderFG = (child, childId) => {
-        let {t} = this.props;
+        let { t } = this.props;
         return (
           <List.Item>
             <List.Content className="large">
               <List.Description>
                 <strong>{child.name}</strong>
                 <span className="underlined" onClick={() => this.getByFG(child, childId)}>
-                {t("show")}
+                  {t("show")}
                 </span>
               </List.Description>
               {child.comment && <List.Description>{child.comment}</List.Description>}
@@ -196,26 +196,72 @@ const Clinrec = inject(
       };
 
       renderRegimen = (child, childId) => {
-        return (
-          <List.Item>
-            <Checkbox
-              checked={child.check}
-              onClick={() => this.check(childId)}
-              label={{
-                children: (
-                  <List.Content className="large">
-                    <List.Header>{child.name}</List.Header>
-                  </List.Content>
-                ),
-              }}
-            />
-            <List.Content className="large">
-              <List.Item>
-                <List.List>{this.renderRecoursive(child)}</List.List>
-              </List.Item>
-            </List.Content>
-          </List.Item>
-        );
+        let {
+          clinrecs: { clinrec, cources },
+        } = this.props;
+        // console.log({ cources, clinrec });
+        if (cources && cources[childId]) {
+          return (
+            <List.Item>
+              <Checkbox
+                checked={child.check}
+                onClick={() => this.check(childId)}
+                label={{
+                  children: (
+                    <List.Content className="large">
+                      <List.Header>{child.name}</List.Header>
+                    </List.Content>
+                  ),
+                }}
+              />
+              <List.Content className="large">
+                <List.Item>
+                  <Table>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell singleLine>Название</Table.HeaderCell>
+                        <Table.HeaderCell>Дозировка</Table.HeaderCell>
+                        <Table.HeaderCell>Форма</Table.HeaderCell>
+                        <Table.HeaderCell>Способ приема</Table.HeaderCell>
+                        <Table.HeaderCell>Кратность приема</Table.HeaderCell>
+                        <Table.HeaderCell>День курса</Table.HeaderCell>
+                        <Table.HeaderCell>Диапазон дней курса</Table.HeaderCell>
+                        <Table.HeaderCell>Длительность курса</Table.HeaderCell>
+                        <Table.HeaderCell>Курс</Table.HeaderCell>
+                        <Table.HeaderCell>Интервал между курсами</Table.HeaderCell>
+                        <Table.HeaderCell>Комментарий</Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+                    {cources[childId].map((item) => {
+                      return this.renderTable(item);
+                    })}
+                  </Table>
+                </List.Item>
+              </List.Content>
+            </List.Item>
+          );
+        } else {
+          return (
+            <List.Item>
+              <Checkbox
+                checked={child.check}
+                onClick={() => this.check(childId)}
+                label={{
+                  children: (
+                    <List.Content className="large">
+                      <List.Header>{child.name}</List.Header>
+                    </List.Content>
+                  ),
+                }}
+              />
+              <List.Content className="large">
+                <List.Item>
+                  <List.List>{this.renderRecoursive(child)}</List.List>
+                </List.Item>
+              </List.Content>
+            </List.Item>
+          );
+        }
       };
 
       renderDrug = (obj) => {
@@ -314,6 +360,74 @@ const Clinrec = inject(
         );
       };
 
+      renderTable = (obj) => {
+        let {
+          clinrecs: { clinrec },
+          tools: { names, shortnames },
+          warnings: { getGroup },
+        } = this.props;
+        // console.log(obj);
+        if (!obj) return null;
+        // console.log({ obj });
+        let { name, type, dosage, specials, freq, duration } = obj;
+        let { method_name, form_name, intervalpreset, schedulepreset, comment } = dosage;
+        let helpers = {};
+        if (dosage.dosage && dosage.dosage.length > 0) {
+          helpers.dosage = {
+            short: `${dosage.dosage[0].value_1} ${shortnames[dosage.dosage[0].id_1]}`,
+          };
+        }
+        let rules = [];
+        // if (intervalpreset) {
+        //   intervalpreset.forEach((item, i) => {
+        //     rules.push(names[item]);
+        //   });
+        // }
+        // if (schedulepreset) {
+        //   schedulepreset.forEach((item, i) => {
+        //     rules.push(names[item]);
+        //   });
+        // }
+        // let { color, group } = getGroup(obj.warning);
+
+        return (
+          <Table.Row>
+            <Table.Cell>
+              <span className="underlined">
+                {/* {name} */}
+                <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
+              </span>
+              {type === "TN" && (
+                <span>
+                  <sup>TM</sup>
+                </span>
+              )}
+            </Table.Cell>
+            <Table.Cell>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: (helpers.dosage && (helpers.dosage.short || helpers.dosage.full)) || "",
+                }}
+                style={{ display: "inline" }}
+              />
+            </Table.Cell>
+            <Table.Cell>{form_name} </Table.Cell>
+            <Table.Cell textAlign="right">
+              {method_name}
+              {rules.length > 0 && ", "}
+              {rules.join(", ")}
+            </Table.Cell>
+            <Table.Cell>{freq} </Table.Cell>
+            <Table.Cell> </Table.Cell>
+            <Table.Cell> </Table.Cell>
+            <Table.Cell>{duration} </Table.Cell>
+            <Table.Cell>{" - "} </Table.Cell>
+            <Table.Cell>{"нет"} </Table.Cell>
+            <Table.Cell>{specials}</Table.Cell>
+          </Table.Row>
+        );
+      };
+
       renderRecoursive = (childs) => {
         let {
           clinrecs: { clinrec },
@@ -382,7 +496,7 @@ const Clinrec = inject(
       render() {
         let {
           router,
-          clinrecs: { clinrec, ready }
+          clinrecs: { clinrec, ready },
         } = this.props;
         const { t } = this.props.actions;
         let { opened } = this.state;

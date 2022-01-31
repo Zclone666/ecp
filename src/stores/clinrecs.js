@@ -8,6 +8,7 @@ class Clinrecs {
   ready = false;
   checker = {};
   clinrec = {};
+  cources = {};
   names = {};
   shortnames = {};
   druglist = [];
@@ -20,6 +21,7 @@ class Clinrecs {
       ready: observable,
       checker: observable,
       clinrec: observable,
+      cources: observable,
       names: observable,
       shortnames: observable,
       druglist: observable,
@@ -78,6 +80,7 @@ class Clinrecs {
       success: async (data) => {
         if (flag) {
           this.clinrec = _.assignIn(this.clinrec, data.ClinRec);
+          this.cources = _.assignIn(this.cources, data.Cources);
           this.names = _.assignIn(this.names, data.names);
           this.shortnames = _.assignIn(this.shortnames, data.shortnames);
           this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
@@ -203,7 +206,7 @@ class Clinrecs {
             form: [],
             intervalpreset: [],
             method: [],
-            name: this.stores.actions.t("choose_one_treatment_schemes"), //"группировка признаков с условием - ИЛИ", 
+            name: this.stores.actions.t("choose_one_treatment_schemes"), //"группировка признаков с условием - ИЛИ",
             parents: child.id,
             schedulepreset: [],
             trust: child.trust,
