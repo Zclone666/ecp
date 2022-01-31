@@ -88,10 +88,12 @@ const Prescript = inject(
       };
       savePatient = async () => {
         let res = await this.props.patients.save();
-
+      
         if (res) {
           this.setOpen(false);
           this.handleChange(null, { name: "patient", value: res.key });
+
+          // this.setState({ [`search_patient`]: res.fio });
         }
       };
       // handleAddition = async (e, { name, value }) => {
@@ -110,7 +112,7 @@ const Prescript = inject(
           // console.log({ value });
           let patient = this.props.patients.current;
           let curr = await this.props.patients.patient.get(value);
-          if (curr.id) await this.props.patients.request(curr.id);
+          if (curr?.id) await this.props.patients.request(curr.id);
           // if ((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id);
           // curr = curr || {};
           // this.props.patients.current = _.extend(patient, {
@@ -173,7 +175,7 @@ const Prescript = inject(
       get patientsListSearch() {
         let arr = [];
         this.props.patients.searchRows.forEach((item, i) => {
-          console.log({ item });
+          // console.log({ item });
           if (item.name) {
             arr.push({
               id: item.id,
@@ -241,7 +243,7 @@ const Prescript = inject(
 
         // let noEmail = !(this.props.patients.current.email && this.props.patients.current.email.length > 0)
         let noEmail = false;
-        // console.log({ doctor, clinic, patient });
+        // console.log( patient );
 
         return (
           <>
@@ -276,10 +278,10 @@ const Prescript = inject(
                           leading: true,
                         })}
                         results={this.patientsListSearch}
-                        value={search_patient}
+                        value={search_patient || patient?.fio}
                         resultClassName="result-wrapper"
                       />
-                      {patient && patient.fio && <Label>{patient.fio}</Label>}
+                      {/* {patient && patient.fio && <Label>{patient.fio}</Label>} */}
                     </Form.Field>
                     <Form.Field>
                       <label>&nbsp;</label>

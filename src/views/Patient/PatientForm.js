@@ -8,7 +8,7 @@ import BirthDate from "../../components/BirthDate";
 import Search from "../../components/Search";
 
 import PatientPassport from "./PatientPassport";
-
+import FormChecker from "./Protocol/FormChecker";
 import { checkDouble, clearDouble } from "../../lib/helpers";
 
 import { withTranslation } from "react-i18next";
@@ -317,13 +317,12 @@ const PatientForm = inject(
           <Segment basic>
             <Form>
               <Form.Group>
-               
                 <Form.Field width={7}>
                   <Search
                     fluid
                     size="big"
                     name="patient"
-                    placeholder={t("patinet_card_name_patient")} 
+                    placeholder={t("patinet_card_name_patient")}
                     loading={!searchReady}
                     onResultSelect={this.handlePatientResultSelect}
                     onSearchChange={_.debounce(this.handlePatientSearchChange, 500, {
@@ -361,7 +360,7 @@ const PatientForm = inject(
 
               {showPatientPassport && <PatientPassport />}
               <Form.Group>
-                <BirthDate name="birthdate" value={birthdate} onChange={this.handleChange} />
+                <BirthDate name="birthdate" value={birthdate} onChange={this.handleChange} trans={t} />
                 <Form.Field>
                   <label>{t("sex")}</label>
                   <Button.Group size="big">
@@ -932,7 +931,8 @@ const PatientForm = inject(
             >
               <Modal.Header>{t("fill_out_protocol")}</Modal.Header>
               <Modal.Content style={{ height: "100%", padding: 0 }} scrolling>
-                <iframe
+                <FormChecker patient={this.props.patients.current}/>
+                {/* <iframe
                   frameborder="0"
                   width="100%"
                   height="100%"
@@ -941,7 +941,7 @@ const PatientForm = inject(
                     "https://smartform.socmedica.dev/form/81/415?patient?=" +
                     JSON.stringify(this.props.patients.current)
                   }
-                ></iframe>
+                ></iframe> */}
               </Modal.Content>
               <Modal.Actions style={{ display: "flex", justifyContent: "space-between" }}>
                 <Button color="red" onClick={() => this.setState({ showProtocol: false })}>

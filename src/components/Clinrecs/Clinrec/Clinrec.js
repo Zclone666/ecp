@@ -140,6 +140,7 @@ const Clinrec = inject(
           clinrecs: { clinrec },
         } = this.props;
         const { t } = this.props.actions;
+        
         return (
           <List.Item>
             <List.Content className="large">
@@ -148,12 +149,19 @@ const Clinrec = inject(
                 {childs.childs &&
                   childs.childs.map((childId) => {
                     let child = clinrec[childId];
-                    if (!child) return null;
+                    if (!child) return null;                    
                     return (
-                      <div className="checkContainer">
+                      <div >                   
                         <Checkbox
                           radio
                           name={id}
+                          label={{
+                            children: (
+                              <span className="underlined">
+                                <div dangerouslySetInnerHTML={{ __html: child.name }} style={{ display: "inline" }} />
+                              </span>
+                            ),
+                          }}
                           checked={child.check}
                           onChange={() => this.handleChangeRadio({ name: childId, parent: id })}
                         />
@@ -300,10 +308,10 @@ const Clinrec = inject(
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Summary>
-                    <span className="underlined">
-                      {/* {name} */}
+                    {/* <span className="underlined">
+                     
                       <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
-                    </span>
+                    </span> */}
                     {type === "TN" && (
                       <span>
                         <sup>TM</sup>
@@ -445,7 +453,7 @@ const Clinrec = inject(
                 if (child.type === "Regimen") return this.renderRegimen(child, childId);
                 if (child.type === "OR") return this.renderRadio(child, childId);
                 if (child.type === "FG") return this.renderFG(child, childId);
-                if (child.type === "AND") return this.renderCheck(child, childId);
+                if (child.type === "AND") return this.renderCheck(child, childId);                
                 return (
                   <List.Item key={"calc" + childId}>
                     <List.Content className="large">
@@ -519,7 +527,7 @@ const Clinrec = inject(
                         let course = clinrec[courseId];
                         if (!course) return null;
                         // console.log({item});
-                        let openMe = "calc" + courseId === opened || rec.childs.length == 1;
+                        let openMe = "calc" + courseId === opened || rec.childs.length == 1;                   
                         return (
                           <List.Item key={"calc" + i} style={{ cursor: "pointer" }}>
                             {rec.childs.length > 1 && <List.Icon name={`angle ${openMe ? "down" : "right"}`} />}

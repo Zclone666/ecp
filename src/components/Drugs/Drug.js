@@ -160,12 +160,14 @@ const Drug = inject(
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
         let selectedWarnings = warnIcons[selectedDrug];
+
         const drugWarnings = _.orderBy(
           Array.from(warning.values()),
-          ["step", "value", "trust"],
-          ["desc", "desc", "desc"]
+          ["group", "step", "value", "trust"],
+          ["desc", "asc", "desc", "desc"]
         );
         const arrowColor = drugWarnings?.length > 0 ? drugWarnings[0].color : false;
+        // console.log({ arrowColor, warnings: Array.from(warning.values()), drugWarnings });
         // console.log({ drug });
         let { key, name, level, tn, type, dosage, helpers, specials, date } = drug;
         const dateOfPrescription = date ? moment(date, "x").format("DD.MM.YYYY") : "";
@@ -295,7 +297,8 @@ const Drug = inject(
                 <RouterLink
                   to={"/warning/" + drug.key}
                   className="left floated content arrowBg"
-                  style={{ backgroundColor: arrowColor ? arrowColor : currWarning.color }}
+                  //style={{ backgroundColor: arrowColor ? arrowColor : currWarning.color }}
+                  style={{ backgroundColor: currWarning.color }}
                 >
                   <List.Icon
                     name="arrow alternate circle right"
