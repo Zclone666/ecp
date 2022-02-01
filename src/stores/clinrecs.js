@@ -8,6 +8,7 @@ class Clinrecs {
   ready = false;
   checker = {};
   clinrec = {};
+  cources = {};
   names = {};
   shortnames = {};
   druglist = [];
@@ -20,6 +21,7 @@ class Clinrecs {
       ready: observable,
       checker: observable,
       clinrec: observable,
+      cources: observable,
       names: observable,
       shortnames: observable,
       druglist: observable,
@@ -78,6 +80,7 @@ class Clinrecs {
       success: async (data) => {
         if (flag) {
           this.clinrec = _.assignIn(this.clinrec, data.ClinRec);
+          this.cources = _.assignIn(this.cources, data.Cources);
           this.names = _.assignIn(this.names, data.names);
           this.shortnames = _.assignIn(this.shortnames, data.shortnames);
           this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
@@ -203,7 +206,7 @@ class Clinrecs {
             form: [],
             intervalpreset: [],
             method: [],
-            name: this.stores.actions.t("choose_one_treatment_schemes"), //"группировка признаков с условием - ИЛИ", 
+            name: this.stores.actions.t("choose_one_treatment_schemes"), //"группировка признаков с условием - ИЛИ",
             parents: child.id,
             schedulepreset: [],
             trust: child.trust,
@@ -248,8 +251,9 @@ class Clinrecs {
       always: (data) => {},
     });
   }
+
   iterator = 1;
-  recursiveGetDrugs = (child = null, clinrecId = null) => {
+  recursiveGetDrugs = (child = null, clinrecId = null, childId = null) => {
     // console.log("checker: ", this.checker);
     // console.log("drugToClinrecHashset ", this.drugToClinrecHashset);
     // console.log({ child });
@@ -287,8 +291,20 @@ class Clinrecs {
       if (child.childs && child.childs.length > 0) {
         child.childs.forEach((id, i) => {
           let item = this.clinrec[id];
-          item && this.recursiveGetDrugs(item, clinrecId);
+          item && this.recursiveGetDrugs(item, clinrecId, id);
         });
+      } else if (child.cource) {
+        // console.log("here 1");
+        // console.log({ child, clinrecId });
+        if (this.cources && this.cources[childId] && this.cources[childId].length) {
+          // console.log("here 2");
+          _.keys(this.cources[childId]).forEach((drugid, i) => {
+            let drugitem = this.cources[childId][drugid];
+            // console.log({ drugitem, drugid });
+            // this.recursiveGetDrugs(drugitem, drugid);
+            setTimeout(() => this.stores.drugs.selectFromSearch(drugitem), this.iterator * 10);
+          });
+        }
       }
     } else {
       // this.stores.db.clearData(true);

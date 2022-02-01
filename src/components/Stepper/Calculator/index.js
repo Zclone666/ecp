@@ -340,6 +340,15 @@ const Calculator = inject(
             .join(" ")
             .includes(u)
         );
+        if (concetrationNeeded) {
+          weights.push({
+            key: 99,
+            value: 99,
+            text: "%",
+          });
+        }
+        //
+        // console.log({ currUnit, weights, dosage });
         //
         return (
           <Segment basic>
@@ -355,6 +364,7 @@ const Calculator = inject(
                   <Form.Field width={4}>
                     <label>{concetrationNeeded ? t("concentration") : t("dosage")}:</label>
                     <Input
+                      readOnly={concetrationNeeded}
                       disabled={disableAll || disableMulti}
                       size="big"
                       name="dosage"
@@ -454,6 +464,7 @@ const Calculator = inject(
                       labelPosition="right"
                       placeholder="500"
                       onChange={this.handleChange}
+                      readOnly={true}
                     />
                   </Form.Field>
                   <Form.Field width={6}>

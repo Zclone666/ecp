@@ -167,7 +167,7 @@ const Drug = inject(
           ["desc", "asc", "desc", "desc"]
         );
         const arrowColor = drugWarnings?.length > 0 ? drugWarnings[0].color : false;
-        console.log({ arrowColor, warnings: Array.from(warning.values()), drugWarnings });
+        // console.log({ arrowColor, warnings: Array.from(warning.values()), drugWarnings });
         // console.log({ drug });
         let { key, name, level, tn, type, dosage, helpers, specials, date } = drug;
         const dateOfPrescription = date ? moment(date, "x").format("DD.MM.YYYY") : "";
