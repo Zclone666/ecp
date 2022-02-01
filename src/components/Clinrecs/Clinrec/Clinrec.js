@@ -140,7 +140,7 @@ const Clinrec = inject(
           clinrecs: { clinrec },
         } = this.props;
         const { t } = this.props.actions;
-        
+
         return (
           <List.Item>
             <List.Content className="large">
@@ -149,9 +149,9 @@ const Clinrec = inject(
                 {childs.childs &&
                   childs.childs.map((childId) => {
                     let child = clinrec[childId];
-                    if (!child) return null;                    
+                    if (!child) return null;
                     return (
-                      <div >                   
+                      <div>
                         <Checkbox
                           radio
                           name={id}
@@ -234,11 +234,7 @@ const Clinrec = inject(
                         <Table.HeaderCell>Способ приема</Table.HeaderCell>
                         <Table.HeaderCell>Кратность приема</Table.HeaderCell>
                         <Table.HeaderCell>День курса</Table.HeaderCell>
-                        <Table.HeaderCell>Диапазон дней курса</Table.HeaderCell>
                         <Table.HeaderCell>Длительность курса</Table.HeaderCell>
-                        <Table.HeaderCell>Курс</Table.HeaderCell>
-                        <Table.HeaderCell>Интервал между курсами</Table.HeaderCell>
-                        <Table.HeaderCell>Комментарий</Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
                     {cources[childId].map((item) => {
@@ -309,7 +305,7 @@ const Clinrec = inject(
                 <Feed.Content>
                   <Feed.Summary>
                     {/* <span className="underlined">
-                     
+
                       <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
                     </span> */}
                     {type === "TN" && (
@@ -427,12 +423,8 @@ const Clinrec = inject(
               {rules.join(", ")}
             </Table.Cell>
             <Table.Cell>{freq} </Table.Cell>
-            <Table.Cell> </Table.Cell>
-            <Table.Cell> </Table.Cell>
-            <Table.Cell>{duration} </Table.Cell>
-            <Table.Cell>{" - "} </Table.Cell>
-            <Table.Cell>{"нет"} </Table.Cell>
             <Table.Cell>{specials}</Table.Cell>
+            <Table.Cell>{duration} </Table.Cell>
           </Table.Row>
         );
       };
@@ -453,7 +445,7 @@ const Clinrec = inject(
                 if (child.type === "Regimen") return this.renderRegimen(child, childId);
                 if (child.type === "OR") return this.renderRadio(child, childId);
                 if (child.type === "FG") return this.renderFG(child, childId);
-                if (child.type === "AND") return this.renderCheck(child, childId);                
+                if (child.type === "AND") return this.renderCheck(child, childId);
                 return (
                   <List.Item key={"calc" + childId}>
                     <List.Content className="large">
@@ -527,7 +519,7 @@ const Clinrec = inject(
                         let course = clinrec[courseId];
                         if (!course) return null;
                         // console.log({item});
-                        let openMe = "calc" + courseId === opened || rec.childs.length == 1;                   
+                        let openMe = "calc" + courseId === opened || rec.childs.length == 1;
                         return (
                           <List.Item key={"calc" + i} style={{ cursor: "pointer" }}>
                             {rec.childs.length > 1 && <List.Icon name={`angle ${openMe ? "down" : "right"}`} />}
