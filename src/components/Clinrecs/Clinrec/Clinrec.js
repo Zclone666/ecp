@@ -119,10 +119,17 @@ const Clinrec = inject(
                     let child = clinrec[childId];
                     if (!child) return null;
                     return (
-                      <div className="checkContainer">
+                      <div>
                         <Checkbox
                           name={id}
                           checked={child.check}
+                          label={{
+                            children: (
+                              <span className="underlined">
+                                <div dangerouslySetInnerHTML={{ __html: child.name }} style={{ display: "inline" }} />
+                              </span>
+                            ),
+                          }}
                           onChange={() => this.handleChangeCheckbox({ name: childId, parent: id })}
                         />
                         {this.renderPure(child, childId)}
@@ -305,9 +312,9 @@ const Clinrec = inject(
                 <Feed.Content>
                   <Feed.Summary>
                     {/* <span className="underlined">
-
-                      <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
-                    </span> */}
+                        <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
+                      </span>
+                    */}
                     {type === "TN" && (
                       <span>
                         <sup>TM</sup>
