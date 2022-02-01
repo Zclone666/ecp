@@ -32,6 +32,13 @@ const Settings = inject(
           zhnvlp_reg: null,
           protocol: null,
           rf_ban: null,
+
+          genetic_passport: null, 
+          lactation: null,
+          pregnancy: null,
+          car_driving: null,
+          clinical_recommendations: null,
+
         };
         this.sliderRef = createRef();
       }
@@ -57,7 +64,7 @@ const Settings = inject(
       }
 
       render() {
-        const { zhnvlp_fed, zhnvlp_reg, protocol, rf_ban } = this.state; //this.props.actions.profile.settings || {};
+        const { zhnvlp_fed, zhnvlp_reg, protocol, rf_ban, genetic_passport, lactation,pregnancy,car_driving,clinical_recommendations } = this.state; //this.props.actions.profile.settings || {};
         const { t } = this.props.actions;
         return (
           <div className="h100">
@@ -116,6 +123,67 @@ const Settings = inject(
                         label={t("not_allowed_rf")}
                       />
                     </Form.Field>
+                  </Form.Group>
+
+                  <Form.Group widths={2}>
+                    <Form.Field>
+                      <Checkbox
+                        onChange={this.handleChange}
+                        name="clinical_recommendations"
+                        checked={!!clinical_recommendations}
+                        slider
+                        label={t("clinical_recommendations")}
+                      />
+                    </Form.Field>
+                    <Form.Field>
+                      <Checkbox
+                        onChange={this.handleChange}
+                        name="car_driving"
+                        checked={!!car_driving}
+                        slider
+                        label={t("car_driving")}
+                      />
+                    </Form.Field>
+                  </Form.Group>
+                  <Form.Group widths={2}>
+                    <Form.Field>
+                      <Checkbox
+                        onChange={this.handleChange}
+                        name="pregnancy"
+                        checked={!!pregnancy}
+                        slider
+                        label={t("pregnancy")}
+                      />
+                    </Form.Field>
+                    <Form.Field>
+                      <Checkbox
+                        onChange={this.handleChange}
+                        name="lactation"
+                        checked={!!lactation}
+                        slider
+                        label={t("lactation")}
+                      />
+                    </Form.Field>
+                  </Form.Group>
+                  <Form.Group widths={2}>
+                    <Form.Field>
+                      <Checkbox
+                        onChange={this.handleChange}
+                        name="genetic_passport"
+                        checked={!!genetic_passport}
+                        slider
+                        label={t("genetic_passport")}
+                      />
+                    </Form.Field>
+                    {/* <Form.Field>
+                      <Checkbox
+                        onChange={this.handleChange}
+                        name="lactation"
+                        checked={!!lactation}
+                        slider
+                        label={t("lactation")}
+                      />
+                    </Form.Field> */}
                   </Form.Group>
                 </Form>
               </Segment>
