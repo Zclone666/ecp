@@ -5,7 +5,7 @@ metadata:
   labels:
     k8s-app: ecp-front-free
     project: ecp
-  namespace: dockers
+  namespace: default
 spec:
   replicas: 3
   selector:
@@ -28,7 +28,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: ecp-front-free-svc
-  namespace: dockers
+  namespace: default
   labels:
     k8s-app: ecp-front-free-svc
     project: ecp
