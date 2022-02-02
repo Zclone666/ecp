@@ -124,15 +124,10 @@ const Clinrec = inject(
                           name={id}
                           checked={child.check}
                           label={{
-                            children: (
-                              <span className="underlined">
-                                <div dangerouslySetInnerHTML={{ __html: child.name }} style={{ display: "inline" }} />
-                              </span>
-                            ),
+                            children: this.renderPure(child, childId),
                           }}
                           onChange={() => this.handleChangeCheckbox({ name: childId, parent: id })}
                         />
-                        {this.renderPure(child, childId)}
                       </div>
                     );
                   })}
@@ -163,16 +158,11 @@ const Clinrec = inject(
                           radio
                           name={id}
                           label={{
-                            children: (
-                              <span className="underlined">
-                                <div dangerouslySetInnerHTML={{ __html: child.name }} style={{ display: "inline" }} />
-                              </span>
-                            ),
+                            children: this.renderPure(child, childId),
                           }}
                           checked={child.check}
                           onChange={() => this.handleChangeRadio({ name: childId, parent: id })}
                         />
-                        {this.renderPure(child, childId)}
                       </div>
                     );
                   })}
@@ -311,10 +301,10 @@ const Clinrec = inject(
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Summary>
-                    {/* <span className="underlined">
-                        <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
-                      </span>
-                    */}
+                    <span className="underlined">
+                      <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
+                    </span>
+
                     {type === "TN" && (
                       <span>
                         <sup>TM</sup>
