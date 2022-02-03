@@ -75,7 +75,7 @@ class Tools {
           nameshort[99] = "%";
           unitpharm.push(99);
           units[99] = _.cloneDeep(units[250]);
-          units[99][0].value = 10;
+          units[99][0].value = 10000;
         }
         // end kostyl
 
