@@ -350,7 +350,7 @@ const Recipe = inject(
         let noEmail = false;
         // console.log({ doctor, clinic, patient });
         if (printType === "ambulance_list") {
-          recipe_formid = "F3EPyWjCT30nRTEsHqBYqg=="
+          recipe_formid = "F3EPyWjCT30nRTEsHqBYqg==";
         }
         const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
         // console.log({ tags });
@@ -376,12 +376,12 @@ const Recipe = inject(
                 </Menu.Item>
                 {/* {!code && ( */}
                 <Menu.Item disabled={noEmail || !recipe_formid || this.state.savePending} onClick={this.save}>
-                {t("send")}
+                  {t("send")}
                 </Menu.Item>
                 {/* )} */}
                 {/* {code && ( */}
                 <Menu.Item disabled={noEmail || !code} onClick={this.print}>
-                {t("print")}
+                  {t("print")}
                 </Menu.Item>
                 <Menu.Item
                   disabled={noEmail || !recipe_formid || this.state.wasSigned}
@@ -406,323 +406,329 @@ const Recipe = inject(
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("ambulance_list")} size="big" color="blue" fluid>
-                    {t("outpatient_appointment_list")}
+                      {t("outpatient_appointment_list")}
                     </Button>{" "}
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("station_list")} size="big" color="blue" fluid>
-                    {t("stationary_appointment_list")}
+                      {t("stationary_appointment_list")}
                     </Button>{" "}
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("reanim_list")} size="big" color="blue" fluid>
-                    {t("resuscitation_appointment_list")}
+                      {t("resuscitation_appointment_list")}
                     </Button>{" "}
                   </Grid.Column>
 
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("recipe")} size="big" color="purple" fluid>
-                    {t("writing_recipe")}
+                      {t("writing_recipe")}
                     </Button>{" "}
                   </Grid.Column>
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("protocol")} size="big" color="orange" fluid>
-                    {t("council_minutes")}
+                      {t("council_minutes")}
                     </Button>{" "}
                   </Grid.Column>
                 </Grid>
               </div>
               <div className="scrollwrapper">
                 <Segment basic>
-                {printType === "protocol"? <FormChecker patient={this.props.patients.current}/>:
-                  <Form>
-                    <Form.Field>
-                      <label>{t("recipe_form")}</label>
-                      <Dropdown
-                        size="big"
-                        options={Object.entries(recipeData.items).map(([id, value]) => {
-                          return {
-                            key: id,
-                            text: value.name,
-                            value: id,
-                          };
-                        })}
-                        placeholder={t("choose")}
-                        name="recipe_formid"
-                        selection
-                        fluid
-                        value={recipe_formid}
-                        onChange={this.handleRecipeDataChange}
-                      />
-                    </Form.Field>
-                    {recipe_formid && (
+                  {printType === "protocol" ? (
+                    <FormChecker patient={this.props.patients.current} />
+                  ) : (
+                    <Form>
                       <Form.Field>
-                        <label>{t("recipe_state_time")}</label>
+                        <label>{t("recipe_form")}</label>
                         <Dropdown
                           size="big"
-                          options={
-                            !recipe_formid
-                              ? []
-                              : recipeData.items[recipe_formid].durations.map((item) => {
-                                  return {
-                                    key: item.id,
-                                    text: item.name,
-                                    value: item,
-                                  };
-                                })
-                          }
+                          options={Object.entries(recipeData.items).map(([id, value]) => {
+                            return {
+                              key: id,
+                              text: value.name,
+                              value: id,
+                            };
+                          })}
                           placeholder={t("choose")}
-                          name="recipe_endtimeitem"
+                          name="recipe_formid"
                           selection
                           fluid
-                          value={recipe_endtimeitem}
+                          value={recipe_formid}
                           onChange={this.handleRecipeDataChange}
                         />
                       </Form.Field>
-                    )}
-                    <Form.Group>
-                      {tags.includes("PatientFIO") && (
-                        <Form.Field width={12}>
-                          <label>{t("name_patient")}</label>
-                          <Input name="fio" value={patient.fio} readOnly />
-                        </Form.Field>
-                      )}
-                      {tags.includes("DayOfBirth") && tags.includes("MonthOfBirth") && tags.includes("YearOfBirth") && (
-                        <Form.Field width={4}>
-                          <label>{t("date_birth")}</label>
-                          <Calendar
-                            name="birthdate"
-                            value={moment(patient.birthdate).format("x")}
-                            maxDate={new Date()}
-                            onChange={this.handlePatientDataChange}
-                            size="medium"
-                          />
-                          {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
-                        </Form.Field>
-                      )}
-                    </Form.Group>
-                    {tags.includes("DoctorFIO") && (
-                      <Form.Field>
-                        <label>{t("name_doctor")}</label>
-                        <Input name="docName" value={docName} readOnly />
-                      </Form.Field>
-                    )}
-                    {tags.includes("CategoryCode") && (
-                      <Form.Field>
-                        <label>{t("code_category_code")}</label>
-                        <Input name="citizenCategory" value={citizenCategory} onChange={this.handleChange} />
-                      </Form.Field>
-                    )}
-                    {tags.includes("CodeMKB10") && (
-                      <Form.Group>
-                        <Form.Field width={10}>
-                          <label>{t("choose_determine_nosological_form_code")}</label>
-                          <Dropdown
-                            size="big"
-                            options={diseases.map((x) => ({ key: x.id, text: x.name, value: x.id }))}
-                            placeholder={t("choose")}
-                            name="recipeDiseaseId"
-                            selection
-                            fluid
-                            value={recipeDiseaseId}
-                            onChange={this.handleChange}
-                          />
-                        </Form.Field>
-                        <Form.Field width={6}>
-                          <label>{t("nonological_form_code")}</label>
-                          <Input
-                            name="mkb10code"
-                            value={mkb10code}
-                            onChange={this.handleChange}
-                            readOnly={recipeDiseaseId != t("manual_input_code")}
-                          />
-                        </Form.Field>
-                      </Form.Group>
-                    )}
-                    {tags.includes("SourceOfFinancing") && (
-                      <Form.Field>
-                        <label>{t("source_financing")}</label>
-                        <Dropdown
-                          size="big"
-                          options={[
-                            t("federal_budget"),
-                            t("budget_subject_russian_federation"),
-                            t("municipal_budget"),
-                          ].map((x) => ({ key: x, text: x, value: x }))}
-                          placeholder={t("choose")}
-                          name="financingSource"
-                          selection
-                          fluid
-                          value={financingSource}
-                          onChange={this.handleChange}
-                        />
-                      </Form.Field>
-                    )}
-                    {tags.includes("PercentageOfPayment") && (
-                      <Form.Field>
-                        <label>{t("percent_payment")}</label>
-                        <Dropdown
-                          size="big"
-                          options={["50%", "100%"].map((x) => ({ key: x, text: x, value: x }))}
-                          placeholder={t("choose")}
-                          name="compensation"
-                          selection
-                          fluid
-                          value={compensation}
-                          onChange={this.handleChange}
-                        />
-                      </Form.Field>
-                    )}
-                    {tags.includes("SNILS") && (
-                      <Form.Field>
-                        <label>{t("SNILS")}</label>
-                        <Input
-                          size="big"
-                          children={
-                            <MaskedInput
-                              name="snils"
-                              value={snils || ""}
-                              onChange={this.handleMaskedInputPatientDataChange}
-                              mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, " ", /\d/, /\d/]}
-                              placeholder="000-000-000 00"
-                            />
-                          }
-                        />
-                      </Form.Field>
-                    )}
-                    {tags.includes("MedCardNumber") && (
-                      <Form.Field>
-                        <label>{t("patient_medical_map_number")}</label>
-                        <Input
-                          size="big"
-                          name="medcard_num"
-                          value={medcard_num?.default || ""}
-                          placeholder=""
-                          onChange={this.handlePatientDataChange}
-                        />
-                      </Form.Field>
-                    )}
-                    {tags.includes("AdressOrMedCardNumber") && (
-                      <Form.Field>
-                        <label>{t("residence_address")}</label>
-                        <Input
-                          size="big"
-                          name="main_address"
-                          value={main_address || ""}
-                          placeholder=""
-                          onChange={this.handlePatientDataChange}
-                        />
-                      </Form.Field>
-                    )}
-                    {tags.includes("PolicyNumber") && (
-                      <Form.Field>
-                        <label>{t("polis_oms")}</label>
-                        <Input
-                          size="big"
-                          children={
-                            <MaskedInput
-                              name="policy_num"
-                              value={policy_num || ""}
-                              onChange={this.handleMaskedInputPatientDataChange}
-                              mask={[
-                                /\d/,
-                                /\d/,
-                                /\d/,
-                                /\d/,
-                                " ",
-                                /\d/,
-                                /\d/,
-                                /\d/,
-                                /\d/,
-                                " ",
-                                /\d/,
-                                /\d/,
-                                /\d/,
-                                /\d/,
-                                " ",
-                                /\d/,
-                                /\d/,
-                                /\d/,
-                                /\d/,
-                              ]}
-                              placeholder="0000 0000 0000 0000"
-                            />
-                          }
-                        />
-                      </Form.Field>
-                    )}
-                    {tags.includes("Cito") && (
-                      <Form.Field align="left">
-                        <Checkbox name="cito" checked={cito} label="Cito" onChange={this.handleRecipeDataChange} />
-                      </Form.Field>
-                    )}
-                    {tags.includes("Statim") && (
-                      <Form.Field align="left">
-                        <Checkbox
-                          name="statim"
-                          checked={statim}
-                          label="Statim"
-                          onChange={this.handleRecipeDataChange}
-                        />
-                      </Form.Field>
-                    )}
-                    {tags.includes("SpecNaz") && (
-                      <Form.Field align="left">
-                        <Checkbox
-                          name="special"
-                          checked={special}
-                          label={t("according_special_purpose")}
-                          onChange={this.handleRecipeDataChange}
-                        />
-                      </Form.Field>
-                    )}
-                    {tags.includes("SpecNazTime") && special && (
-                      <Form.Group>
-                        <Form.Field width={6}>
-                          <label>{t("choose_vacation_frequency")}</label>
-                          <Dropdown
-                            size="big"
-                            options={[
-                              { key: 1, text: t("daily"), value: 1 },
-                              { key: 2, text: t("monthly"), value: 2 },
-                              { key: 3, text: t("other_period"), value: 3 },
-                            ]}
-                            placeholder={t("choose")}
-                            name="spectextPrompt"
-                            selection
-                            fluid
-                            value={this.state.spectextPrompt}
-                            onChange={this.handleRecipeDataChange}
-                          />
-                        </Form.Field>
-                        {this.state.spectextPrompt == "3" && (
-                          <Form.Field width={10}>
-                            <label>{t("indicate_vacation_frequency")}</label>
-                            <Input
-                              name="spectext"
-                              value={spectext || ""}
-                              placeholder=""
+                      {recipe_formid &&
+                        recipeData.items[recipe_formid] &&
+                        recipeData.items[recipe_formid].durations &&
+                        recipeData.items[recipe_formid].durations.length > 0 && (
+                          <Form.Field>
+                            <label>{t("recipe_state_time")}</label>
+                            <Dropdown
+                              size="big"
+                              options={
+                                !recipe_formid
+                                  ? []
+                                  : recipeData.items[recipe_formid].durations.map((item) => {
+                                      return {
+                                        key: item.id,
+                                        text: item.name,
+                                        value: item,
+                                      };
+                                    })
+                              }
+                              placeholder={t("choose")}
+                              name="recipe_endtimeitem"
+                              selection
+                              fluid
+                              value={recipe_endtimeitem}
                               onChange={this.handleRecipeDataChange}
                             />
                           </Form.Field>
                         )}
+                      <Form.Group>
+                        {tags.includes("PatientFIO") && (
+                          <Form.Field width={12}>
+                            <label>{t("name_patient")}</label>
+                            <Input name="fio" value={patient.fio} readOnly />
+                          </Form.Field>
+                        )}
+                        {tags.includes("DayOfBirth") && tags.includes("MonthOfBirth") && tags.includes("YearOfBirth") && (
+                          <Form.Field width={4}>
+                            <label>{t("date_birth")}</label>
+                            <Calendar
+                              name="birthdate"
+                              value={moment(patient.birthdate).format("x")}
+                              maxDate={new Date()}
+                              onChange={this.handlePatientDataChange}
+                              size="medium"
+                            />
+                            {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
+                          </Form.Field>
+                        )}
                       </Form.Group>
-                    )}
-                  
-                    {recipe_formid && (
-                      <Form.Field>
-                        <label>{t("comment_prescription")}</label>
-                        <TextArea
-                          size="big"
-                          placeholder={t("explanation_recipe")}
-                          name="recipe_text"
-                          fluid
-                          value={recipe_text}
-                          onChange={this.handleChange}
-                        />
-                      </Form.Field>
-                    )}
-                  </Form>}
+                      {tags.includes("DoctorFIO") && (
+                        <Form.Field>
+                          <label>{t("name_doctor")}</label>
+                          <Input name="docName" value={docName} readOnly />
+                        </Form.Field>
+                      )}
+                      {tags.includes("CategoryCode") && (
+                        <Form.Field>
+                          <label>{t("code_category_code")}</label>
+                          <Input name="citizenCategory" value={citizenCategory} onChange={this.handleChange} />
+                        </Form.Field>
+                      )}
+                      {tags.includes("CodeMKB10") && (
+                        <Form.Group>
+                          <Form.Field width={10}>
+                            <label>{t("choose_determine_nosological_form_code")}</label>
+                            <Dropdown
+                              size="big"
+                              options={diseases.map((x) => ({ key: x.id, text: x.name, value: x.id }))}
+                              placeholder={t("choose")}
+                              name="recipeDiseaseId"
+                              selection
+                              fluid
+                              value={recipeDiseaseId}
+                              onChange={this.handleChange}
+                            />
+                          </Form.Field>
+                          <Form.Field width={6}>
+                            <label>{t("nonological_form_code")}</label>
+                            <Input
+                              name="mkb10code"
+                              value={mkb10code}
+                              onChange={this.handleChange}
+                              readOnly={recipeDiseaseId != t("manual_input_code")}
+                            />
+                          </Form.Field>
+                        </Form.Group>
+                      )}
+                      {tags.includes("SourceOfFinancing") && (
+                        <Form.Field>
+                          <label>{t("source_financing")}</label>
+                          <Dropdown
+                            size="big"
+                            options={[
+                              t("federal_budget"),
+                              t("budget_subject_russian_federation"),
+                              t("municipal_budget"),
+                            ].map((x) => ({ key: x, text: x, value: x }))}
+                            placeholder={t("choose")}
+                            name="financingSource"
+                            selection
+                            fluid
+                            value={financingSource}
+                            onChange={this.handleChange}
+                          />
+                        </Form.Field>
+                      )}
+                      {tags.includes("PercentageOfPayment") && (
+                        <Form.Field>
+                          <label>{t("percent_payment")}</label>
+                          <Dropdown
+                            size="big"
+                            options={["50%", "100%"].map((x) => ({ key: x, text: x, value: x }))}
+                            placeholder={t("choose")}
+                            name="compensation"
+                            selection
+                            fluid
+                            value={compensation}
+                            onChange={this.handleChange}
+                          />
+                        </Form.Field>
+                      )}
+                      {tags.includes("SNILS") && (
+                        <Form.Field>
+                          <label>{t("SNILS")}</label>
+                          <Input
+                            size="big"
+                            children={
+                              <MaskedInput
+                                name="snils"
+                                value={snils || ""}
+                                onChange={this.handleMaskedInputPatientDataChange}
+                                mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, " ", /\d/, /\d/]}
+                                placeholder="000-000-000 00"
+                              />
+                            }
+                          />
+                        </Form.Field>
+                      )}
+                      {tags.includes("MedCardNumber") && (
+                        <Form.Field>
+                          <label>{t("patient_medical_map_number")}</label>
+                          <Input
+                            size="big"
+                            name="medcard_num"
+                            value={medcard_num?.default || ""}
+                            placeholder=""
+                            onChange={this.handlePatientDataChange}
+                          />
+                        </Form.Field>
+                      )}
+                      {tags.includes("AdressOrMedCardNumber") && (
+                        <Form.Field>
+                          <label>{t("residence_address")}</label>
+                          <Input
+                            size="big"
+                            name="main_address"
+                            value={main_address || ""}
+                            placeholder=""
+                            onChange={this.handlePatientDataChange}
+                          />
+                        </Form.Field>
+                      )}
+                      {tags.includes("PolicyNumber") && (
+                        <Form.Field>
+                          <label>{t("polis_oms")}</label>
+                          <Input
+                            size="big"
+                            children={
+                              <MaskedInput
+                                name="policy_num"
+                                value={policy_num || ""}
+                                onChange={this.handleMaskedInputPatientDataChange}
+                                mask={[
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                  " ",
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                  " ",
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                  " ",
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                  /\d/,
+                                ]}
+                                placeholder="0000 0000 0000 0000"
+                              />
+                            }
+                          />
+                        </Form.Field>
+                      )}
+                      {tags.includes("Cito") && (
+                        <Form.Field align="left">
+                          <Checkbox name="cito" checked={cito} label="Cito" onChange={this.handleRecipeDataChange} />
+                        </Form.Field>
+                      )}
+                      {tags.includes("Statim") && (
+                        <Form.Field align="left">
+                          <Checkbox
+                            name="statim"
+                            checked={statim}
+                            label="Statim"
+                            onChange={this.handleRecipeDataChange}
+                          />
+                        </Form.Field>
+                      )}
+                      {tags.includes("SpecNaz") && (
+                        <Form.Field align="left">
+                          <Checkbox
+                            name="special"
+                            checked={special}
+                            label={t("according_special_purpose")}
+                            onChange={this.handleRecipeDataChange}
+                          />
+                        </Form.Field>
+                      )}
+                      {tags.includes("SpecNazTime") && special && (
+                        <Form.Group>
+                          <Form.Field width={6}>
+                            <label>{t("choose_vacation_frequency")}</label>
+                            <Dropdown
+                              size="big"
+                              options={[
+                                { key: 1, text: t("daily"), value: 1 },
+                                { key: 2, text: t("monthly"), value: 2 },
+                                { key: 3, text: t("other_period"), value: 3 },
+                              ]}
+                              placeholder={t("choose")}
+                              name="spectextPrompt"
+                              selection
+                              fluid
+                              value={this.state.spectextPrompt}
+                              onChange={this.handleRecipeDataChange}
+                            />
+                          </Form.Field>
+                          {this.state.spectextPrompt == "3" && (
+                            <Form.Field width={10}>
+                              <label>{t("indicate_vacation_frequency")}</label>
+                              <Input
+                                name="spectext"
+                                value={spectext || ""}
+                                placeholder=""
+                                onChange={this.handleRecipeDataChange}
+                              />
+                            </Form.Field>
+                          )}
+                        </Form.Group>
+                      )}
+
+                      {recipe_formid && (
+                        <Form.Field>
+                          <label>{t("comment_prescription")}</label>
+                          <TextArea
+                            size="big"
+                            placeholder={t("explanation_recipe")}
+                            name="recipe_text"
+                            fluid
+                            value={recipe_text}
+                            onChange={this.handleChange}
+                          />
+                        </Form.Field>
+                      )}
+                    </Form>
+                  )}
                   {false && (
                     <Form>
                       <Form.Field>
@@ -735,7 +741,7 @@ const Recipe = inject(
                               value: item.id,
                             };
                           })}
-                          placeholder={t("ivan")+" "+t("ivanov")}
+                          placeholder={t("ivan") + " " + t("ivanov")}
                           search
                           name="doctor"
                           selection
@@ -756,7 +762,7 @@ const Recipe = inject(
                                 value: item.key,
                               };
                             })}
-                            placeholder={t("ivan")+" "+t("ivanov")}
+                            placeholder={t("ivan") + " " + t("ivanov")}
                             search={false}
                             name="patient"
                             selection
@@ -892,7 +898,7 @@ const Recipe = inject(
                   {t("main_parser_cancel")}
                 </Button>
                 <Button color="blue" onClick={this.sign} disabled={this.state.selectedCertificate == null}>
-                {t("subscribe")}
+                  {t("subscribe")}
                 </Button>
               </Modal.Actions>
             </Modal>
