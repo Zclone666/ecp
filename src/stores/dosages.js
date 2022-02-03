@@ -250,6 +250,7 @@ class Dosages {
     let {
       actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
       drugs: { current },
+      actions: { t },
     } = this.stores;
 
     let { dosage } = this;
@@ -275,7 +276,11 @@ class Dosages {
           if (_.findIndex(arr, (itm) => itm.dosage && itm.dosage.small == this.stores.actions.t("no_data")) == -1) {
             noData = true;
             arr.push({
-              dosage: { small: this.stores.actions.t("no_data"), full: this.stores.actions.t("dosage_not_specified"), id: 248 },
+              dosage: {
+                small: this.stores.actions.t("no_data"),
+                full: this.stores.actions.t("dosage_not_specified"),
+                id: 248,
+              },
               pack: {
                 small: "",
                 full: "",
@@ -370,7 +375,7 @@ class Dosages {
       });
     if (noData && arr.length > 1) {
       _.remove(arr, function (itm) {
-        return itm.dosage && itm.dosage.small == this.stores.actions.t("no_data");
+        return itm.dosage && itm.dosage.small == t("no_data");
       });
     }
     return arr;
