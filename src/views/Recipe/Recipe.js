@@ -42,6 +42,7 @@ import {
   Grid,
   Checkbox,
 } from "semantic-ui-react";
+import FormChecker from "../Patient/Protocol/FormChecker";
 
 const Recipe = inject(
   "router",
@@ -163,7 +164,7 @@ const Recipe = inject(
       };
 
       handleRecipeDataChange = (e, { name, value }) => {
-        // console.log({ name, value, e });
+        console.log({ name, value, e });
         const { t } = this.props.actions;
         this.resetSign();
         if (!name && !value) {
@@ -348,10 +349,13 @@ const Recipe = inject(
 
         let noEmail = false;
         // console.log({ doctor, clinic, patient });
-
+        if (printType === "ambulance_list") {
+          recipe_formid = "F3EPyWjCT30nRTEsHqBYqg=="
+        }
         const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
         // console.log({ tags });
-        // console.log({ patient });
+
+        console.log(recipe_formid, recipeData.items["F3EPyWjCT30nRTEsHqBYqg=="], printType, "recipe_formid");
         // console.log({ recipe_endtimeitem });
         const settings = {
           dots: false,
@@ -430,6 +434,7 @@ const Recipe = inject(
               </div>
               <div className="scrollwrapper">
                 <Segment basic>
+                {printType === "protocol"? <FormChecker patient={this.props.patients.current}/>:
                   <Form>
                     <Form.Field>
                       <label>{t("recipe_form")}</label>
@@ -717,7 +722,7 @@ const Recipe = inject(
                         />
                       </Form.Field>
                     )}
-                  </Form>
+                  </Form>}
                   {false && (
                     <Form>
                       <Form.Field>
