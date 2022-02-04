@@ -322,6 +322,7 @@ class Patients {
           dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
           // console.log({ dosage });
           const { names, nameshort } = this.stores.tools.unitsPharm;
+          nameshort[99] = "%";
           // console.log({ d });
           let helpers = {
             dosage: {
