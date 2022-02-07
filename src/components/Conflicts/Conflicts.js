@@ -128,7 +128,7 @@ const Conflicts = inject(
         // value: 0.75
         // valuecolor: "#fc7301"
 
-        console.log(selectedWarnings, groups, "selectedWarnings, groups");
+        // console.log(selectedWarnings, groups, "selectedWarnings, groups");
 
         // console.log('groups', groups);
         return (
@@ -137,7 +137,7 @@ const Conflicts = inject(
               {_.keys(groups).map((key, i) => {
                 let group = groups[key];
                 let color = (selectedWarnings[group.type] && selectedWarnings[group.type].color) || group.valuecolor;
-                console.log('groups', group, color);
+                // console.log('groups', group, color);
                 let icon = group.type;
 
                 let arr = group.type.split("_");

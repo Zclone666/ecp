@@ -11,6 +11,7 @@ class Clinrecs {
   cources = {};
   names = {};
   shortnames = {};
+  diseaseSelect = [];
   druglist = [];
   drugToClinrecHashset = {};
   collectorAvailable = false;
@@ -49,7 +50,7 @@ class Clinrecs {
     this.clinicalGuidelinesExist = [];
   }
 
-  async check(flag = false, disease) {
+  async check(flag = false) {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
     this.stores.db.clearData(false, true);
@@ -65,18 +66,14 @@ class Clinrecs {
       data.liquids.push(liquid);
     });
 
-    // if(flag){
     data.checker = _.cloneDeep(this.stores.actions.clinrecCheckerData);
-    // }
-
     data.active_language = active_language;
-
     data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
-    data.patient.disease = disease;
 
-    // console.log(disease, flag);
+    data.patient.disease = this.diseaseSelect;
+
     return POST({
       path: "tools/clinicalGuidelines",
       data,

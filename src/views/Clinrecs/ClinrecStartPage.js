@@ -22,16 +22,19 @@ const ClinrecStartPage = inject(
       componentDidUpdate(prevProps, prevState) {
 
         const { clinicalGuidelinesExist } = this.props.clinrecs;
+        
         let checkedNew = {}
         if (Array.isArray(clinicalGuidelinesExist) && !this.state.start) {
           this.setState({ start: true });
-          clinicalGuidelinesExist.map((item) => {
-            checkedNew = {
-              ...checkedNew,
-              [item.id]: {
-                id: item.id,
-                name: item.name,
-              },
+          clinicalGuidelinesExist.map((item) => {                     
+            if (item.exist) {
+              checkedNew = {
+                ...checkedNew,
+                [item.id]: {
+                  id: item.id,
+                  name: item.name,
+                },
+              }
             }
           })
           this.setState({
@@ -41,28 +44,22 @@ const ClinrecStartPage = inject(
 
       }
 
-      proceedToClinrecs = () => {
-        // console.log("patient: ", this.props.patients.current);
-        const { clinrecCheckerStep } = this.props.actions;
-        let disease = []
-        // this.props.patients.current.disease = []
-        // console.log(this.props.patients.current, "value.value.value");
+      proceedToClinrecs = () => {    
+        const { clinrecCheckerStep } = this.props.actions;   
+        this.props.clinrecs.diseaseSelect = [];
+
         if (this.props.patients.current) {          
           for (const [key, value] of Object.entries(this.state.checked)) {
-            // console.log(value, "value.value.value222");
-            if (value && !disease.find((d) => d.id == value.id)) {
-              // !this.props.patients.current.disease.find((d) => d.id == value.id)) {
-              // console.log(value, "value.value.value");
-              disease.push(value)
-              // this.props.patients.current.disease.push(value);
+            if (value && !this.props.clinrecs.diseaseSelect.find((d) => d.id === value.id)) {
+               this.props.clinrecs.diseaseSelect.push(value) 
             } 
           }
         }
-        // console.log(this.props.patients.current, "value.value.value");
-        // console.log(disease, "this.state.checked");
-        this.props.clinrecs.check(false, disease);
+
+        this.props.clinrecs.check(false);
         this.props.router.push(`/clinrec/checker/${clinrecCheckerStep}`);
       };
+
       render() {
         const { t } = this.props.actions;
         // console.log("state: ", this.state);
