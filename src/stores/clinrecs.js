@@ -49,7 +49,7 @@ class Clinrecs {
     this.clinicalGuidelinesExist = [];
   }
 
-  async check(flag = false) {
+  async check(flag = false, disease) {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
     this.stores.db.clearData(false, true);
@@ -74,6 +74,9 @@ class Clinrecs {
     data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+    data.patient.disease = disease;
+
+    // console.log(disease, flag);
     return POST({
       path: "tools/clinicalGuidelines",
       data,
@@ -155,7 +158,7 @@ class Clinrecs {
     // console.log("patient: ", this.stores.patients.current);
     data.disease = patient?.disease || [];
     if (patient && patient.co_disease) data.disease = data.disease.concat(patient.co_disease);
-
+    console.log("clinicalGuidelinesExist");
     return POST({
       path: "tools/clinicalGuidelinesExist",
       data,

@@ -15,18 +15,52 @@ const ClinrecStartPage = inject(
         super(props);
         this.state = {
           checked: {},
+          start: false
         };
       }
+
+      componentDidUpdate(prevProps, prevState) {
+
+        const { clinicalGuidelinesExist } = this.props.clinrecs;
+        let checkedNew = {}
+        if (Array.isArray(clinicalGuidelinesExist) && !this.state.start) {
+          this.setState({ start: true });
+          clinicalGuidelinesExist.map((item) => {
+            checkedNew = {
+              ...checkedNew,
+              [item.id]: {
+                id: item.id,
+                name: item.name,
+              },
+            }
+          })
+          this.setState({
+            checked: checkedNew
+          })
+        }
+
+      }
+
       proceedToClinrecs = () => {
         // console.log("patient: ", this.props.patients.current);
         const { clinrecCheckerStep } = this.props.actions;
-        if (this.props.patients.current) {
+        let disease = []
+        // this.props.patients.current.disease = []
+        // console.log(this.props.patients.current, "value.value.value");
+        if (this.props.patients.current) {          
           for (const [key, value] of Object.entries(this.state.checked)) {
-            if (!this.props.patients.current.disease.find((d) => d.id == value.id))
-              this.props.patients.current.disease.push(value);
+            // console.log(value, "value.value.value222");
+            if (value && !disease.find((d) => d.id == value.id)) {
+              // !this.props.patients.current.disease.find((d) => d.id == value.id)) {
+              // console.log(value, "value.value.value");
+              disease.push(value)
+              // this.props.patients.current.disease.push(value);
+            } 
           }
         }
-        this.props.clinrecs.check();
+        // console.log(this.props.patients.current, "value.value.value");
+        // console.log(disease, "this.state.checked");
+        this.props.clinrecs.check(false, disease);
         this.props.router.push(`/clinrec/checker/${clinrecCheckerStep}`);
       };
       render() {
@@ -38,7 +72,7 @@ const ClinrecStartPage = inject(
           .concat(this.props.patients.current.co_disease.map((d) => d.id));
         // console.log({ clinicalGuidelinesExist });
         const rednerTree = (data) => {
-          // console.log({ data });
+
           return data?.items?.length ? (
             <List.Item style={{ height: "100%" }} key={data.id}>
               <List.Content className="large">
@@ -48,7 +82,7 @@ const ClinrecStartPage = inject(
             </List.Item>
           ) : (
             // <List>
-            <List.Item style={{ height: "100%" }} key={data.id}>
+              data.exist && <List.Item style={{ height: "100%" }} key={data.id}>
               <List.Content className="large">
                 <List.Description>
                   <div style={{ display: "flex", flexDirection: "row" }}>
@@ -69,9 +103,10 @@ const ClinrecStartPage = inject(
                               },
                             });
                         }}
-                        readonly={diseases.includes(data.id)}
-                        disabled={diseases.includes(data.id)}
-                        checked={this.state.checked[data.id] || diseases.includes(data.id)}
+                          // readonly={diseases.includes(data.id)}
+                          // defaultChecked
+                          // disabled={diseases.includes(data.id)}|| diseases.includes(data.id)
+                          checked={this.state.checked[data.id] || this.state.checked[data.id] === "undefinednud"}
                         style={{ marginRight: "5px", fontSize: 16 }}
                         label={data.name}
                       />
@@ -83,55 +118,7 @@ const ClinrecStartPage = inject(
             // </List>
           );
         };
-        // const sampleData = {
-        //   alert: { code: "200", level: "success", sticky: false },
-        //   result: [
-        //     { id: "tDZ/lbIl+J157GZPZTaOVg==", name: "геморрой", exist: true, items: [] },
-        //     {
-        //       id: "5NPEFYebJgtVHkehexj0Zg==",
-        //       name: "рак молочной железы",
-        //       exist: false,
-        //       items: [
-        //         {
-        //           id: "PRMJNmMVi/itNBxcxsrHEA==",
-        //           name: "рак молочной железы, нелюминальный, Her2-позитивный подтип",
-        //           exist: true,
-        //           items: [],
-        //         },
-        //         {
-        //           id: "eTzyRIrUlRWaRnJcW3hL2Q==",
-        //           name: "рак молочной железы, тройной негативный подтип",
-        //           exist: true,
-        //           items: [],
-        //         },
-        //         {
-        //           id: "bqMNSYx7aQB9Hgz4ojzfOQ==",
-        //           name: "рак молочной железы люминальный B подтип",
-        //           exist: true,
-        //           items: [],
-        //         },
-        //         {
-        //           id: "TA1WbJpm4A1iv7dEWfusRg==",
-        //           name: "рак молочной железы люминальный А подтип",
-        //           exist: true,
-        //           items: [],
-        //         },
-        //       ],
-        //       route: "down",
-        //     },
-        //     {
-        //       id: "x9iOERvHhEvz6n5XoXwrCw==",
-        //       name: "коронавирусная инфекция COVID-19",
-        //       exist: false,
-        //       items: [
-        //         { id: "MuDqACqRNOyqAplclOi/+A==", name: "COVID-19 лёгкой степени тяжести", exist: true, items: [] },
-        //         { id: "NdsfYEdQNcaxHYWH9sdqwA==", name: "COVID-19 средней степени тяжести", exist: true, items: [] },
-        //         { id: "yTuSKeawAW+Wc3tVhF+B2w==", name: "COVID-19 тяжёлой степени тяжести", exist: true, items: [] },
-        //       ],
-        //       route: "down",
-        //     },
-        //   ],
-        // };
+
         return (
           <>
             <Menu className="bottom fixed menu two item huge main">
@@ -144,8 +131,7 @@ const ClinrecStartPage = inject(
 
             <div className="scrollwrapper bottomMenu">
               <Segment basic>
-                {clinicalGuidelinesExist &&
-                  clinicalGuidelinesExist.map &&
+                {Array.isArray(clinicalGuidelinesExist) &&
                   clinicalGuidelinesExist.map((item) => <List size={"massive"}>{rednerTree(item)}</List>)}
               </Segment>
             </div>

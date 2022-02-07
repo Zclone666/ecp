@@ -382,6 +382,17 @@ const resources = {
       ivanovich: "Иванович",
 
       concentration: "концентрация",
+      clinical_recommendations_short: "Клинреки",
+      pharmacotherapy_patient: "Фармакотерапия пациента",
+      course_duration: "Длительность курса",
+      course_day: "День курса",
+      method_reception: "Способ приема",
+      // multiplicity_reception: "Кратность приема",
+      form: "Форма",
+      // dosage: "Дозировка",
+      name: "Название",
+
+
     },
   },
 };

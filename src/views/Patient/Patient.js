@@ -168,11 +168,26 @@ const Patient = inject(
           this.goTo(step);
         }
       }
+
+      getClinrecExist = () => {
+
+        this.props.clinrecs.getClinicalGuidelinesExist();
+        this.props.router.push("/crstartpage/default");
+        // "/crstartpage/default"
+      };
+
       render() {
-        const { t } = this.props.actions;
+        let {
+          misLinkLogin: misDisabled, t
+        } = this.props.actions;
+        // const { t } = this.props.actions;
         let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
         let section = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
         let { step } = this.state;
+        const {
+          disease,
+          co_disease,
+        } = this.props.patients.current;
         const { firstname, lastname } = this.props.actions.patientPassport;
         switch (shownPage) {
           case "list":
@@ -199,6 +214,8 @@ const Patient = inject(
           swipe: false,
           initialSlide: step,
         };
+        let isDisease = disease.length > 0 || co_disease.length > 0;
+
         return (
           <div className="h100">
             {step === 0 && (
@@ -216,7 +233,19 @@ const Patient = inject(
                 <Menu.Item color="red" onClick={this.back}>
                   {t("back")}
                 </Menu.Item>
-                <Menu.Item onClick={() => this.saveForm(false)}>{t("apply")}</Menu.Item>                
+                {/* apply */}
+                {/* <Menu.Item onClick={() => this.saveForm(false)}>{t("pharmacotherapy_patient")}</Menu.Item> */}
+                {/* isDisease && */}
+
+                <Menu.Item
+                  disabled={misDisabled || !isDisease || !firstname || !lastname}
+                  onClick={this.getClinrecExist}
+                >
+                  {/* <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}> */}
+                  {t("clinical_recommendations_short")}
+                  {/* </div> */}
+                </Menu.Item>
+
                 <Popup
                   disabled={!(!firstname || !lastname)}
                   position="top center"
