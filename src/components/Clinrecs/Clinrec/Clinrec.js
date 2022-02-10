@@ -184,7 +184,7 @@ const Clinrec = inject(
       };
 
       renderFG = (child, childId) => {
-        let { t } = this.props;
+        let { t } = this.props.actions;
         return (
           <List.Item>
             <List.Content className="large">
@@ -205,6 +205,7 @@ const Clinrec = inject(
         let {
           clinrecs: { clinrec, cources },
         } = this.props;
+        let { t } = this.props.actions;
         // console.log({ cources, clinrec });
         if (cources && cources[childId]) {
           return (
@@ -225,13 +226,13 @@ const Clinrec = inject(
                   <Table celled>
                     <Table.Header>
                       <Table.Row>
-                        <Table.HeaderCell singleLine>Название</Table.HeaderCell>
-                        <Table.HeaderCell>Дозировка</Table.HeaderCell>
-                        <Table.HeaderCell>Форма</Table.HeaderCell>
-                        <Table.HeaderCell>Способ приема</Table.HeaderCell>
-                        <Table.HeaderCell>Кратность приема</Table.HeaderCell>
-                        <Table.HeaderCell>День курса</Table.HeaderCell>
-                        <Table.HeaderCell>Длительность курса</Table.HeaderCell>
+                        <Table.HeaderCell singleLine>{t("name")}</Table.HeaderCell>
+                        <Table.HeaderCell>{t("dosage")}</Table.HeaderCell>
+                        <Table.HeaderCell>{t("form")}</Table.HeaderCell>
+                        <Table.HeaderCell>{t("method_reception")}</Table.HeaderCell>
+                        <Table.HeaderCell>{t("multiplicity_reception")}</Table.HeaderCell>
+                        <Table.HeaderCell>{t("course_day")}</Table.HeaderCell>
+                        <Table.HeaderCell>{t("course_duration")}</Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
                     {cources[childId].map((item) => {

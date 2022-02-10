@@ -417,6 +417,7 @@ class Actions {
 
   async resetAll(flag = "patient") {
     let structure = await _.cloneDeep(StructureScheme);
+    this.stores.clinrecs.collectorAvailable = false;
 
     switch (flag) {
       case "patient":
@@ -1115,7 +1116,7 @@ class Actions {
             alerts: [
               {
                 title: this.t("attention"),
-                message: this.t("you_already_registered")+" "+this.t("go_to_login"),
+                message: this.t("you_already_registered") + " " + this.t("go_to_login"),
                 button: {
                   text: this.t("jump"),
                   action: () => {

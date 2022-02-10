@@ -355,7 +355,7 @@ const Recipe = inject(
         const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
         // console.log({ tags });
 
-        console.log(recipe_formid, recipeData.items["F3EPyWjCT30nRTEsHqBYqg=="], printType, "recipe_formid");
+        // console.log(recipe_formid, recipeData.items["F3EPyWjCT30nRTEsHqBYqg=="], printType, "recipe_formid");
         // console.log({ recipe_endtimeitem });
         const settings = {
           dots: false,
@@ -457,34 +457,31 @@ const Recipe = inject(
                           onChange={this.handleRecipeDataChange}
                         />
                       </Form.Field>
-                      {recipe_formid &&
-                        recipeData.items[recipe_formid] &&
-                        recipeData.items[recipe_formid].durations &&
-                        recipeData.items[recipe_formid].durations.length > 0 && (
-                          <Form.Field>
-                            <label>{t("recipe_state_time")}</label>
-                            <Dropdown
-                              size="big"
-                              options={
-                                !recipe_formid
-                                  ? []
-                                  : recipeData.items[recipe_formid].durations.map((item) => {
-                                      return {
-                                        key: item.id,
-                                        text: item.name,
-                                        value: item,
-                                      };
-                                    })
-                              }
-                              placeholder={t("choose")}
-                              name="recipe_endtimeitem"
-                              selection
-                              fluid
-                              value={recipe_endtimeitem}
-                              onChange={this.handleRecipeDataChange}
-                            />
-                          </Form.Field>
-                        )}
+                      {recipe_formid && (
+                        <Form.Field>
+                          <label>{t("recipe_state_time")}</label>
+                          <Dropdown
+                            size="big"
+                            options={
+                              !recipe_formid
+                                ? []
+                                : recipeData.items[recipe_formid].durations.map((item) => {
+                                    return {
+                                      key: item.id,
+                                      text: item.name,
+                                      value: item,
+                                    };
+                                  })
+                            }
+                            placeholder={t("choose")}
+                            name="recipe_endtimeitem"
+                            selection
+                            fluid
+                            value={recipe_endtimeitem}
+                            onChange={this.handleRecipeDataChange}
+                          />
+                        </Form.Field>
+                      )}
                       <Form.Group>
                         {tags.includes("PatientFIO") && (
                           <Form.Field width={12}>
@@ -746,7 +743,7 @@ const Recipe = inject(
                           name="doctor"
                           selection
                           fluid
-                          value={doctor}
+                          value={doctor || ""}
                           onChange={this.handleChange}
                         />
                       </Form.Field>
@@ -767,7 +764,7 @@ const Recipe = inject(
                             name="patient"
                             selection
                             fluid
-                            value={patient.key}
+                            value={patient.key || ""}
                             onAddItem={this.handleAddition}
                             onChange={this.handleChange}
                           />
@@ -823,7 +820,7 @@ const Recipe = inject(
                           name="clinic"
                           selection
                           fluid
-                          value={clinic}
+                          value={clinic || ""}
                           onChange={this.handleChange}
                         />
                       </Form.Field>

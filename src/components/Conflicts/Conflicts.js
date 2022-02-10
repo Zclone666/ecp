@@ -89,14 +89,55 @@ const Conflicts = inject(
         } = this.props;
         let selectedWarnings = this.conflicts;
         let noSelections = _.isEmpty(selectedWarnings);
-        // console.log('activeConflicts', activeConflicts);
+        let GroupGroup = []
+
+        // var map = groups.reduce((acc, cur)=>{
+        //   acc[cur.id] = acc[cur.id] || { 
+        //     id: cur.id,
+        //     facts: [],
+        //     plans: []
+        //   };
+        //   acc[cur.id].plans.push(cur.plan);
+        //   acc[cur.id].facts.push(cur.fact);
+        //   return acc;
+        //   },{})
+
+        // console.log(map);
+
+        // var result = Object.values(map);
+
+        //         age: (...)
+        // clinrec: (...)
+        // driving: (...)
+        // interdrug: (...)
+        // onedv_1: Proxy
+        // onedv_2: (...)
+        // seffect: (...)
+        // unidirfd_1: (...)
+        // unidirfd_2: (...)
+        // unidirfd_3: (...)
+        // unidirfd_4: (...)
+        // unidirfd_5: (...)
+        // unidirfg_1: (...)
+        // unidirfg_2: (...)
+
+        // group: 6
+        // hint: "Дублирующий препарат"
+        // hintarr: Proxy
+        // type: "onedv_1"
+        // value: 0.75
+        // valuecolor: "#fc7301"
+
+        // console.log(selectedWarnings, groups, "selectedWarnings, groups");
+
+        // console.log('groups', groups);
         return (
           <>
             <Grid as={Segment} basic style={{ marginTop: 0 }}>
               {_.keys(groups).map((key, i) => {
                 let group = groups[key];
                 let color = (selectedWarnings[group.type] && selectedWarnings[group.type].color) || group.valuecolor;
-
+                // console.log('groups', group, color);
                 let icon = group.type;
 
                 let arr = group.type.split("_");
@@ -119,7 +160,7 @@ const Conflicts = inject(
                   ageIconName = "ageday";
                   age = moment().diff(moment(patientForm.birthdate, "x"), "days");
                 }
-
+                console.log('selectedConflict', selectedConflict);
                 return (
                   <Grid.Column key={"warn" + i} className="conflict">
                     {!selectedConflict && selectedWarnings[group.type] ? (

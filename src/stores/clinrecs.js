@@ -11,6 +11,7 @@ class Clinrecs {
   cources = {};
   names = {};
   shortnames = {};
+  diseaseSelect = [];
   druglist = [];
   drugToClinrecHashset = {};
   collectorAvailable = false;
@@ -65,15 +66,14 @@ class Clinrecs {
       data.liquids.push(liquid);
     });
 
-    // if(flag){
     data.checker = _.cloneDeep(this.stores.actions.clinrecCheckerData);
-    // }
-
     data.active_language = active_language;
-
     data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+
+    data.patient.disease = this.diseaseSelect;
+
     return POST({
       path: "tools/clinicalGuidelines",
       data,
@@ -155,7 +155,7 @@ class Clinrecs {
     // console.log("patient: ", this.stores.patients.current);
     data.disease = patient?.disease || [];
     if (patient && patient.co_disease) data.disease = data.disease.concat(patient.co_disease);
-
+    console.log("clinicalGuidelinesExist");
     return POST({
       path: "tools/clinicalGuidelinesExist",
       data,

@@ -354,7 +354,7 @@ const Main = inject(
                       {fio || t("patient_notSelected")}
                     </Menu.Item>
                   </Responsive>
-                  {!misDisabled && isDisease && (
+                  {/* {!misDisabled && isDisease && (
                     <Responsive
                       as={RouterLink}
                       // to={`/clinrec/checker/${clinrecCheckerStep}`}
@@ -367,11 +367,11 @@ const Main = inject(
                       <Menu.Item>
                         <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}>
                           <Icon name="clipboard list" />
-                          Клинреки
+                          {t("clinical_recommendations")}
                         </div>
                       </Menu.Item>
                     </Responsive>
-                  )}
+                  )} */}
                   <Responsive fireOnMount as={RouterLink} to="/patient/info" maxWidth={misDisabled ? "0" : "480"}>
                     <Menu.Item icon>
                       <Icon name="bed" size="large" />
