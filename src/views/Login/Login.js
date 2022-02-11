@@ -20,6 +20,7 @@ const Login = inject(
           filledCode: false,
           showCode: false,
           privateKeyOnly: LOGIN == "privateKeyOnly",
+          showPassword: false,
         };
         const autofill = localStorage.getItem("autofill");
         // console.log({ autofill });
@@ -78,10 +79,11 @@ const Login = inject(
         this.checkFilled();
       };
       render() {
-        let { filled, filledCode, showCode } = this.state;
+        let { filled, filledCode, showCode, showPassword } = this.state;
         let {
           loginForm: { remember, email, password },
-          projectTitle,t
+          projectTitle,
+          t,
         } = this.props.actions;
         return (
           <div className="login-form height100perc">
@@ -117,8 +119,14 @@ const Login = inject(
                           icon="lock"
                           iconPosition="left"
                           placeholder={t("password")}
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           onChange={this.handleChange}
+                          action={{
+                            icon: showPassword ? "eye slash" : "eye",
+                            onClick: () => {
+                              this.setState({ showPassword: !showPassword });
+                            },
+                          }}
                         />
                       )}
                       {(showCode || this.state.privateKeyOnly) && (
@@ -164,7 +172,6 @@ const Login = inject(
                 </Segment>
               </Grid.Column>
             </Grid>
-      
           </div>
         );
       }
