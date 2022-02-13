@@ -15,7 +15,10 @@ export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
 const createCsServerUrl = (url) => {
-  if (window.location.host.includes("localhost") || window.location.host.includes("socmedica.dev")) {
+  if (
+    window.location.host.includes("localhost")
+    // || window.location.host.includes("socmedica.dev")
+  ) {
     return "http://84.23.32.38:8999" + url;
   }
   if (window.location.host.includes("http://84.23.32.38:9031")) {
