@@ -14,8 +14,16 @@ export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
 export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
-const createCsServerUrl = (url) =>
-  SERVER == "dev" ? "https://csdev.socmedica.com" + url : "https://cs.socmedica.com" + url;
+const createCsServerUrl = (url) => {
+  if (window.location.host.includes("localhost") || window.location.host.includes("socmedica.dev")) {
+    return "http://84.23.32.38:8999" + url;
+  }
+  if (window.location.host.includes("http://84.23.32.38:9031")) {
+    return "http://84.23.32.38:9000" + url;
+  }
+  //--------------------
+  return SERVER == "dev" ? "https://csdev.socmedica.com" + url : "https://cs.socmedica.com" + url;
+};
 // !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
 //   ? "http://" + window.location.hostname + ":9999" + url
 //   : "https://" + (window.location.href.includes(["socmedica.com"]) ? "cs" : "csdev") + ".socmedica.com" + url;
