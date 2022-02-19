@@ -9,6 +9,7 @@ import { withTranslation } from "react-i18next";
 import { checkDouble, clearDouble } from "../../../lib/helpers";
 
 import Schedule from "./Schedule";
+import Interval from "./Interval";
 import Drugs from "./Drugs";
 
 import _ from "lodash";
@@ -483,6 +484,7 @@ const Calculator = inject(
                 </Form.Group>
               </Form>
               {!liquid && <Schedule />}
+              <Interval />
               <Form>
                 <Form.Group>
                   <Form.Field width={16}>

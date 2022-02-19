@@ -150,7 +150,7 @@ const WarningTab = inject(
                     return (
                       <List.Item key="1">
                         {i > 0 && <div className="warningline" style={{ backgroundColor: tab.color }}></div>}
-                        <List.Content style={!item.subjectid && !arr.last ? { padding: "8px 0" } : {}}>
+                        <List.Content style={!item.subjectid && !arr.last ? { padding: "8px 0", display: "flex", flexDirection: "row"} : {}}>
                           <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
                           {!!item.subjectid && drug.name}
                         </List.Content>
@@ -199,7 +199,7 @@ const WarningTab = inject(
                         if (!info.names[desc]) return null;
                         return (
                           <List.Item key={`desc_${d}`}>
-                            <div dangerouslySetInnerHTML={{ __html: info.names[desc] }} />
+                            <div style={{ fontWeight: "bold", fontSize: "large" }} dangerouslySetInnerHTML={{ __html: info.names[desc] }} />
                           </List.Item>
                         );
                       })}
@@ -221,7 +221,7 @@ const WarningTab = inject(
                 )}
                 {tab.id && tab.id.length > 0 && (
                   <>
-                    {info.literature[tab.id] && <Header as="h3">Источники</Header>}
+                    {info.literature[tab.id] && <Header as="h3">{t("sources")}</Header>}
                     {info.literature[tab.id] &&
                       info.literature[tab.id].map((lit, l) => {
                         if (lit && info.urls[lit]) {

@@ -91,8 +91,6 @@ const Recipe = inject(
         this.sliderRef.current.slickPrev();
       };
       goTo = (x) => {
-        // console.log('go to ', x);
-        // console.log('this.sliderRef', this.sliderRef);
         this.sliderRef.current.slickGoTo(x);
       };
 
@@ -101,7 +99,7 @@ const Recipe = inject(
         let code = await this.props.recipes.save();
 
         this.setState({ savePending: false });
-        // console.log({res});
+
         if (!code) return;
         this.setState({ code });
         this.setOpenCode(true);
@@ -109,7 +107,7 @@ const Recipe = inject(
       };
       print = async () => {
         let code = await this.props.recipes.print();
-        // console.log({res});
+
         if (!code) return;
 
         document.getElementById("ifmcontentstoprint").style.display = "contents";
@@ -133,7 +131,11 @@ const Recipe = inject(
         this.props.recipes.code = null;
       };
 
-      setPrintType = (printType) => {
+      setPrintType = (id, printType) => {
+        if (printType === "list") {
+          // recipe_formid = id;
+          this.props.recipes["recipe_formid"] = id;
+        }
         this.setState({ printType });
         this.next();
       };
@@ -146,7 +148,6 @@ const Recipe = inject(
         }
       };
       // handleAddition = async (e, { name, value }) => {
-      //   // console.log({ name, value });
       //   let key = moment().format('x').toString()
       //   await this.props.patients.patient.set(key, {key, name: value, id: null})
       //   this.handleChange(null, { name: 'patient', value: key })
@@ -154,7 +155,7 @@ const Recipe = inject(
 
       handleChange = async (e, { name, value }) => {
         this.resetSign();
-        // if (name === "patient") console.log({ value });
+     
         if (!name && !value) {
           let { name, value } = e.target;
         }
@@ -164,7 +165,7 @@ const Recipe = inject(
       };
 
       handleRecipeDataChange = (e, { name, value }) => {
-        console.log({ name, value, e });
+
         const { t } = this.props.actions;
         this.resetSign();
         if (!name && !value) {
@@ -235,7 +236,7 @@ const Recipe = inject(
         const availableCertificates = await getUserCertificates()
           .then((certs) => certs)
           .catch((e) => {
-            // console.log({ e });
+      
             return [];
           })
           .then((certs) => Promise.all(certs.map(async (c) => ({ cert: c, valid: await c.isValid() }))));
@@ -253,7 +254,7 @@ const Recipe = inject(
         await createHash(stringifiedData).then((hashedDataToSign) =>
           createDetachedSignature(this.state.selectedCertificate.thumbprint, hashedDataToSign).then((result) => {
             this.setState({ signedData: result });
-            // console.log({ cert });
+          
             this.props.recipes.stringifiedSignData = stringifiedData;
             this.props.recipes.digitallySignedRecipe = result.replaceAll("\r\n", "");
             this.props.recipes.certificateBase64 = certBase64.replaceAll("\r\n", "");
@@ -349,15 +350,9 @@ const Recipe = inject(
         doctor = doctor || doc.name;
 
         let noEmail = false;
-        // console.log({ doctor, clinic, patient });
-        if (printType === "ambulance_list") {
-          recipe_formid = "F3EPyWjCT30nRTEsHqBYqg==";
-        }
-        const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
-        // console.log({ tags });
 
-        console.log(recipe_formid, recipeData.items["F3EPyWjCT30nRTEsHqBYqg=="], printType, "recipe_formid");
-        // console.log({ recipe_endtimeitem });
+        const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
+ 
         const settings = {
           dots: false,
           infinite: false,
@@ -368,6 +363,7 @@ const Recipe = inject(
           swipe: false,
           initialSlide: 0,
         };
+
         return (
           <>
             {!!printType ? (
@@ -405,7 +401,18 @@ const Recipe = inject(
                   <Grid.Column width={16}>
                     <Header>{t("choose_form")}</Header>
                   </Grid.Column>
-                  <Grid.Column width={8}>
+                  {Object.entries(recipeData.items).filter(([id, value]) => value.type === "list").map(([id, value]) => {
+
+                    return <Grid.Column width={8}>
+                      <Button onClick={() => this.setPrintType(id, "list")} size="big" color="blue" fluid>
+                        {value.name}
+                        {/* {t("outpatient_appointment_list")} */}
+                      </Button>{" "}
+                    </Grid.Column>;
+
+                  })}
+
+                  {/* <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("ambulance_list")} size="big" color="blue" fluid>
                       {t("outpatient_appointment_list")}
                     </Button>{" "}
@@ -419,13 +426,14 @@ const Recipe = inject(
                     <Button onClick={() => this.setPrintType("reanim_list")} size="big" color="blue" fluid>
                       {t("resuscitation_appointment_list")}
                     </Button>{" "}
-                  </Grid.Column>
+                  </Grid.Column> */}
 
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("recipe")} size="big" color="purple" fluid>
                       {t("writing_recipe")}
                     </Button>{" "}
                   </Grid.Column>
+
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("protocol")} size="big" color="orange" fluid>
                       {t("council_minutes")}
@@ -439,11 +447,11 @@ const Recipe = inject(
                     <FormChecker patient={this.props.patients.current} />
                   ) : (
                     <Form>
-                      <Form.Field>
+                        {printType !== "list" ? <Form.Field>
                         <label>{t("recipe_form")}</label>
                         <Dropdown
                           size="big"
-                          options={Object.entries(recipeData.items).map(([id, value]) => {
+                            options={Object.entries(recipeData.items).filter(([id, value]) => value.type !== "list").map(([id, value]) => {
                             return {
                               key: id,
                               text: value.name,
@@ -457,35 +465,32 @@ const Recipe = inject(
                           value={recipe_formid}
                           onChange={this.handleRecipeDataChange}
                         />
-                      </Form.Field>
-                      {recipe_formid &&
-                        recipeData.items[recipe_formid] &&
-                        recipeData.items[recipe_formid].durations &&
-                        recipeData.items[recipe_formid].durations.length > 0 && (
-                          <Form.Field>
-                            <label>{t("recipe_state_time")}</label>
-                            <Dropdown
-                              size="big"
-                              options={
-                                !recipe_formid
-                                  ? []
-                                  : recipeData.items[recipe_formid].durations.map((item) => {
-                                      return {
-                                        key: item.id,
-                                        text: item.name,
-                                        value: item,
-                                      };
-                                    })
-                              }
-                              placeholder={t("choose")}
-                              name="recipe_endtimeitem"
-                              selection
-                              fluid
-                              value={recipe_endtimeitem}
-                              onChange={this.handleRecipeDataChange}
-                            />
-                          </Form.Field>
-                        )}
+                        </Form.Field> : null}
+                      {recipe_formid && (
+                        <Form.Field>
+                          <label>{t("recipe_state_time")}</label>
+                          <Dropdown
+                            size="big"
+                            options={
+                              !recipe_formid
+                                ? []
+                                : recipeData.items[recipe_formid].durations.map((item) => {
+                                    return {
+                                      key: item.id,
+                                      text: item.name,
+                                      value: item,
+                                    };
+                                  })
+                            }
+                            placeholder={t("choose")}
+                            name="recipe_endtimeitem"
+                            selection
+                            fluid
+                            value={recipe_endtimeitem}
+                            onChange={this.handleRecipeDataChange}
+                          />
+                        </Form.Field>
+                      )}
                       <Form.Group>
                         {tags.includes("PatientFIO") && (
                           <Form.Field width={12}>
@@ -717,7 +722,8 @@ const Recipe = inject(
 
                       {recipe_formid && (
                         <Form.Field>
-                          <label>{t("comment_prescription")}</label>
+                            <label>{t("comment_prescription")}</label> 
+                            {/* сomment_leaf_destination */}
                           <TextArea
                             size="big"
                             placeholder={t("explanation_recipe")}
@@ -747,7 +753,7 @@ const Recipe = inject(
                           name="doctor"
                           selection
                           fluid
-                          value={doctor}
+                          value={doctor || ""}
                           onChange={this.handleChange}
                         />
                       </Form.Field>
@@ -768,7 +774,7 @@ const Recipe = inject(
                             name="patient"
                             selection
                             fluid
-                            value={patient.key}
+                            value={patient.key || ""}
                             onAddItem={this.handleAddition}
                             onChange={this.handleChange}
                           />
@@ -824,7 +830,7 @@ const Recipe = inject(
                           name="clinic"
                           selection
                           fluid
-                          value={clinic}
+                          value={clinic || ""}
                           onChange={this.handleChange}
                         />
                       </Form.Field>

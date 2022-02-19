@@ -391,8 +391,9 @@ const resources = {
       form: "Форма",
       // dosage: "Дозировка",
       name: "Название",
-
-
+      //comment_prescription
+      сomment_leaf_destination: "Комментарий к листу назначения",
+      sources: "Источники",
     },
   },
 };

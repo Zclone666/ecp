@@ -14,8 +14,20 @@ export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
 export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
-const createCsServerUrl = (url) =>
-  SERVER == "dev" ? "https://csdev.socmedica.com" + url : "https://cs.socmedica.com" + url;
+const createCsServerUrl = (url) => {
+  if (
+    window.location.host.includes("localhost") ||
+    window.location.host.includes("178.176.38.245:9031")
+    // || window.location.host.includes("socmedica.dev")
+  ) {
+    return "http://84.23.32.38:8999" + url;
+  }
+  if (window.location.host.includes("84.23.32.38:9031")) {
+    return "http://84.23.32.38:9000" + url;
+  }
+  //--------------------
+  return SERVER == "dev" ? "https://csdev.socmedica.com" + url : "https://cs.socmedica.com" + url;
+};
 // !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
 //   ? "http://" + window.location.hostname + ":9999" + url
 //   : "https://" + (window.location.href.includes(["socmedica.com"]) ? "cs" : "csdev") + ".socmedica.com" + url;
@@ -417,6 +429,7 @@ class Actions {
 
   async resetAll(flag = "patient") {
     let structure = await _.cloneDeep(StructureScheme);
+    this.stores.clinrecs.collectorAvailable = false;
 
     switch (flag) {
       case "patient":
@@ -1115,7 +1128,7 @@ class Actions {
             alerts: [
               {
                 title: this.t("attention"),
-                message: this.t("you_already_registered")+" "+this.t("go_to_login"),
+                message: this.t("you_already_registered") + " " + this.t("go_to_login"),
                 button: {
                   text: this.t("jump"),
                   action: () => {
