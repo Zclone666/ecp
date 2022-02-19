@@ -174,6 +174,7 @@ const Recipe = inject(
         if (name == "recipe_formid") {
           this.props.recipes["maxcount"] = this.props.actions.recipeData.items[value].maxcount;
           this.props.recipes["drugKeysForPrescription"] = [];
+          this.props.recipes["formType"] = this.props.actions.recipeData.items[value].type;
         }
         if (name == "spectextPrompt") {
           this.setState({ spectextPrompt: value });
