@@ -32,6 +32,7 @@ import {
   Modal,
   Flag,
   TextArea,
+  Image,
 } from "semantic-ui-react";
 
 import _ from "lodash";
@@ -346,6 +347,7 @@ const Main = inject(
                     <Icon size="large" name="content" />
                   </Menu.Item>
                 )}
+                {/* {misDisabled && <Image src='../ecp_mis.png' />} */}
 
                 <Menu.Menu position="right">
                   <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>

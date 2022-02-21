@@ -40,6 +40,7 @@ const Conflicts = inject(
           //this.props.actions.activeDrugs = warnGroups[groupId].ids
           this.props.actions.activeConflicts = [parseInt(groupId)];
         }
+        this.setState({ activeIndex: null })
       };
       handleClick = (e, titleProps) => {
         const { index } = titleProps
