@@ -40,7 +40,7 @@ const Conflicts = inject(
           //this.props.actions.activeDrugs = warnGroups[groupId].ids
           this.props.actions.activeConflicts = [parseInt(groupId)];
         }
-        this.setState({ activeIndex: null })
+
       };
       handleClick = (e, titleProps) => {
         const { index } = titleProps
@@ -178,9 +178,11 @@ const Conflicts = inject(
                       }
                       trigger={
                         <Icon.Group
-                          onClick={() => this.selectConflict(item.values[0].key)}
+                          onClick={() => {
+                            this.selectConflict(item.values[0].key);
+                            this.setState({ activeIndex: null })
+                          }}
                           size="big"
-
                           className={noSelections || selectedWarnings[item.values[0].key] ? "selected" : "gray"}
                         >
                           {item.type === "age" ? (

@@ -348,6 +348,16 @@ const Main = inject(
                   </Menu.Item>
                 )}
                 {/* {misDisabled && <Image src='../ecp_mis.png' />} */}
+                {misDisabled && <Image src='../ecp_mis.png' style={{
+                  margin: "4px",
+                  height: "35px"
+                }} />}
+
+                {misDisabled && <Header className={"menuhead"} style={{ margin: "auto", marginLeft: "8px", fontWeight: "600" }}
+                  as='h4'
+                  content='Электронный клинический фармаколог'
+                  subheader='система поддержки принятия врачебных решений'
+                />}
 
                 <Menu.Menu position="right">
                   <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>
