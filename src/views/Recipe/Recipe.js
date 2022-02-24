@@ -131,13 +131,16 @@ const Recipe = inject(
         this.props.recipes.code = null;
       };
 
-      setPrintType = (id, printType) => {
+      setPrintType = (printType, id) => {
         if (printType === "list") {
           // recipe_formid = id;
           this.props.recipes["recipe_formid"] = id;
         }
         this.setState({ printType });
+        // if (printType !== 'protocol') {
         this.next();
+        // }
+
       };
       savePatient = async () => {
         let res = await this.props.patients.save();
@@ -404,7 +407,7 @@ const Recipe = inject(
                   {Object.entries(recipeData.items).filter(([id, value]) => value.type === "list").map(([id, value]) => {
 
                     return <Grid.Column width={8}>
-                      <Button onClick={() => this.setPrintType(id, "list")} size="big" color="blue" fluid>
+                      <Button onClick={() => this.setPrintType("list", id)} size="big" color="blue" fluid>
                         {value.name}
                         {/* {t("outpatient_appointment_list")} */}
                       </Button>{" "}
