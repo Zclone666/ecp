@@ -144,11 +144,11 @@ const Conflicts = inject(
                 // console.log('groups', noSelections, selectedWarnings, selectedWarnings[item.type], item);
                 if (item.values.length < 2) {
                   return <Grid.Column key={"warn" + i} className="conflict">
-                    {!selectedConflict && selectedWarnings[item.type] ? (
+                    {!selectedConflict && selectedWarnings[item.values[0].key] ? (
                       <RouterLink
-                        to={"/warning/" + item.type}
+                        to={"/warning/" + item.values[0].key}
                         className="conflicticon arrowBg"
-                        style={{ backgroundColor: color, zIndex: -1 }}
+                        style={{ backgroundColor: color }}
                       >
                         <List.Icon
                           name="arrow alternate circle down"
@@ -158,7 +158,7 @@ const Conflicts = inject(
                         />
                       </RouterLink>
                     ) : (
-                      <RouterLink to={"/warning/" + item.type} className="conflicticon arrowBg none" style={{ zIndex: -1 }}>
+                        <RouterLink to={"/warning/" + item.values[0].key} className="conflicticon arrowBg none" >
                         <List.Icon name="arrow alternate circle down" style={{ color: "#FFF" }} size="large" />
                       </RouterLink>
                     )}
@@ -198,7 +198,7 @@ const Conflicts = inject(
                   </Grid.Column>
                 } else {
                   return <Grid.Column className={activeIndex !== i ? "conflict" : ""}
-                    style={activeIndex !== i ? { width: "auto", padding: "0" } : { width: "auto", paddingTop: 0, paddingRight: 0 }}>
+                    style={activeIndex !== i ? { width: "auto", padding: "0" } : { width: "auto", paddingTop: 0, paddingRight: 0, overflow: "hidden" }}>
 
                     <Accordion key={"warn" + i} className={activeIndex !== i ? "conflict" : ""} >
                       {activeIndex !== i ? <Popup
@@ -233,13 +233,13 @@ const Conflicts = inject(
                       <Accordion.Content active={activeIndex === i} style={{ display: activeIndex === i ? "flex" : "none" }}>
 
                         {item.values.map((element) => {
-                          // console.log(element, "element");
+                          console.log(element, "element");
                           return (<Grid.Column key={"warn" + i} className="conflict" style={{ paddingTop: 0, paddingRight: 0 }}>
                             {!selectedConflict && selectedWarnings[element.type] ? (
                               <RouterLink
                                 to={"/warning/" + element.type}
                                 className="conflicticon arrowBg"
-                                style={{ backgroundColor: color, zIndex: -1 }}
+                                style={{ backgroundColor: color }}
                               >
                                 <List.Icon
                                   name="arrow alternate circle down"
@@ -249,8 +249,8 @@ const Conflicts = inject(
                                 />
                               </RouterLink>
                             ) : (
-                              <RouterLink to={"/warning/" + element.type} className="conflicticon arrowBg none" style={{ zIndex: -1 }}>
-                                <List.Icon name="arrow alternate circle down" style={{ color: "#FFF", zIndex: -1 }} size="large" />
+                                <RouterLink to={"/warning/" + element.type} className="conflicticon arrowBg none" >
+                                  <List.Icon name="arrow alternate circle down" style={{ color: "#FFF" }} size="large" />
                               </RouterLink>
                             )}
                             <Popup
