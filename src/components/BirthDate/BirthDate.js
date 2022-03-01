@@ -27,6 +27,7 @@ class BirthDate extends Component {
     };
   }
   handleChangeBirth = (e, { value }) => {
+    // console.log({ value });
     let { onChange, name } = this.props;
     let year = 0,
       month = 0,
@@ -74,9 +75,14 @@ class BirthDate extends Component {
     if (weeks > 0) arr.push(weeks, declension(ref_weeks, weeks));
     if (days > 0) arr.push(days, declension(ref_days, days));
 
-    onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
+   // onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
     this.setState({ birth: arr.join(" "), date: moment(value).format("x") });
   };
+
+  onChangeDate = (e, { value }) => {
+    let { onChange, name } = this.props;
+    onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
+  }
   componentDidMount() {
     let { value } = this.props;
     //console.log({ value });
@@ -101,9 +107,9 @@ class BirthDate extends Component {
       <Form.Field width={16}>
         <label>{t("age_date_birth")}</label>
         <div className="birthdate">
-          <AutoComplete value={birth} onChange={this.handleChangeBirth} trans={t} />
+          <AutoComplete value={birth} onChange={(e, { value }) => this.handleChangeBirth(e, { value })} trans={t} />
           <Button basic icon="arrows alternate horizontal" />
-          <Calendar value={date} onChange={this.handleChangeDate} maxDate={new Date()} />
+          <Calendar value={date} onChange={(e, { value }) => { this.handleChangeDate(e, { value }); this.onChangeDate(e, { value }) }} maxDate={new Date()} />
         </div>
       </Form.Field>
     );

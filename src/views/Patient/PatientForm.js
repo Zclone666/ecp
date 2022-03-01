@@ -86,9 +86,10 @@ const PatientForm = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
-        const { editForm } = this.props;
-        // console.log(name, value, "name, value");
-        editForm();
+        const { editForm } = this.props;        
+        // if (!(name == "birthdate" && value < 0)) {
+          editForm();
+        // }        
         const { birthdate } = this.props.patients.current;
         // console.log({ birthdate, value });
         let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
@@ -137,6 +138,8 @@ const PatientForm = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
+        const { editForm } = this.props;
+        editForm()
         this.props.patients.current[name] = !this.props.patients.current[name];
         if (name === "pregnancy" && !this.props.patients.current.pregnancy) {
           this.props.patients.current.gestation = null;
@@ -185,6 +188,8 @@ const PatientForm = inject(
       handleResultSelect = async (e, { name, result }) => {
         // console.log({ name, result });
         //let newName = name === 'co_disease' ? 'disease' : name
+        const { editForm } = this.props;
+        editForm();
         await this.props.actions.selectPatient(result, name);
         this.setState({ [`search_${name}`]: "" });
       };
@@ -298,8 +303,6 @@ const PatientForm = inject(
           genpassport_exist,
         } = this.props.patients.current;
 
-        // console.log("current patient: ", this.props.patients.current);
-        // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
         let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport, showProtocol } =
           this.state;
@@ -309,11 +312,7 @@ const PatientForm = inject(
 
         let isWoman = sex === "female";
         let isPregant = !!pregnancy;
-
-        // console.log({birthdate});
         let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
-        // console.log({veryOld});
-
         let { search_patient } = this.state;
 
         return (
@@ -363,7 +362,7 @@ const PatientForm = inject(
 
               {showPatientPassport && <PatientPassport />}
               <Form.Group>
-                <BirthDate name="birthdate" value={birthdate} onChange={this.handleChange} trans={t} />
+                <BirthDate name="birthdate" value={birthdate} onChange={(e, { name, value }) => this.handleChange(e, { name, value })} trans={t} />
                 <Form.Field>
                   <label>{t("sex")}</label>
                   <Button.Group size="big">

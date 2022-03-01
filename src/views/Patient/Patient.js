@@ -250,14 +250,14 @@ const Patient = inject(
                 </Menu.Item>
 
                 <Popup
-                  disabled={!(!firstname || !lastname)}
+                  disabled={!(!firstname || !lastname) || !edit}
                   position="top center"
                   content={t("fill_passport_details")}
                   trigger={
                     <Menu.Item
                       onClick={this.savePatient}
                       // isLoading={this.state.pending}
-                      disabled={!firstname || !lastname}
+                      disabled={(!firstname || !lastname) || !edit}
                     >
                       {t("save")}
                     </Menu.Item>
@@ -272,7 +272,7 @@ const Patient = inject(
                 </Menu.Item>
                 <Menu.Item
                   // isLoading={this.state.pending} 
-                  onClick={this.savePatient} disabled={!firstname || !lastname}>
+                  onClick={this.savePatient} disabled={(!firstname || !lastname) || !edit}>
                   {t("save")}
                 </Menu.Item>
               </Menu>
