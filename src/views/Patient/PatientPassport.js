@@ -50,6 +50,8 @@ const PatientPassport = inject(
       };
 
       handleChange = (e, { name, value }) => {
+        const { editForm } = this.props;
+        editForm && editForm();
         if (!name && !value) {
           let { name, value } = e.target;
         }

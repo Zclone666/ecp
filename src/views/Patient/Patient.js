@@ -283,10 +283,10 @@ const Patient = inject(
                 <PatientsList />
               </div>
               <div className="scrollwrapper bottomMenu">
-                <PatientForm editForm={() => { this.setState({ edit: true }) }} />
+                <PatientForm editForm={() => this.setState({ edit: true })} />
               </div>
               <div className="scrollwrapper bottomMenu">
-                <PatientPassport />
+                <PatientPassport editForm={() => this.setState({ edit: true })} />
               </div>
             </Slider>
           </div>

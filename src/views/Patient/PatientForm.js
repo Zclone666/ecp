@@ -88,9 +88,8 @@ const PatientForm = inject(
           let { name, value } = e.target;
         }
         const { editForm } = this.props;        
-        // if (!(name == "birthdate" && value < 0)) {
         editForm();
-        // }        
+
         let errorValue = false;
         if (name == "weight") {
           errorValue = isWeight(value);
@@ -372,7 +371,7 @@ const PatientForm = inject(
               </Form.Group>
               <Divider horizontal fitted />
 
-              {showPatientPassport && <PatientPassport />}
+              {showPatientPassport && <PatientPassport editForm={() => this.props.editForm()} />}
               <Form.Group>
                 <BirthDate name="birthdate" value={birthdate} onChange={(e, { name, value }) => this.handleChange(e, { name, value })} trans={t} />
                 <Form.Field>
