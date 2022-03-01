@@ -20,6 +20,15 @@ const isLocalhost = Boolean(
     )
 );
 
+export function isGrowth(n) {
+  // n < 10 || 
+  return (n > 275) && n !== "";
+}
+export function isWeight(n) {
+  // n < 5 || 
+  return (n > 500) && n !== "";
+}
+
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.

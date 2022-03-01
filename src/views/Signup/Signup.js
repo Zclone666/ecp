@@ -189,6 +189,7 @@ const Signup = inject(
                               fluid
                               size="big"
                               name="clinic"
+                              noResultsMessage={t("main_search_notFound")}
                               placeholder={t("enter_name_clinic")}
                               loading={!searchReady}
                               onResultSelect={this.handleResultSelect}

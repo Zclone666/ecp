@@ -135,6 +135,7 @@ const Main = inject(
 
       clearDeleted = () => {
         this.props.drugs.clearDeleted();
+        this.props.recipes.saveList();
       };
 
       handleChangeClinic = (e, { name, value }) => {
@@ -150,7 +151,7 @@ const Main = inject(
       };
 
       changeLang = (lang) => {
-        console.log({ lang });
+        // console.log({ lang });
         this.props.i18n.changeLanguage(lang);
         this.props.actions.setLang(lang);
       };

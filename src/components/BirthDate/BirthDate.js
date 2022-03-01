@@ -48,12 +48,16 @@ class BirthDate extends Component {
     });
     // console.log({ year, month, week, day });
     // console.log(moment().format('DD.MM.YYYY'));
+    // if (year < 150) {
     let date = moment().add({ years: -year, months: -month, weeks: -week, days: -day }).format("x");
     if (birthyear > 0) date = moment().set("year", birthyear).format("x");
     //let date = moment().year(-year).month(-month).week(-week).day(-day).format('X')
     // console.log('birth', date, birthyear);
     onChange && onChange(null, { name, value: parseInt(date) });
     this.setState({ date, birth: value });
+    // }
+
+
   };
   handleChangeDate = (e, { value }) => {
     // console.log({ value });
@@ -75,7 +79,7 @@ class BirthDate extends Component {
     if (weeks > 0) arr.push(weeks, declension(ref_weeks, weeks));
     if (days > 0) arr.push(days, declension(ref_days, days));
 
-   // onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
+    // onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
     this.setState({ birth: arr.join(" "), date: moment(value).format("x") });
   };
 
@@ -102,6 +106,10 @@ class BirthDate extends Component {
   render() {
     let { birth, date } = this.state;
 
+    let dateNew = new Date();
+    let dateFuture = new Date();
+    dateFuture.setDate(dateNew.getDate() - (150 * 365));
+
     let { trans: t } = this.props;
     return (
       <Form.Field width={16}>
@@ -109,7 +117,7 @@ class BirthDate extends Component {
         <div className="birthdate">
           <AutoComplete value={birth} onChange={(e, { value }) => this.handleChangeBirth(e, { value })} trans={t} />
           <Button basic icon="arrows alternate horizontal" />
-          <Calendar value={date} onChange={(e, { value }) => { this.handleChangeDate(e, { value }); this.onChangeDate(e, { value }) }} maxDate={new Date()} />
+          <Calendar value={date} onChange={(e, { value }) => { this.handleChangeDate(e, { value }); this.onChangeDate(e, { value }) }} minDate={dateFuture} maxDate={new Date()} />
         </div>
       </Form.Field>
     );

@@ -233,10 +233,10 @@ const Patient = inject(
             )}
             {step === 1 && (
               <Menu className="bottom fixed menu three item huge main">
-                <Menu.Item color="red" onClick={this.back}>
+                <Menu.Item color="red" onClick={() => this.saveForm(false)}>
                   {t("back")}
                 </Menu.Item>
-                {/* apply */}
+                {/* apply this.back */}
                 {/* <Menu.Item onClick={() => this.saveForm(false)}>{t("pharmacotherapy_patient")}</Menu.Item> */}
                 {/* isDisease && */}
 

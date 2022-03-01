@@ -35,6 +35,7 @@ import {
 
 import _ from "lodash";
 import moment from "moment";
+import { isGrowth, isWeight } from "../../serviceWorker";
 
 const boxDisabled = !window.location.host.includes("socmedica") && !window.location.host.includes(["localhost"]);
 
@@ -88,18 +89,28 @@ const PatientForm = inject(
         }
         const { editForm } = this.props;        
         // if (!(name == "birthdate" && value < 0)) {
-          editForm();
+        editForm();
         // }        
+        let errorValue = false;
+        if (name == "weight") {
+          errorValue = isWeight(value);
+        }
+        if (name == "growth") {
+          errorValue = isGrowth(value);
+        }
         const { birthdate } = this.props.patients.current;
-        // console.log({ birthdate, value });
-        let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
+        // console.log(errorValue);
+        let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") <= 12 || 
+        moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
 
         if (name === "weight" || name === "growth") {
           value = clearDouble(value);
-          if (!checkDouble(value)) {
-            this.props.patients.current[name] = value;
-          } else {
-            this.props.patients.current[name] = parseFloat(value);
+          if (!errorValue) {
+            if (!checkDouble(value)) {
+              this.props.patients.current[name] = value;
+            } else {
+              this.props.patients.current[name] = parseFloat(value);
+            }
           }
 
           this.props.patients.current.masIndex =
@@ -324,6 +335,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="patient"
+                    noResultsMessage={t("main_search_notFound")}
                     placeholder={t("patinet_card_name_patient")}
                     loading={!searchReady}
                     onResultSelect={this.handlePatientResultSelect}
@@ -338,13 +350,13 @@ const PatientForm = inject(
                 <Form.Field width={3}>
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
-                {this.props.patients.current.id && (
+                {/* {this.props.patients.current.id && (
                   <Form.Field width={2}>
                     {(window.location.href.includes("socmedica.dev") || window.location.href.includes("localhost")) && (
                       <Button onClick={() => this.setState({ showProtocol: !showProtocol })}>{t("protocol")}</Button>
                     )}
                   </Form.Field>
-                )}
+                )} */}
                 <Form.Field width={3}>
                   <Button onClick={() => this.setState({ showPatientPassport: !showPatientPassport })}>
                     {showPatientPassport
@@ -381,6 +393,8 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="growth"
+                    type="number"
+                    // error={growth < 8}
                     value={growth || ""}
                     label={{ basic: true, content: t("sm") }}
                     labelPosition="right"
@@ -393,6 +407,8 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="weight"
+                    type="number"
+                    // error={weight < 3}
                     value={weight || ""}
                     label={{ basic: true, content: t("kg") }}
                     labelPosition="right"
@@ -434,6 +450,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="disease"
+                    noResultsMessage={t("main_search_notFound")}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -468,6 +485,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="co_disease"
+                    noResultsMessage={t("main_search_notFound")}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -606,6 +624,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="allergy"
+                    noResultsMessage={t("main_search_notFound")}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
