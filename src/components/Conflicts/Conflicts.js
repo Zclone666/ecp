@@ -233,7 +233,7 @@ const Conflicts = inject(
                       <Accordion.Content active={activeIndex === i} style={{ display: activeIndex === i ? "flex" : "none" }}>
 
                         {item.values.map((element) => {
-                          console.log(element, "element");
+                          
                           return (<Grid.Column key={"warn" + i} className="conflict" style={{ paddingTop: 0, paddingRight: 0 }}>
                             {!selectedConflict && selectedWarnings[element.type] ? (
                               <RouterLink

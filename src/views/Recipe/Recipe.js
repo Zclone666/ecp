@@ -169,6 +169,7 @@ const Recipe = inject(
 
       handleRecipeDataChange = (e, { name, value }) => {
 
+        // console.log(name, value, "name, value ");
         const { t } = this.props.actions;
         this.resetSign();
         if (!name && !value) {
@@ -355,7 +356,8 @@ const Recipe = inject(
         let noEmail = false;
 
         const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
- 
+
+        // console.log(tags, recipe_formid, recipeData.items, tags.includes("PatientFIO"), tags.includes("@PatientFIO@"));
         const settings = {
           dots: false,
           infinite: false,

@@ -86,6 +86,9 @@ const PatientForm = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
+        const { editForm } = this.props;
+        // console.log(name, value, "name, value");
+        editForm();
         const { birthdate } = this.props.patients.current;
         // console.log({ birthdate, value });
         let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
@@ -498,7 +501,7 @@ const PatientForm = inject(
                 })}
               </List>
               {!misDisabled && (
-                <Form.Group style={{ "align-items": "flex-end" }} widths={1}>
+                <Form.Group style={{ alignItems: "flex-end" }} widths={1}>
                   <Form.Field width={4}>
                     <label>{t("gene_mutation")}</label>
                     {/* number: {mutations.length} gene: {this.state.mutation.gene} allele1:{" "}
@@ -569,9 +572,10 @@ const PatientForm = inject(
                       size="big"
                       fluid
                       labelPosition="left"
-                      icon="file"
+                      icon
                       onClick={() => this.fileUploadRef.current.click()}
                     >
+                      <Icon name='file' />
                       {genpassport_exist ? t("update_patient_genetic_passport") : t("download_genetic_passport")}
                     </Button>
                     <input id="genpassport-upload" ref={this.fileUploadRef} type="file" hidden accept=".csv" />
