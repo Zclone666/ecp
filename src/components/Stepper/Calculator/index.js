@@ -484,7 +484,7 @@ const Calculator = inject(
                 </Form.Group>
               </Form>
               {!liquid && <Schedule />}
-              <Interval />
+              {/* <Interval /> */}
               <Form>
                 <Form.Group>
                   <Form.Field width={16}>
