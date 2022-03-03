@@ -208,9 +208,6 @@ const Clinrec = inject(
             <List.Content className="large">
               <List.Description>
                 <strong>{t("select_one_or_more_options")}</strong>
-                <span className="underlined" onClick={() => this.getByFG(child, childId)}>
-                  {t("show")}
-                </span>
               </List.Description>
               {child.comment && <List.Description>{child.comment}</List.Description>}
               <List.List>{this.renderRecoursive(child)}</List.List>
