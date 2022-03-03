@@ -201,6 +201,24 @@ const Clinrec = inject(
         );
       };
 
+      renderSelect = (child, childId) => {
+        let { t } = this.props.actions;
+        return (
+          <List.Item>
+            <List.Content className="large">
+              <List.Description>
+                <strong>{t("select_one_or_more_options")}</strong>
+                <span className="underlined" onClick={() => this.getByFG(child, childId)}>
+                  {t("show")}
+                </span>
+              </List.Description>
+              {child.comment && <List.Description>{child.comment}</List.Description>}
+              <List.List>{this.renderRecoursive(child)}</List.List>
+            </List.Content>
+          </List.Item>
+        );
+      };
+
       renderRegimen = (child, childId) => {
         let {
           clinrecs: { clinrec, cources },
@@ -486,6 +504,9 @@ const Clinrec = inject(
             break;
           case "Unknown":
             return this.renderFG(child, childId);
+            break;
+          case "Select":
+            return this.renderSelect(child, childId);
             break;
           default:
             return this.renderRecoursive(child, childId);

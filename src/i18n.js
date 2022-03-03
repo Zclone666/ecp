@@ -110,6 +110,7 @@ const resources = {
       date_birth: "Дата рождения",
       choose_one_or_more_options: "Выберите один или несколько вариантов",
       choose_one_options: "Выберите один из вариантов",
+      select_one_or_more_options: "Выберите один или несколько вариантов",
       show: "Показать",
       name_patient: "ФИО пациента",
       name_doctor: "ФИО врача",
@@ -378,7 +379,7 @@ const resources = {
       сomment_leaf_destination: "Комментарий к листу назначения",
       sources: "Источники",
 
-      date_commencement_therapy: "Дата начала терапии"
+      date_commencement_therapy: "Дата начала терапии",
     },
   },
 };
