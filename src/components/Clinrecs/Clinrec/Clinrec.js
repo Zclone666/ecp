@@ -462,6 +462,7 @@ const Clinrec = inject(
                 if (child.type === "OR") return this.renderRadio(child, childId);
                 if (child.type === "FG") return this.renderFG(child, childId);
                 if (child.type === "AND") return this.renderCheck(child, childId);
+                if (child.type === "Select") return this.renderSelect(child, childId);
                 return (
                   <List.Item key={"calc" + childId}>
                     <List.Content className="large">
