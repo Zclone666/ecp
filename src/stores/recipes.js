@@ -249,7 +249,7 @@ class Recipes {
       certificate: this.certificateBase64,
       signed_data: this.digitallySignedRecipe,
     };
-
+    // console.log(data2, data);
     return POST({
       path: this.stringifiedSignData ? "Prescript/RecipeNewEDS" : "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data: this.stringifiedSignData ? data2 : data,

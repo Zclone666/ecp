@@ -741,7 +741,7 @@ const Recipe = inject(
                             </Form.Field>
                           )
                         }
-                      {recipe_formid && (
+                        {recipe_formid && printType !== "list" && (
                         <Form.Field>
                             <label>{t("comment_prescription")}</label> 
                             {/* сomment_leaf_destination */}

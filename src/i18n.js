@@ -342,6 +342,8 @@ const resources = {
       dosage_not_specified: "Дозировка не указана",
       recipe_discharged: "Рецепт выписан!",
       you_print_send_mail: "Теперь вы можете распечатать его, или отправить на почту.",
+      appointment_sheet_formed: "Лист назначения сформирован!",
+      //Лист назначения сформирован
 
       ready: "Готово",
       recipe_shipped_by: "Рецепт отправлен на",
