@@ -269,6 +269,8 @@ const LiquidCalculator = inject("db", "actions", "router", "drugs", "dosages", "
 
     let disableAll = !ready;
     let disableMulti = true;
+    // console.log(currUnit, def, fullDosage);
+    // console.log(getFromBase(currUnit || def, fullDosage).join(" + "));
     return (
       <Segment basic>
         {isLiquid && (

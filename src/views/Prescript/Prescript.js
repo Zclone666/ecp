@@ -321,7 +321,7 @@ const Prescript = inject(
                     />
                   </Form.Field>
                   <Form.Field>
-                    <label>ЛПУ</label>
+                    <label>{t("health_care_facility")}</label>
                     <Search
                       fluid
                       size="big"

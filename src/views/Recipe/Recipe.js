@@ -95,6 +95,7 @@ const Recipe = inject(
       };
 
       save = async () => {
+        const { t } = this.props.actions;
         this.setState({ savePending: true });
         let code = await this.props.recipes.save();
 
@@ -102,8 +103,7 @@ const Recipe = inject(
 
         if (!code) return;
         this.setState({ code });
-        this.setOpenCode(true);
-        // this.props.router.push('/')
+
       };
       print = async () => {
         let code = await this.props.recipes.print();
@@ -117,9 +117,7 @@ const Recipe = inject(
         pri.document.close();
         pri.focus();
         pri.print();
-        // this.setState({ code })
-        // this.setOpenCode(true)
-        // this.props.router.push('/')
+
       };
 
       mail = async () => {
@@ -226,6 +224,11 @@ const Recipe = inject(
         if (name === "birthdate") {
           const date = moment(value).format("x");
           this.props.patients.current["birthdate"] = date;
+          return;
+        }
+        if (name === "datetherapy") {
+          const date = moment(value).format("x");
+          this.props.patients.current["datetherapy"] = date;
           return;
         }
         this.props.patients.current[name] = value;
@@ -356,7 +359,7 @@ const Recipe = inject(
         let noEmail = false;
 
         const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
-
+        console.log(recipe_formid, code, "recipe_formid");
         // console.log(tags, recipe_formid, recipeData.items, tags.includes("PatientFIO"), tags.includes("@PatientFIO@"));
         const settings = {
           dots: false,
@@ -372,7 +375,7 @@ const Recipe = inject(
         return (
           <>
             {!!printType ? (
-              <Menu className="bottom fixed menu four item huge main">
+              <Menu className={printType !== "list" ? "bottom fixed menu four item huge main" : "bottom fixed menu three item huge main"}>
                 <Menu.Item color="red" onClick={this.back}>
                   {t("back")}
                 </Menu.Item>
@@ -381,17 +384,16 @@ const Recipe = inject(
                   {t("send")}
                 </Menu.Item>
                 {/* )} */}
-                {/* {code && ( */}
-                <Menu.Item disabled={noEmail || !code} onClick={this.print}>
+                {/* {code && ( disabled={noEmail || !code}*/}
+                <Menu.Item onClick={this.print}>
                   {t("print")}
                 </Menu.Item>
-                <Menu.Item
+                {printType !== "list" && <Menu.Item
                   disabled={noEmail || !recipe_formid || this.state.wasSigned}
                   onClick={this.initiateSigningProcess}
                 >
                   <span>{this.state.wasSigned ? t("signed") : t("subscribe")}</span>
-                </Menu.Item>
-                {/* )} */}
+                </Menu.Item>}
               </Menu>
             ) : (
               <Menu className="bottom fixed menu four item huge main">
@@ -471,7 +473,7 @@ const Recipe = inject(
                           onChange={this.handleRecipeDataChange}
                         />
                         </Form.Field> : null}
-                      {recipe_formid && (
+                        {recipe_formid && recipeData.items[recipe_formid].durations.length > 0 && (
                         <Form.Field>
                           <label>{t("recipe_state_time")}</label>
                           <Dropdown
@@ -724,7 +726,21 @@ const Recipe = inject(
                           )}
                         </Form.Group>
                       )}
-
+                        {
+                          tags.includes("DateStartReception") && (
+                            <Form.Field width={4}>
+                              <label>{t("date_commencement_therapy")}</label>
+                              <Calendar
+                                name="datetherapy"
+                                // value={moment(patient.datetherapy).format("x")}
+                                minDate={new Date()}
+                                onChange={this.handlePatientDataChange}
+                                size="medium"
+                              />
+                              {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
+                            </Form.Field>
+                          )
+                        }
                       {recipe_formid && (
                         <Form.Field>
                             <label>{t("comment_prescription")}</label> 
@@ -845,7 +861,7 @@ const Recipe = inject(
                 </Segment>
               </div>
             </Slider>
-
+            
             <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
               <Modal.Header>{t("code_pharmacy")}</Modal.Header>
               <Modal.Content>

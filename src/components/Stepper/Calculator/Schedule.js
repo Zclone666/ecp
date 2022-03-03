@@ -20,7 +20,7 @@ function declension(forms, val) {
   return forms[val % 100 > 4 && val % 100 < 20 ? 2 : cases[val % 10 < 5 ? val % 10 : 5]];
 }
 
-const ref_days = ["день", "дня", "дней"];
+const ref_days = ["day", "a_day", "days"];
 
 const Schedule = inject(
   "db",
@@ -43,14 +43,8 @@ const Schedule = inject(
           let { name, value } = e.target;
         }
         const { t } = this.props.actions;
-        // console.log('HERE');
-        // console.log({ name, value });
         if (name === "dateStart" || name === "dateFinish") {
-          // console.log({ value: value });
-          // value = moment(moment(value).format("DD.MM.YYYY"), "DD.MM.YYYY").format("x");
           if (name === "dateFinish") value = moment(parseInt(moment(value, "x").add(1, "d").format("x")) - 1, "x");
-          // console.log({ value });
-          this.setState({ timeFromStart: null });
           if (moment(value).format("x") !== "Invalid date")
             this.props.actions.scheduleForm[name] = moment(value).format("x");
           if (name === "dateFinish") this.props.actions.scheduleForm.finishAlternate = null;
@@ -62,12 +56,12 @@ const Schedule = inject(
             moment(this.props.actions.scheduleForm.dateStart, "x"),
             "days"
           );
-          duration_num = duration_num == 0 ? 1 : duration_num;
+          duration_num = duration_num == 0 ? 1 : duration_num;          
           this.props.drugs.current.duration = duration_num + " " + t(declension(ref_days, duration_num));
+          this.setState({ timeFromStart: this.props.drugs.current.duration });
           this.props.drugs.current.duration_id = null;
-          // console.log(moment(this.props.actions.scheduleForm.dateFinish, 'x').from(moment(this.props.actions.scheduleForm.dateStart, 'x'), true));
-          // console.log({ value: moment(value).format('x') } );
-        } else {
+ 
+        } else {          
           switch (name) {
             case "finishAlternate":
               this.props.actions.scheduleForm.finishAlternate = this.props.actions.scheduleForm.finishAlternate
@@ -78,36 +72,23 @@ const Schedule = inject(
               this.props.drugs.current.duration_id = null;
               this.props.actions.scheduleForm.dateFinish = null;
               break;
-            // case 'finishAlternate':
-            //
-            //   break;
-            // case 'finishAlternate':
-            //
-            //   break;
-            // case 'finishAlternate':
-            //
-            //   break;
-            // case 'finishAlternate':
-            //
-            //   break;
+
             default:
               this.props.actions.scheduleForm[name] = value;
           }
           //this.props.actions.scheduleForm[name] = value
         }
 
-        // this.setState({ [name]: value })
-        // console.log({ name, value });
       };
       setTomorrow = () => {
         let tomorrow = moment().add(1, "d").toDate();
-        // console.log({ tomorrow });
+
         this.handleChange(null, {
           name: "dateStart",
           value: tomorrow,
         });
       };
-      setDate = (tpl, id) => {
+      setDate = (tpl, id) => {        
         let { UIText } = this.props.actions;
         let { dateStart } = this.props.actions.scheduleForm;
         this.setState({ timeFromStart: UIText.duration[id] });

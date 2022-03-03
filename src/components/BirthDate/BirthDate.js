@@ -13,7 +13,7 @@ function declension(forms, val) {
   return forms[val % 100 > 4 && val % 100 < 20 ? 2 : cases[val % 10 < 5 ? val % 10 : 5]];
 }
 
-const ref_days = ["день", "дня", "дней"],
+const ref_days = ["день", "дня", "дней2"],
   ref_weeks = ["неделя", "недели", "недель"],
   ref_months = ["месяц", "месяца", "месяцев"],
   ref_years = ["год", "года", "лет"];

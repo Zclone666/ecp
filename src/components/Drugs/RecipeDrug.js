@@ -108,7 +108,6 @@ const RecipeDrug = inject(
 
         let drug = drugs.drug.get(key) || {};
         let { freq, freq_id, duration, duration_id, calc, dosage, helpers, schedule } = drug;
-        // console.log({drug});
         let { finishAlternate } = schedule || {};
 
         if (calc && calc.fullDosage && helpers && helpers.dosage && helpers.dosage.id) {
@@ -127,7 +126,7 @@ const RecipeDrug = inject(
         } else if (duration) {
           arr.push(duration);
         }
-        // if(duration && UIText.duration[duration]) arr.push(UIText.duration[duration])
+
         if (finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate]);
 
         return {

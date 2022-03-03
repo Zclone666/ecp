@@ -199,7 +199,7 @@ const WarningTab = inject(
                         if (!info.names[desc]) return null;
                         return (
                           <List.Item key={`desc_${d}`}>
-                            <div style={{ fontWeight: "bold", fontSize: "large" }} dangerouslySetInnerHTML={{ __html: info.names[desc] }} />
+                            <div style={{ fontWeight: "bold", fontSize: "large", lineHeight: "normal" }} dangerouslySetInnerHTML={{ __html: info.names[desc] }} />
                           </List.Item>
                         );
                       })}

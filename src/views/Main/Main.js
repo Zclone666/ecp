@@ -218,6 +218,7 @@ const Main = inject(
 
       render() {
         const { open, openCautions, openClearence, searchQuery, selectedDrug, selectedConflict, clinic } = this.state;
+
         let {
           currentPage,
           height,
@@ -227,7 +228,11 @@ const Main = inject(
           misLinkLogin: misDisabled,
           topview_disabled,
           bottomview_disabled,
+
+          drugStructure: { doctor_name: doctor },
+          doctor: doc,
         } = this.props.actions;
+        doctor = doctor || doc.name;
         let {
           drugs: {
             searchReady,
@@ -246,6 +251,7 @@ const Main = inject(
           warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
           actions: {
             patientForm: { disease, co_disease },
+
             clinrecCheckerStep,
             isPrescriptFilled,
             patientPassport,
@@ -553,10 +559,15 @@ const Main = inject(
                   vertical
                   size="huge"
                 >
+                  <Message style={{ margin: "0" }}>
+                    {doctor}
+                  </Message>
+
                   <Menu.Item as={RouterLink} to="/patient/list">
                     <Icon name="address book" />
                     {t("patient_patients")}
                   </Menu.Item>
+
                   {texts && texts.agreementheader && (
                     <Menu.Item as={RouterLink} to="/license-agreement">
                       <Icon name="file alternate" />

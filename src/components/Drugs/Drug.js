@@ -111,11 +111,6 @@ const Drug = inject(
           arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
         }
 
-        // if(freq) arr.push(freq)
-
-        // if(duration) arr.push(duration)
-        // if(freq && UIText.freq[freq]) arr.push(UIText.freq[freq])
-        // console.log({ UIText });
         if (freq_id && UIText && UIText.freq && UIText.freq[freq_id]) {
           arr.push(UIText.freq[freq_id]);
         } else if (freq) {
@@ -215,9 +210,6 @@ const Drug = inject(
           dosage.method && (nameshort[dosage.method] || names[dosage.method])
             ? nameshort[dosage.method] || names[dosage.method]
             : "";
-
-        // console.log({ dosage, nameshort, names, helpers, rules });
-        // console.log({ dosageForm, helpersDosage, dosageMethod });
 
         return (
           <List.Item style={resultStyle} className={`${!hasWarnings ? "nowarnings " : ""}${className}`}>
