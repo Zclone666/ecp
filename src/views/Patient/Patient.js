@@ -218,7 +218,7 @@ const Patient = inject(
           initialSlide: step,
         };
         let isDisease = disease.length > 0 || co_disease.length > 0;
-
+        console.log(disease, "diseasedisease");
         return (
           <div className="h100">
             {step === 0 && (
@@ -239,9 +239,9 @@ const Patient = inject(
                 {/* apply this.back */}
                 {/* <Menu.Item onClick={() => this.saveForm(false)}>{t("pharmacotherapy_patient")}</Menu.Item> */}
                 {/* isDisease && */}
-
+                {/* || !firstname || !lastname */}
                 <Menu.Item
-                  disabled={misDisabled || !isDisease || !firstname || !lastname}
+                  disabled={misDisabled || !isDisease}
                   onClick={this.getClinrecExist}
                 >
                   {/* <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}> */}
