@@ -103,7 +103,7 @@ const Recipe = inject(
 
         if (!code) return;
         this.setState({ code });
-
+        this.setState({ openCode: true });
       };
       print = async () => {
         let code = await this.props.recipes.print();
@@ -117,7 +117,6 @@ const Recipe = inject(
         pri.document.close();
         pri.focus();
         pri.print();
-
       };
 
       mail = async () => {
@@ -138,7 +137,6 @@ const Recipe = inject(
         // if (printType !== 'protocol') {
         this.next();
         // }
-
       };
       savePatient = async () => {
         let res = await this.props.patients.save();
@@ -156,7 +154,7 @@ const Recipe = inject(
 
       handleChange = async (e, { name, value }) => {
         this.resetSign();
-     
+
         if (!name && !value) {
           let { name, value } = e.target;
         }
@@ -166,7 +164,6 @@ const Recipe = inject(
       };
 
       handleRecipeDataChange = (e, { name, value }) => {
-
         // console.log(name, value, "name, value ");
         const { t } = this.props.actions;
         this.resetSign();
@@ -243,7 +240,6 @@ const Recipe = inject(
         const availableCertificates = await getUserCertificates()
           .then((certs) => certs)
           .catch((e) => {
-      
             return [];
           })
           .then((certs) => Promise.all(certs.map(async (c) => ({ cert: c, valid: await c.isValid() }))));
@@ -261,7 +257,7 @@ const Recipe = inject(
         await createHash(stringifiedData).then((hashedDataToSign) =>
           createDetachedSignature(this.state.selectedCertificate.thumbprint, hashedDataToSign).then((result) => {
             this.setState({ signedData: result });
-          
+
             this.props.recipes.stringifiedSignData = stringifiedData;
             this.props.recipes.digitallySignedRecipe = result.replaceAll("\r\n", "");
             this.props.recipes.certificateBase64 = certBase64.replaceAll("\r\n", "");
@@ -375,7 +371,13 @@ const Recipe = inject(
         return (
           <>
             {!!printType ? (
-              <Menu className={printType !== "list" ? "bottom fixed menu four item huge main" : "bottom fixed menu three item huge main"}>
+              <Menu
+                className={
+                  printType !== "list"
+                    ? "bottom fixed menu four item huge main"
+                    : "bottom fixed menu three item huge main"
+                }
+              >
                 <Menu.Item color="red" onClick={this.back}>
                   {t("back")}
                 </Menu.Item>
@@ -385,15 +387,15 @@ const Recipe = inject(
                 </Menu.Item>
                 {/* )} */}
                 {/* {code && ( disabled={noEmail || !code}*/}
-                <Menu.Item onClick={this.print}>
-                  {t("print")}
-                </Menu.Item>
-                {printType !== "list" && <Menu.Item
-                  disabled={noEmail || !recipe_formid || this.state.wasSigned}
-                  onClick={this.initiateSigningProcess}
-                >
-                  <span>{this.state.wasSigned ? t("signed") : t("subscribe")}</span>
-                </Menu.Item>}
+                <Menu.Item onClick={this.print}>{t("print")}</Menu.Item>
+                {printType !== "list" && (
+                  <Menu.Item
+                    disabled={noEmail || !recipe_formid || this.state.wasSigned}
+                    onClick={this.initiateSigningProcess}
+                  >
+                    <span>{this.state.wasSigned ? t("signed") : t("subscribe")}</span>
+                  </Menu.Item>
+                )}
               </Menu>
             ) : (
               <Menu className="bottom fixed menu four item huge main">
@@ -408,16 +410,18 @@ const Recipe = inject(
                   <Grid.Column width={16}>
                     <Header>{t("choose_form")}</Header>
                   </Grid.Column>
-                  {Object.entries(recipeData.items).filter(([id, value]) => value.type === "list").map(([id, value]) => {
-
-                    return <Grid.Column width={8}>
-                      <Button onClick={() => this.setPrintType("list", id)} size="big" color="blue" fluid>
-                        {value.name}
-                        {/* {t("outpatient_appointment_list")} */}
-                      </Button>{" "}
-                    </Grid.Column>;
-
-                  })}
+                  {Object.entries(recipeData.items)
+                    .filter(([id, value]) => value.type === "list")
+                    .map(([id, value]) => {
+                      return (
+                        <Grid.Column width={8}>
+                          <Button onClick={() => this.setPrintType("list", id)} size="big" color="blue" fluid>
+                            {value.name}
+                            {/* {t("outpatient_appointment_list")} */}
+                          </Button>{" "}
+                        </Grid.Column>
+                      );
+                    })}
 
                   {/* <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("ambulance_list")} size="big" color="blue" fluid>
@@ -454,26 +458,30 @@ const Recipe = inject(
                     <FormChecker patient={this.props.patients.current} />
                   ) : (
                     <Form>
-                        {printType !== "list" ? <Form.Field>
-                        <label>{t("recipe_form")}</label>
-                        <Dropdown
-                          size="big"
-                            options={Object.entries(recipeData.items).filter(([id, value]) => value.type !== "list").map(([id, value]) => {
-                            return {
-                              key: id,
-                              text: value.name,
-                              value: id,
-                            };
-                          })}
-                          placeholder={t("choose")}
-                          name="recipe_formid"
-                          selection
-                          fluid
-                          value={recipe_formid}
-                          onChange={this.handleRecipeDataChange}
-                        />
-                        </Form.Field> : null}
-                        {recipe_formid && recipeData.items[recipe_formid].durations.length > 0 && (
+                      {printType !== "list" ? (
+                        <Form.Field>
+                          <label>{t("recipe_form")}</label>
+                          <Dropdown
+                            size="big"
+                            options={Object.entries(recipeData.items)
+                              .filter(([id, value]) => value.type !== "list")
+                              .map(([id, value]) => {
+                                return {
+                                  key: id,
+                                  text: value.name,
+                                  value: id,
+                                };
+                              })}
+                            placeholder={t("choose")}
+                            name="recipe_formid"
+                            selection
+                            fluid
+                            value={recipe_formid}
+                            onChange={this.handleRecipeDataChange}
+                          />
+                        </Form.Field>
+                      ) : null}
+                      {recipe_formid && recipeData.items[recipe_formid].durations.length > 0 && (
                         <Form.Field>
                           <label>{t("recipe_state_time")}</label>
                           <Dropdown
@@ -726,25 +734,23 @@ const Recipe = inject(
                           )}
                         </Form.Group>
                       )}
-                        {
-                          tags.includes("DateStartReception") && (
-                            <Form.Field width={4}>
-                              <label>{t("date_commencement_therapy")}</label>
-                              <Calendar
-                                name="datetherapy"
-                                // value={moment(patient.datetherapy).format("x")}
-                                minDate={new Date()}
-                                onChange={this.handlePatientDataChange}
-                                size="medium"
-                              />
-                              {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
-                            </Form.Field>
-                          )
-                        }
-                        {recipe_formid && printType !== "list" && (
+                      {tags.includes("DateStartReception") && (
+                        <Form.Field width={4}>
+                          <label>{t("date_commencement_therapy")}</label>
+                          <Calendar
+                            name="datetherapy"
+                            // value={moment(patient.datetherapy).format("x")}
+                            minDate={new Date()}
+                            onChange={this.handlePatientDataChange}
+                            size="medium"
+                          />
+                          {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
+                        </Form.Field>
+                      )}
+                      {recipe_formid && printType !== "list" && (
                         <Form.Field>
-                            <label>{t("comment_prescription")}</label> 
-                            {/* сomment_leaf_destination */}
+                          <label>{t("comment_prescription")}</label>
+                          {/* сomment_leaf_destination */}
                           <TextArea
                             size="big"
                             placeholder={t("explanation_recipe")}
@@ -861,7 +867,7 @@ const Recipe = inject(
                 </Segment>
               </div>
             </Slider>
-            
+
             <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
               <Modal.Header>{t("code_pharmacy")}</Modal.Header>
               <Modal.Content>
