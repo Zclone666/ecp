@@ -646,6 +646,12 @@ i.huge.violet.icon {
   }
 }
 
+@media only screen and (max-width: 767px) {
+.menuhead {
+  display: none;
+}
+}
+
 .ui.statistics.getback .statistic {
   padding: 10px;
 }
@@ -1433,7 +1439,7 @@ ul.ui.list li {
   padding-left: 50px;
   position: relative;
   background-color: #f3f3f2;
-  padding-right: ;
+  // padding-right: ;
 }
 .ui.list.drugslist .item .arrowholder {
   position: absolute;
@@ -1530,9 +1536,11 @@ ul.ui.list li {
   background-color: #ccc;
   box-shadow: 0.5px 0.5px 2px #bbb;
   padding: 0;
-  left: 24px;
+  margin-left: 12px;
+  //left: 24px;
 }
 .conflict > .conflicticon.arrowBg.none {
+  // display: none;
   margin-top: -100px;
 }
 .conflict > .conflicticon.arrowBg > .icon {

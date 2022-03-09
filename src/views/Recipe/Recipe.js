@@ -91,25 +91,23 @@ const Recipe = inject(
         this.sliderRef.current.slickPrev();
       };
       goTo = (x) => {
-        // console.log('go to ', x);
-        // console.log('this.sliderRef', this.sliderRef);
         this.sliderRef.current.slickGoTo(x);
       };
 
       save = async () => {
+        const { t } = this.props.actions;
         this.setState({ savePending: true });
         let code = await this.props.recipes.save();
 
         this.setState({ savePending: false });
-        // console.log({res});
+
         if (!code) return;
         this.setState({ code });
-        this.setOpenCode(true);
-        // this.props.router.push('/')
+        this.setState({ openCode: true });
       };
       print = async () => {
         let code = await this.props.recipes.print();
-        // console.log({res});
+
         if (!code) return;
 
         document.getElementById("ifmcontentstoprint").style.display = "contents";
@@ -119,9 +117,6 @@ const Recipe = inject(
         pri.document.close();
         pri.focus();
         pri.print();
-        // this.setState({ code })
-        // this.setOpenCode(true)
-        // this.props.router.push('/')
       };
 
       mail = async () => {
@@ -133,9 +128,15 @@ const Recipe = inject(
         this.props.recipes.code = null;
       };
 
-      setPrintType = (printType) => {
+      setPrintType = (printType, id) => {
+        if (printType === "list") {
+          // recipe_formid = id;
+          this.props.recipes["recipe_formid"] = id;
+        }
         this.setState({ printType });
+        // if (printType !== 'protocol') {
         this.next();
+        // }
       };
       savePatient = async () => {
         let res = await this.props.patients.save();
@@ -146,7 +147,6 @@ const Recipe = inject(
         }
       };
       // handleAddition = async (e, { name, value }) => {
-      //   // console.log({ name, value });
       //   let key = moment().format('x').toString()
       //   await this.props.patients.patient.set(key, {key, name: value, id: null})
       //   this.handleChange(null, { name: 'patient', value: key })
@@ -154,7 +154,7 @@ const Recipe = inject(
 
       handleChange = async (e, { name, value }) => {
         this.resetSign();
-        // if (name === "patient") console.log({ value });
+
         if (!name && !value) {
           let { name, value } = e.target;
         }
@@ -164,7 +164,7 @@ const Recipe = inject(
       };
 
       handleRecipeDataChange = (e, { name, value }) => {
-        console.log({ name, value, e });
+        // console.log(name, value, "name, value ");
         const { t } = this.props.actions;
         this.resetSign();
         if (!name && !value) {
@@ -174,6 +174,7 @@ const Recipe = inject(
         if (name == "recipe_formid") {
           this.props.recipes["maxcount"] = this.props.actions.recipeData.items[value].maxcount;
           this.props.recipes["drugKeysForPrescription"] = [];
+          this.props.recipes["formType"] = this.props.actions.recipeData.items[value].type;
         }
         if (name == "spectextPrompt") {
           this.setState({ spectextPrompt: value });
@@ -222,6 +223,11 @@ const Recipe = inject(
           this.props.patients.current["birthdate"] = date;
           return;
         }
+        if (name === "datetherapy") {
+          const date = moment(value).format("x");
+          this.props.patients.current["datetherapy"] = date;
+          return;
+        }
         this.props.patients.current[name] = value;
       };
       handleMaskedInputPatientDataChange = (e) => {
@@ -234,7 +240,6 @@ const Recipe = inject(
         const availableCertificates = await getUserCertificates()
           .then((certs) => certs)
           .catch((e) => {
-            // console.log({ e });
             return [];
           })
           .then((certs) => Promise.all(certs.map(async (c) => ({ cert: c, valid: await c.isValid() }))));
@@ -252,7 +257,7 @@ const Recipe = inject(
         await createHash(stringifiedData).then((hashedDataToSign) =>
           createDetachedSignature(this.state.selectedCertificate.thumbprint, hashedDataToSign).then((result) => {
             this.setState({ signedData: result });
-            // console.log({ cert });
+
             this.props.recipes.stringifiedSignData = stringifiedData;
             this.props.recipes.digitallySignedRecipe = result.replaceAll("\r\n", "");
             this.props.recipes.certificateBase64 = certBase64.replaceAll("\r\n", "");
@@ -348,15 +353,10 @@ const Recipe = inject(
         doctor = doctor || doc.name;
 
         let noEmail = false;
-        // console.log({ doctor, clinic, patient });
-        if (printType === "ambulance_list") {
-          recipe_formid = "F3EPyWjCT30nRTEsHqBYqg==";
-        }
-        const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
-        // console.log({ tags });
 
-        // console.log(recipe_formid, recipeData.items["F3EPyWjCT30nRTEsHqBYqg=="], printType, "recipe_formid");
-        // console.log({ recipe_endtimeitem });
+        const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
+        console.log(recipe_formid, code, "recipe_formid");
+        // console.log(tags, recipe_formid, recipeData.items, tags.includes("PatientFIO"), tags.includes("@PatientFIO@"));
         const settings = {
           dots: false,
           infinite: false,
@@ -367,10 +367,17 @@ const Recipe = inject(
           swipe: false,
           initialSlide: 0,
         };
+
         return (
           <>
             {!!printType ? (
-              <Menu className="bottom fixed menu four item huge main">
+              <Menu
+                className={
+                  printType !== "list"
+                    ? "bottom fixed menu four item huge main"
+                    : "bottom fixed menu three item huge main"
+                }
+              >
                 <Menu.Item color="red" onClick={this.back}>
                   {t("back")}
                 </Menu.Item>
@@ -379,17 +386,16 @@ const Recipe = inject(
                   {t("send")}
                 </Menu.Item>
                 {/* )} */}
-                {/* {code && ( */}
-                <Menu.Item disabled={noEmail || !code} onClick={this.print}>
-                  {t("print")}
-                </Menu.Item>
-                <Menu.Item
-                  disabled={noEmail || !recipe_formid || this.state.wasSigned}
-                  onClick={this.initiateSigningProcess}
-                >
-                  <span>{this.state.wasSigned ? t("signed") : t("subscribe")}</span>
-                </Menu.Item>
-                {/* )} */}
+                {/* {code && ( disabled={noEmail || !code}*/}
+                <Menu.Item onClick={this.print}>{t("print")}</Menu.Item>
+                {printType !== "list" && (
+                  <Menu.Item
+                    disabled={noEmail || !recipe_formid || this.state.wasSigned}
+                    onClick={this.initiateSigningProcess}
+                  >
+                    <span>{this.state.wasSigned ? t("signed") : t("subscribe")}</span>
+                  </Menu.Item>
+                )}
               </Menu>
             ) : (
               <Menu className="bottom fixed menu four item huge main">
@@ -404,7 +410,20 @@ const Recipe = inject(
                   <Grid.Column width={16}>
                     <Header>{t("choose_form")}</Header>
                   </Grid.Column>
-                  <Grid.Column width={8}>
+                  {Object.entries(recipeData.items)
+                    .filter(([id, value]) => value.type === "list")
+                    .map(([id, value]) => {
+                      return (
+                        <Grid.Column width={8}>
+                          <Button onClick={() => this.setPrintType("list", id)} size="big" color="blue" fluid>
+                            {value.name}
+                            {/* {t("outpatient_appointment_list")} */}
+                          </Button>{" "}
+                        </Grid.Column>
+                      );
+                    })}
+
+                  {/* <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("ambulance_list")} size="big" color="blue" fluid>
                       {t("outpatient_appointment_list")}
                     </Button>{" "}
@@ -418,13 +437,14 @@ const Recipe = inject(
                     <Button onClick={() => this.setPrintType("reanim_list")} size="big" color="blue" fluid>
                       {t("resuscitation_appointment_list")}
                     </Button>{" "}
-                  </Grid.Column>
+                  </Grid.Column> */}
 
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("recipe")} size="big" color="purple" fluid>
                       {t("writing_recipe")}
                     </Button>{" "}
                   </Grid.Column>
+
                   <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("protocol")} size="big" color="orange" fluid>
                       {t("council_minutes")}
@@ -438,26 +458,30 @@ const Recipe = inject(
                     <FormChecker patient={this.props.patients.current} />
                   ) : (
                     <Form>
-                      <Form.Field>
-                        <label>{t("recipe_form")}</label>
-                        <Dropdown
-                          size="big"
-                          options={Object.entries(recipeData.items).map(([id, value]) => {
-                            return {
-                              key: id,
-                              text: value.name,
-                              value: id,
-                            };
-                          })}
-                          placeholder={t("choose")}
-                          name="recipe_formid"
-                          selection
-                          fluid
-                          value={recipe_formid}
-                          onChange={this.handleRecipeDataChange}
-                        />
-                      </Form.Field>
-                      {recipe_formid && (
+                      {printType !== "list" ? (
+                        <Form.Field>
+                          <label>{t("recipe_form")}</label>
+                          <Dropdown
+                            size="big"
+                            options={Object.entries(recipeData.items)
+                              .filter(([id, value]) => value.type !== "list")
+                              .map(([id, value]) => {
+                                return {
+                                  key: id,
+                                  text: value.name,
+                                  value: id,
+                                };
+                              })}
+                            placeholder={t("choose")}
+                            name="recipe_formid"
+                            selection
+                            fluid
+                            value={recipe_formid}
+                            onChange={this.handleRecipeDataChange}
+                          />
+                        </Form.Field>
+                      ) : null}
+                      {recipe_formid && recipeData.items[recipe_formid].durations.length > 0 && (
                         <Form.Field>
                           <label>{t("recipe_state_time")}</label>
                           <Dropdown
@@ -710,10 +734,23 @@ const Recipe = inject(
                           )}
                         </Form.Group>
                       )}
-
-                      {recipe_formid && (
+                      {tags.includes("DateStartReception") && (
+                        <Form.Field width={4}>
+                          <label>{t("date_commencement_therapy")}</label>
+                          <Calendar
+                            name="datetherapy"
+                            // value={moment(patient.datetherapy).format("x")}
+                            minDate={new Date()}
+                            onChange={this.handlePatientDataChange}
+                            size="medium"
+                          />
+                          {/* <Input name="birthdate" value={moment(patient.birthdate).format("DD.MM.YYYY")} readOnly /> */}
+                        </Form.Field>
+                      )}
+                      {recipe_formid && printType !== "list" && (
                         <Form.Field>
                           <label>{t("comment_prescription")}</label>
+                          {/* сomment_leaf_destination */}
                           <TextArea
                             size="big"
                             placeholder={t("explanation_recipe")}

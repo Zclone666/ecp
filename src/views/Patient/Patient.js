@@ -46,9 +46,11 @@ const Patient = inject(
           isLoading: false,
           searchQuery: "",
           pending: false,
+          edit: false,
         };
         this.sliderRef = createRef();
       }
+      // this.setState({ edit: true });
       newPatient = () => {
         this.saveForm(true);
         this.props.router.push("/patient/passport");
@@ -134,6 +136,7 @@ const Patient = inject(
           this.props.actions.patientForm.birthdate = birthdate;
         }
         this.props.db.clearData(false, true);
+        this.setState({ edit: false });
         if (!noClose) this.props.router.push("/");
         // this.props.db.GetDuration()
       };
@@ -183,7 +186,7 @@ const Patient = inject(
         // const { t } = this.props.actions;
         let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
         let section = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
-        let { step } = this.state;
+        let { step, edit } = this.state;
         const {
           disease,
           co_disease,
@@ -215,7 +218,7 @@ const Patient = inject(
           initialSlide: step,
         };
         let isDisease = disease.length > 0 || co_disease.length > 0;
-
+        console.log(disease, "diseasedisease");
         return (
           <div className="h100">
             {step === 0 && (
@@ -230,15 +233,15 @@ const Patient = inject(
             )}
             {step === 1 && (
               <Menu className="bottom fixed menu three item huge main">
-                <Menu.Item color="red" onClick={this.back}>
+                <Menu.Item color="red" onClick={() => this.saveForm(false)}>
                   {t("back")}
                 </Menu.Item>
-                {/* apply */}
+                {/* apply this.back */}
                 {/* <Menu.Item onClick={() => this.saveForm(false)}>{t("pharmacotherapy_patient")}</Menu.Item> */}
                 {/* isDisease && */}
-
+                {/* || !firstname || !lastname */}
                 <Menu.Item
-                  disabled={misDisabled || !isDisease || !firstname || !lastname}
+                  disabled={misDisabled || !isDisease}
                   onClick={this.getClinrecExist}
                 >
                   {/* <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}> */}
@@ -247,14 +250,14 @@ const Patient = inject(
                 </Menu.Item>
 
                 <Popup
-                  disabled={!(!firstname || !lastname)}
+                  disabled={!(!firstname || !lastname) || !edit}
                   position="top center"
                   content={t("fill_passport_details")}
                   trigger={
                     <Menu.Item
                       onClick={this.savePatient}
-                      isLoading={this.state.pending}
-                      disabled={!firstname || !lastname}
+                      // isLoading={this.state.pending}
+                      disabled={(!firstname || !lastname) || !edit}
                     >
                       {t("save")}
                     </Menu.Item>
@@ -267,7 +270,9 @@ const Patient = inject(
                 <Menu.Item color="red" onClick={this.back}>
                   {t("main_parser_cancel")}
                 </Menu.Item>
-                <Menu.Item isLoading={this.state.pending} onClick={this.savePatient} disabled={!firstname || !lastname}>
+                <Menu.Item
+                  // isLoading={this.state.pending} 
+                  onClick={this.savePatient} disabled={(!firstname || !lastname) || !edit}>
                   {t("save")}
                 </Menu.Item>
               </Menu>
@@ -278,10 +283,10 @@ const Patient = inject(
                 <PatientsList />
               </div>
               <div className="scrollwrapper bottomMenu">
-                <PatientForm />
+                <PatientForm editForm={() => this.setState({ edit: true })} />
               </div>
               <div className="scrollwrapper bottomMenu">
-                <PatientPassport />
+                <PatientPassport editForm={() => this.setState({ edit: true })} />
               </div>
             </Slider>
           </div>

@@ -120,6 +120,7 @@ const PatientsList = inject(
                     fluid
                     size="big"
                     name="patient"
+                    noResultsMessage={t("main_search_notFound")}
                     placeholder={t("patinet_card_name_patient")}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}

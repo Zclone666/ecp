@@ -2,25 +2,6 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 const resources = {
-  en: {
-    translation: {
-      "Welcome to React": "Welcome to ecp2",
-      patient_patients: "Patients",
-      main_menu_exit: "Exit",
-      patient_notSelected: "Patient is not selected",
-      main_search_tip: "Add medical drugs using the search bar avobe or",
-      main_parser_tip: "type them in",
-      main_parser_header: "Type in medical drugs' names",
-      main_parser_tip2: "You can type in many pharmaceuticals with dosages, the system will try to parse them",
-      main_parser_cancel: "Cancel",
-      main_parser_parse: "Parse",
-      main_search_notFound: "nothing was found",
-      main_drugs_reset: "Clear",
-      main_drugs_check: "Check",
-      main_drugs_prescribe: "Prescribe",
-      main_drugs_write: "Write a prescription",
-    },
-  },
   ru: {
     translation: {
       // "Welcome to React": "добро пожаловать в экф",
@@ -129,6 +110,7 @@ const resources = {
       date_birth: "Дата рождения",
       choose_one_or_more_options: "Выберите один или несколько вариантов",
       choose_one_options: "Выберите один из вариантов",
+      select_one_or_more_options: "Выберите один или несколько вариантов",
       show: "Показать",
       name_patient: "ФИО пациента",
       name_doctor: "ФИО врача",
@@ -361,6 +343,8 @@ const resources = {
       dosage_not_specified: "Дозировка не указана",
       recipe_discharged: "Рецепт выписан!",
       you_print_send_mail: "Теперь вы можете распечатать его, или отправить на почту.",
+      appointment_sheet_formed: "Лист назначения сформирован!",
+      //Лист назначения сформирован
 
       ready: "Готово",
       recipe_shipped_by: "Рецепт отправлен на",
@@ -391,8 +375,11 @@ const resources = {
       form: "Форма",
       // dosage: "Дозировка",
       name: "Название",
+      //comment_prescription
+      сomment_leaf_destination: "Комментарий к листу назначения",
+      sources: "Источники",
 
-
+      date_commencement_therapy: "Дата начала терапии",
     },
   },
 };

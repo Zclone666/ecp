@@ -144,8 +144,7 @@ const Warning = inject(
 
           //console.log({ subjFrom, subjTo });
           if (subjFrom && subjTo) tabs.push(warn);
-        });
-        console.log({ tabs });
+        });       
         return tabs;
       }
 

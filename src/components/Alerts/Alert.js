@@ -7,22 +7,26 @@ class AlertItem extends React.Component {
     super(props);
     this.state = {
       open: true,
+      hold: false,
     };
   }
   close = () => {
     let { onClose } = this.props;
-    this.setState({ open: false }, () => {
+    this.setState({ open: false, hold: false }, () => {
       setTimeout(() => {
         onClose();
       }, 1000);
     });
+  };
+  hold = () => {
+    this.setState({ hold: true });
   };
   componentDidMount() {
     let { sticky } = this.props;
     sticky = false;
     if (!sticky) {
       setTimeout(() => {
-        this.close();
+        if (!this.state.hold) this.close();
       }, 7000);
     }
   }
@@ -33,6 +37,8 @@ class AlertItem extends React.Component {
     return (
       <Transition visible={open} animation="scale" duration={1000}>
         <Message
+          onMouseEnter={this.hold}
+          onMouseLeave={this.close}
           className="small squared"
           onDismiss={this.close}
           success={level === "success"}

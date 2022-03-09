@@ -201,6 +201,21 @@ const Clinrec = inject(
         );
       };
 
+      renderSelect = (child, childId) => {
+        let { t } = this.props.actions;
+        return (
+          <List.Item>
+            <List.Content className="large">
+              <List.Description>
+                <strong>{t("select_one_or_more_options")}</strong>
+              </List.Description>
+              {child.comment && <List.Description>{child.comment}</List.Description>}
+              <List.List>{this.renderRecoursive(child)}</List.List>
+            </List.Content>
+          </List.Item>
+        );
+      };
+
       renderRegimen = (child, childId) => {
         let {
           clinrecs: { clinrec, cources },
@@ -444,6 +459,7 @@ const Clinrec = inject(
                 if (child.type === "OR") return this.renderRadio(child, childId);
                 if (child.type === "FG") return this.renderFG(child, childId);
                 if (child.type === "AND") return this.renderCheck(child, childId);
+                if (child.type === "Select") return this.renderSelect(child, childId);
                 return (
                   <List.Item key={"calc" + childId}>
                     <List.Content className="large">
@@ -486,6 +502,9 @@ const Clinrec = inject(
             break;
           case "Unknown":
             return this.renderFG(child, childId);
+            break;
+          case "Select":
+            return this.renderSelect(child, childId);
             break;
           default:
             return this.renderRecoursive(child, childId);

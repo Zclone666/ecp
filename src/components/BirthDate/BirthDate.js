@@ -13,7 +13,7 @@ function declension(forms, val) {
   return forms[val % 100 > 4 && val % 100 < 20 ? 2 : cases[val % 10 < 5 ? val % 10 : 5]];
 }
 
-const ref_days = ["день", "дня", "дней"],
+const ref_days = ["день", "дня", "дней2"],
   ref_weeks = ["неделя", "недели", "недель"],
   ref_months = ["месяц", "месяца", "месяцев"],
   ref_years = ["год", "года", "лет"];
@@ -27,6 +27,7 @@ class BirthDate extends Component {
     };
   }
   handleChangeBirth = (e, { value }) => {
+    // console.log({ value });
     let { onChange, name } = this.props;
     let year = 0,
       month = 0,
@@ -47,12 +48,16 @@ class BirthDate extends Component {
     });
     // console.log({ year, month, week, day });
     // console.log(moment().format('DD.MM.YYYY'));
+    // if (year < 150) {
     let date = moment().add({ years: -year, months: -month, weeks: -week, days: -day }).format("x");
     if (birthyear > 0) date = moment().set("year", birthyear).format("x");
     //let date = moment().year(-year).month(-month).week(-week).day(-day).format('X')
     // console.log('birth', date, birthyear);
     onChange && onChange(null, { name, value: parseInt(date) });
     this.setState({ date, birth: value });
+    // }
+
+
   };
   handleChangeDate = (e, { value }) => {
     // console.log({ value });
@@ -74,9 +79,14 @@ class BirthDate extends Component {
     if (weeks > 0) arr.push(weeks, declension(ref_weeks, weeks));
     if (days > 0) arr.push(days, declension(ref_days, days));
 
-    onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
+    // onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
     this.setState({ birth: arr.join(" "), date: moment(value).format("x") });
   };
+
+  onChangeDate = (e, { value }) => {
+    let { onChange, name } = this.props;
+    onChange && onChange(null, { name, value: parseInt(moment(value).format("x")) });
+  }
   componentDidMount() {
     let { value } = this.props;
     //console.log({ value });
@@ -96,14 +106,18 @@ class BirthDate extends Component {
   render() {
     let { birth, date } = this.state;
 
+    let dateNew = new Date();
+    let dateFuture = new Date();
+    dateFuture.setDate(dateNew.getDate() - (150 * 365));
+
     let { trans: t } = this.props;
     return (
       <Form.Field width={16}>
         <label>{t("age_date_birth")}</label>
         <div className="birthdate">
-          <AutoComplete value={birth} onChange={this.handleChangeBirth} trans={t} />
+          <AutoComplete value={birth} onChange={(e, { value }) => this.handleChangeBirth(e, { value })} trans={t} />
           <Button basic icon="arrows alternate horizontal" />
-          <Calendar value={date} onChange={this.handleChangeDate} maxDate={new Date()} />
+          <Calendar value={date} onChange={(e, { value }) => { this.handleChangeDate(e, { value }); this.onChangeDate(e, { value }) }} minDate={dateFuture} maxDate={new Date()} />
         </div>
       </Form.Field>
     );

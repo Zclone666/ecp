@@ -43,7 +43,7 @@ const Analogs = inject(
         }
       };
       setAnalog = async ({ id, drug }) => {
-        // console.log({id, drug});
+        
         let { router } = this.props;
         drug.fpid = id;
         drug.key = null;

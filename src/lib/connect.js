@@ -13,7 +13,7 @@ export const API_SERVER = (() => {
   if (window.location.host.includes("84.23.32.38:9031")) {
     return "http://84.23.32.38:9004";
   } else if (
-    window.location.host.includes("localhost") ||
+    // window.location.host.includes("localhost") ||
     window.location.host.includes("178.176.38.245:9031")
     // || window.location.host.includes("socmedica.dev")
   ) {

@@ -32,6 +32,7 @@ import {
   Modal,
   Flag,
   TextArea,
+  Image,
 } from "semantic-ui-react";
 
 import _ from "lodash";
@@ -92,47 +93,11 @@ const Main = inject(
         this.setState({ open: x === "close" ? false : !this.state.open });
       };
 
-      handleResultSelect = async (e, { result }) => {
-        // this.props.drugs.searchRows = [
-        //   {
-        //     key: null,
-        //     id: "cyP8RzdZUco9PaSp+Zbmug==",
-        //     fpid: null,
-        //     type: "DV",
-        //     level: 283,
-        //     name: "Минералокортикоиды",
-        //     namesearch: null,
-        //     group: 0,
-        //     main: false,
-        //   },
-        //   {
-        //     key: null,
-        //     id: "DpRCvhJYBTNl8S32CoaWAw==",
-        //     fpid: null,
-        //     type: "DV",
-        //     level: 283,
-        //     name: "Глюкокортикоиды",
-        //     namesearch: null,
-        //     group: 0,
-        //     main: false,
-        //   },
-        // ];
-        // this.props.drugs.searchRows = await this.props.drugs.searchByFG(result);
-        // this.setState({ searchQuery: "e pa pa" });
-        // console.log("search input ", this.searchInput.current);
-        // const input = document.querySelector(".results.transition.result-wrapper");
-        // input.classList.add("visible");
-        // console.log({ input });
-
-        // console.log("search rows: ", this.props.drugs.searchRows);
-        // return;
-
-        // if (this.props.drugs.searchReady == false) return;
-
+      handleResultSelect = async (e, { result }) => { 
         this.setState({ searchQuery: "" });
         if (!["FG", "ATX"].includes(result.type)) {
           this.props.drugs.selectFromSearch(result);
-          const input = document.querySelector(".results.transition.result-wrapper");
+          const input = document.querySelector(".results.transition.result-wrapper");    
           input.classList.remove("visible");
         } else if (["FG", "ATX"].includes(result.type)) {
           // console.log("fg or atx");
@@ -170,6 +135,7 @@ const Main = inject(
 
       clearDeleted = () => {
         this.props.drugs.clearDeleted();
+        this.props.recipes.saveList();
       };
 
       handleChangeClinic = (e, { name, value }) => {
@@ -185,7 +151,7 @@ const Main = inject(
       };
 
       changeLang = (lang) => {
-        console.log({ lang });
+        // console.log({ lang });
         this.props.i18n.changeLanguage(lang);
         this.props.actions.setLang(lang);
       };
@@ -252,6 +218,7 @@ const Main = inject(
 
       render() {
         const { open, openCautions, openClearence, searchQuery, selectedDrug, selectedConflict, clinic } = this.state;
+
         let {
           currentPage,
           height,
@@ -261,7 +228,11 @@ const Main = inject(
           misLinkLogin: misDisabled,
           topview_disabled,
           bottomview_disabled,
+
+          drugStructure: { doctor_name: doctor },
+          doctor: doc,
         } = this.props.actions;
+        doctor = doctor || doc.name;
         let {
           drugs: {
             searchReady,
@@ -280,6 +251,7 @@ const Main = inject(
           warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
           actions: {
             patientForm: { disease, co_disease },
+
             clinrecCheckerStep,
             isPrescriptFilled,
             patientPassport,
@@ -337,6 +309,7 @@ const Main = inject(
           document.querySelector(".pusherwrapper.pusher") &&
             document.querySelector(".pusherwrapper.pusher").classList.remove("pusherwrapper", "pusher");
         }
+        // console.log(listChanged, cautionsTitle);
         return (
           <>
             {!disabled && !topview_disabled && (
@@ -346,6 +319,17 @@ const Main = inject(
                     <Icon size="large" name="content" />
                   </Menu.Item>
                 )}
+                {/* {misDisabled && <Image src='../ecp_mis.png' />} */}
+                {misDisabled && <Image src='../ecp_mis.png' style={{
+                  margin: "4px",
+                  height: "35px"
+                }} />}
+
+                {misDisabled && <Header className={"menuhead"} style={{ margin: "auto", marginLeft: "8px", fontWeight: "600" }}
+                  as='h4'
+                  content='Электронный клинический фармаколог'
+                  subheader='система поддержки принятия врачебных решений'
+                />}
 
                 <Menu.Menu position="right">
                   <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>
@@ -426,7 +410,7 @@ const Main = inject(
                   </Menu.Item>
                 </Menu>
               )}
-              {!disabled && showMainBottomMenu && !bottomview_disabled && (
+              {drug.size > 0 && !disabled && showMainBottomMenu && !bottomview_disabled && (
                 <Menu className={`bottom fixed menu three item huge main`}>
                   <Modal
                     closeIcon
@@ -465,7 +449,7 @@ const Main = inject(
                   <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
                     {t("main_drugs_check")}
                   </Menu.Item>
-                  {listChanged ? (
+                  {listChanged && editedDrugs ? (
                     cautionsTitle ? (
                       <Modal
                         onClose={() => this.setOpen(false, "openCautions")}
@@ -575,10 +559,15 @@ const Main = inject(
                   vertical
                   size="huge"
                 >
+                  <Message style={{ margin: "0" }}>
+                    {doctor}
+                  </Message>
+
                   <Menu.Item as={RouterLink} to="/patient/list">
                     <Icon name="address book" />
                     {t("patient_patients")}
                   </Menu.Item>
+
                   {texts && texts.agreementheader && (
                     <Menu.Item as={RouterLink} to="/license-agreement">
                       <Icon name="file alternate" />
@@ -597,10 +586,10 @@ const Main = inject(
                       {t("main_menu_clinics")}
                     </Menu.Item>
                   )}
-                  <Menu.Item as={RouterLink} to="/settings/my">
+                  {/* <Menu.Item as={RouterLink} to="/settings/my">
                     <Icon name="user md" />
                     {t("main_menu_settings")}
-                  </Menu.Item>
+                  </Menu.Item> */}
                   {false && (
                     <Menu.Item disabled as={RouterLink} to="/profile/show">
                       <Icon name="user md" />

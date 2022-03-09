@@ -20,6 +20,8 @@ class Recipes {
   insuranceNumber = null;
   patientCard = null;
 
+  formType = null;
+
   cito = false;
   statim = false;
   special = false;
@@ -236,6 +238,7 @@ class Recipes {
       cert_code: this.cert_code,
       validity_start_date: this.validity_start_date,
       validity_end_date: this.validity_end_date,
+      formType: this.formType,
     };
 
     const data2 = {
@@ -246,7 +249,7 @@ class Recipes {
       certificate: this.certificateBase64,
       signed_data: this.digitallySignedRecipe,
     };
-
+    // console.log(data2, data);
     return POST({
       path: this.stringifiedSignData ? "Prescript/RecipeNewEDS" : "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data: this.stringifiedSignData ? data2 : data,

@@ -35,6 +35,7 @@ import {
 
 import _ from "lodash";
 import moment from "moment";
+import { isGrowth, isWeight } from "../../serviceWorker";
 
 const boxDisabled = !window.location.host.includes("socmedica") && !window.location.host.includes(["localhost"]);
 
@@ -86,16 +87,29 @@ const PatientForm = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
+        const { editForm } = this.props;        
+        editForm();
+
+        let errorValue = false;
+        if (name == "weight") {
+          errorValue = isWeight(value);
+        }
+        if (name == "growth") {
+          errorValue = isGrowth(value);
+        }
         const { birthdate } = this.props.patients.current;
-        // console.log({ birthdate, value });
-        let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
+        // console.log(errorValue);
+        let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") <= 12 || 
+        moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
 
         if (name === "weight" || name === "growth") {
           value = clearDouble(value);
-          if (!checkDouble(value)) {
-            this.props.patients.current[name] = value;
-          } else {
-            this.props.patients.current[name] = parseFloat(value);
+          if (!errorValue) {
+            if (!checkDouble(value)) {
+              this.props.patients.current[name] = value;
+            } else {
+              this.props.patients.current[name] = parseFloat(value);
+            }
           }
 
           this.props.patients.current.masIndex =
@@ -134,6 +148,8 @@ const PatientForm = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
+        const { editForm } = this.props;
+        editForm()
         this.props.patients.current[name] = !this.props.patients.current[name];
         if (name === "pregnancy" && !this.props.patients.current.pregnancy) {
           this.props.patients.current.gestation = null;
@@ -182,6 +198,8 @@ const PatientForm = inject(
       handleResultSelect = async (e, { name, result }) => {
         // console.log({ name, result });
         //let newName = name === 'co_disease' ? 'disease' : name
+        const { editForm } = this.props;
+        editForm();
         await this.props.actions.selectPatient(result, name);
         this.setState({ [`search_${name}`]: "" });
       };
@@ -295,8 +313,6 @@ const PatientForm = inject(
           genpassport_exist,
         } = this.props.patients.current;
 
-        // console.log("current patient: ", this.props.patients.current);
-        // console.log({ mutations });
         let { diseaseRows, allergyRows } = this.props.diseases;
         let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport, showProtocol } =
           this.state;
@@ -306,11 +322,7 @@ const PatientForm = inject(
 
         let isWoman = sex === "female";
         let isPregant = !!pregnancy;
-
-        // console.log({birthdate});
         let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
-        // console.log({veryOld});
-
         let { search_patient } = this.state;
 
         return (
@@ -322,6 +334,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="patient"
+                    noResultsMessage={t("main_search_notFound")}
                     placeholder={t("patinet_card_name_patient")}
                     loading={!searchReady}
                     onResultSelect={this.handlePatientResultSelect}
@@ -336,13 +349,13 @@ const PatientForm = inject(
                 <Form.Field width={3}>
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
-                {this.props.patients.current.id && (
+                {/* {this.props.patients.current.id && (
                   <Form.Field width={2}>
                     {(window.location.href.includes("socmedica.dev") || window.location.href.includes("localhost")) && (
                       <Button onClick={() => this.setState({ showProtocol: !showProtocol })}>{t("protocol")}</Button>
                     )}
                   </Form.Field>
-                )}
+                )} */}
                 <Form.Field width={3}>
                   <Button onClick={() => this.setState({ showPatientPassport: !showPatientPassport })}>
                     {showPatientPassport
@@ -358,9 +371,9 @@ const PatientForm = inject(
               </Form.Group>
               <Divider horizontal fitted />
 
-              {showPatientPassport && <PatientPassport />}
+              {showPatientPassport && <PatientPassport editForm={() => this.props.editForm()} />}
               <Form.Group>
-                <BirthDate name="birthdate" value={birthdate} onChange={this.handleChange} trans={t} />
+                <BirthDate name="birthdate" value={birthdate} onChange={(e, { name, value }) => this.handleChange(e, { name, value })} trans={t} />
                 <Form.Field>
                   <label>{t("sex")}</label>
                   <Button.Group size="big">
@@ -379,6 +392,8 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="growth"
+                    type="number"
+                    // error={growth < 8}
                     value={growth || ""}
                     label={{ basic: true, content: t("sm") }}
                     labelPosition="right"
@@ -391,6 +406,8 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="weight"
+                    type="number"
+                    // error={weight < 3}
                     value={weight || ""}
                     label={{ basic: true, content: t("kg") }}
                     labelPosition="right"
@@ -432,6 +449,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="disease"
+                    noResultsMessage={t("main_search_notFound")}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -466,6 +484,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="co_disease"
+                    noResultsMessage={t("main_search_notFound")}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
@@ -498,7 +517,7 @@ const PatientForm = inject(
                 })}
               </List>
               {!misDisabled && (
-                <Form.Group style={{ "align-items": "flex-end" }} widths={1}>
+                <Form.Group style={{ alignItems: "flex-end" }} widths={1}>
                   <Form.Field width={4}>
                     <label>{t("gene_mutation")}</label>
                     {/* number: {mutations.length} gene: {this.state.mutation.gene} allele1:{" "}
@@ -569,9 +588,10 @@ const PatientForm = inject(
                       size="big"
                       fluid
                       labelPosition="left"
-                      icon="file"
+                      icon
                       onClick={() => this.fileUploadRef.current.click()}
                     >
+                      <Icon name='file' />
                       {genpassport_exist ? t("update_patient_genetic_passport") : t("download_genetic_passport")}
                     </Button>
                     <input id="genpassport-upload" ref={this.fileUploadRef} type="file" hidden accept=".csv" />
@@ -603,6 +623,7 @@ const PatientForm = inject(
                     fluid
                     size="big"
                     name="allergy"
+                    noResultsMessage={t("main_search_notFound")}
                     loading={!searchReady}
                     onResultSelect={this.handleResultSelect}
                     onSearchChange={_.debounce(this.handleSearchChange, 500, {
