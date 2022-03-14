@@ -66,6 +66,7 @@ const Recipe = inject(
           wasSigned: false,
           signedData: null,
           savePending: false,
+          sevingPending: false,
           printType: null,
         };
         this.sliderRef = createRef();
@@ -96,7 +97,7 @@ const Recipe = inject(
 
       save = async () => {
         const { t } = this.props.actions;
-        this.setState({ savePending: true });
+        this.setState({ savePending: true, sevingPending: true });
         let code = await this.props.recipes.save();
 
         this.setState({ savePending: false });
@@ -107,6 +108,20 @@ const Recipe = inject(
       };
       print = async () => {
         let code = await this.props.recipes.print();
+
+        if (!code) return;
+
+        document.getElementById("ifmcontentstoprint").style.display = "contents";
+        var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+        pri.document.open();
+        await pri.document.write(code);
+        pri.document.close();
+        pri.focus();
+        pri.print();
+      };
+
+      notSavePrint = async () => {
+        let code = await this.props.recipes.notSavePrint();
 
         if (!code) return;
 
@@ -387,7 +402,9 @@ const Recipe = inject(
                 </Menu.Item>
                 {/* )} */}
                 {/* {code && ( disabled={noEmail || !code}*/}
-                <Menu.Item onClick={this.print}>{t("print")}</Menu.Item>
+                <Menu.Item onClick={() => this.state.sevingPending ? this.print() : this.notSavePrint()}>
+                  {t("print")}
+                </Menu.Item>
                 {printType !== "list" && (
                   <Menu.Item
                     disabled={noEmail || !recipe_formid || this.state.wasSigned}
