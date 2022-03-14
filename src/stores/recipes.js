@@ -390,6 +390,7 @@ class Recipes {
       data,
       success: async (data) => {
         console.log(data);
+        this.stores.actions.loading = false;
         return data.code;
       },
       fail: (alerts) => {
