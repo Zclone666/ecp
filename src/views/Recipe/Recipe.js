@@ -66,6 +66,7 @@ const Recipe = inject(
           wasSigned: false,
           signedData: null,
           savePending: false,
+          sevingPending: false,
           printType: null,
         };
         this.sliderRef = createRef();
@@ -96,7 +97,7 @@ const Recipe = inject(
 
       save = async () => {
         const { t } = this.props.actions;
-        this.setState({ savePending: true });
+        this.setState({ savePending: true, sevingPending: true });
         let code = await this.props.recipes.save();
 
         this.setState({ savePending: false });
@@ -107,6 +108,20 @@ const Recipe = inject(
       };
       print = async () => {
         let code = await this.props.recipes.print();
+
+        if (!code) return;
+
+        document.getElementById("ifmcontentstoprint").style.display = "contents";
+        var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+        pri.document.open();
+        await pri.document.write(code);
+        pri.document.close();
+        pri.focus();
+        pri.print();
+      };
+
+      notSavePrint = async () => {
+        let code = await this.props.recipes.notSavePrint();
 
         if (!code) return;
 
@@ -132,7 +147,17 @@ const Recipe = inject(
         if (printType === "list") {
           // recipe_formid = id;
           this.props.recipes["recipe_formid"] = id;
+          // console.log(this.props.actions.recipeData.items, "this.props.actions.recipeData.items");
+          this.props.recipes["maxcount"] = this.props.actions.recipeData.items[id].maxcount;
+          this.props.recipes["drugKeysForPrescription"] = [];
+          this.props.recipes["formType"] = this.props.actions.recipeData.items[id].type;
         }
+
+        // if (name == "recipe_formid") {
+        //   this.props.recipes["maxcount"] = this.props.actions.recipeData.items[value].maxcount;
+        //   this.props.recipes["drugKeysForPrescription"] = [];
+        //   this.props.recipes["formType"] = this.props.actions.recipeData.items[value].type;
+        // }
         this.setState({ printType });
         // if (printType !== 'protocol') {
         this.next();
@@ -355,7 +380,7 @@ const Recipe = inject(
         let noEmail = false;
 
         const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
-        console.log(recipe_formid, code, "recipe_formid");
+        // console.log(recipe_formid, code, "recipe_formid");
         // console.log(tags, recipe_formid, recipeData.items, tags.includes("PatientFIO"), tags.includes("@PatientFIO@"));
         const settings = {
           dots: false,
@@ -387,7 +412,9 @@ const Recipe = inject(
                 </Menu.Item>
                 {/* )} */}
                 {/* {code && ( disabled={noEmail || !code}*/}
-                <Menu.Item onClick={this.print}>{t("print")}</Menu.Item>
+                <Menu.Item onClick={() => this.state.sevingPending ? this.print() : this.notSavePrint()}>
+                  {t("print")}
+                </Menu.Item>
                 {printType !== "list" && (
                   <Menu.Item
                     disabled={noEmail || !recipe_formid || this.state.wasSigned}
@@ -445,11 +472,11 @@ const Recipe = inject(
                     </Button>{" "}
                   </Grid.Column>
 
-                  <Grid.Column width={8}>
+                  {/* <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("protocol")} size="big" color="orange" fluid>
                       {t("council_minutes")}
                     </Button>{" "}
-                  </Grid.Column>
+                  </Grid.Column> */}
                 </Grid>
               </div>
               <div className="scrollwrapper">
@@ -738,7 +765,7 @@ const Recipe = inject(
                         <Form.Field width={4}>
                           <label>{t("date_commencement_therapy")}</label>
                           <Calendar
-                            name="datetherapy"
+                              name="dateStart"
                             // value={moment(patient.datetherapy).format("x")}
                             minDate={new Date()}
                             onChange={this.handlePatientDataChange}
@@ -869,13 +896,13 @@ const Recipe = inject(
             </Slider>
 
             <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
-              <Modal.Header>{t("code_pharmacy")}</Modal.Header>
+              <Modal.Header>{printType !== "list" ? t("code_pharmacy") : t("appointment_sheet_formed")}</Modal.Header>
               <Modal.Content>
-                <Header as="h1">{code}</Header>
+                {printType !== "list" ? <Header as="h1">{code}</Header> : null}
               </Modal.Content>
               <Modal.Actions>
                 <Button
-                  content={t("print_recipe")}
+                  content={t("print")}
                   labelPosition="right"
                   primary
                   icon="file alternate outline"

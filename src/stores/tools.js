@@ -1,6 +1,7 @@
 import { observable, action, autorun, computed, makeObservable } from "mobx";
 import { GET, POST, PUT } from "../lib/connect";
 import moment from "moment";
+import { checkDouble, clearDouble } from "../lib/helpers";
 
 import _ from "lodash";
 
@@ -376,7 +377,58 @@ class Tools {
 
   round = (val, dec = 3) => {
     let delimiter = Math.pow(10, dec);
-    return Math.floor(val * delimiter) / delimiter;
+    return Math.round(val * delimiter) / delimiter;
+  };
+
+  getFromBase = (unitId, value, double = 4, name = null) => {
+    let { round } = this;
+
+    let unit = this.units[unitId];
+    if (!unit) return [0];
+
+    if (!_.isArray(value)) value = [value];
+    let checked = false;
+
+    value.forEach((item, i) => {
+      if (!checkDouble(item, false)) checked = true;
+    });
+    if (checked) return value;
+
+    unit.contains.forEach((contain) => {
+      if (contain.action === "division") {
+        value = _.map(value, (dos) => round(dos * contain.value, double));
+      } else {
+        value = _.map(value, (dos) => round(dos / contain.value, double));
+      }
+    });
+
+    return value || [];
+  };
+
+  getToBase = (unitId, value) => {
+    if (!value) return "";
+    if (
+      value === "" ||
+      value === 0 ||
+      value === "0" ||
+      value === "." ||
+      (value.split && (value.split(",")[1] === "" || value.split(".")[1] === ""))
+    )
+      return value;
+
+    let unit = this.units[unitId];
+    if (!unit) return 0;
+    let dosage = value;
+
+    unit.contains.forEach((contain) => {
+      if (contain.action === "division") {
+        dosage = dosage / contain.value;
+      } else {
+        dosage = dosage * contain.value;
+      }
+    });
+
+    return dosage;
   };
 
   timeout(ms) {

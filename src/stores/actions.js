@@ -16,7 +16,7 @@ export const CHECK_REG_KEY = "340f725c9ccb9779";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
 const createCsServerUrl = (url) => {
   if (
-    window.location.host.includes("localhost") ||
+    // window.location.host.includes("localhost") ||
     window.location.host.includes("178.176.38.245:9031")
     // || window.location.host.includes("socmedica.dev")
   ) {
