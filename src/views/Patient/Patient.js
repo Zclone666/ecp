@@ -173,24 +173,18 @@ const Patient = inject(
       }
 
       getClinrecExist = () => {
-
         this.props.clinrecs.getClinicalGuidelinesExist();
         this.props.router.push("/crstartpage/default");
         // "/crstartpage/default"
       };
 
       render() {
-        let {
-          misLinkLogin: misDisabled, t
-        } = this.props.actions;
+        let { misLinkLogin: misDisabled, t } = this.props.actions;
         // const { t } = this.props.actions;
         let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
         let section = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
         let { step, edit } = this.state;
-        const {
-          disease,
-          co_disease,
-        } = this.props.patients.current;
+        const { disease, co_disease } = this.props.patients.current;
         const { firstname, lastname } = this.props.actions.patientPassport;
         switch (shownPage) {
           case "list":
@@ -218,7 +212,7 @@ const Patient = inject(
           initialSlide: step,
         };
         let isDisease = disease.length > 0 || co_disease.length > 0;
-        console.log(disease, "diseasedisease");
+        // console.log(disease, "diseasedisease");
         return (
           <div className="h100">
             {step === 0 && (
@@ -240,10 +234,7 @@ const Patient = inject(
                 {/* <Menu.Item onClick={() => this.saveForm(false)}>{t("pharmacotherapy_patient")}</Menu.Item> */}
                 {/* isDisease && */}
                 {/* || !firstname || !lastname */}
-                <Menu.Item
-                  disabled={misDisabled || !isDisease}
-                  onClick={this.getClinrecExist}
-                >
+                <Menu.Item disabled={misDisabled || !isDisease} onClick={this.getClinrecExist}>
                   {/* <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}> */}
                   {t("clinical_recommendations_short")}
                   {/* </div> */}
@@ -257,7 +248,7 @@ const Patient = inject(
                     <Menu.Item
                       onClick={this.savePatient}
                       // isLoading={this.state.pending}
-                      disabled={(!firstname || !lastname) || !edit}
+                      disabled={!firstname || !lastname || !edit}
                     >
                       {t("save")}
                     </Menu.Item>
@@ -271,8 +262,10 @@ const Patient = inject(
                   {t("main_parser_cancel")}
                 </Menu.Item>
                 <Menu.Item
-                  // isLoading={this.state.pending} 
-                  onClick={this.savePatient} disabled={(!firstname || !lastname) || !edit}>
+                  // isLoading={this.state.pending}
+                  onClick={this.savePatient}
+                  disabled={!firstname || !lastname || !edit}
+                >
                   {t("save")}
                 </Menu.Item>
               </Menu>

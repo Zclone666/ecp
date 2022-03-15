@@ -99,6 +99,7 @@ class Clinrecs {
                   id,
                   name: data.names[id],
                   type: question.type,
+                  helper: question.helper || null,
                   unit: question.unitid
                     ? shortnames[question.unitid] ||
                       data.shortnames[question.unitid] ||
