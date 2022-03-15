@@ -249,7 +249,7 @@ class Recipes {
       certificate: this.certificateBase64,
       signed_data: this.digitallySignedRecipe,
     };
-    // console.log(data2, data);
+    console.log(this.formType);
     return POST({
       path: this.stringifiedSignData ? "Prescript/RecipeNewEDS" : "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data: this.stringifiedSignData ? data2 : data,
@@ -260,7 +260,7 @@ class Recipes {
           this.stores.actions.makeAlerts({
             alerts: [
               {
-                title: this.stores.actions.t("recipe_discharged"),
+                title: this.stores.actions.t(this.formType == "list" ? "appointment_sheet_formed" : "recipe_discharged"),
                 message: this.stores.actions.t("you_print_send_mail"),
                 level: "success",
                 sticky: false,
@@ -346,7 +346,7 @@ class Recipes {
     // data.key = this.stores.actions.privateKey;
     // data.recipe = this.code;
     // data.email = this.stores.actions.patientForm.email;
-    console.log(this.recipe_formid, "this.stores.actions.recipe_formid");
+    // console.log(this.recipe_formid, "this.stores.actions.recipe_formid");
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
     this.stores.actions.loading = true;

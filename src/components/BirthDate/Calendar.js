@@ -54,7 +54,7 @@ class Calendar extends Component {
         validationFormat="DD.MM.YYYY"
         onClear={this.onClear}
         className={`ui fluid ${size || "big"} input`}
-        placeholder={t("date_birth")}
+       // placeholder={t("date_birth")}
         locale="ru"
         minDate={minDate}
         maxDate={maxDate}

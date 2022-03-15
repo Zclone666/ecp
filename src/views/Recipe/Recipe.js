@@ -147,7 +147,17 @@ const Recipe = inject(
         if (printType === "list") {
           // recipe_formid = id;
           this.props.recipes["recipe_formid"] = id;
+          // console.log(this.props.actions.recipeData.items, "this.props.actions.recipeData.items");
+          this.props.recipes["maxcount"] = this.props.actions.recipeData.items[id].maxcount;
+          this.props.recipes["drugKeysForPrescription"] = [];
+          this.props.recipes["formType"] = this.props.actions.recipeData.items[id].type;
         }
+
+        // if (name == "recipe_formid") {
+        //   this.props.recipes["maxcount"] = this.props.actions.recipeData.items[value].maxcount;
+        //   this.props.recipes["drugKeysForPrescription"] = [];
+        //   this.props.recipes["formType"] = this.props.actions.recipeData.items[value].type;
+        // }
         this.setState({ printType });
         // if (printType !== 'protocol') {
         this.next();
@@ -755,7 +765,7 @@ const Recipe = inject(
                         <Form.Field width={4}>
                           <label>{t("date_commencement_therapy")}</label>
                           <Calendar
-                            name="datetherapy"
+                              name="dateStart"
                             // value={moment(patient.datetherapy).format("x")}
                             minDate={new Date()}
                             onChange={this.handlePatientDataChange}
@@ -886,13 +896,13 @@ const Recipe = inject(
             </Slider>
 
             <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
-              <Modal.Header>{t("code_pharmacy")}</Modal.Header>
+              <Modal.Header>{printType !== "list" ? t("code_pharmacy") : t("appointment_sheet_formed")}</Modal.Header>
               <Modal.Content>
-                <Header as="h1">{code}</Header>
+                {printType !== "list" ? <Header as="h1">{code}</Header> : null}
               </Modal.Content>
               <Modal.Actions>
                 <Button
-                  content={t("print_recipe")}
+                  content={t("print")}
                   labelPosition="right"
                   primary
                   icon="file alternate outline"
