@@ -34,21 +34,22 @@ const Stepper = inject(
         this.sliderRef = createRef();
       }
 
-      onChange = ({ name, value }) => {
+      onChange = ({ name, value, unitid }) => {
         let {
           router: { values },
           clinrecs: { checker },
           actions: { clinrecCheckerStep, clinrecCheckerData },
         } = this.props;
         let currPage = checker[_.keys(checker)[clinrecCheckerStep - 1]] || {};
-
+        // console.log({ name, value, unitid });
         this.props.actions.clinrecCheckerData[name].value = value;
+        if (unitid) this.props.actions.clinrecCheckerData[name].unitid = unitid;
         let isReady = true;
         currPage.arr.map((item) => {
           if (clinrecCheckerData[item.id].value === null) isReady = false;
         });
         currPage.isReady = isReady;
-        console.log({ name, value, isReady });
+        // console.log({ name, value, isReady });
       };
 
       handleClick = (e, titleProps) => {
@@ -173,6 +174,7 @@ const Stepper = inject(
                             Value: (
                               <Value
                                 unit={item.unit}
+                                unitid={item.unitid}
                                 name={item.id}
                                 onChange={this.onChange}
                                 title={item.name}
