@@ -380,7 +380,7 @@ const Recipe = inject(
         let noEmail = false;
 
         const tags = recipe_formid ? recipeData.items[recipe_formid].tags : [];
-        console.log(recipe_formid, code, "recipe_formid");
+        // console.log(recipe_formid, code, "recipe_formid");
         // console.log(tags, recipe_formid, recipeData.items, tags.includes("PatientFIO"), tags.includes("@PatientFIO@"));
         const settings = {
           dots: false,
@@ -472,11 +472,11 @@ const Recipe = inject(
                     </Button>{" "}
                   </Grid.Column>
 
-                  <Grid.Column width={8}>
+                  {/* <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("protocol")} size="big" color="orange" fluid>
                       {t("council_minutes")}
                     </Button>{" "}
-                  </Grid.Column>
+                  </Grid.Column> */}
                 </Grid>
               </div>
               <div className="scrollwrapper">

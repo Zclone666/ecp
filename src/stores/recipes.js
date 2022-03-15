@@ -249,7 +249,7 @@ class Recipes {
       certificate: this.certificateBase64,
       signed_data: this.digitallySignedRecipe,
     };
-    console.log(this.formType);
+    // console.log(this.formType);
     return POST({
       path: this.stringifiedSignData ? "Prescript/RecipeNewEDS" : "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data: this.stringifiedSignData ? data2 : data,
@@ -389,7 +389,7 @@ class Recipes {
       path: "prescript/NotSaveRecipePrint", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
       success: async (data) => {
-        console.log(data);
+        // console.log(data);
         this.stores.actions.loading = false;
         return data.code;
       },
