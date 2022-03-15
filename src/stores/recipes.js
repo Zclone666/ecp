@@ -334,6 +334,74 @@ class Recipes {
     });
   };
 
+  notSavePrint = async () => {
+    // if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
+
+    // let { active_language } = this.stores.actions;
+    // let data = {};
+
+    // data.service = "43";
+    // data.active_language = active_language;
+    // data.authkey = this.stores.actions.authkey;
+    // data.key = this.stores.actions.privateKey;
+    // data.recipe = this.code;
+    // data.email = this.stores.actions.patientForm.email;
+    console.log(this.recipe_formid, "this.stores.actions.recipe_formid");
+    if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
+
+    this.stores.actions.loading = true;
+    let { active_language } = this.stores.actions;
+    await this.stores.db.clearData(false, true);
+    let data = this.stores.actions.structure;
+
+    data.service = "43";
+    data.active_language = active_language;
+    data.return_subjects = false;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+
+    data.recipe_data = {
+      formid: this.recipe_formid,
+      recipe_text: this.recipe_text,
+      recipe_endtime: this.recipe_endtime,
+      recipe_endtimeitem: this.recipe_endtimeitem,
+      pcatcode: this.citizenCategory,
+      pdiscount: this.financingSource,
+      cito: this.cito,
+      statim: this.statim,
+      special: this.special,
+      spectext: this.spectext,
+      docsign: this.digitallySignedRecipe,
+      doccertify: this.certificateBase64,
+      cert_owner: this.cert_owner,
+      cert_code: this.cert_code,
+      validity_start_date: this.validity_start_date,
+      validity_end_date: this.validity_end_date,
+      formType: this.formType,
+    };
+
+    // data.recipe_data = { recipe_formid: this.recipe_formid, formType: type };
+    data.recipe_formid = this.recipe_formid;
+    data.сlinical_guidelines = this.stores.clinrecs.drugToClinrecHashset;
+    data.checker = this.stores.actions.clinrecCheckerData; //this.stores.clinrecs.checker;
+
+    return POST({
+      path: "prescript/NotSaveRecipePrint", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      data,
+      success: async (data) => {
+        console.log(data);
+        this.stores.actions.loading = false;
+        return data.code;
+      },
+      fail: (alerts) => {
+        this.stores.actions.loading = false;
+      },
+      always: (data) => {
+        this.stores.actions.makeAlerts(data);
+      },
+    });
+  };
+
   email = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
