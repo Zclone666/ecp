@@ -119,7 +119,7 @@ const Clinrec = inject(
                     let child = clinrec[childId];
                     if (!child) return null;
                     return (
-                      <div>
+                      <div key={"chckbx_" + childId}>
                         <Checkbox
                           name={id}
                           checked={child.check}
@@ -153,7 +153,7 @@ const Clinrec = inject(
                     let child = clinrec[childId];
                     if (!child) return null;
                     return (
-                      <div>
+                      <div key={"rdio_" + childId}>
                         <Checkbox
                           radio
                           name={id}

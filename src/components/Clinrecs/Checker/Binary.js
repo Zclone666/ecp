@@ -14,7 +14,7 @@ export default class Binary extends React.Component {
     onChange({ name, value: !!value ? 0 : 1 });
   };
   render() {
-    let { title, name, value, buttons, helper } = this.props;
+    let { title, name, value, buttons, helper, radio } = this.props;
     return (
       <List.Item style={{ position: "relative" }}>
         {helper && (
@@ -47,7 +47,9 @@ export default class Binary extends React.Component {
             <label>{title}</label>
           </>
         )}
-        {!buttons && <Checkbox checked={!!value} onChange={this.handleChange} name={name} label={title} />}
+        {!buttons && (
+          <Checkbox radio={radio} checked={!!value} onChange={this.handleChange} name={name} label={title} />
+        )}
       </List.Item>
     );
   }

@@ -78,26 +78,45 @@ class Clinrecs {
       path: "tools/clinicalGuidelines",
       data,
       success: async (data) => {
+        this.names = _.assignIn(this.names, data.names);
         if (flag) {
           this.clinrec = _.assignIn(this.clinrec, data.ClinRec);
           this.cources = _.assignIn(this.cources, data.Cources);
-          this.names = _.assignIn(this.names, data.names);
           this.shortnames = _.assignIn(this.shortnames, data.shortnames);
           this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
         } else {
           let pages = {};
+          let questions = [];
+          let pageOfGroup = {};
           if (data && data.checker) {
             let { shortnames } = this.stores.tools;
+            let keys = _.keys(data.checker);
             this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
-            _.keys(data.checker).forEach((id, i) => {
+
+            // min page of group
+            keys.forEach((id, i) => {
+              let question = data.checker[id];
+              if (question.parent) {
+                pageOfGroup[question.parent] =
+                  question.page < pageOfGroup[question.parent] ? question.page : pageOfGroup[question.parent];
+              }
+            });
+
+            keys.forEach((id, i) => {
               let question = data.checker[id];
               this.stores.actions.clinrecCheckerData[id].value =
                 question.type === "Binary" ? question.value || 0 : question.value;
+
+              if (question.parent) {
+                question.page = pageOfGroup[question.parent];
+              }
+
               if (pages[question.page]) {
                 // console.log(question.unitid, shortnames[question.unitid]);
                 pages[question.page].arr.push({
                   id,
                   name: data.names[id],
+                  parent: question.parent,
                   type: question.type,
                   helper: question.helper || null,
                   unit: question.unitid
@@ -117,6 +136,7 @@ class Clinrecs {
                     {
                       id,
                       name: data.names[id],
+                      parent: question.parent,
                       type: question.type,
                       unit: question.unitid
                         ? shortnames[question.unitid] ||
