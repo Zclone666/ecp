@@ -184,42 +184,14 @@ class Recipes {
           } else return d;
         }),
     };
-    // let drugsFull = Array.from(this.stores.drugs.drug.values());
-    // let liquidsFull = Array.from(this.stores.drugs.liquid.values());
-    // drugsFull.forEach((drugFull, i) => {
-    //   let { helpers, ...drug } = drugFull;
-    //   data.drugs.push(drugFull);
-    // });
-    // liquidsFull.forEach((liquidFull, i) => {
-    //   let { helpers, ...liquid } = liquidFull;
-    //   if (liquid.group != 0) {
-    //     data.liquids.push(liquidFull);
-    //   }
-    // });
 
     data.service = "43";
     data.active_language = active_language;
     data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
-
-    data.recipe_endtime = this.recipe_endtime;
-    data.recipe_endtimeitem = this.recipe_endtimeitem;
-    data.recipe_formid = this.recipe_formid;
-    data.recipe_text = this.recipe_text;
-    data.mkb10code = this.mkb10code;
-    data.financingSource = this.financingSource;
-    data.citizenCategory = this.citizenCategory;
-    data.compensation = this.compensation;
-    data.fio = this.stores.patients.current.fio;
-    data.birthdate = this.stores.patients.current.birthdate;
     data.doctor_name = this.stores.actions.drugStructure.doctor_name;
-    data.snils = this.snils;
-    data.insuranceNumber = this.insuranceNumber;
-    data.patientCard = this.patientCard;
     data.clinic_id = this.stores.actions.drugStructure.clinic_id;
-
-    data.forFront = this.stringifiedSignData;
 
     data.recipe_data = {
       formid: this.recipe_formid,
@@ -249,7 +221,7 @@ class Recipes {
       certificate: this.certificateBase64,
       signed_data: this.digitallySignedRecipe,
     };
-    // console.log(this.formType);
+
     return POST({
       path: this.stringifiedSignData ? "Prescript/RecipeNewEDS" : "prescript/recipeNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data: this.stringifiedSignData ? data2 : data,
@@ -335,18 +307,7 @@ class Recipes {
   };
 
   notSavePrint = async () => {
-    // if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
-    // let { active_language } = this.stores.actions;
-    // let data = {};
-
-    // data.service = "43";
-    // data.active_language = active_language;
-    // data.authkey = this.stores.actions.authkey;
-    // data.key = this.stores.actions.privateKey;
-    // data.recipe = this.code;
-    // data.email = this.stores.actions.patientForm.email;
-    // console.log(this.recipe_formid, "this.stores.actions.recipe_formid");
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
     this.stores.actions.loading = true;
@@ -380,7 +341,6 @@ class Recipes {
       formType: this.formType,
     };
 
-    // data.recipe_data = { recipe_formid: this.recipe_formid, formType: type };
     data.recipe_formid = this.recipe_formid;
     data.сlinical_guidelines = this.stores.clinrecs.drugToClinrecHashset;
     data.checker = this.stores.actions.clinrecCheckerData; //this.stores.clinrecs.checker;
