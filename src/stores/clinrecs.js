@@ -167,16 +167,38 @@ class Clinrecs {
   }
 
   async getClinicalGuidelinesExist() {
-    const data = {};
+    // const data = {};
+    // this.stores.actions.loading = true;
+    // let { active_language } = this.stores.actions;
+    // data.authkey = this.stores.actions.authkey;
+    // data.key = this.stores.actions.privateKey;
+    // const patient = _.cloneDeep(this.stores.patients.current);
+    // // console.log("patient: ", this.stores.patients.current);
+    // data.disease = patient?.disease || [];
+    // if (patient && patient.co_disease) data.disease = data.disease.concat(patient.co_disease);
+    // console.log("clinicalGuidelinesExist");
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
+    this.stores.db.clearData(false, true);
+    let data = _.cloneDeep(this.stores.actions.drugStructure);
+    let drugsFull = Array.from(this.stores.drugs.drug.values());
+    let liquidsFull = Array.from(this.stores.drugs.liquid.values());
+    drugsFull.forEach((drugFull, i) => {
+      let { helpers, ...drug } = drugFull;
+      data.drugs.push(drug);
+    });
+    liquidsFull.forEach((liquidFull, i) => {
+      let { helpers, ...liquid } = liquidFull;
+      data.liquids.push(liquid);
+    });
+
+    data.checker = _.cloneDeep(this.stores.actions.clinrecCheckerData);
+    data.active_language = active_language;
+    data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
-    const patient = _.cloneDeep(this.stores.patients.current);
-    // console.log("patient: ", this.stores.patients.current);
-    data.disease = patient?.disease || [];
-    if (patient && patient.co_disease) data.disease = data.disease.concat(patient.co_disease);
-    console.log("clinicalGuidelinesExist");
+
+    data.patient.disease = this.diseaseSelect;
     return POST({
       path: "tools/clinicalGuidelinesExist",
       data,
