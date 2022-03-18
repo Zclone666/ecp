@@ -198,7 +198,8 @@ class Clinrecs {
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
 
-    data.patient.disease = this.diseaseSelect;
+    // data.patient.disease = this.diseaseSelect;
+    data.patient = _.cloneDeep(this.stores.patients.current);
     return POST({
       path: "tools/clinicalGuidelinesExist",
       data,
