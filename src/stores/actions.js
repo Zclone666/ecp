@@ -448,7 +448,7 @@ class Actions {
           misid: null,
           fio: null,
         });
-
+        this.stores.clinrecs.resetClinrecs();
         await this.stores.drugs.clearProto();
         this.stores.drugs.deletedRows = observable([]);
         this.stores.drugs.deletedLiquids = observable([]);
@@ -456,6 +456,7 @@ class Actions {
         break;
       case "all":
         this.stores.patients.unsetCurrent();
+        this.stores.clinrecs.resetClinrecs();
         structure.doctor_id = this.doctor.id;
         structure.doctor_name = this.doctor.name;
         _.assignIn(this.drugStructure, structure);
