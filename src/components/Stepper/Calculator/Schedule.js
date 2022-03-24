@@ -45,13 +45,18 @@ const Schedule = inject(
         // console.log({ name, value });
         const { t } = this.props.actions;
         if (name === "dateStart" || name === "dateFinish") {
-          if (name === "dateStart" && value == "Invalid date") {
+          if (name === "dateStart" && value === "Invalid date") {
             value = null;
             this.props.actions.scheduleForm.dateStart = null;
             this.props.actions.scheduleForm.dateFinish = null;
             this.props.actions.scheduleForm.finishAlternate = null;
           }
-          if (name === "dateFinish") {
+          if (name === "dateFinish" && value === "Invalid date") {
+            value = null;
+            this.props.actions.scheduleForm.dateFinish = null;
+            this.props.actions.scheduleForm.finishAlternate = null;
+          }
+          if (name === "dateFinish" && value !== "Invalid date") {
             value = moment(parseInt(moment(value, "x").add(1, "d").format("x")) - 1, "x");
           }
           if (moment(value).format("x") !== "Invalid date")
