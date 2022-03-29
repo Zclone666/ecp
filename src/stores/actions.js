@@ -14,6 +14,7 @@ export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
 export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
+
 const createCsServerUrl = (url) => {
   if (
     // window.location.host.includes("localhost") ||
