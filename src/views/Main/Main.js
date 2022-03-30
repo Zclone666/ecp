@@ -93,11 +93,11 @@ const Main = inject(
         this.setState({ open: x === "close" ? false : !this.state.open });
       };
 
-      handleResultSelect = async (e, { result }) => { 
+      handleResultSelect = async (e, { result }) => {
         this.setState({ searchQuery: "" });
         if (!["FG", "ATX"].includes(result.type)) {
           this.props.drugs.selectFromSearch(result);
-          const input = document.querySelector(".results.transition.result-wrapper");    
+          const input = document.querySelector(".results.transition.result-wrapper");
           input.classList.remove("visible");
         } else if (["FG", "ATX"].includes(result.type)) {
           // console.log("fg or atx");
@@ -310,6 +310,7 @@ const Main = inject(
             document.querySelector(".pusherwrapper.pusher").classList.remove("pusherwrapper", "pusher");
         }
         // console.log(listChanged, cautionsTitle);
+        // console.log({ makeLiquids, checkLiquids, bottomview_disabled });
         return (
           <>
             {!disabled && !topview_disabled && (
@@ -320,16 +321,25 @@ const Main = inject(
                   </Menu.Item>
                 )}
                 {/* {misDisabled && <Image src='../ecp_mis.png' />} */}
-                {misDisabled && <Image src='../ecp_mis.png' style={{
-                  margin: "4px",
-                  height: "35px"
-                }} />}
+                {misDisabled && (
+                  <Image
+                    src="../ecp_mis.png"
+                    style={{
+                      margin: "4px",
+                      height: "35px",
+                    }}
+                  />
+                )}
 
-                {misDisabled && <Header className={"menuhead"} style={{ margin: "auto", marginLeft: "8px", fontWeight: "600" }}
-                  as='h4'
-                  content='Электронный клинический фармаколог'
-                  subheader='система поддержки принятия врачебных решений'
-                />}
+                {misDisabled && (
+                  <Header
+                    className={"menuhead"}
+                    style={{ margin: "auto", marginLeft: "8px", fontWeight: "600" }}
+                    as="h4"
+                    content="Электронный клинический фармаколог"
+                    subheader="система поддержки принятия врачебных решений"
+                  />
+                )}
 
                 <Menu.Menu position="right">
                   <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>
@@ -559,9 +569,7 @@ const Main = inject(
                   vertical
                   size="huge"
                 >
-                  <Message style={{ margin: "0" }}>
-                    {doctor}
-                  </Message>
+                  <Message style={{ margin: "0" }}>{doctor}</Message>
 
                   <Menu.Item as={RouterLink} to="/patient/list">
                     <Icon name="address book" />

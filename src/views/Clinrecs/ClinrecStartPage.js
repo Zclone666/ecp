@@ -15,18 +15,17 @@ const ClinrecStartPage = inject(
         super(props);
         this.state = {
           checked: {},
-          start: false
+          start: false,
         };
       }
 
       componentDidUpdate(prevProps, prevState) {
-
         const { clinicalGuidelinesExist } = this.props.clinrecs;
-        
-        let checkedNew = {}
+
+        let checkedNew = {};
         if (Array.isArray(clinicalGuidelinesExist) && !this.state.start) {
           this.setState({ start: true });
-          clinicalGuidelinesExist.map((item) => {                     
+          clinicalGuidelinesExist.map((item) => {
             if (item.exist) {
               checkedNew = {
                 ...checkedNew,
@@ -34,25 +33,24 @@ const ClinrecStartPage = inject(
                   id: item.id,
                   name: item.name,
                 },
-              }
+              };
             }
-          })
+          });
           this.setState({
-            checked: checkedNew
-          })
+            checked: checkedNew,
+          });
         }
-
       }
 
-      proceedToClinrecs = () => {    
-        const { clinrecCheckerStep } = this.props.actions;   
+      proceedToClinrecs = () => {
+        const { clinrecCheckerStep } = this.props.actions;
         this.props.clinrecs.diseaseSelect = [];
 
-        if (this.props.patients.current) {          
+        if (this.props.patients.current) {
           for (const [key, value] of Object.entries(this.state.checked)) {
             if (value && !this.props.clinrecs.diseaseSelect.find((d) => d.id === value.id)) {
-               this.props.clinrecs.diseaseSelect.push(value) 
-            } 
+              this.props.clinrecs.diseaseSelect.push(value);
+            }
           }
         }
 
@@ -69,7 +67,6 @@ const ClinrecStartPage = inject(
           .concat(this.props.patients.current.co_disease.map((d) => d.id));
         // console.log({ clinicalGuidelinesExist });
         const rednerTree = (data) => {
-
           return data?.items?.length ? (
             <List.Item style={{ height: "100%" }} key={data.id}>
               <List.Content className="large">
@@ -79,39 +76,41 @@ const ClinrecStartPage = inject(
             </List.Item>
           ) : (
             // <List>
-              data.exist && <List.Item style={{ height: "100%" }} key={data.id}>
-              <List.Content className="large">
-                <List.Description>
-                  <div style={{ display: "flex", flexDirection: "row" }}>
-                    {data.exist && (
-                      <Checkbox
-                        onChange={() => {
-                          // data.checked = !data.checked;
-                          if (this.state.checked[data.id])
-                            this.setState({ checked: { ...this.state.checked, [data.id]: null } });
-                          else
-                            this.setState({
-                              checked: {
-                                ...this.state.checked,
-                                [data.id]: {
-                                  id: data.id,
-                                  name: data.name,
+            data.exist && (
+              <List.Item style={{ height: "100%" }} key={data.id}>
+                <List.Content className="large">
+                  <List.Description>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                      {data.exist && (
+                        <Checkbox
+                          onChange={() => {
+                            // data.checked = !data.checked;
+                            if (this.state.checked[data.id])
+                              this.setState({ checked: { ...this.state.checked, [data.id]: null } });
+                            else
+                              this.setState({
+                                checked: {
+                                  ...this.state.checked,
+                                  [data.id]: {
+                                    id: data.id,
+                                    name: data.name,
+                                  },
                                 },
-                              },
-                            });
-                        }}
+                              });
+                          }}
                           // readonly={diseases.includes(data.id)}
                           // defaultChecked
                           // disabled={diseases.includes(data.id)}|| diseases.includes(data.id)
-                          checked={this.state.checked[data.id] || this.state.checked[data.id] === "undefinednud"}
-                        style={{ marginRight: "5px", fontSize: 16 }}
-                        label={data.name}
-                      />
-                    )}
-                  </div>
-                </List.Description>
-              </List.Content>
-            </List.Item>
+                          checked={!!this.state.checked[data.id]}
+                          style={{ marginRight: "5px", fontSize: 16 }}
+                          label={data.name}
+                        />
+                      )}
+                    </div>
+                  </List.Description>
+                </List.Content>
+              </List.Item>
+            )
             // </List>
           );
         };
@@ -129,7 +128,11 @@ const ClinrecStartPage = inject(
             <div className="scrollwrapper bottomMenu">
               <Segment basic>
                 {Array.isArray(clinicalGuidelinesExist) &&
-                  clinicalGuidelinesExist.map((item) => <List size={"massive"}>{rednerTree(item)}</List>)}
+                  clinicalGuidelinesExist.map((item, i) => (
+                    <List key={"st_ls_" + i} size={"massive"}>
+                      {rednerTree(item)}
+                    </List>
+                  ))}
               </Segment>
             </div>
           </>

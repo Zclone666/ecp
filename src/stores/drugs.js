@@ -1046,7 +1046,7 @@ class Drugs {
       // this.deletedRows.push(drug);
       this.unselectedRows.push(drug);
     }
-    if (drug.group != 0) {
+    if (drug.group && drug.group != 0) {
       this.stores.actions.makeLiquids = true;
       this.removeLiquids([drug.group]);
     }

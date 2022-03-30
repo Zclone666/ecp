@@ -103,10 +103,10 @@ const Value = inject("tools")(
                     name={name}
                     onChange={this.handleChange}
                     placeholder={title}
-                    value={value}
+                    value={value || ""}
                   />
                 ) : (
-                  <Input name={name} onChange={this.handleChange} placeholder={title} value={value} />
+                  <Input name={name} onChange={this.handleChange} placeholder={title} value={value || ""} />
                 )}
               </Form.Field>
             </Form>

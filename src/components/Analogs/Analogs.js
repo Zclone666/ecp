@@ -43,21 +43,20 @@ const Analogs = inject(
         }
       };
       setAnalog = async ({ id, drug }) => {
-        
         let { router } = this.props;
         drug.fpid = id;
         drug.key = null;
-        drug.helpers = {
-          dosage: { short: "", full: "", id: null },
-          pack: { short: "", full: "", id: null },
-          type: "simple",
-          url: "",
-          key: null,
-          way: "lf",
-          step: 4,
-          mnn: false,
-          drugCache: null,
-        };
+        // drug.helpers = {
+        //   dosage: { short: "", full: "", id: null },
+        //   pack: { short: "", full: "", id: null },
+        //   type: "simple",
+        //   url: "",
+        //   key: null,
+        //   way: "lf",
+        //   step: 4,
+        //   mnn: false,
+        //   drugCache: null,
+        // };
         let drugKey = router.values && router.values.page;
         await this.props.drugs.unselectDrug({ key: drugKey });
         await this.props.drugs.selectFromSearch(drug);
@@ -113,7 +112,8 @@ const Analogs = inject(
                                           <Table.Cell collapsing textAlign="right">
                                             {analogItem.min && (
                                               <>
-                                                {t("federal_list")} <Label color="green">{analogItem.min} ₽</Label> {t("to")}{" "}
+                                                {t("federal_list")} <Label color="green">{analogItem.min} ₽</Label>{" "}
+                                                {t("to")}{" "}
                                               </>
                                             )}
                                           </Table.Cell>

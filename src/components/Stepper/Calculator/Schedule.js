@@ -42,9 +42,23 @@ const Schedule = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
+        // console.log({ name, value });
         const { t } = this.props.actions;
         if (name === "dateStart" || name === "dateFinish") {
-          if (name === "dateFinish") value = moment(parseInt(moment(value, "x").add(1, "d").format("x")) - 1, "x");
+          if (name === "dateStart" && value === "Invalid date") {
+            value = null;
+            this.props.actions.scheduleForm.dateStart = null;
+            this.props.actions.scheduleForm.dateFinish = null;
+            this.props.actions.scheduleForm.finishAlternate = null;
+          }
+          if (name === "dateFinish" && value === "Invalid date") {
+            value = null;
+            this.props.actions.scheduleForm.dateFinish = null;
+            this.props.actions.scheduleForm.finishAlternate = null;
+          }
+          if (name === "dateFinish" && value !== "Invalid date") {
+            value = moment(parseInt(moment(value, "x").add(1, "d").format("x")) - 1, "x");
+          }
           if (moment(value).format("x") !== "Invalid date")
             this.props.actions.scheduleForm[name] = moment(value).format("x");
           if (name === "dateFinish") this.props.actions.scheduleForm.finishAlternate = null;
@@ -52,16 +66,21 @@ const Schedule = inject(
             this.props.actions.scheduleForm.dateFinish = null;
             this.props.actions.scheduleForm.finishAlternate = null;
           }
-          let duration_num = moment(this.props.actions.scheduleForm.dateFinish, "x").diff(
-            moment(this.props.actions.scheduleForm.dateStart, "x"),
-            "days"
-          );
-          duration_num = duration_num == 0 ? 1 : duration_num;          
-          this.props.drugs.current.duration = duration_num + " " + t(declension(ref_days, duration_num));
+          let duration_num = null;
+          if (this.props.actions.scheduleForm.dateStart && this.props.actions.scheduleForm.dateFinish) {
+            duration_num = moment(this.props.actions.scheduleForm.dateFinish, "x").diff(
+              moment(this.props.actions.scheduleForm.dateStart, "x"),
+              "days"
+            );
+          }
+
+          duration_num = duration_num === 0 ? 1 : duration_num;
+          this.props.drugs.current.duration = duration_num
+            ? duration_num + " " + t(declension(ref_days, duration_num))
+            : null;
           this.setState({ timeFromStart: this.props.drugs.current.duration });
           this.props.drugs.current.duration_id = null;
- 
-        } else {          
+        } else {
           switch (name) {
             case "finishAlternate":
               this.props.actions.scheduleForm.finishAlternate = this.props.actions.scheduleForm.finishAlternate
@@ -78,7 +97,6 @@ const Schedule = inject(
           }
           //this.props.actions.scheduleForm[name] = value
         }
-
       };
       setTomorrow = () => {
         let tomorrow = moment().add(1, "d").toDate();
@@ -88,7 +106,7 @@ const Schedule = inject(
           value: tomorrow,
         });
       };
-      setDate = (tpl, id) => {        
+      setDate = (tpl, id) => {
         let { UIText } = this.props.actions;
         let { dateStart } = this.props.actions.scheduleForm;
         this.setState({ timeFromStart: UIText.duration[id] });
@@ -166,7 +184,7 @@ const Schedule = inject(
           },
           router: { values },
         } = this.props;
-        let {t} = this.props.actions;
+        let { t } = this.props.actions;
         let { timeFromStart } = this.state;
         // console.log({dateStart});
         //
@@ -183,9 +201,9 @@ const Schedule = inject(
               <Form.Group>
                 <Form.Field width={4}>
                   <label>
-                  {t("home_accepts")} (
+                    {t("home_accepts")} (
                     <span className="link" onClick={this.setTomorrow}>
-                    {t("tomorrow")}
+                      {t("tomorrow")}
                     </span>
                     ):
                   </label>
@@ -248,7 +266,6 @@ const Schedule = inject(
                     >
                       {t("before_canceling")}
                     </Button>
-
                   </Responsive>
                   <Responsive as={Button.Group} fluid maxWidth={480}>
                     <Button
@@ -259,7 +276,6 @@ const Schedule = inject(
                     >
                       {t("before_canceling")}
                     </Button>
-               
                   </Responsive>
                 </Form.Field>
               </Form.Group>
@@ -283,7 +299,6 @@ const Schedule = inject(
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
                         {t("by_day_week")}
                       </Button>
-               
                     </Responsive>
                     <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
                       <Button
@@ -314,7 +329,6 @@ const Schedule = inject(
                   //'calendar': <Calendar />
                 }[format]
               }
-          
             </Form>
           </Segment>
         );
