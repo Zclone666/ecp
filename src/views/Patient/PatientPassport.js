@@ -44,6 +44,8 @@ const PatientPassport = inject(
       }
 
       handleMaskedInputChange = (e) => {
+        const { editForm } = this.props;
+        editForm && editForm();
         const { value, name } = e.target;
         // console.log({ e, value, name });
         this.props.actions.patientPassport[name] = value;
@@ -83,7 +85,7 @@ const PatientPassport = inject(
         return (
           <Segment basic>
             <Form>
-              <Form.Group widths={3}>          
+              <Form.Group widths={3}>
                 <Form.Field required>
                   <label>{t("last_name")}</label>
                   <Input

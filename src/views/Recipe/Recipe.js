@@ -472,11 +472,11 @@ const Recipe = inject(
                     </Button>{" "}
                   </Grid.Column>
 
-                  {/* <Grid.Column width={8}>
+                  <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("protocol")} size="big" color="orange" fluid>
                       {t("council_minutes")}
                     </Button>{" "}
-                  </Grid.Column> */}
+                  </Grid.Column>
                 </Grid>
               </div>
               <div className="scrollwrapper">

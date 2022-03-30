@@ -1,2 +1,2 @@
-import Checker from './Checker'
-export default Checker
+import Page from "./Page";
+export default Page;

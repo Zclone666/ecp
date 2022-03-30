@@ -9,6 +9,7 @@ class Clinrecs {
   checker = {};
   clinrec = {};
   cources = {};
+  hasTherapy = false;
   names = {};
   shortnames = {};
   diseaseSelect = [];
@@ -23,6 +24,7 @@ class Clinrecs {
       checker: observable,
       clinrec: observable,
       cources: observable,
+      hasTherapy: observable,
       names: observable,
       shortnames: observable,
       druglist: observable,
@@ -41,6 +43,8 @@ class Clinrecs {
     this.ready = false;
     this.checker = {};
     this.clinrec = {};
+    this.cources = {};
+    this.hasTherapy = false;
     this.names = {};
     this.shortnames = {};
     this.druglist = [];
@@ -78,26 +82,54 @@ class Clinrecs {
       path: "tools/clinicalGuidelines",
       data,
       success: async (data) => {
+        this.names = _.assignIn(this.names, data.names);
+        //has pharm therapy
+        if (data.Cources && _.keys(data.Cources).length > 0) this.hasTherapy = true;
+        _.keys(data.ClinRec).forEach((id, i) => {
+          if (data.ClinRec[id].type == "Drug") {
+            this.hasTherapy = true;
+          }
+        });
+
         if (flag) {
           this.clinrec = _.assignIn(this.clinrec, data.ClinRec);
           this.cources = _.assignIn(this.cources, data.Cources);
-          this.names = _.assignIn(this.names, data.names);
           this.shortnames = _.assignIn(this.shortnames, data.shortnames);
           this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
         } else {
           let pages = {};
+          let questions = [];
+          let pageOfGroup = {};
           if (data && data.checker) {
             let { shortnames } = this.stores.tools;
+            let keys = _.keys(data.checker);
             this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
-            _.keys(data.checker).forEach((id, i) => {
+
+            // min page of group
+            keys.forEach((id, i) => {
               let question = data.checker[id];
+              if (question.parent) {
+                pageOfGroup[question.parent] =
+                  question.page < pageOfGroup[question.parent] ? question.page : pageOfGroup[question.parent];
+              }
+            });
+            keys.forEach((id, i) => {
+              let question = data.checker[id];
+              //has pharm therapy
+
               this.stores.actions.clinrecCheckerData[id].value =
                 question.type === "Binary" ? question.value || 0 : question.value;
+
+              if (question.parent) {
+                question.page = pageOfGroup[question.parent];
+              }
+
               if (pages[question.page]) {
                 // console.log(question.unitid, shortnames[question.unitid]);
                 pages[question.page].arr.push({
                   id,
                   name: data.names[id],
+                  parent: question.parent,
                   type: question.type,
                   helper: question.helper || null,
                   unit: question.unitid
@@ -117,6 +149,7 @@ class Clinrecs {
                     {
                       id,
                       name: data.names[id],
+                      parent: question.parent,
                       type: question.type,
                       unit: question.unitid
                         ? shortnames[question.unitid] ||
@@ -147,16 +180,39 @@ class Clinrecs {
   }
 
   async getClinicalGuidelinesExist() {
-    const data = {};
+    // const data = {};
+    // this.stores.actions.loading = true;
+    // let { active_language } = this.stores.actions;
+    // data.authkey = this.stores.actions.authkey;
+    // data.key = this.stores.actions.privateKey;
+    // const patient = _.cloneDeep(this.stores.patients.current);
+    // // console.log("patient: ", this.stores.patients.current);
+    // data.disease = patient?.disease || [];
+    // if (patient && patient.co_disease) data.disease = data.disease.concat(patient.co_disease);
+    // console.log("clinicalGuidelinesExist");
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
+    this.stores.db.clearData(false, true);
+    let data = _.cloneDeep(this.stores.actions.drugStructure);
+    let drugsFull = Array.from(this.stores.drugs.drug.values());
+    let liquidsFull = Array.from(this.stores.drugs.liquid.values());
+    drugsFull.forEach((drugFull, i) => {
+      let { helpers, ...drug } = drugFull;
+      data.drugs.push(drug);
+    });
+    liquidsFull.forEach((liquidFull, i) => {
+      let { helpers, ...liquid } = liquidFull;
+      data.liquids.push(liquid);
+    });
+
+    data.checker = _.cloneDeep(this.stores.actions.clinrecCheckerData);
+    data.active_language = active_language;
+    data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
-    const patient = _.cloneDeep(this.stores.patients.current);
-    // console.log("patient: ", this.stores.patients.current);
-    data.disease = patient?.disease || [];
-    if (patient && patient.co_disease) data.disease = data.disease.concat(patient.co_disease);
-    console.log("clinicalGuidelinesExist");
+
+    // data.patient.disease = this.diseaseSelect;
+    data.patient = _.cloneDeep(this.stores.patients.current);
     return POST({
       path: "tools/clinicalGuidelinesExist",
       data,

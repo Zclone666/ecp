@@ -6,6 +6,7 @@ import RouterLink from "../../../router/a";
 
 import Binary from "../Checker/Binary";
 import Value from "../Checker/Value";
+import Page from "../Checker/Page";
 import Clinrec from "../Clinrec";
 
 import { Transition, Accordion, Icon, Step, Responsive, List, Header } from "semantic-ui-react";
@@ -34,33 +35,6 @@ const Stepper = inject(
         this.sliderRef = createRef();
       }
 
-      onChange = ({ name, value, unitid }) => {
-        let {
-          router: { values },
-          clinrecs: { checker },
-          actions: { clinrecCheckerStep, clinrecCheckerData },
-        } = this.props;
-        let currPage = checker[_.keys(checker)[clinrecCheckerStep - 1]] || {};
-        // console.log({ name, value, unitid });
-        this.props.actions.clinrecCheckerData[name].value = value;
-        if (unitid) this.props.actions.clinrecCheckerData[name].unitid = unitid;
-        let isReady = true;
-        currPage.arr.map((item) => {
-          if (clinrecCheckerData[item.id].value === null) isReady = false;
-        });
-        currPage.isReady = isReady;
-        // console.log({ name, value, isReady });
-      };
-
-      handleClick = (e, titleProps) => {
-        e.preventDefault();
-        const { index } = titleProps;
-        const { activeIndex } = this.state;
-        const newIndex = activeIndex === index ? -1 : index;
-
-        this.setState({ activeIndex: newIndex });
-        return false;
-      };
       next = () => {
         this.sliderRef.slickNext();
       };
@@ -70,6 +44,7 @@ const Stepper = inject(
       goTo = (x) => {
         this.sliderRef.current.slickGoTo(x);
       };
+
       componentDidUpdate(prevProps, prevState) {
         let {
           clinrecs: { checker },
@@ -95,6 +70,7 @@ const Stepper = inject(
           });
         }
       }
+
       handleOnUpdate = (event, data) => {
         // console.log({event, data});
         if (data.width > 479) {
@@ -103,6 +79,7 @@ const Stepper = inject(
           this.setState({ viewType: "mobile" });
         }
       };
+
       render() {
         let { activeIndex, viewType } = this.state;
         let {
@@ -156,36 +133,9 @@ const Stepper = inject(
               <Slider ref={this.sliderRef} {...settings}>
                 {_.keys(checker).map((id, i) => {
                   let page = checker[id];
+                  let parentFlag = null;
                   // console.log({id, page});
-                  return (
-                    <div className="scrollwrapper" key={"page" + i}>
-                      <List selection divided className="dozelist big">
-                        {page.arr.map((item, x) => {
-                          return {
-                            Binary: (
-                              <Binary
-                                name={item.id}
-                                helper={item.helper || null}
-                                onChange={this.onChange}
-                                title={item.name}
-                                value={clinrecCheckerData[item.id].value}
-                              />
-                            ),
-                            Value: (
-                              <Value
-                                unit={item.unit}
-                                unitid={item.unitid}
-                                name={item.id}
-                                onChange={this.onChange}
-                                title={item.name}
-                                value={clinrecCheckerData[item.id].value}
-                              />
-                            ),
-                          }[item.type];
-                        })}
-                      </List>
-                    </div>
-                  );
+                  return <Page id={id} key={"page" + id} />;
                 })}
                 <div className="scrollwrapper">
                   <Clinrec />

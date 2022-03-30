@@ -189,8 +189,8 @@ class Dosages {
     let currentDosages = await this.dosage.get(drug_obj.id);
     let { active_language } = this.stores.actions;
     // console.log('HERE, ' + drug_obj.key);
-
-    if (currentDosages && !flag) {
+    // console.log({ "drug_obj.fpid": drug_obj.fpid });
+    if (currentDosages && !flag && !drug_obj.fpid) {
       await this.isSolute(drug_obj.key);
       await this.stores.drugs.setBaseDosages(drug_obj.key);
       // await this.stores.drugs.getDosageParams()

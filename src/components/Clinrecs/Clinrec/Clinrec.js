@@ -18,6 +18,7 @@ import {
   Feed,
   Checkbox,
   Responsive,
+  Message,
 } from "semantic-ui-react";
 
 import _ from "lodash";
@@ -119,7 +120,7 @@ const Clinrec = inject(
                     let child = clinrec[childId];
                     if (!child) return null;
                     return (
-                      <div>
+                      <div key={"chckbx_" + childId}>
                         <Checkbox
                           name={id}
                           checked={child.check}
@@ -153,7 +154,7 @@ const Clinrec = inject(
                     let child = clinrec[childId];
                     if (!child) return null;
                     return (
-                      <div>
+                      <div key={"rdio_" + childId}>
                         <Checkbox
                           radio
                           name={id}
@@ -514,7 +515,7 @@ const Clinrec = inject(
       render() {
         let {
           router,
-          clinrecs: { clinrec, ready },
+          clinrecs: { clinrec, ready, hasTherapy },
         } = this.props;
         const { t } = this.props.actions;
         let { opened } = this.state;
@@ -555,6 +556,14 @@ const Clinrec = inject(
                         );
                       })}
                     </List>
+                    {!hasTherapy && (
+                      <Message warning size="large">
+                        <Message.Header>{t("attention")}</Message.Header>
+                        <p>{t("clinrec_not_exist_first_paragraph")}</p>
+                        <p>{t("clinrec_not_exist_second_paragraph")}</p>
+                        <p>{t("clinrec_not_exist_third_paragraph")}</p>
+                      </Message>
+                    )}
                   </>
                 );
               })}

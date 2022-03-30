@@ -173,8 +173,12 @@ const Patient = inject(
       }
 
       getClinrecExist = () => {
-        this.props.clinrecs.getClinicalGuidelinesExist();
-        this.props.router.push("/crstartpage/default");
+        this.props.clinrecs.resetClinrecs();
+        setTimeout(() => {
+          this.props.clinrecs.getClinicalGuidelinesExist();
+          this.props.router.push("/crstartpage/default");
+        }, 50);
+
         // "/crstartpage/default"
       };
 

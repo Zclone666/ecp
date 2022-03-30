@@ -87,7 +87,7 @@ const PatientForm = inject(
         if (!name && !value) {
           let { name, value } = e.target;
         }
-        const { editForm } = this.props;        
+        const { editForm } = this.props;
         editForm();
 
         let errorValue = false;
@@ -99,8 +99,9 @@ const PatientForm = inject(
         }
         const { birthdate } = this.props.patients.current;
         // console.log(errorValue);
-        let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") <= 12 || 
-        moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
+        let veryOld =
+          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") <= 12 ||
+          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
 
         if (name === "weight" || name === "growth") {
           value = clearDouble(value);
@@ -130,7 +131,7 @@ const PatientForm = inject(
         } else {
           this.props.patients.current[name] = value;
         }
-        if ((name === "sex" && value !== "female") || veryOld) {
+        if ((name === "sex" && value !== "female") || (birthdate && veryOld)) {
           this.props.patients.current.pregnancy = false;
           this.props.patients.current.gestation = null;
           this.props.patients.current.trimester = null;
@@ -149,7 +150,7 @@ const PatientForm = inject(
           let { name, value } = e.target;
         }
         const { editForm } = this.props;
-        editForm()
+        editForm();
         this.props.patients.current[name] = !this.props.patients.current[name];
         if (name === "pregnancy" && !this.props.patients.current.pregnancy) {
           this.props.patients.current.gestation = null;
@@ -158,10 +159,13 @@ const PatientForm = inject(
         //console.log({ name, value });
       };
       handleAddMutation = () => {
+        const { editForm } = this.props;
+        editForm();
         this.props.patients.current.mutations.push(this.state.mutation);
         this.setState({ mutation: { gene: "", allele1: "", allele2: "" } });
       };
       handleFileUpload = (e) => {
+        const { editForm } = this.props;
         const { id } = this.props.patients.current;
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -184,15 +188,23 @@ const PatientForm = inject(
           this.props.tools.loadGenPassport(id, parsedResult);
         };
         reader.readAsBinaryString(file);
+
+        editForm();
       };
       handleRemoveMutation = (item, i) => {
+        const { editForm } = this.props;
+        editForm();
         this.props.patients.current.mutations.splice(i, 1);
       };
       handleAddLabData = () => {
+        const { editForm } = this.props;
+        editForm();
         this.props.patients.current.labparams.push(this.state.lab_data);
         this.setState({ lab_data: "" });
       };
       handleRemoveLabData = (item, i) => {
+        const { editForm } = this.props;
+        editForm();
         this.props.patients.current.labparams.splice(i, 1);
       };
       handleResultSelect = async (e, { name, result }) => {
@@ -314,8 +326,14 @@ const PatientForm = inject(
         } = this.props.patients.current;
 
         let { diseaseRows, allergyRows } = this.props.diseases;
-        let { search_disease, search_co_disease, search_allergy, misDisabled, showPatientPassport, showProtocol } =
-          this.state;
+        let {
+          search_disease,
+          search_co_disease,
+          search_allergy,
+          misDisabled,
+          showPatientPassport,
+          showProtocol,
+        } = this.state;
         let searchReady = true,
           searchRows = [],
           searchQuery = "";
@@ -373,7 +391,12 @@ const PatientForm = inject(
 
               {showPatientPassport && <PatientPassport editForm={() => this.props.editForm()} />}
               <Form.Group>
-                <BirthDate name="birthdate" value={birthdate} onChange={(e, { name, value }) => this.handleChange(e, { name, value })} trans={t} />
+                <BirthDate
+                  name="birthdate"
+                  value={birthdate}
+                  onChange={(e, { name, value }) => this.handleChange(e, { name, value })}
+                  trans={t}
+                />
                 <Form.Field>
                   <label>{t("sex")}</label>
                   <Button.Group size="big">
@@ -591,7 +614,7 @@ const PatientForm = inject(
                       icon
                       onClick={() => this.fileUploadRef.current.click()}
                     >
-                      <Icon name='file' />
+                      <Icon name="file" />
                       {genpassport_exist ? t("update_patient_genetic_passport") : t("download_genetic_passport")}
                     </Button>
                     <input id="genpassport-upload" ref={this.fileUploadRef} type="file" hidden accept=".csv" />
@@ -709,12 +732,12 @@ const PatientForm = inject(
                       icon
                       fluid
                       labelPosition="left"
-                      primary={!!pregnancy}
+                      primary={isPregant}
                       onClick={this.handleChangeToggle}
                       name="pregnancy"
                       value="pregnancy"
                     >
-                      <Icon name={!!pregnancy ? "check square" : "square outline"} />
+                      <Icon name={isPregant ? "check square" : "square outline"} />
                       {t("pregnancy")}
                     </Button>
                   </Form.Field>
@@ -832,12 +855,12 @@ const PatientForm = inject(
                       size="big"
                       icon
                       labelPosition="left"
-                      primary={!!pregnancy}
+                      primary={isPregant}
                       onClick={this.handleChangeToggle}
                       name="pregnancy"
                       value="pregnancy"
                     >
-                      <Icon name={!!pregnancy ? "check square" : "square outline"} />
+                      <Icon name={isPregant ? "check square" : "square outline"} />
                       {t("pregnancy")}
                     </Button>
                   </Form.Field>
@@ -952,7 +975,7 @@ const PatientForm = inject(
             >
               <Modal.Header>{t("fill_out_protocol")}</Modal.Header>
               <Modal.Content style={{ height: "100%", padding: 0 }} scrolling>
-                <FormChecker patient={this.props.patients.current}/>
+                <FormChecker patient={this.props.patients.current} />
                 {/* <iframe
                   frameborder="0"
                   width="100%"

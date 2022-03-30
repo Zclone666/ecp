@@ -13,6 +13,13 @@ import Analogs from "./analogs";
 import DrugInfo from "./druginfo";
 import Clinrecs from "./clinrecs";
 import { configure } from "mobx";
+import { storageEmulator } from "../lib/helpers";
+
+if (!window.localStorage) {
+  Object.defineProperty(window, "localStorage", {
+    value: storageEmulator,
+  });
+}
 
 var ua = window.navigator.userAgent;
 var isIE = /MSIE|Trident/.test(ua);

@@ -14,6 +14,7 @@ export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
 export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN == "privateKeyOnly";
+
 const createCsServerUrl = (url) => {
   if (
     // window.location.host.includes("localhost") ||
@@ -448,14 +449,12 @@ class Actions {
           misid: null,
           fio: null,
         });
-
-        await this.stores.drugs.clearProto();
-        this.stores.drugs.deletedRows = observable([]);
-        this.stores.drugs.deletedLiquids = observable([]);
-        this.stores.drugs.selectedRows = observable([]);
+        this.stores.clinrecs.resetClinrecs();
+        this.stores.db.clearData(true, true);
         break;
       case "all":
         this.stores.patients.unsetCurrent();
+        this.stores.clinrecs.resetClinrecs();
         structure.doctor_id = this.doctor.id;
         structure.doctor_name = this.doctor.name;
         _.assignIn(this.drugStructure, structure);
