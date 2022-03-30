@@ -9,6 +9,7 @@ class Clinrecs {
   checker = {};
   clinrec = {};
   cources = {};
+  hasTherapy = false;
   names = {};
   shortnames = {};
   diseaseSelect = [];
@@ -23,6 +24,7 @@ class Clinrecs {
       checker: observable,
       clinrec: observable,
       cources: observable,
+      hasTherapy: observable,
       names: observable,
       shortnames: observable,
       druglist: observable,
@@ -41,6 +43,8 @@ class Clinrecs {
     this.ready = false;
     this.checker = {};
     this.clinrec = {};
+    this.cources = {};
+    this.hasTherapy = false;
     this.names = {};
     this.shortnames = {};
     this.druglist = [];
@@ -79,6 +83,14 @@ class Clinrecs {
       data,
       success: async (data) => {
         this.names = _.assignIn(this.names, data.names);
+        //has pharm therapy
+        if (data.Cources && _.keys(data.Cources).length > 0) this.hasTherapy = true;
+        _.keys(data.ClinRec).forEach((id, i) => {
+          if (data.ClinRec[id].type == "Drug") {
+            this.hasTherapy = true;
+          }
+        });
+
         if (flag) {
           this.clinrec = _.assignIn(this.clinrec, data.ClinRec);
           this.cources = _.assignIn(this.cources, data.Cources);
@@ -101,9 +113,10 @@ class Clinrecs {
                   question.page < pageOfGroup[question.parent] ? question.page : pageOfGroup[question.parent];
               }
             });
-
             keys.forEach((id, i) => {
               let question = data.checker[id];
+              //has pharm therapy
+
               this.stores.actions.clinrecCheckerData[id].value =
                 question.type === "Binary" ? question.value || 0 : question.value;
 

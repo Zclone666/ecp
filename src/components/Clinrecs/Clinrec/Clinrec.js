@@ -18,6 +18,7 @@ import {
   Feed,
   Checkbox,
   Responsive,
+  Message,
 } from "semantic-ui-react";
 
 import _ from "lodash";
@@ -514,7 +515,7 @@ const Clinrec = inject(
       render() {
         let {
           router,
-          clinrecs: { clinrec, ready },
+          clinrecs: { clinrec, ready, hasTherapy },
         } = this.props;
         const { t } = this.props.actions;
         let { opened } = this.state;
@@ -555,6 +556,14 @@ const Clinrec = inject(
                         );
                       })}
                     </List>
+                    {!hasTherapy && (
+                      <Message warning size="large">
+                        <Message.Header>{t("attention")}</Message.Header>
+                        <p>{t("clinrec_not_exist_first_paragraph")}</p>
+                        <p>{t("clinrec_not_exist_second_paragraph")}</p>
+                        <p>{t("clinrec_not_exist_third_paragraph")}</p>
+                      </Message>
+                    )}
                   </>
                 );
               })}
