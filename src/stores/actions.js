@@ -450,10 +450,7 @@ class Actions {
           fio: null,
         });
         this.stores.clinrecs.resetClinrecs();
-        await this.stores.drugs.clearProto();
-        this.stores.drugs.deletedRows = observable([]);
-        this.stores.drugs.deletedLiquids = observable([]);
-        this.stores.drugs.selectedRows = observable([]);
+        this.stores.db.clearData(true, true);
         break;
       case "all":
         this.stores.patients.unsetCurrent();
