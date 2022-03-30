@@ -159,10 +159,13 @@ const PatientForm = inject(
         //console.log({ name, value });
       };
       handleAddMutation = () => {
+        const { editForm } = this.props;
+        editForm();
         this.props.patients.current.mutations.push(this.state.mutation);
         this.setState({ mutation: { gene: "", allele1: "", allele2: "" } });
       };
       handleFileUpload = (e) => {
+        const { editForm } = this.props;
         const { id } = this.props.patients.current;
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -185,15 +188,23 @@ const PatientForm = inject(
           this.props.tools.loadGenPassport(id, parsedResult);
         };
         reader.readAsBinaryString(file);
+
+        editForm();
       };
       handleRemoveMutation = (item, i) => {
+        const { editForm } = this.props;
+        editForm();
         this.props.patients.current.mutations.splice(i, 1);
       };
       handleAddLabData = () => {
+        const { editForm } = this.props;
+        editForm();
         this.props.patients.current.labparams.push(this.state.lab_data);
         this.setState({ lab_data: "" });
       };
       handleRemoveLabData = (item, i) => {
+        const { editForm } = this.props;
+        editForm();
         this.props.patients.current.labparams.splice(i, 1);
       };
       handleResultSelect = async (e, { name, result }) => {
