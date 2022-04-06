@@ -217,15 +217,9 @@ const Drug = inject(
               <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
               <Responsive fireOnMount as={Button.Group} minWidth={misDisabled ? "1" : "481"}>
                 <Popup
-                  content={t("dosage")}
+                  content={t("choose_replacement")}
                   trigger={
-                    <Button
-                      disabled={drug.group !== 0}
-                      as={RouterLink}
-                      to={"/fgreplace/chosefd"}
-                      onClick={this.getLF}
-                      icon
-                    >
+                    <Button as={RouterLink} to={"/fgreplace/chosefd"} onClick={this.getLF} icon>
                       <Icon name="refresh" />
                     </Button>
                   }
@@ -405,6 +399,13 @@ const Drug = inject(
               >
                 {!disabled && (
                   <Dropdown.Menu>
+                    <Dropdown.Item
+                      icon="refresh"
+                      as={RouterLink}
+                      to={"/fgreplace/chosefd"}
+                      onClick={this.getLF}
+                      text={t("choose_replacement")}
+                    />
                     {dosReady && (
                       <Dropdown.Item
                         disabled={drug.group !== 0}
