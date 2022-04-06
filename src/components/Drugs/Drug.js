@@ -216,6 +216,20 @@ const Drug = inject(
             <List.Content floated="right">
               <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
               <Responsive fireOnMount as={Button.Group} minWidth={misDisabled ? "1" : "481"}>
+                <Popup
+                  content={t("dosage")}
+                  trigger={
+                    <Button
+                      disabled={drug.group !== 0}
+                      as={RouterLink}
+                      to={"/fgreplace/chosefd"}
+                      onClick={this.getLF}
+                      icon
+                    >
+                      <Icon name="refresh" />
+                    </Button>
+                  }
+                />
                 {!disabled && dosReady && (
                   <Popup
                     content={t("dosage")}

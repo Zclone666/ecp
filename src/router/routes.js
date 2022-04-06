@@ -47,6 +47,8 @@ export default {
 
   "/druginfo/:page": { section: "main", name: "druginfo", render: <Main /> },
 
+  "/fgreplace/:page": { section: "main", name: "fgreplace", render: <Main /> },
+
   "/crstartpage/:page": { section: "main", name: "crstartpage", render: <Main /> },
   "/clinrec/:page": { section: "main", name: "clinrec", render: <Main /> },
   "/clinrec/:page/:step": { section: "main", name: "clinrec", render: <Main /> },
