@@ -25,7 +25,7 @@ const DV = inject(
         this.state = {
           activeIndex: "0",
           activeSubIndex: null,
-          checked: null,
+          checked: [],
           viewType: "pc",
         };
       }
@@ -38,7 +38,13 @@ const DV = inject(
         this.setState({ activeSubIndex: index === this.state.activeSubIndex ? -1 : index });
       };
       handleDrugClick = (index) => {
-        this.setState({ checked: index });
+        let { checked } = this.state;
+        if (checked.includes(index)) {
+          _.pull(checked, index);
+        } else {
+          checked.push(index);
+        }
+        this.setState({ checked });
       };
 
       get fgs() {
@@ -101,8 +107,7 @@ const DV = inject(
                                           return (
                                             <List.Item key={"fd" + item.id} style={{ position: "relative" }}>
                                               <Checkbox
-                                                radio
-                                                checked={item.id == checked}
+                                                checked={checked.includes(item.id)}
                                                 onChange={() => this.handleDrugClick(item.id)}
                                                 name={"drugForChange"}
                                                 label={item.name}
