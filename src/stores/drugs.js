@@ -19,6 +19,12 @@ class Drugs {
   deletedRows = [];
   deletedLiquids = [];
 
+  fdForSearch = {};
+
+  drugsForFG = [];
+  fds = [];
+  fgs = [];
+
   searchReady = true;
 
   listChanged = true;
@@ -38,6 +44,9 @@ class Drugs {
       unselectedLiquids: observable,
       deletedRows: observable,
       deletedLiquids: observable,
+      fdForSearch: observable,
+      fds: observable,
+      fgs: observable,
       searchReady: observable,
       listChanged: observable,
       drugsRemoved: observable,
@@ -1170,6 +1179,73 @@ class Drugs {
       data,
       success: async (data) => {
         return [...data.childs, ...data.concepts];
+      },
+      fail: () => [],
+    });
+  }
+
+  async drugsByFD(concept) {
+    let { active_language } = this.stores.actions;
+    let concepts = [];
+    this.fdForSearch[concept.key].forEach((item, i) => {
+      if (item.main) concepts.push({ id: item.id, name: item.name });
+    });
+
+    let data = {
+      drug: concept,
+      active_language,
+      concepts,
+    };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: "Drugs/DrugsByFD",
+      data,
+      success: async (data) => {
+        if (data.factions) {
+          data.factions.forEach((fd, i) => {
+            let { id, name, fgroups, drugs } = fd;
+            this.fds.push({ id, name });
+            fgroups.forEach((fg, i) => {
+              this.fgs.push({
+                fd: fd.id,
+                id: fg.id,
+                name: fg.name,
+                drugs: fg.drugs,
+              });
+            });
+          });
+
+          // this.drugsForFD = data.factions;
+        }
+        console.log(data);
+      },
+      fail: () => [],
+    });
+  }
+  async FDbyDrug(concept) {
+    let { active_language } = this.stores.actions;
+    let data = {
+      drug: concept,
+      active_language,
+    };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    if (this.fdForSearch[concept.key]) return;
+    return POST({
+      path: "Drugs/FDByDrug",
+      data,
+      success: async (data) => {
+        if (data.concepts) {
+          this.fdForSearch[concept.key] = data.concepts;
+          // if (data.concepts.length == 1) {
+          this.stores.router.push(`/fgreplace/chosedv/${concept.key}`);
+          this.drugsByFD(concept);
+          // }
+          // data.concepts.forEach((item, i) => {
+          //   this.fdForSearch.push(item);
+          // });
+        }
       },
       fail: () => [],
     });

@@ -223,6 +223,10 @@ class Warnings {
                       value: item.value,
                       color,
                       group,
+                      // если нужен подбор по фармгруппе
+                      needChange:
+                        (warnIcons[subject.drugkey] && warnIcons[subject.drugkey].needChange) ||
+                        (item.type === "interdrug" && item.value >= 0.5),
                     };
                   }
                 }

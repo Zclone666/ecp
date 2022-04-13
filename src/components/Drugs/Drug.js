@@ -51,6 +51,10 @@ const Drug = inject(
         let { drug } = this.props;
         await this.props.analogs.get(drug);
       };
+      getFD = async () => {
+        let { drug } = this.props;
+        await this.props.drugs.FDbyDrug(drug);
+      };
 
       getInfo = async () => {
         let { drug } = this.props;
@@ -216,14 +220,16 @@ const Drug = inject(
             <List.Content floated="right">
               <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
               <Responsive fireOnMount as={Button.Group} minWidth={misDisabled ? "1" : "481"}>
-                <Popup
-                  content={t("choose_replacement")}
-                  trigger={
-                    <Button as={RouterLink} to={"/fgreplace/chosefd"} onClick={this.getLF} icon>
-                      <Icon name="refresh" />
-                    </Button>
-                  }
-                />
+                {((maxItem && maxItem.needChange) || true) && (
+                  <Popup
+                    content={t("choose_replacement")}
+                    trigger={
+                      <Button as={RouterLink} to={`/fgreplace/chosefd/${ldrug.key}`} onClick={this.getFD} icon>
+                        <Icon name="refresh" />
+                      </Button>
+                    }
+                  />
+                )}
                 {!disabled && dosReady && (
                   <Popup
                     content={t("dosage")}
@@ -399,13 +405,15 @@ const Drug = inject(
               >
                 {!disabled && (
                   <Dropdown.Menu>
-                    <Dropdown.Item
-                      icon="refresh"
-                      as={RouterLink}
-                      to={"/fgreplace/chosefd"}
-                      onClick={this.getLF}
-                      text={t("choose_replacement")}
-                    />
+                    {maxItem && maxItem.needChange && (
+                      <Dropdown.Item
+                        icon="refresh"
+                        as={RouterLink}
+                        to={`/fgreplace/chosefd/${ldrug.key}`}
+                        onClick={this.getFD}
+                        text={t("choose_replacement")}
+                      />
+                    )}
                     {dosReady && (
                       <Dropdown.Item
                         disabled={drug.group !== 0}

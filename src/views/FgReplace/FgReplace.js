@@ -48,6 +48,7 @@ const FgReplace = inject(
       render() {
         const { t } = this.props.actions;
         let page = (this.props.router.values && this.props.router.values.page) || "none";
+        let drug = (this.props.router.values && this.props.router.values.drug) || "none";
         return (
           <>
             <Menu className="bottom fixed menu two item huge main">
@@ -56,7 +57,7 @@ const FgReplace = inject(
               </Menu.Item>
               {{
                 chosefd: (
-                  <Menu.Item color="red" as={RouterLink} to="/fgreplace/chosedv">
+                  <Menu.Item color="red" as={RouterLink} to={`/fgreplace/chosedv/${drug}`}>
                     {t("next")}
                   </Menu.Item>
                 ),

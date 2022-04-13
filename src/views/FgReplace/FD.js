@@ -10,11 +10,7 @@ const FD = inject(
   "db",
   "actions",
   "router",
-  "drugs",
-  "warnings",
-  "dosages",
-  "clinrecs",
-  "patients"
+  "drugs"
 )(
   observer(
     class FD extends Component {
@@ -26,20 +22,22 @@ const FD = inject(
         };
       }
 
-      onChange = ({ name, value, unitid }) => {};
+      handleChange = (id) => {
+        let drug = (this.props.router.values && this.props.router.values.drug) || "none";
+
+        this.props.drugs.fdForSearch[drug].forEach((item, i) => {
+          if (item.id == id) {
+            this.props.drugs.fdForSearch[drug][i].main = !item.main;
+          }
+        });
+      };
 
       render() {
         let { activeIndex, viewType } = this.state;
         const { t } = this.props.actions;
-        let page = {
-          arr: [
-            { value: true, name: "lolo", title: "ФД 1" },
-            { value: true, name: "lolo", title: "ФД 2" },
-            { value: true, name: "lolo", title: "ФД 3" },
-            { value: true, name: "lolo", title: "ФД 4" },
-          ],
-        };
-
+        const { fdForSearch } = this.props.drugs;
+        let drug = (this.props.router.values && this.props.router.values.drug) || "none";
+        // console.log(fdForSearch);
         return (
           <div className="scrollwrapper">
             <Header as="h3" className="stretched">
@@ -47,14 +45,20 @@ const FD = inject(
               <Header.Content>{t("choose_fd_you_wanna_achive")}</Header.Content>
             </Header>
             <List selection divided className="dozelist big">
-              {_.orderBy(page.arr, ["parent", "sort"], ["desc", "asc"]).map((item, x) => {
-                let { value, name, title } = item;
-                return (
-                  <List.Item style={{ position: "relative" }}>
-                    <Checkbox checked={!!value} onChange={this.handleChange} name={name} label={title} />
-                  </List.Item>
-                );
-              })}
+              {fdForSearch[drug] &&
+                fdForSearch[drug].map((item, x) => {
+                  let { main, name, id } = item;
+                  return (
+                    <List.Item key={"fd" + id} style={{ position: "relative" }}>
+                      <Checkbox
+                        checked={!!main}
+                        onChange={() => this.handleChange(id)}
+                        name={"fdForSearch"}
+                        label={name}
+                      />
+                    </List.Item>
+                  );
+                })}
             </List>
           </div>
         );
