@@ -1218,7 +1218,7 @@ class Drugs {
 
           // this.drugsForFD = data.factions;
         }
-        console.log(data);
+        // console.log(data);
       },
       fail: () => [],
     });
