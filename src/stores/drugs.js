@@ -21,7 +21,7 @@ class Drugs {
 
   fdForSearch = {};
 
-  drugsForFG = [];
+  drugsForFG = {};
   fds = [];
   fgs = [];
 
@@ -1212,6 +1212,9 @@ class Drugs {
                 id: fg.id,
                 name: fg.name,
                 drugs: fg.drugs,
+              });
+              fg.drugs.forEach((drug, i) => {
+                this.drugsForFG[drug.id] = drug;
               });
             });
           });

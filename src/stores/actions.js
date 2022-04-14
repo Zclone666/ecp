@@ -263,6 +263,11 @@ class Actions {
   activeDrugs = [];
   activeConflicts = [];
 
+  selectedDrugFg = null;
+  selectedConflictFg = null;
+  activeDrugsFg = [];
+  activeConflictsFg = [];
+
   drugStructure = _.cloneDeep(StructureScheme);
 
   default_clinic_id = null;
@@ -357,6 +362,10 @@ class Actions {
       selectedConflict: observable,
       activeDrugs: observable,
       activeConflicts: observable,
+      selectedDrugFg: observable,
+      selectedConflictFg: observable,
+      activeDrugsFg: observable,
+      activeConflictsFg: observable,
       drugStructure: observable,
       default_clinic_id: observable,
       resetAll: action,

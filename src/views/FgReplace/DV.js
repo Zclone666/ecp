@@ -4,6 +4,7 @@ import { withTranslation } from "react-i18next";
 
 import RouterLink from "../../router/a";
 import Loader from "../../components/Loader";
+import Conflicts from "../../components/Conflicts/ConflictsFG";
 
 import { Transition, Accordion, Icon, Step, Responsive, List, Header, Checkbox } from "semantic-ui-react";
 import _ from "lodash";
@@ -26,6 +27,7 @@ const DV = inject(
           activeIndex: "0",
           activeSubIndex: null,
           checked: [],
+          openFor: null,
           viewType: "pc",
         };
       }
@@ -44,7 +46,8 @@ const DV = inject(
         } else {
           checked.push(index);
         }
-        this.setState({ checked });
+        this.setState({ checked, openFor: index });
+        this.props.warnings.checkFg(checked);
       };
 
       get fgs() {
@@ -58,18 +61,9 @@ const DV = inject(
       }
 
       render() {
-        let { activeIndex, activeSubIndex, viewType, checked } = this.state;
+        let { activeIndex, activeSubIndex, viewType, checked, openFor } = this.state;
         const { t } = this.props.actions;
         let { fds } = this.props.drugs;
-
-        let page = {
-          arr: [
-            { value: true, name: "lolo", title: "ФД 1" },
-            { value: true, name: "lolo", title: "ФД 2" },
-            { value: true, name: "lolo", title: "ФД 3" },
-            { value: true, name: "lolo", title: "ФД 4" },
-          ],
-        };
 
         return (
           <div className="scrollwrapper">
@@ -112,6 +106,7 @@ const DV = inject(
                                                 name={"drugForChange"}
                                                 label={item.name}
                                               />
+                                              {openFor == item.id && <Conflicts />}
                                             </List.Item>
                                           );
                                         })}
