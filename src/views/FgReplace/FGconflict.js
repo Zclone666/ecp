@@ -101,13 +101,13 @@ const FgDrugs = inject(
       }
 
       render() {
-        let { selectedDrugFg, selectedConflictFg, activeDrugsFg, activeConflictsFg, patientForm } = this.state;
+        let { selectedDrugFg, selectedConflictFg, activeDrugsFg, activeConflictsFg, patientForm } = this.props.actions;
         const { t } = this.props.actions;
         let { fds, drugs } = this.props.drugs;
-
+        // console.log(selectedConflictFg);
         return (
           <div className="fgdrugs">
-            <Header as="h4">{t("list_of_drugs_with_interactions")}</Header>
+            {selectedConflictFg && <Header as="h4">{t("list_of_drugs_with_interactions")}</Header>}
             <List>
               {this.drugs.map((drug, i) => {
                 return this.warnDrugs[drug.key] ? (
