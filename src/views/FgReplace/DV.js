@@ -5,6 +5,7 @@ import { withTranslation } from "react-i18next";
 import RouterLink from "../../router/a";
 import Loader from "../../components/Loader";
 import Conflicts from "../../components/Conflicts/ConflictsFG";
+import FGconflict from "./FGconflict";
 
 import { Transition, Accordion, Icon, Step, Responsive, List, Header, Checkbox } from "semantic-ui-react";
 import _ from "lodash";
@@ -96,7 +97,7 @@ const DV = inject(
                                   </Accordion.Title>
                                   {activeSubIndex === fg.id && (
                                     <Accordion.Content active={activeSubIndex === fg.id}>
-                                      <List selection divided className="dozelist big">
+                                      <List divided className="dozelist big">
                                         {fg.drugs.map((item) => {
                                           return (
                                             <List.Item key={"fd" + item.id} style={{ position: "relative" }}>
@@ -107,6 +108,7 @@ const DV = inject(
                                                 label={item.name}
                                               />
                                               {openFor == item.id && <Conflicts />}
+                                              {openFor == item.id && <FGconflict />}
                                             </List.Item>
                                           );
                                         })}
