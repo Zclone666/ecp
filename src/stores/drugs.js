@@ -1199,6 +1199,9 @@ class Drugs {
     };
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+    this.fds = [];
+    this.fgs = [];
+    this.drugsForFG = {};
     return POST({
       path: "Drugs/DrugsByFD",
       data,
