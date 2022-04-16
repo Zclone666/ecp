@@ -41,6 +41,8 @@ const FgReplace = inject(
         // drugsDosages.data.set( currDrug.key, _.extend(current, { ...current, url: location.pathname }) );
       };
 
+      chose = () => {};
+
       back = () => {
         this.props.router.push("/");
       };
@@ -62,7 +64,7 @@ const FgReplace = inject(
                   </Menu.Item>
                 ),
                 chosedv: (
-                  <Menu.Item color="red" onClick={this.back}>
+                  <Menu.Item color="red" onClick={this.chose}>
                     {t("confirm")}
                   </Menu.Item>
                 ),

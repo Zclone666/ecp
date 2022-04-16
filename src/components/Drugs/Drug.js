@@ -220,7 +220,7 @@ const Drug = inject(
             <List.Content floated="right">
               <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
               <Responsive fireOnMount as={Button.Group} minWidth={misDisabled ? "1" : "481"}>
-                {((maxItem && maxItem.needChange) || true) && (
+                {maxItem && maxItem.needChange && (
                   <Popup
                     content={t("choose_replacement")}
                     trigger={

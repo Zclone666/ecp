@@ -247,7 +247,7 @@ class Warnings {
                       // если нужен подбор по фармгруппе
                       needChange:
                         (warnIcons[subject.drugkey] && warnIcons[subject.drugkey].needChange) ||
-                        (item.type === "interdrug" && item.value >= 0.5),
+                        (item.type === "interdrug" && item.value > 0.5),
                     };
                   }
                 }

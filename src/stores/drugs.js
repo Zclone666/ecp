@@ -1184,9 +1184,10 @@ class Drugs {
     });
   }
 
-  async drugsByFD(concept) {
+  async drugsByFD(key) {
     let { active_language } = this.stores.actions;
     let concepts = [];
+    let concept = this.stores.drugs.drug.get(key);
     this.fdForSearch[concept.key].forEach((item, i) => {
       if (item.main) concepts.push({ id: item.id, name: item.name });
     });
@@ -1241,10 +1242,10 @@ class Drugs {
       success: async (data) => {
         if (data.concepts) {
           this.fdForSearch[concept.key] = data.concepts;
-          // if (data.concepts.length == 1) {
-          this.stores.router.push(`/fgreplace/chosedv/${concept.key}`);
-          this.drugsByFD(concept);
-          // }
+          if (data.concepts.length == 1) {
+            this.stores.router.push(`/fgreplace/chosedv/${concept.key}`);
+            this.drugsByFD(concept.key);
+          }
           // data.concepts.forEach((item, i) => {
           //   this.fdForSearch.push(item);
           // });
