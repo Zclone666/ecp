@@ -102,15 +102,23 @@ const FgDrugs = inject(
 
       render() {
         let { selectedDrugFg, selectedConflictFg, activeDrugsFg, activeConflictsFg, patientForm } = this.props.actions;
-        const { t } = this.props.actions;
-        let { fds, drugs } = this.props.drugs;
+        const { t, checkedFg, openForFg } = this.props.actions;
+        let { fds, drugs, drugsForFG } = this.props.drugs;
+
+        let drugKey = (this.props.router.values && this.props.router.values.drug) || "none";
         // console.log(selectedConflictFg);
         return (
           <div className="fgdrugs">
             {selectedConflictFg && <Header as="h4">{t("list_of_drugs_with_interactions")}</Header>}
             <List>
+              {checkedFg.map((id, i) => {
+                let drug = drugsForFG[id];
+                return this.warnDrugs[drug.key] && drugKey != drug.key && openForFg != drug.id ? (
+                  <ChangeFGDrug key={"fgdrug" + i} active={this.warnDrugs[drug.key] || false} drug={drug} />
+                ) : null;
+              })}
               {this.drugs.map((drug, i) => {
-                return this.warnDrugs[drug.key] ? (
+                return this.warnDrugs[drug.key] && drugKey != drug.key ? (
                   <ChangeFGDrug key={"fgdrug" + i} active={this.warnDrugs[drug.key] || false} drug={drug} />
                 ) : null;
               })}

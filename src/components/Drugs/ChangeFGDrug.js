@@ -39,7 +39,7 @@ const ChangeFGDrug = inject(
         } = this.props;
 
         let arr = [];
-
+        calc = calc || {};
         // console.log({drug});
 
         if (calc.fullDosage && helpers.dosage && helpers.dosage.id) {
@@ -71,6 +71,9 @@ const ChangeFGDrug = inject(
         } = this.props;
 
         let { key, name, type, dosage, helpers } = drug;
+
+        helpers = helpers || {};
+        dosage = dosage || {};
 
         let drugDosages = dose.get(key) || {};
 

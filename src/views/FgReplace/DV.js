@@ -44,12 +44,20 @@ const DV = inject(
         let { checked } = this.state;
         if (checked.includes(index)) {
           _.pull(checked, index);
+          this.setState({ checked, openFor: null });
         } else {
           checked.push(index);
+          this.setState({ checked, openFor: index });
+          this.props.actions.openForFg = index;
         }
-        this.setState({ checked, openFor: index });
+        this.props.actions.selectedConflictFg = null;
+        this.props.actions.checkedFg = checked;
         this.props.warnings.checkFg(checked);
       };
+
+      componentWillUnmount() {
+        this.props.actions.checkedFg = [];
+      }
 
       get fgs() {
         let { fgs } = this.props.drugs;

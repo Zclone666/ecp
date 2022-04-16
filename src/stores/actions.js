@@ -268,6 +268,9 @@ class Actions {
   activeDrugsFg = [];
   activeConflictsFg = [];
 
+  checkedFg = [];
+  openForFg = null;
+
   drugStructure = _.cloneDeep(StructureScheme);
 
   default_clinic_id = null;
@@ -366,6 +369,8 @@ class Actions {
       selectedConflictFg: observable,
       activeDrugsFg: observable,
       activeConflictsFg: observable,
+      checkedFg: observable,
+      openForFg: observable,
       drugStructure: observable,
       default_clinic_id: observable,
       resetAll: action,

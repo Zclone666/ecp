@@ -1213,8 +1213,8 @@ class Drugs {
                 name: fg.name,
                 drugs: fg.drugs,
               });
-              fg.drugs.forEach((drug, i) => {
-                this.drugsForFG[drug.id] = drug;
+              fg.drugs.forEach((drug, x) => {
+                this.drugsForFG[drug.id] = { key: `fgkey-${x}-${i}`, ...drug };
               });
             });
           });
