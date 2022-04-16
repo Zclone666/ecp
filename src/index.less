@@ -1515,9 +1515,9 @@ ul.ui.list li {
 }
 .changefg .conflict .big.icons {
   line-height: 27px;
-  height: 50px;
+  height: 40px;
   width: 40px !important;
-  padding-top: 11px;
+  padding-top: 6px;
 }
 .changefg.grid {
   float: right;
@@ -1526,6 +1526,10 @@ ul.ui.list li {
 .changefg .conflict.column {
   width: 54px !important;
   padding-top: 0 !important;
+  overflow: visible;
+}
+.changefg .conflict.auto.column {
+  width: auto !important;
 }
 .fgdrugs {
   margin-top: 2em;
@@ -1550,6 +1554,36 @@ ul.ui.list li {
 .fgdrugs .item .ui.feed .summary,
 .fgdrugs .ui.feed .meta {
   white-space: normal !important;
+}
+
+.warnstack {
+  display: flex;
+  flex-direction: row-reverse;
+  padding-right: 21px;
+  padding-left: 0px;
+}
+.warnstack.open {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.ui.grid.changefg .conflict .big.icons.selected {
+  border-radius: 100%;
+  outline: 1px solid #fff;
+  background: #fff;
+}
+
+.changefg .warnstack .conflict.column {
+  margin-right: -49px;
+}
+.changefg .warnstack.open .conflict.column {
+  margin-right: 0;
+}
+.changefg .warncontainer {
+}
+.changefg .warncontainer.open {
+  margin-right: -13px;
+  padding-right: 0;
 }
 
 .ui.list .item .arrowBg {

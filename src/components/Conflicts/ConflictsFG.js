@@ -41,8 +41,8 @@ const Conflicts = inject(
           this.props.actions.activeConflictsFg = [parseInt(groupId)];
         }
       };
-      handleClick = (e, titleProps) => {
-        const { index } = titleProps;
+      handleClick = (index) => {
+        // const { index } = titleProps;
         const { activeIndex } = this.state;
         const newIndex = activeIndex === index ? -1 : index;
 
@@ -151,24 +151,6 @@ const Conflicts = inject(
                 if (item.values.length < 2) {
                   return (
                     <Grid.Column key={"warn" + i} className="conflict">
-                      {!selectedConflictFg && selectedWarnings[item.values[0].key] ? (
-                        <RouterLink
-                          to={"/warning/" + item.values[0].key}
-                          className="conflicticon arrowBg"
-                          style={{ backgroundColor: color }}
-                        >
-                          <List.Icon
-                            name="arrow alternate circle down"
-                            style={{ color: "#FFF" }}
-                            size="large"
-                            onClick={() => {}}
-                          />
-                        </RouterLink>
-                      ) : (
-                        <RouterLink to={"/warning/" + item.values[0].key} className="conflicticon arrowBg none">
-                          <List.Icon name="arrow alternate circle down" style={{ color: "#FFF" }} size="large" />
-                        </RouterLink>
-                      )}
                       <Popup
                         position="top right"
                         content={
@@ -209,51 +191,102 @@ const Conflicts = inject(
                   );
                 } else {
                   return (
-                    <Grid.Column
-                      className={activeIndex !== i ? "conflict" : ""}
-                      style={
-                        activeIndex !== i
-                          ? { width: "auto", padding: "0" }
-                          : { width: "auto", paddingTop: 0, paddingRight: 0, overflow: "hidden" }
-                      }
-                    >
-                      <Accordion key={"warn" + i} className={activeIndex !== i ? "conflict" : ""}>
-                        {activeIndex !== i ? (
-                          <Popup
-                            content={
-                              <>
-                                {item.values[0].hintarr && item.values[0].hintarr.length > 0 && (
-                                  <Header as="h5" content={item.values[0].hint} />
-                                )}
-                              </>
-                            }
-                            trigger={
-                              <Accordion.Title
-                                style={{ padding: "0" }}
-                                active={activeIndex === i}
-                                index={i}
-                                onClick={this.handleClick}
+                    <div className={activeIndex !== i ? "warncontainer" : "warncontainer open"}>
+                      {activeIndex !== i ? (
+                        <Popup
+                          position="top right"
+                          content={
+                            <>
+                              {item.values[0].hintarr && item.values[0].hintarr.length > 0 && (
+                                <Header as="h5" content={item.values[0].hint} />
+                              )}
+                            </>
+                          }
+                          trigger={
+                            <div className="warnstack" onClick={() => this.handleClick(i)}>
+                              {item.values.map((element) => {
+                                return (
+                                  <Grid.Column
+                                    key={"warn" + i}
+                                    className="conflict"
+                                    style={{ paddingTop: 0, paddingRight: 0 }}
+                                  >
+                                    <Icon.Group
+                                      size="big"
+                                      className={noSelections || selectedWarnings[element.key] ? "selected" : "gray"}
+                                    >
+                                      {element.type === "age" ? (
+                                        <Icon
+                                          as="img"
+                                          src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`}
+                                        />
+                                      ) : (
+                                        <Icon as="img" src={`/warnicons/${icon}.svg`} />
+                                      )}
+                                      <Icon size="big" name="circle outline" style={{ color }} />
+                                      {element.type === "age" && age && (
+                                        <div className="agecontainer">{age || "!"}</div>
+                                      )}
+                                    </Icon.Group>
+                                  </Grid.Column>
+                                );
+                              })}
+                            </div>
+                          }
+                        />
+                      ) : (
+                        <div className="warnstack open">
+                          {item.values.map((element) => {
+                            return (
+                              <Grid.Column
+                                key={"warn" + i}
+                                className="conflict"
+                                style={{ paddingTop: 0, paddingRight: 0 }}
                               >
-                                <Icon.Group
-                                  style={{
-                                    boxShadow: `3px 0 0px ${color},  10px 0 0 -6px #eee,  11px 0 0px -4px ${color},  20px 0 0 -10px #eee`,
-                                    borderRadius: "50%",
-                                  }}
-                                  size="big"
-                                  className={noSelections || selectedWarnings[item.typeOld] ? "selected" : "gray"}
-                                >
-                                  {item.type === "age" ? (
-                                    <Icon as="img" src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`} />
-                                  ) : (
-                                    <Icon as="img" src={`/warnicons/${icon}.svg`} />
-                                  )}
-                                  <Icon size="big" name="circle outline" style={{ color }} />
-                                  {item.type === "age" && age && <div className="agecontainer">{age || "!"}</div>}
-                                </Icon.Group>
-                              </Accordion.Title>
-                            }
-                          />
-                        ) : null}
+                                <Popup
+                                  position="top right"
+                                  content={
+                                    <>
+                                      {element.hintarr && element.hintarr.length > 0 && (
+                                        <Header as="h5" content={element.hint} />
+                                      )}
+                                      {(!element.hintarr || element.hintarr.length < 1) && element.hint}
+                                      {element.hintarr && element.hintarr.length > 0 && (
+                                        <List bulleted>
+                                          {element.hintarr.map((hintId, x) => {
+                                            return <List.Item key={"hint-" + i + "-" + x}>{names[hintId]}</List.Item>;
+                                          })}
+                                        </List>
+                                      )}
+                                    </>
+                                  }
+                                  trigger={
+                                    <Icon.Group
+                                      onClick={() => this.selectConflict(element.key)}
+                                      size="big"
+                                      className={noSelections || selectedWarnings[element.key] ? "selected" : "gray"}
+                                    >
+                                      {element.type === "age" ? (
+                                        <Icon
+                                          as="img"
+                                          src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`}
+                                        />
+                                      ) : (
+                                        <Icon as="img" src={`/warnicons/${icon}.svg`} />
+                                      )}
+                                      <Icon size="big" name="circle outline" style={{ color }} />
+                                      {element.type === "age" && age && (
+                                        <div className="agecontainer">{age || "!"}</div>
+                                      )}
+                                    </Icon.Group>
+                                  }
+                                />
+                              </Grid.Column>
+                            );
+                          })}
+                        </div>
+                      )}
+                      {false && (
                         <Accordion.Content
                           active={activeIndex === i}
                           style={{ display: activeIndex === i ? "flex" : "none" }}
@@ -328,8 +361,8 @@ const Conflicts = inject(
                             );
                           })}
                         </Accordion.Content>
-                      </Accordion>
-                    </Grid.Column>
+                      )}
+                    </div>
                   );
                 }
               })}
