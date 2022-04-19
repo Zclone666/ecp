@@ -20,7 +20,7 @@ export default class Binary extends React.Component {
         {helper && (
           <Popup
             position="bottom right"
-            content={helper}
+            content={<div dangerouslySetInnerHTML={{ __html: helper }} />}
             trigger={<Icon style={{ position: "absolute", right: "10px" }} name="question circle" />}
           />
         )}
