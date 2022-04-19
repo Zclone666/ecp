@@ -1184,6 +1184,23 @@ class Drugs {
     });
   }
 
+  async choseNewDrugs(drugKey) {
+    let concepts = [];
+    let del = this.stores.drugs.drug.get(drugKey);
+    this.unselectDrug(del);
+    let length = this.stores.actions.checkedFg.length;
+    await this.stores.actions.checkedFg.forEach(async (key, i) => {
+      await this.selectFromSearch(this.drugsForFG[key]);
+      // console.log({ i: i + 1, length });
+      if (i + 1 == length) {
+        // console.log("HERE");
+        setTimeout(() => {
+          this.stores.warnings.check();
+        }, 200);
+      }
+    });
+  }
+
   async drugsByFD(key) {
     let { active_language } = this.stores.actions;
     let concepts = [];
@@ -1230,6 +1247,7 @@ class Drugs {
       fail: () => [],
     });
   }
+
   async FDbyDrug(concept) {
     let { active_language } = this.stores.actions;
     let data = {

@@ -71,6 +71,7 @@ class Warnings {
 
     autorun(() => {});
   }
+
   getGroup(val) {
     let color = "#cccccc";
     let group = 0;

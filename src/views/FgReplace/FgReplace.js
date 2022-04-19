@@ -41,7 +41,12 @@ const FgReplace = inject(
         // drugsDosages.data.set( currDrug.key, _.extend(current, { ...current, url: location.pathname }) );
       };
 
-      chose = () => {};
+      chose = () => {
+        let drug = (this.props.router.values && this.props.router.values.drug) || "none";
+
+        this.back();
+        this.props.drugs.choseNewDrugs(drug);
+      };
 
       back = () => {
         this.props.router.push("/");
@@ -54,9 +59,19 @@ const FgReplace = inject(
         return (
           <>
             <Menu className="bottom fixed menu two item huge main">
-              <Menu.Item color="red" onClick={this.back}>
-                {t("back")}
-              </Menu.Item>
+              {{
+                chosefd: (
+                  <Menu.Item color="red" onClick={this.back}>
+                    {t("back")}
+                  </Menu.Item>
+                ),
+                chosedv: (
+                  <Menu.Item color="red" as={RouterLink} to={`/fgreplace/chosefd/${drug}`}>
+                    {t("back")}
+                  </Menu.Item>
+                ),
+                none: <div />,
+              }[page] || null}
               {{
                 chosefd: (
                   <Menu.Item color="red" as={RouterLink} to={`/fgreplace/chosedv/${drug}`}>

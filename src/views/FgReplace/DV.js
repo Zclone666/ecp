@@ -40,15 +40,20 @@ const DV = inject(
       handleSubClick = (e, { index }) => {
         this.setState({ activeSubIndex: index === this.state.activeSubIndex ? -1 : index });
       };
-      handleDrugClick = (index) => {
+      handleDrugClick = (id, drugs) => {
         let { checked } = this.state;
-        if (checked.includes(index)) {
-          _.pull(checked, index);
+        if (checked.includes(id)) {
+          _.pull(checked, id);
           this.setState({ checked, openFor: null });
         } else {
-          checked.push(index);
-          this.setState({ checked, openFor: index });
-          this.props.actions.openForFg = index;
+          drugs.forEach((drug, i) => {
+            if (checked.includes(drug.id)) {
+              _.pull(checked, drug.id);
+            }
+          });
+          checked.push(id);
+          this.setState({ checked, openFor: id });
+          this.props.actions.openForFg = id;
         }
         this.props.actions.selectedConflictFg = null;
         this.props.actions.checkedFg = checked;
@@ -111,7 +116,7 @@ const DV = inject(
                                             <List.Item key={"fd" + item.id} style={{ position: "relative" }}>
                                               <Checkbox
                                                 checked={checked.includes(item.id)}
-                                                onChange={() => this.handleDrugClick(item.id)}
+                                                onChange={() => this.handleDrugClick(item.id, fg.drugs)}
                                                 name={"drugForChange"}
                                                 label={item.name}
                                               />
