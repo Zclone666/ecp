@@ -446,9 +446,135 @@ class Dosages {
 
   setStepDosage = () => {
     // console.log('this.calcValues', this.calcValues);
+    let { way, step } = this.stores.router.values || {};
     let vals = this.calcValues;
     let weight = this.stores.patients.current.weight || null;
-
+    // console.log({ way, step });
+    // console.log(vals);
+    if (!step) {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: null,
+        way: null,
+        step: null,
+        form: null,
+        method: null,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
+    if (step == 1 || step == "1") {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: this.stores.actions.stepsData.key,
+        way,
+        step,
+        form: null,
+        method: null,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
+    if (way === "lf" && step == 2) {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: this.stores.actions.stepsData.key,
+        way,
+        step,
+        form: this.stores.actions.stepsData.form,
+        method: null,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
+    if (way === "lf" && step == 3) {
+      this.stores.actions.stepsData.method = null;
+      return;
+    }
+    if (way === "methods" && step == "2") {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: this.stores.actions.stepsData.key,
+        way,
+        step,
+        form: null,
+        method: this.stores.actions.stepsData.method,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
+    if (way === "methods" && step == "3") {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: this.stores.actions.stepsData.key,
+        way,
+        step,
+        form: this.stores.actions.stepsData.form,
+        method: this.stores.actions.stepsData.method,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
     if (!vals.dosage.value) return;
 
     // let baseDosage = vals.dosage.value
