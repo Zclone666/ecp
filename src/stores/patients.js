@@ -375,6 +375,90 @@ class Patients {
     });
   }
 
+  setPatient(patient) {
+    let {
+      allergy,
+      birthdate,
+      disease,
+      disease2,
+      co_disease,
+      driving,
+      email,
+      fio,
+      gestation,
+      growth,
+      id,
+      lactation,
+      miscode,
+      misid,
+      name,
+      pregnancy,
+      sex,
+      trimester,
+      weight,
+      mutations,
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    } = patient;
+    co_disease = co_disease || [];
+    this.stores.actions.patientForm = {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      allergy,
+      birthdate,
+      disease,
+      disease2,
+      co_disease,
+      driving,
+      gestation,
+      growth,
+      lactation,
+      pregnancy,
+      sex,
+      trimester,
+      weight,
+      mutations,
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    };
+    this.stores.actions.patientPassport = {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    };
+    return patient || {};
+  }
+
   async getPatient(id) {
     let { active_language } = this.stores.actions;
     let data = {
@@ -391,114 +475,8 @@ class Patients {
       data,
       success: async (data) => {
         // console.log('DATA', data);
-        let {
-          allergy,
-          birthdate,
-          disease,
-          disease2,
-          co_disease,
-          driving,
-          email,
-          fio,
-          gestation,
-          growth,
-          id,
-          lactation,
-          miscode,
-          misid,
-          name,
-          pregnancy,
-          sex,
-          trimester,
-          weight,
-          mutations,
-          lastname,
-          patronymic,
-          firstname,
 
-          snils,
-          policy_num,
-          medcard_num,
-
-          main_address,
-        } = data.patient;
-        // let { drugs } = data
-        co_disease = co_disease || [];
-        this.stores.actions.patientForm = {
-          id,
-          email,
-          fio,
-          miscode,
-          misid,
-          name,
-          allergy,
-          birthdate,
-          disease,
-          disease2,
-          co_disease,
-          driving,
-          gestation,
-          growth,
-          lactation,
-          pregnancy,
-          sex,
-          trimester,
-          weight,
-          mutations,
-          lastname,
-          patronymic,
-          firstname,
-
-          snils,
-          policy_num,
-          medcard_num,
-
-          main_address,
-        };
-        // this.stores.actions.drugStructure.patient = {
-        //   id,
-        //   key: id,
-        //   email,
-        //   fio,
-        //   miscode,
-        //   misid,
-        //   name,
-        //   allergy,
-        //   birthdate,
-        //   disease,
-        //   disease2,
-        //   co_disease,
-        //   driving,
-        //   gestation,
-        //   growth,
-        //   lactation,
-        //   pregnancy,
-        //   sex,
-        //   trimester,
-        //   weight,
-        // };
-        this.stores.actions.patientPassport = {
-          id,
-          email,
-          fio,
-          miscode,
-          misid,
-          name,
-          lastname,
-          patronymic,
-          firstname,
-
-          snils,
-          policy_num,
-          medcard_num,
-
-          main_address,
-        };
-
-        // drugs.forEach(async (drug, i) => {
-        //   await this.stores.drugs.selectFromSearch( drug )
-        // });
-        return data.patient || {};
+        return this.setPatient(data.patient);
       },
       fail: (alerts) => {},
       always: (data) => {},
@@ -663,7 +641,7 @@ class Patients {
         }
         if (data.patient) {
           let { id } = data.patient;
-          this.getPatient(id);
+          this.setPatient(data.patient);
           await this.request(id);
         }
         return data;
