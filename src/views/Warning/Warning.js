@@ -116,8 +116,8 @@ const Warning = inject(
 
         let warnArr = _.orderBy(
           Array.from(warning.values()),
-          ["group", "step", "value", "trust"],
-          ["desc", "asc", "desc", "desc"]
+          ["step", "group", "value", "trust"],
+          ["asc", "desc", "desc", "desc"]
         );
         let isConflict = !!_.find(groups, { type: values.page });
         //console.log({isConflict, selectedDrug});
@@ -144,7 +144,7 @@ const Warning = inject(
 
           //console.log({ subjFrom, subjTo });
           if (subjFrom && subjTo) tabs.push(warn);
-        });       
+        });
         return tabs;
       }
 
