@@ -10,14 +10,14 @@ export const PROJECT_TITLE = "ЭКФ";
 export const PRE_PATH = "";
 export const PRODUCTION = false;
 export const API_SERVER = (() => {
-  if (window.location.host.includes("84.23.32.38:9031")) {
-    return "http://84.23.32.38:9004";
+  if (window.location.host.includes("localhost:30931")) {
+    return "http://localhost:30904";
   } else if (
     // window.location.host.includes("localhost") ||
-    window.location.host.includes("178.176.38.245:9031")
+    window.location.host.includes("localhost:9031")
     // || window.location.host.includes("socmedica.dev")
   ) {
-    return "http://178.176.38.245:9004";
+    return "http://localhost:9004";
   }
   //------------------------------------
   return !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])

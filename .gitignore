@@ -25,3 +25,5 @@ package-lock.json
 
 /.idea
 *.rar
+/.vs/ecp2/v17
+/.vs

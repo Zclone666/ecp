@@ -18,16 +18,16 @@ const privateKeyOnly = LOGIN == "privateKeyOnly";
 const createCsServerUrl = (url) => {
   if (
     // window.location.host.includes("localhost") ||
-    window.location.host.includes("178.176.38.245:9031")
+    window.location.host.includes("localhost:9031")
     // || window.location.host.includes("socmedica.dev")
   ) {
-    return "http://84.23.32.38:8999" + url;
+    return "http://localhost:44380" + url;
   }
-  if (window.location.host.includes("84.23.32.38:9031")) {
-    return "http://84.23.32.38:9000" + url;
+  if (window.location.host.includes("localhost:9031")) {
+    return "http://localhost:44380" + url;
   }
   //--------------------
-  return SERVER == "dev" ? "https://csdev.socmedica.com" + url : "https://cs.socmedica.com" + url;
+  return SERVER == "dev" ? "http://localhost:44380" + url : "http://localhost:44380" + url;
 };
 // !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
 //   ? "http://" + window.location.hostname + ":9999" + url
@@ -1013,7 +1013,7 @@ class Actions {
     // data.active_language = active_language
     return;
     return await POST({
-      path: `https://cs.socmedica.com/api/umkb/checkRights`,
+      path: `http://localhost:44380/api/umkb/checkRights`,
       data,
       success: async (data) => {
         alert();
