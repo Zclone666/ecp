@@ -21,13 +21,13 @@ const createCsServerUrl = (url) => {
     window.location.host.includes("localhost:9031")
     // || window.location.host.includes("socmedica.dev")
   ) {
-    return "http://localhost:44380" + url;
+    return "http://"+window.location.hostname+":44380" + url;
   }
   if (window.location.host.includes("localhost:9031")) {
-    return "http://localhost:44380" + url;
+    return "http://"+window.location.hostname+":44380" + url;
   }
   //--------------------
-  return SERVER == "dev" ? "http://localhost:44380" + url : "http://localhost:44380" + url;
+  return SERVER == "dev" ? "http://"+window.location.hostname+":44380" + url : "http://"+window.location.hostname+":44380" + url;
 };
 // !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
 //   ? "http://" + window.location.hostname + ":9999" + url
@@ -1013,7 +1013,7 @@ class Actions {
     // data.active_language = active_language
     return;
     return await POST({
-      path: `http://localhost:44380/api/umkb/checkRights`,
+      path: "http://"+window.location.hostname+":44380/api/umkb/checkRights",
       data,
       success: async (data) => {
         alert();
