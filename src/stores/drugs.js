@@ -71,7 +71,13 @@ class Drugs {
       // console.log(Array.from(this.liquid.values()));
     });
   }
-  //drug
+
+  /**
+  // метод устанавливает выбранный драг при работе с дозировками и расписанием приема
+  * @param drug - драг
+  * @param key - идентификатор драга
+  * @param id - айди ДВ или ТН
+  */
   setCurrent = async ({ drug, key, id }) => {
     let drugTpl = _.cloneDeep(DrugScheme);
     drugTpl.key = key;
@@ -81,23 +87,40 @@ class Drugs {
     await _.assignIn(this.current, drugTpl, drug);
   };
 
+  /**
+  // метод убирает выбранный драг
+  */
   unsetCurrent = () => {
     _.assignIn(this.current, DrugScheme);
   };
 
+  /**
+  // метод получения клонированного объекта выбранного драга
+  */
   getCurrent = () => {
     return _.cloneDeep(this.current);
   };
 
+  /**
+  // метод получения клонированного объекта драга по ключу
+  * @param key - идентификатор драга
+  */
   getClone = async (key) => {
     let drug = await this.drug.get(key);
     return _.cloneDeep(drug);
   };
 
+  /**
+  // метод получения пустого объекта драга
+  */
   getNew = () => {
     return _.cloneDeep(DrugScheme);
   };
 
+  /**
+  // метод устанавливает дозировки к драгу в базовых единицах из того, что выбрано в степпере и калькуляторе
+  * @param key - идентификатор драга
+  */
   setBaseDosages = async (key) => {
     let drug = await this.drug.get(key);
     // console.log("setBaseDosages: ", { drug }, drug.calc.countBaseUnit);
@@ -131,6 +154,10 @@ class Drugs {
   };
 
   // service functions
+
+  /**
+  // метод очищает назначенную терапию (то, что пришло с бэка с заполненным полем proto)
+  */
   async clearProto() {
     await this.drug.forEach((drugObj, key) => {
       if (drugObj.proto) {
@@ -141,6 +168,10 @@ class Drugs {
       }
     });
   }
+
+  /**
+  // метод очищает весь лист назначений
+  */
   async clearList() {
     await this.drug.forEach((drugObj, key) => {
       // if (drugObj.proto) {
@@ -152,6 +183,10 @@ class Drugs {
     });
     this.stores.actions.makeLiquids = false;
   }
+
+  /**
+  // метод возвращает удаленный лист назначений
+  */
   async returnList() {
     this.unselectedLiquids.forEach(async (liquid, i) => {
       if (liquid.group != null) {
@@ -170,6 +205,9 @@ class Drugs {
     this.unselectedLiquids = observable([]);
   }
 
+  /**
+  // метод окончательно очищает удаленную терапию
+  */
   async clearDeleted() {
     this.unselectedRows.forEach((item, i) => {
       this.deletedRows.push(item);
@@ -183,6 +221,10 @@ class Drugs {
     this.drugsRemoved = true;
   }
 
+  /**
+  // метод получает и устанавливает МНН для драга, и создает кэш с исходным драгом
+  * @param drug - объект драга
+  */
   async MNNfromTN(drug) {
     let { active_language } = this.stores.actions;
     let data = {
@@ -215,6 +257,11 @@ class Drugs {
     }
   }
 
+  /**
+  // метод превращает ДВ или ТН в ФП, после чего запрашивает и устанавливает необходимые параметры дозировки
+  * @param drugKey - идентификатор драга
+  * @param fpid - айди ФП
+  */
   setFP = async (drugKey, fpid) => {
     let currentDrug = (await this.drug.get(drugKey)) || {};
     currentDrug = await _.assignIn(currentDrug, { fpid });
@@ -222,6 +269,9 @@ class Drugs {
     this.stores.dosages.get(currentDrug, true);
   };
 
+  /**
+  // метод сохраняет данные к драгу при закрытии степпера дозировок
+  */
   setDosageParams = async () => {
     let drugData = this.stores.actions.stepsData;
     let calcData = this.stores.actions.calculatorForm;
@@ -328,6 +378,9 @@ class Drugs {
     this.stores.db.clearData();
   };
 
+  /**
+  // метод зполняет служебные объекты для калькулятора и степпера при нажатии на каплю
+  */
   getDosageParams = async () => {
     // console.log("\n getting dosage params \n");
     let drugData = this.stores.actions.stepsData;
@@ -414,29 +467,53 @@ class Drugs {
   };
 
   // liquids and groups
+
+  /**
+  // метод возвращает пустой объект раствора
+  */
   getNewLiquid = () => {
     return _.cloneDeep(LiquidScheme);
   };
 
+  /**
+  // метод устанавливает выбранный раствор при работе с дозировками и расписанием приема
+  * @param liquid - объект раствора
+  * @param key - идентификатор раствора
+  */
   setCurrentLiquid = async ({ liquid, key }) => {
     await _.assignIn(this.currLiquid, LiquidScheme);
     if (!liquid && !!key) liquid = await this.liquid.get(key);
     _.assignIn(this.currLiquid, liquid);
   };
 
+  /**
+  // метод получения клонированного объекта выбранного раствора
+  */
   getCurrentLiquid = () => {
     return _.cloneDeep(this.currLiquid);
   };
 
+  /**
+  // метод получения клонированного объекта раствора по ключу
+  * @param key - идентификатор драга
+  */
   getCloneLiquid = async (key) => {
     let liquid = await this.liquid.get(key);
     return _.cloneDeep(liquid);
   };
 
+  /**
+  // метод убирает выбранный раствор
+  */
   unsetCurrentLiquid = () => {
     _.assignIn(this.currLiquid, LiquidScheme);
   };
 
+  /**
+  // метод добавляет драги в раствор по списку ключей и помечает как изменненные все затронутые драги
+  * @param keys - мссив ключей
+  * @param group - идентификатор раствора
+  */
   async setGroup(keys, group) {
     if (!_.isArray(keys)) {
       keys = [keys];
@@ -482,15 +559,20 @@ class Drugs {
     }, 300);
   }
 
+  /**
+  // метод сбрасывает все растворы
+  */
   async resetGroups() {
     this.drug.forEach((item, i) => {
       if (item.group !== 0) {
         item.group = 0;
-        this.drug.set(item.key, item);
       }
     });
   }
 
+  /**
+  // геттер проверки что во всех растворах не менее 2 элементов
+  */
   get checkLiquids() {
     let isOk = true;
     let obj = {};
@@ -507,6 +589,9 @@ class Drugs {
     return isOk;
   }
 
+  /**
+  // метод проверки что во всех растворах не менее 2 элементов
+  */
   async checkLiquidsOk() {
     let isOk = true;
     let obj = {};
@@ -524,6 +609,9 @@ class Drugs {
     this.stores.actions.isLiquidsOk = isOk;
   }
 
+  /**
+  // геттер расчета исходных данных для калькулятора раствора
+  */
   get calcLiquid() {
     let {
       drug: drugs,
@@ -599,10 +687,14 @@ class Drugs {
     };
   }
 
-  removeLiquids = async (arr) => {
-    if (!arr) return;
-    if (!Array.isArray(arr)) arr = [arr];
-    arr.forEach((item, i) => {
+  /**
+  // метод удаляет растворы по списку ключей
+  * @param keys - мссив ключей
+  */
+  removeLiquids = async (keys) => {
+    if (!keys) return;
+    if (!Array.isArray(keys)) keys = [keys];
+    keys.forEach((item, i) => {
       let currLiquid = this.liquid.get(item) || {};
       if (currLiquid.proto) {
         this.unselectedLiquids.push(currLiquid);
@@ -613,6 +705,9 @@ class Drugs {
     this.listChanged = true;
   };
 
+  /**
+  // метод создает растворы для всех драгов в листе назначений исходя из поля group
+  */
   makeLiquids = async () => {
     let obj = {};
     this.drug.forEach((item, i) => {
@@ -638,6 +733,10 @@ class Drugs {
     this.listChanged = true;
   };
 
+  /**
+  // метод создает раствор или помечает как измененный
+  * @param key - идентификатор раствора
+  */
   makeLiquid = async (key) => {
     key = parseInt(key);
     let current = this.liquid.get(key) || {};
@@ -655,6 +754,10 @@ class Drugs {
     return true;
   };
 
+  /**
+  // метод сохраняет данные к раствору при закрытии калькулятора дозировок
+  * @param id - идентификатор раствора
+  */
   setLiquidParams = async (id = null) => {
     let {
       stores: {
@@ -754,6 +857,10 @@ class Drugs {
     // console.log(this.liquid.get(id));
   };
 
+  /**
+  // метод пересчитывает данные калькулятора раствора при изменении одного из значений
+  * @param id - идентификатор раствора
+  */
   recalcLiquidParams = (id = null) => {
     let {
       stores: {
@@ -808,6 +915,10 @@ class Drugs {
     this.listChanged = true;
   };
 
+  /**
+  // метод зполняет служебные объекты для калькулятора дозировок раствора
+  * @param id - идентификатор раствора
+  */
   getLiquidParams = async (id = null) => {
     let {
       stores: {
@@ -981,6 +1092,11 @@ class Drugs {
   };
 
   // search, creae and remove drugs
+  /**
+  // метод побуквенного поиска по ТН и ДВ
+  * @param text - срока поиска
+  * @param saveTo - в какой список сохранять овтет сервера
+  */
   async search(text, saveTo = "search") {
     this.searchReady = false;
     let { active_language } = this.stores.actions;
@@ -1025,6 +1141,13 @@ class Drugs {
   }
 
   // concept from search, flag - if true, do not clear data
+  /**
+  // метод создания драга при выборе из побуквенного поиска и добавления в лист назначения
+  * @param concept - концепт из поиска
+  * @param flag - если true, не сбрасывать проверки на варнинги
+  * @param getDosages - если false, не запрашивать дозировки для драга
+  * @param names - дополнительные строки наименований из метода Parse
+  */
   selectFromSearch = async (concept, flag = false, getDosages = true, names) => {
     let drug = this.getNew();
     if (!concept.calc) concept.calc = drug.calc;
@@ -1050,6 +1173,11 @@ class Drugs {
     return true;
   };
 
+  /**
+  // метод убирает драг из листа назанчения и при необходимости удаляет раствор, содержавший этот драг
+  * @param drug - объект драга
+  * @param onlyProto - если false, добавит в список удаленных не только текущую терапию, но и не сохраненные на бэке
+  */
   async unselectDrug(drug, onlyProto = true) {
     if (drug.proto || !onlyProto) {
       // this.deletedRows.push(drug);
@@ -1068,6 +1196,11 @@ class Drugs {
     return true;
   }
 
+  /**
+  // метод отправляет произвольный текст с препаратами, дозировками и расписанеим приема на парсинг на бэк
+  // и получает обратно список драгов с дозировками в нашем формате, после чего добавляет в лист назанчений
+  * @param text - текст для парсинга
+  */
   async Parse(text) {
     const texts = text.split("\n");
     const data = { texts };
@@ -1166,10 +1299,14 @@ class Drugs {
     });
   }
 
-  async searchByFG(concept) {
+  /**
+  // метод поиска драгов по фармгруппе, используется для отображения драгов внутри фармгруппы в строке поиска
+  * @param drug - концепт из строки поиска
+  */
+  async searchByFG(drug) {
     let { active_language } = this.stores.actions;
     let data = {
-      drug: concept,
+      drug,
       active_language,
     };
     data.authkey = this.stores.actions.authkey;
@@ -1184,6 +1321,11 @@ class Drugs {
     });
   }
 
+  /**
+  // метод замены препарата в листе назнчения на один или несколько из формы подбора замены
+  // а после запускает проверку на взаимодействия
+  * @param drugKey - идентификатор драга в листе назначений
+  */
   async choseNewDrugs(drugKey) {
     let concepts = [];
     let del = this.stores.drugs.drug.get(drugKey);
@@ -1201,6 +1343,10 @@ class Drugs {
     });
   }
 
+  /**
+  // метод поиска драгов по фармдействию, используется для формы подбора замены
+  * @param key - идентификатор драга в листе назначений
+  */
   async drugsByFD(key) {
     let { active_language } = this.stores.actions;
     let concepts = [];
@@ -1248,6 +1394,10 @@ class Drugs {
     });
   }
 
+  /**
+  // метод поиска фармдействий по драгу, используется для подбора замены препарата по фармдействию
+  * @param concept - концепт драга
+  */
   async FDbyDrug(concept) {
     let { active_language } = this.stores.actions;
     let data = {

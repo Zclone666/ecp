@@ -89,6 +89,9 @@ class Recipes {
     });
   }
 
+  /**
+  // метод сброса данных рецепта
+  */
   resetState = () => {
     this.ready = false;
     this.code = null;
@@ -124,6 +127,9 @@ class Recipes {
     this.validity_end_date = null;
   };
 
+  /**
+  // метод фрмирует объект для электронной подписи
+  */
   getDataToSign = () => {
     let { active_language } = this.stores.actions;
     let data = {
@@ -167,6 +173,9 @@ class Recipes {
     return data;
   };
 
+  /**
+  // метод сохраняет новые рецепт на бэке
+  */
   save = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -260,6 +269,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод получения кода МКБ10
+  */
   getMKB10 = async () => {
     let { active_language } = this.stores.actions;
     let data = {
@@ -279,6 +291,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод запрашивает печатную форму (пдф)
+  */
   print = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -311,6 +326,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод запрашивает печатную форму (пдф) без сохранения самого рецепта
+  */
   notSavePrint = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -366,6 +384,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод запрашивает отправку рецепта на имейл
+  */
   email = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -408,6 +429,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод сохраняет лист назначений на бэк
+  */
   saveList = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 

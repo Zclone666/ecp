@@ -39,6 +39,9 @@ class Clinrecs {
     autorun(() => {});
   }
 
+  /**
+  // метод сброса клинреков
+  */
   resetClinrecs() {
     this.ready = false;
     this.checker = {};
@@ -54,6 +57,10 @@ class Clinrecs {
     this.clinicalGuidelinesExist = [];
   }
 
+  /**
+  // метод получения чекера для клинреков или самого клинрека
+  * @param flag - если true - получаем результат, иначе - чекер
+  */
   async check(flag = false) {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
@@ -179,6 +186,9 @@ class Clinrecs {
     });
   }
 
+  /**
+  // метод проверки наличия клинреков
+  */
   async getClinicalGuidelinesExist() {
     // const data = {};
     // this.stores.actions.loading = true;
@@ -228,6 +238,11 @@ class Clinrecs {
     });
   }
 
+  /**
+  // рекурсивный метод получения плоского массива айди родительских элементов дерева клинрека до самого верхнего родителя
+  * @param childId - id элемента
+  * @param accumulator - массив для накопления id
+  */
   getRootClinrecId(childId, accumulator) {
     const result = accumulator ? accumulator : [];
     result.push(childId);
@@ -310,6 +325,12 @@ class Clinrecs {
   }
 
   iterator = 1;
+  /**
+  // рекурсивный метод получения выбранных драгов из клинрека и добвления их в лист назначений
+  * @param child - дочерний элемент в дереве клинрека
+  * @param clinrecId - id клинрека
+  * @param childId - id дочернего элемнта
+  */
   recursiveGetDrugs = (child = null, clinrecId = null, childId = null) => {
     // console.log("checker: ", this.checker);
     // console.log("drugToClinrecHashset ", this.drugToClinrecHashset);

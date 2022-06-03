@@ -35,40 +35,45 @@ class Patients {
     autorun(() => {});
   }
 
-  setCurrent = async ({
-    id,
-    email,
-    fio,
-    miscode,
-    misid,
-    name,
-    birthdate,
-    sex,
-    growth,
-    weight,
-    disease,
-    co_disease,
-    labparams,
-    pregnancy,
-    gestation,
-    trimester,
-    lactation,
-    driving,
-    alcohol,
-    masIndex,
-    squareIndex,
-    allergy,
-    mutations,
-    lastname,
-    patronymic,
-    firstname,
-    snils,
-    policy_num,
-    medcard_num,
+  /**
+  // метод устанавливае текущего пациента
+  * @param patient - объект пациента
+  */
+  setCurrent = async (patient) => {
+    let {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      birthdate,
+      sex,
+      growth,
+      weight,
+      disease,
+      co_disease,
+      labparams,
+      pregnancy,
+      gestation,
+      trimester,
+      lactation,
+      driving,
+      alcohol,
+      masIndex,
+      squareIndex,
+      allergy,
+      mutations,
+      lastname,
+      patronymic,
+      firstname,
+      snils,
+      policy_num,
+      medcard_num,
 
-    main_address,
-    genpassport_exist,
-  }) => {
+      main_address,
+      genpassport_exist,
+    } = patient || {};
     let patientTpl = _.cloneDeep(PatientScheme);
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
     squareIndex = parseFloat((0.007184 * Math.pow(growth, 0.725) * Math.pow(weight, 0.425)).toFixed(2));
@@ -110,24 +115,41 @@ class Patients {
     });
   };
 
+  /**
+  // метод очищает объект текущего пациента
+  */
   unsetCurrent = () => {
     this.stores.actions.resetPatientPassport();
     _.assignIn(this.current, PatientScheme);
   };
 
+  /**
+  // метод возвращает клонированный объект текущего пациента
+  */
   getCurrent = () => {
     return _.cloneDeep(this.current);
   };
 
+  /**
+  // метод возвращает клонированный объект пациента по ключу
+  * @param key - ключ пациента
+  */
   getClone = async (key) => {
     let patient = await this.patient.get(key);
     return _.cloneDeep(patient);
   };
 
+  /**
+  // метод возвращает пустой объект пациента
+  */
   getNew = () => {
     return _.cloneDeep(PatientScheme);
   };
 
+  /**
+  // метод получает данные и терапию пациента по айди
+  * @param id - айди пациента
+  */
   async request(id) {
     this.stores.actions.loading = true;
     await this.stores.actions.resetAll();
@@ -375,6 +397,10 @@ class Patients {
     });
   }
 
+  /**
+  // метод устанавливает поля формы редактирования пациента
+  * @param patient - объект пациента
+  */
   setPatient(patient) {
     let {
       allergy,
@@ -459,6 +485,10 @@ class Patients {
     return patient || {};
   }
 
+  /**
+  // метод сохраняет пациента из формы редактирования пациента
+  * @param id - айди пациента
+  */
   async getPatient(id) {
     let { active_language } = this.stores.actions;
     let data = {
@@ -484,6 +514,9 @@ class Patients {
   }
 
   //Tools/GetLastPatients
+  /**
+  // метод получает концепты последних 30 измененных пациентов для врача
+  */
   async getList() {
     this.searchReady = false;
     let { active_language } = this.stores.actions;
@@ -528,6 +561,11 @@ class Patients {
     });
   }
 
+  /**
+  // метод сохраняет в нужном формате список пациентов, полученный в методе getList
+  * @param patients - список айди пациентов
+  * @param names - объект айди => имя пациента
+  */
   async makeList({ patients, names }) {
     if (patients && _.isArray(patients)) {
       patients.forEach(async (patientId, i) => {
@@ -543,6 +581,9 @@ class Patients {
     }
   }
 
+  /**
+  // геттер возвращает массив пациентов для выпадашки с первым пустым элементом (чтоыб не выбирался первый по дефолту)
+  */
   get arr() {
     let arr = [
       {
@@ -556,6 +597,10 @@ class Patients {
     return arr;
   }
 
+  /**
+  // метод ищет возвращает объект пациента по айди
+  * @param id - айди пациента
+  */
   getById(id) {
     let res = {};
     Array.from(this.patient.values()).forEach((item, i) => {
@@ -564,6 +609,11 @@ class Patients {
     return res;
   }
 
+  /**
+  // метод побуквенного поиска пациента
+  * @param text - строка поиска
+  * @param saveTo - куда положить ответ
+  */
   async search(text, saveTo = "search") {
     this.searchReady = false;
     let { active_language } = this.stores.actions;
@@ -608,6 +658,9 @@ class Patients {
     });
   }
 
+  /**
+  // метод сохаранения пациента на бэк
+  */
   async save() {
     let { active_language } = this.stores.actions;
     let data = {

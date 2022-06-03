@@ -35,6 +35,9 @@ class Dosages {
     autorun(() => {});
   }
 
+  /**
+  // устаревший метод
+  */
   async calcDrug(key) {
     // here!
     // let currPack = {
@@ -68,7 +71,11 @@ class Dosages {
     // let { obj, value, ...helpers } = currPack
   }
 
-  //getLF
+  /**
+  // метод получения данных по фармпрепарату (для замены в листе назначений на аналог)
+  // устанавливает дозировку, лекарственную форму и способ приема, как будто они были выбраны вручную для ДВ
+  * @param drug_obj - концепт аналога
+  */
   async getFp(drug_obj) {
     let { active_language } = this.stores.actions;
     let data = {
@@ -156,6 +163,10 @@ class Dosages {
     });
   }
 
+  /**
+  // метод проверки наличия кеша дозировок для ДВ
+  * @param id - айди ДВ
+  */
   async checkDosage(id) {
     let flag = null;
     // console.log("here");
@@ -167,6 +178,10 @@ class Dosages {
     return flag;
   }
 
+  /**
+  // метод проверки наличия жидкой формы у драга (нужно для возможности создания раствора)
+  * @param key - идентификатор драга
+  */
   isSolute = async (key) => {
     let drug = await this.stores.drugs.drug.get(key);
     let dosages = await this.dosage.get(drug.id);
@@ -183,6 +198,12 @@ class Dosages {
     drug.solute = solute;
   };
 
+  /**
+  // основной метод получения дозировок для драга
+  * @param drug_obj - концепт драга
+  * @param flag - указывает на принудительное обновление кеша
+  * @param additionalNames - дополнительные строки наименований для дозировок, используются в методе drugs.Parse
+  */
   get = async (drug_obj, flag = false, additionalNames) => {
     additionalNames = additionalNames ? additionalNames : {};
     // console.log(drug_obj);
@@ -246,9 +267,13 @@ class Dosages {
     });
   };
 
+  /**
+  // метод формирует массив доступных дозировок для степпера выбора дозировки,
+  // в зависимости от выбранной лекарственной формы и/или способа приема
+  */
   get currDosagesArr() {
     let {
-      actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
+      actions: { stepsData },
       drugs: { current },
       actions: { t },
     } = this.stores;
@@ -381,6 +406,9 @@ class Dosages {
     return arr;
   }
 
+  /**
+  // геттер для прведения дозировки к базовым единицам и подсчета составных дозировок
+  */
   get calcValues() {
     let drug = this.stores.drugs.current;
     let dosages = this.current;
@@ -444,6 +472,10 @@ class Dosages {
     };
   }
 
+  /**
+  // метод для подсчета и заполнения данных для степпера выбора дозировок
+  // используется для автозаполнения, если выбран аналог или актуальная терапия
+  */
   setStepDosage = () => {
     // console.log('this.calcValues', this.calcValues);
     let { way, step } = this.stores.router.values || {};
@@ -616,7 +648,13 @@ class Dosages {
     };
   };
 
-  getFromBase = (unitId, value, double = 4, name = null) => {
+  /**
+  // метод преобразования ИЗ базовой единицы измерения
+  * @param unitId - айди единицы измерения, В которую преобразовать
+  * @param value - значение в базовой ед. изм.
+  * @param double - сколько знаков после запятой оставить
+  */
+  getFromBase = (unitId, value, double = 4) => {
     let { round } = this.stores.tools;
     // console.log(0,{ value });
 
@@ -648,6 +686,11 @@ class Dosages {
     return value || [];
   };
 
+  /**
+  // метод преобразования В базовую единицу измерения
+  * @param unitId - айди единицы измерения, ИЗ которой преобразовать
+  * @param value - значение в исходной ед. изм.
+  */
   getToBase = (unitId, value) => {
     if (
       value === "" ||

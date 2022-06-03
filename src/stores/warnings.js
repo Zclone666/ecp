@@ -118,6 +118,10 @@ class Warnings {
     }
     return { color, group };
   }
+
+  /**
+  // метод отправки измененных данных обратно в МИС
+  */
   async backToMis() {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
@@ -152,6 +156,9 @@ class Warnings {
   }
 
   //getInfoPrep
+  /**
+  // метод проверки взаимодействий
+  */
   async check() {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.backToMis();
 
@@ -271,6 +278,10 @@ class Warnings {
     });
   }
 
+  /**
+  // метод проверки варнингов для формы подбора замены
+  * @param drugsChecked - выбранные для замены препараты (проверка идет между ними и теми, что в листе назначений, кроме заменяемого)
+  */
   async checkFg(drugsChecked) {
     // if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.backToMis();
 
@@ -405,6 +416,10 @@ class Warnings {
     });
   }
 
+  /**
+  // метод получения протокола из МИСа
+  * @param protocol - айди протокола
+  */
   async protocol(protocol) {
     if (!protocol || protocol == "" || typeof protocol == "undefined") return;
     if (!this.stores.router) {
@@ -415,7 +430,7 @@ class Warnings {
     let { active_language } = this.stores.actions;
     this.stores.router.push("/");
     return POST({
-      path: "mis/Protocol", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: "mis/Protocol",
       data: { key: protocol, active_language },
       success: async (data) => {
         if (!data.drugs) {
@@ -523,6 +538,12 @@ class Warnings {
     });
   }
 
+  /**
+  // метод дополнительного текста для варнинга
+  * @param firstDrugId - айди первого драга в варнинге
+  * @param lastDrugId - айди последнго драга
+  * @param fieldId - айди поля в варнинге
+  */
   async getWarningInfo(firstDrugId, lastDrugId, fieldId) {
     const data = {};
 

@@ -162,8 +162,6 @@ const Warning = inject(
 
         //_.orderBy(arr, ["step", "value", "trust"], ["asc", "desc", "desc"])
         return arr.map((warn, i) => {
-          let interaction = getElement("interaction", warn.value);
-          let trust = getElement("trust", warn.trust);
           return (
             <Menu.Item
               key={"tab" + i}
@@ -197,9 +195,6 @@ const Warning = inject(
         // console.log({arr, tabs: this.tabs});
 
         return arr.map((warn1, i) => {
-          let interaction = getElement("interaction", warn1.value);
-          let trust = getElement("trust", warn1.trust);
-          // console.log(i);
           return (
             <Dropdown.Item
               value={i + 11}
@@ -215,14 +210,14 @@ const Warning = inject(
 
       render() {
         let {
-          actions: { getElement },
+          actions: { getWarnElement },
         } = this.props;
         const { t } = this.props.actions;
         let { activeIndex, open } = this.state;
         let widths = this.tabs.length ? (this.tabs.length < 13 ? this.tabs.length : 12) : 1;
         let warn = this.tabs[activeIndex];
-        let interaction = getElement("interaction", warn.value);
-        let trust = getElement("trust", warn.trust);
+        let interaction = getWarnElement("interaction", warn.value);
+        let trust = getWarnElement("trust", warn.trust);
 
         // console.log("this tabs: ", this.tabs);
         return (
