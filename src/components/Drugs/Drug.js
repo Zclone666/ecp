@@ -109,10 +109,14 @@ const Drug = inject(
 
         let arr = [];
 
-        if (calc && calc.fullDosage && helpers.dosage && helpers.dosage.id) {
-          let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
-          let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
-          arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
+        if (calc && calc.count && calc.countUnit && helpers.dosage && helpers.dosage.id) {
+          let str = `${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
+          if (calc.fullDosage) {
+            let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
+            let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
+            str += ` (${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName})`;
+          }
+          arr.push(str);
         }
 
         if (freq_id && UIText && UIText.freq && UIText.freq[freq_id]) {
@@ -158,6 +162,7 @@ const Drug = inject(
         const { t } = this.props.actions;
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
+        // console.log(drug);
         let selectedWarnings = warnIcons[selectedDrug];
 
         const drugWarnings = _.orderBy(
