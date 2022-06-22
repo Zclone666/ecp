@@ -138,6 +138,7 @@ class Clinrecs {
                   name: data.names[id],
                   parent: question.parent,
                   type: question.type,
+                  sort: question.sort,
                   helper: question.helper || null,
                   unit: question.unitid
                     ? shortnames[question.unitid] ||
@@ -158,6 +159,7 @@ class Clinrecs {
                       name: data.names[id],
                       parent: question.parent,
                       type: question.type,
+                      sort: question.sort,
                       unit: question.unitid
                         ? shortnames[question.unitid] ||
                           data.shortnames[question.unitid] ||
