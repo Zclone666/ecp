@@ -400,7 +400,7 @@ const Main = inject(
               {unselectedRows.length > 0 && (
                 <Menu secondary className={`bottom fixed`}>
                   <Menu.Item>
-                    {t("removed_string")}: {unselectedRows.length}
+                    {t("amount_of_drugs_removed")}: {unselectedRows.length}
                   </Menu.Item>
                   <Menu.Item onClick={this.returnDeleted}>
                     <Icon name="undo alternate" />
@@ -408,7 +408,7 @@ const Main = inject(
                   </Menu.Item>
                   <Menu.Item onClick={this.clearDeleted}>
                     <Icon name="delete" />
-                    {t("remove_nasovsev")}
+                    {t("delete_forever")}
                   </Menu.Item>
                 </Menu>
               )}

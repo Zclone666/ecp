@@ -65,6 +65,7 @@ const Page = inject(
           <div className="scrollwrapper">
             <List selection divided className="dozelist big">
               {_.orderBy(page.arr, ["parent", "sort"], ["desc", "asc"]).map((item, x) => {
+                // console.log({ sort: item.sort });
                 if (item.parent && item.parent != parentFlag) {
                   parentFlag = item.parent;
                   let groupHeader = names[item.parent];

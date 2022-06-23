@@ -89,6 +89,9 @@ class Recipes {
     });
   }
 
+  /**
+  // метод сброса данных рецепта
+  */
   resetState = () => {
     this.ready = false;
     this.code = null;
@@ -124,6 +127,9 @@ class Recipes {
     this.validity_end_date = null;
   };
 
+  /**
+  // метод фрмирует объект для электронной подписи
+  */
   getDataToSign = () => {
     let { active_language } = this.stores.actions;
     let data = {
@@ -167,6 +173,9 @@ class Recipes {
     return data;
   };
 
+  /**
+  // метод сохраняет новые рецепт на бэке
+  */
   save = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -180,6 +189,11 @@ class Recipes {
         .filter((drug) => this.drugKeysForPrescription.includes(drug.key))
         .map((d) => {
           if (d?.dosage?.dosage?.length == 0 && d?.calc?.dosage?.[0] == 0) {
+            // if (d.calc.dosage && typeof d.calc.dosage == "array") {
+            //   d.calc.dosage = d.calc.dosage.map((item) => {
+            //     return parseInt(item);
+            //   });
+            // }
             return { ...d, calc: { ...d.calc, count: null, countBaseUnit: null, countUnit: null, dayCount: null } };
           } else return d;
         }),
@@ -229,16 +243,16 @@ class Recipes {
         if (data && data.code) {
           this.code = data.code;
 
-          this.stores.actions.makeAlerts({
-            alerts: [
-              {
-                title: this.stores.actions.t(this.formType == "list" ? "appointment_sheet_formed" : "recipe_discharged"),
-                message: this.stores.actions.t("you_print_send_mail"),
-                level: "success",
-                sticky: false,
-              },
-            ],
-          });
+          // this.stores.actions.makeAlerts({
+          //   alerts: [
+          //     {
+          //       title: this.stores.actions.t(this.formType == "list" ? "appointment_sheet_formed" : "recipe_discharged"),
+          //       message: this.stores.actions.t("you_print_send_mail"),
+          //       level: "success",
+          //       sticky: false,
+          //     },
+          //   ],
+          // });
 
           return data.code;
         } else {
@@ -255,6 +269,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод получения кода МКБ10
+  */
   getMKB10 = async () => {
     let { active_language } = this.stores.actions;
     let data = {
@@ -274,6 +291,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод запрашивает печатную форму (пдф)
+  */
   print = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -306,8 +326,10 @@ class Recipes {
     });
   };
 
+  /**
+  // метод запрашивает печатную форму (пдф) без сохранения самого рецепта
+  */
   notSavePrint = async () => {
-
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
     this.stores.actions.loading = true;
@@ -362,6 +384,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод запрашивает отправку рецепта на имейл
+  */
   email = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 
@@ -404,6 +429,9 @@ class Recipes {
     });
   };
 
+  /**
+  // метод сохраняет лист назначений на бэк
+  */
   saveList = async () => {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.stores.warnings.backToMis();
 

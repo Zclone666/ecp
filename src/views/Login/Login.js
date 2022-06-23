@@ -1,7 +1,20 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
-import { Button, Form, Grid, Header, Image, Message, Segment, Divider, Checkbox, Confirm } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Image,
+  Message,
+  Segment,
+  Divider,
+  Checkbox,
+  Confirm,
+  Dropdown,
+  Flag,
+} from "semantic-ui-react";
 import RouterLink from "../../router/a";
 import { withTranslation } from "react-i18next";
 import { LOGIN } from "../../constants";
@@ -32,6 +45,13 @@ const Login = inject(
           this.props.actions.loginForm.password = autofillPassword ? autofillPassword : "";
         }
       }
+
+      changeLang = (lang) => {
+        // console.log({ lang });
+        this.props.i18n.changeLanguage(lang);
+        this.props.actions.setLang(lang);
+      };
+
       handleLogin = async (e) => {
         e && e.preventDefault();
         if (this.state.authPending) return;
@@ -84,9 +104,38 @@ const Login = inject(
           loginForm: { remember, email, password },
           projectTitle,
           t,
+          active_language,
         } = this.props.actions;
         return (
           <div className="login-form height100perc">
+            <div style={{ position: "absolute", right: 0, top: 0, padding: "15px" }}>
+              <Dropdown
+                // disabled
+                item
+                text={
+                  active_language == "ru" ? (
+                    <>
+                      Русский <Flag name="ru" />
+                    </>
+                  ) : (
+                    <>
+                      English <Flag name="gb" />
+                    </>
+                  )
+                }
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => this.changeLang("en")}>
+                    <Flag name="gb" />
+                    English
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => this.changeLang("ru")}>
+                    <Flag name="ru" />
+                    Русский
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
             <Grid padded textAlign="center" style={{ height: "100%" }} verticalAlign="middle">
               <Grid.Column style={{ maxWidth: 450 }}>
                 <Segment basic>
