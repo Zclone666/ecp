@@ -74,9 +74,22 @@ class Tools {
         if (units[250 || units[99]]) {
           names[99] = this.stores.actions.t("percent");
           nameshort[99] = "%";
-          unitpharm.push(99);
+          unitrefs[248].push("99");
+          unitpharm.push("99");
           units[99] = _.cloneDeep(units[250]);
-          units[99][1].value = 100;
+          units[99][0].value = 10;
+
+          names[999999] = this.stores.actions.t("percent");
+          nameshort[999999] = "%";
+          // unitrefs[248].push("999999");
+          unitpharm.push("999999");
+          units[999999] = [
+            { action: "division", id: "248", value: 1000 },
+            // { action: "multiplication", id: "168", value: 0.1 },
+          ];
+          // units[99][0].value = 10;
+          // units[99][1].value = 10;
+          // console.log({ "%": units[99] });
         }
         // end kostyl
 
@@ -233,6 +246,10 @@ class Tools {
         _.keys(unitrefs).forEach((refkey) => {
           if (unitrefs[refkey].includes(unitkey)) newunit.arr = refkey;
         });
+      }
+
+      if (unitkey == 99) {
+        newunit.arr = "248";
       }
 
       if (unitrefs[unitkey]) {

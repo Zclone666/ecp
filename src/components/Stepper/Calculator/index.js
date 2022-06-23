@@ -84,8 +84,16 @@ const Calculator = inject(
           // this.props.actions.calculatorForm[name] = value
         }
 
-        let { dosage, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage } =
-          this.props.actions.calculatorForm;
+        let {
+          dosage,
+          count,
+          dayCount,
+          dosageUnit,
+          fullDosage,
+          weightDosage,
+          dayDosage,
+          dayWeightDosage,
+        } = this.props.actions.calculatorForm;
 
         // console.log({ dosage, count, dayCount, dosageUnit, fullDosage, weightDosage, dayDosage, dayWeightDosage });
 
@@ -186,8 +194,17 @@ const Calculator = inject(
         let { getToBase, getFromBase, calcValues } = this.props.dosages;
         let { freq } = this.props.tools.unitsSchedule;
         let preset = { tpl: freq[value] }; //_.find(presets, { 'id': value});
-        let { type, dosage, count, dosageUnit, dayCount, fullDosage, weightDosage, dayDosage, dayWeightDosage } =
-          this.props.actions.calculatorForm;
+        let {
+          type,
+          dosage,
+          count,
+          dosageUnit,
+          dayCount,
+          fullDosage,
+          weightDosage,
+          dayDosage,
+          dayWeightDosage,
+        } = this.props.actions.calculatorForm;
         this.props.drugs.current.freq = value;
         this.props.drugs.current.freq_id = preset.tpl[0].id;
         this.props.actions.scheduleForm.interval = preset.tpl;
@@ -343,13 +360,13 @@ const Calculator = inject(
         );
         if (concetrationNeeded) {
           weights.push({
-            key: 99,
-            value: 99,
+            key: 999999,
+            value: 999999,
             text: "%",
           });
         }
         //
-        // console.log({ currUnit, weights, dosage });
+        // console.log({ currUnit, def, weights, dosage });
         //
         return (
           <Segment basic>
@@ -369,7 +386,7 @@ const Calculator = inject(
                       disabled={disableAll || disableMulti}
                       size="big"
                       name="dosage"
-                      value={getFromBase(currUnit || def, dosage).join(" + ") || ""}
+                      value={getFromBase(currUnit || def, currUnit === 999999 ? dosage / 10 : dosage).join(" + ") || ""}
                       label={
                         <Dropdown
                           name="currUnit"

@@ -434,6 +434,7 @@ class Dosages {
         if (item.action === "division") secondUnit = units[item.id];
       });
     }
+    // console.log(unit);
     // console.log({firstUnit, unit});
     let unitsArr = ((firstUnit || unit) && getUnitArr((firstUnit && firstUnit.id) || (unit && unit.id))) || {};
     // console.log('pack',pack);
@@ -654,12 +655,13 @@ class Dosages {
   * @param value - значение в базовой ед. изм.
   * @param double - сколько знаков после запятой оставить
   */
-  getFromBase = (unitId, value, double = 4) => {
+  getFromBase = (unitId, value, double = 6) => {
     let { round } = this.stores.tools;
     // console.log(0,{ value });
 
     let unit = this.stores.tools.units[unitId];
     if (!unit) return [0];
+    // console.log(unit);
     //let dosage = value
 
     if (!_.isArray(value)) value = [value];
@@ -700,12 +702,7 @@ class Dosages {
       (value.split && (value.split(",")[1] === "" || value.split(".")[1] === ""))
     )
       return value;
-    // console.log(typeof(value));
-    // value = value.replace(',', '.')
-    // if(value.split('.')[1] && value.split('.')[1] != ''){
-    //   console.log(value);
-    //   value = parseFloat(value)
-    // }
+
     let unit = this.stores.tools.units[unitId];
     if (!unit) return 0;
     let dosage = value;
