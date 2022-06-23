@@ -35,6 +35,9 @@ class Dosages {
     autorun(() => {});
   }
 
+  /**
+  // устаревший метод
+  */
   async calcDrug(key) {
     // here!
     // let currPack = {
@@ -68,7 +71,11 @@ class Dosages {
     // let { obj, value, ...helpers } = currPack
   }
 
-  //getLF
+  /**
+  // метод получения данных по фармпрепарату (для замены в листе назначений на аналог)
+  // устанавливает дозировку, лекарственную форму и способ приема, как будто они были выбраны вручную для ДВ
+  * @param drug_obj - концепт аналога
+  */
   async getFp(drug_obj) {
     let { active_language } = this.stores.actions;
     let data = {
@@ -156,6 +163,10 @@ class Dosages {
     });
   }
 
+  /**
+  // метод проверки наличия кеша дозировок для ДВ
+  * @param id - айди ДВ
+  */
   async checkDosage(id) {
     let flag = null;
     // console.log("here");
@@ -167,6 +178,10 @@ class Dosages {
     return flag;
   }
 
+  /**
+  // метод проверки наличия жидкой формы у драга (нужно для возможности создания раствора)
+  * @param key - идентификатор драга
+  */
   isSolute = async (key) => {
     let drug = await this.stores.drugs.drug.get(key);
     let dosages = await this.dosage.get(drug.id);
@@ -183,6 +198,12 @@ class Dosages {
     drug.solute = solute;
   };
 
+  /**
+  // основной метод получения дозировок для драга
+  * @param drug_obj - концепт драга
+  * @param flag - указывает на принудительное обновление кеша
+  * @param additionalNames - дополнительные строки наименований для дозировок, используются в методе drugs.Parse
+  */
   get = async (drug_obj, flag = false, additionalNames) => {
     additionalNames = additionalNames ? additionalNames : {};
     // console.log(drug_obj);
@@ -246,9 +267,13 @@ class Dosages {
     });
   };
 
+  /**
+  // метод формирует массив доступных дозировок для степпера выбора дозировки,
+  // в зависимости от выбранной лекарственной формы и/или способа приема
+  */
   get currDosagesArr() {
     let {
-      actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
+      actions: { stepsData },
       drugs: { current },
       actions: { t },
     } = this.stores;
@@ -381,6 +406,9 @@ class Dosages {
     return arr;
   }
 
+  /**
+  // геттер для прведения дозировки к базовым единицам и подсчета составных дозировок
+  */
   get calcValues() {
     let drug = this.stores.drugs.current;
     let dosages = this.current;
@@ -406,6 +434,7 @@ class Dosages {
         if (item.action === "division") secondUnit = units[item.id];
       });
     }
+    // console.log(unit);
     // console.log({firstUnit, unit});
     let unitsArr = ((firstUnit || unit) && getUnitArr((firstUnit && firstUnit.id) || (unit && unit.id))) || {};
     // console.log('pack',pack);
@@ -444,11 +473,141 @@ class Dosages {
     };
   }
 
+  /**
+  // метод для подсчета и заполнения данных для степпера выбора дозировок
+  // используется для автозаполнения, если выбран аналог или актуальная терапия
+  */
   setStepDosage = () => {
     // console.log('this.calcValues', this.calcValues);
+    let { way, step } = this.stores.router.values || {};
     let vals = this.calcValues;
     let weight = this.stores.patients.current.weight || null;
-
+    // console.log({ way, step });
+    // console.log(vals);
+    if (!step) {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: null,
+        way: null,
+        step: null,
+        form: null,
+        method: null,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
+    if (step == 1 || step == "1") {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: this.stores.actions.stepsData.key,
+        way,
+        step,
+        form: null,
+        method: null,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
+    if (way === "lf" && step == 2) {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: this.stores.actions.stepsData.key,
+        way,
+        step,
+        form: this.stores.actions.stepsData.form,
+        method: null,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
+    if (way === "lf" && step == 3) {
+      this.stores.actions.stepsData.method = null;
+      return;
+    }
+    if (way === "methods" && step == "2") {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: this.stores.actions.stepsData.key,
+        way,
+        step,
+        form: null,
+        method: this.stores.actions.stepsData.method,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
+    if (way === "methods" && step == "3") {
+      this.stores.actions.calculatorForm = {
+        dosage: [0],
+        count: 1,
+        dosageUnit: "248",
+        dayCount: 1,
+        fullDosage: [0],
+        weightDosage: [0],
+        dayDosage: [0],
+        dayWeightDosage: [0],
+      };
+      this.stores.actions.stepsData = {
+        key: this.stores.actions.stepsData.key,
+        way,
+        step,
+        form: this.stores.actions.stepsData.form,
+        method: this.stores.actions.stepsData.method,
+        pack: {},
+        dosage: [],
+        value: null,
+        helpers: {},
+      };
+      return;
+    }
     if (!vals.dosage.value) return;
 
     // let baseDosage = vals.dosage.value
@@ -490,12 +649,19 @@ class Dosages {
     };
   };
 
-  getFromBase = (unitId, value, double = 4, name = null) => {
+  /**
+  // метод преобразования ИЗ базовой единицы измерения
+  * @param unitId - айди единицы измерения, В которую преобразовать
+  * @param value - значение в базовой ед. изм.
+  * @param double - сколько знаков после запятой оставить
+  */
+  getFromBase = (unitId, value, double = 6) => {
     let { round } = this.stores.tools;
     // console.log(0,{ value });
 
     let unit = this.stores.tools.units[unitId];
     if (!unit) return [0];
+    // console.log(unit);
     //let dosage = value
 
     if (!_.isArray(value)) value = [value];
@@ -522,6 +688,11 @@ class Dosages {
     return value || [];
   };
 
+  /**
+  // метод преобразования В базовую единицу измерения
+  * @param unitId - айди единицы измерения, ИЗ которой преобразовать
+  * @param value - значение в исходной ед. изм.
+  */
   getToBase = (unitId, value) => {
     if (
       value === "" ||
@@ -531,12 +702,7 @@ class Dosages {
       (value.split && (value.split(",")[1] === "" || value.split(".")[1] === ""))
     )
       return value;
-    // console.log(typeof(value));
-    // value = value.replace(',', '.')
-    // if(value.split('.')[1] && value.split('.')[1] != ''){
-    //   console.log(value);
-    //   value = parseFloat(value)
-    // }
+
     let unit = this.stores.tools.units[unitId];
     if (!unit) return 0;
     let dosage = value;

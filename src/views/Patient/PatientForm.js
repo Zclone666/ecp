@@ -83,6 +83,13 @@ const PatientForm = inject(
         }
       }
 
+      veryOld(birthdate) {
+        return (
+          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") <= 10 ||
+          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60
+        );
+      }
+
       handleChange = (e, { name, value }) => {
         if (!name && !value) {
           let { name, value } = e.target;
@@ -99,9 +106,7 @@ const PatientForm = inject(
         }
         const { birthdate } = this.props.patients.current;
         // console.log(errorValue);
-        let veryOld =
-          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") <= 12 ||
-          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
+        let veryOld = this.veryOld(birthdate);
 
         if (name === "weight" || name === "growth") {
           value = clearDouble(value);
@@ -340,7 +345,7 @@ const PatientForm = inject(
 
         let isWoman = sex === "female";
         let isPregant = !!pregnancy;
-        let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
+        let veryOld = this.veryOld(birthdate);
         let { search_patient } = this.state;
 
         return (

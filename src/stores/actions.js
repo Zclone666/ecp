@@ -49,6 +49,7 @@ class Actions {
 
   disabled = false;
   miskey = null;
+  misurl = null;
 
   active_language = "ru";
 
@@ -263,6 +264,14 @@ class Actions {
   activeDrugs = [];
   activeConflicts = [];
 
+  selectedDrugFg = null;
+  selectedConflictFg = null;
+  activeDrugsFg = [];
+  activeConflictsFg = [];
+
+  checkedFg = [];
+  openForFg = null;
+
   drugStructure = _.cloneDeep(StructureScheme);
 
   default_clinic_id = null;
@@ -357,6 +366,12 @@ class Actions {
       selectedConflict: observable,
       activeDrugs: observable,
       activeConflicts: observable,
+      selectedDrugFg: observable,
+      selectedConflictFg: observable,
+      activeDrugsFg: observable,
+      activeConflictsFg: observable,
+      checkedFg: observable,
+      openForFg: observable,
       drugStructure: observable,
       default_clinic_id: observable,
       resetAll: action,
@@ -382,6 +397,7 @@ class Actions {
       // }
     });
   }
+
   async setLang(lang) {
     if (lang !== this.active_language) {
       // this.drugStructure.active_language =
@@ -390,6 +406,7 @@ class Actions {
       window.location.reload(false);
     }
   }
+
   onResize() {
     // console.log('resize');
     let h = window.innerHeight;
@@ -417,6 +434,9 @@ class Actions {
     }
   }
 
+  /*
+  // создает и возвращает полную структуру пациента с назначениями для отправки
+  */
   get structure() {
     let { patients, drugs } = this.stores;
     let structure = _.cloneDeep(this.drugStructure);
@@ -428,6 +448,12 @@ class Actions {
     return structure;
   }
 
+  /**
+  // сбрасывает введенные/загруженные данные в зависимости от выбранного параметра
+  * @param flag == patient - сбрасывает введенного пациента и его лист назначений
+                == list - сбрасывает лист назначений
+                == all - сбрасывает все данные
+  */
   async resetAll(flag = "patient") {
     let structure = await _.cloneDeep(StructureScheme);
     this.stores.clinrecs.collectorAvailable = false;
@@ -492,6 +518,11 @@ class Actions {
     // }
   }
 
+  /**
+  // выбор данных для пациента из выпадающего списка (аллергия, заболевание)
+  * @param row - концепт из выпадающего списка строки поиска
+  * @param from - название списка, по которому был поиск (disease, allergy)
+  */
   async selectPatient(row, from) {
     row.key = moment().format("x").toString();
     this.stores.patients.current[from] = await _.unionWith(
@@ -503,7 +534,11 @@ class Actions {
     this.stores.db.clearData();
     return true;
   }
-
+  /**
+  // удаление данных для пациента (аллергия, заболевание)
+  * @param row - концепт для удаления
+  * @param from - название параметра для удаления (disease, allergy)
+  */
   async unselectPatient(row, from) {
     this.stores.patients.current[from] = await _.xorWith(
       this.stores.patients.current[from],
@@ -515,6 +550,10 @@ class Actions {
     return true;
   }
 
+  /**
+  // получене служебных данных (списки единиц измерения, тексовых строк на нужном языке и т.п.)
+  * @param name - название списка (и апи для него)
+  */
   async getObject(name) {
     let { active_language } = this;
     return POST({
@@ -539,7 +578,12 @@ class Actions {
     });
   }
 
-  getElement = (name, value) => {
+  /**
+  // получене названия элемнта для вкладки варнинга (опасность и доказательность)
+  * @param name - название списка
+  * @param value - значение
+  */
+  getWarnElement = (name, value) => {
     // console.log({ el: this.elements, name, value });
     let text = "";
     this.elements[name].forEach((item, i) => {
@@ -568,12 +612,19 @@ class Actions {
     return text;
   };
 
+  /**
+  // проверка, что заполнены все поля для сохранения назначения
+  */
   get isPrescriptFilled() {
     let { doctor_id, clinic_id } = this.drugStructure;
     let patient = this.stores.patients.current;
     return (patient.key || patient.id) && doctor_id && clinic_id;
   }
 
+  /**
+  // метод автоматической авторизации при открытии страницы. также загружает служебные данные
+  // работает как для обычной авторизации, так и для авторизации по ссылке из МИСа
+  */
   async autologin() {
     // this.drugStructure.active_language =
     this.active_language = (await localStorage.getItem("lang")) || null;
@@ -628,8 +679,8 @@ class Actions {
         });
       if (misAuthSuccess) return;
     }
-    //------------------------------
 
+    //------------AUTHKEY-----------
     this.authkey = (await localStorage.getItem("authkey")) || "";
     // return;
     if (this.stores.router.values.protocol) {
@@ -688,6 +739,9 @@ class Actions {
     });
   }
 
+  /**
+  // метод проверки авторизации
+  */
   async login() {
     //this.loginForm.key = AUTH_SERVICE_KEY;
     this.loading = true;
@@ -827,6 +881,10 @@ class Actions {
       },
     });
   }
+
+  /**
+  // метод получения профиля врача
+  */
   async getProfile() {
     let data = {
       // key: AUTH_SERVICE_KEY,
@@ -876,6 +934,10 @@ class Actions {
       },
     });
   }
+
+  /**
+  // метод получения ключа (authkey)
+  */
   async fakelogin() {
     this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey, remember, ...data } = this.loginForm;
@@ -934,6 +996,10 @@ class Actions {
     });
   }
 
+  /**
+  // метод получения данных при входе по ссылке из МИСа
+  * @param data - данные, полученные методом autologin
+  */
   async fakeMisLogin(data) {
     this.loginForm.key = AUTH_SERVICE_KEY;
     this.loginForm.privateKey = data.args.key;
@@ -983,6 +1049,10 @@ class Actions {
     this.loading = false;
   }
 
+  /**
+  // метод входа по персональному ключу (для кробки)
+  * @param privateKey - персональный ключ пользователя
+  */
   async fakePrivateKeylogin(privateKey) {
     this.loginForm.key = AUTH_SERVICE_KEY;
     if (privateKey == undefined) privateKey = this.loginForm.privateKey;
@@ -1064,6 +1134,10 @@ class Actions {
       },
     });
   }
+
+  /**
+  // метод регистрации пользователя
+  */
   async signin() {
     this.signinForm.key = AUTH_SERVICE_KEY;
 
@@ -1088,6 +1162,10 @@ class Actions {
       },
     });
   }
+
+  /**
+  // проверка наличия пользователя в системе (по email)
+  */
   async checkUserUmkb() {
     // this.signinForm.key = AUTH_SERVICE_KEY;
     let dataSend = {
@@ -1151,6 +1229,9 @@ class Actions {
     });
   }
 
+  /**
+  // метод подтверждения email
+  */
   async confirm() {
     this.confirmForm.key = AUTH_SERVICE_KEY;
     return POST({
@@ -1175,6 +1256,9 @@ class Actions {
     });
   }
 
+  /**
+  // метод запроса письма для подтвержления email
+  */
   async getConfirm() {
     this.getConfirmForm.key = AUTH_SERVICE_KEY;
     return POST({
@@ -1198,6 +1282,9 @@ class Actions {
     });
   }
 
+  /**
+  // метод запроса письма для сброса пароля
+  */
   async resetPass() {
     this.resetPassForm.key = REQUEST_PASS_KEY;
     return POST({
@@ -1224,6 +1311,9 @@ class Actions {
     });
   }
 
+  /**
+  // метод задания нового пароля
+  */
   async newPass() {
     this.newPassForm.key = RESET_PASS_KEY;
     return POST({
@@ -1253,6 +1343,9 @@ class Actions {
     });
   }
 
+  /**
+  // метод разлогинивания (уничтожает authkey)
+  */
   async logout() {
     return GET({
       path: createCsServerUrl(`/api/user/authexit`),
@@ -1270,6 +1363,10 @@ class Actions {
     });
   }
 
+  /**
+  // метод для отображения текстовой страки на нужном языке
+  * @param k - текстовый ключ строки
+  */
   t = (k) => {
     const defaultTexts = i18n.res;
     const ecptext = this?.UIText?.ecptext || {};

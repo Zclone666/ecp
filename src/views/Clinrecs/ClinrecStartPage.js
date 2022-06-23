@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import { List, Menu, Responsive, Segment, Checkbox } from "semantic-ui-react";
+import { List, Menu, Responsive, Segment, Checkbox, Popup } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
+import _ from "lodash";
 
 const ClinrecStartPage = inject(
   "actions",
@@ -66,6 +67,11 @@ const ClinrecStartPage = inject(
           .map((d) => d.id)
           .concat(this.props.patients.current.co_disease.map((d) => d.id));
         // console.log({ clinicalGuidelinesExist });
+        // console.log(this.state.checked);
+        const disabled = !_.findKey(this.state.checked, function (o) {
+          return o;
+        });
+
         const rednerTree = (data) => {
           return data?.items?.length ? (
             <List.Item style={{ height: "100%" }} key={data.id}>
@@ -119,7 +125,22 @@ const ClinrecStartPage = inject(
           <>
             <Menu className="bottom fixed menu two item huge main">
               <Menu.Item onClick={() => this.props.router.push("/")}>{t("back")}</Menu.Item>
-              <Menu.Item onClick={this.proceedToClinrecs}>{t("apply")}</Menu.Item>
+              {disabled ? (
+                <Popup
+                  position="top center"
+                  trigger={
+                    <Menu.Item disabled={disabled} onClick={this.proceedToClinrecs}>
+                      {t("apply")}
+                    </Menu.Item>
+                  }
+                >
+                  Выберите хотя бы один вариант
+                </Popup>
+              ) : (
+                <Menu.Item disabled={disabled} onClick={this.proceedToClinrecs}>
+                  {t("apply")}
+                </Menu.Item>
+              )}
             </Menu>
             {/* <div>
               <div>clinrecs start page</div>

@@ -22,8 +22,23 @@ class Warnings {
   cautionsTitle = null;
   cautions = [];
   icons = {};
+
+  groupsFg = {};
+  cautionsTitleFg = null;
+  cautionsFg = [];
+  iconsFg = {};
+
   warningInfo = {};
   info = {
+    names: observable({}),
+    description: observable({}),
+    guidance: observable({}),
+    literature: observable({}),
+    outcome: observable({}),
+    urls: observable({}),
+    hinttype: observable({}),
+  };
+  infoFg = {
     names: observable({}),
     description: observable({}),
     guidance: observable({}),
@@ -41,15 +56,22 @@ class Warnings {
       cautions: observable,
       icons: observable,
       warningInfo: observable,
+
+      groupsFg: observable,
+      cautionsTitleFg: observable,
+      cautionsFg: observable,
+      iconsFg: observable,
     });
 
     this.stores = stores;
     this.router = stores.router;
 
     this.warning = observable.map({}, "warning");
+    this.warningFg = observable.map({}, "warningFg");
 
     autorun(() => {});
   }
+
   getGroup(val) {
     let color = "#cccccc";
     let group = 0;
@@ -96,6 +118,10 @@ class Warnings {
     }
     return { color, group };
   }
+
+  /**
+  // метод отправки измененных данных обратно в МИС
+  */
   async backToMis() {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
@@ -130,6 +156,9 @@ class Warnings {
   }
 
   //getInfoPrep
+  /**
+  // метод проверки взаимодействий
+  */
   async check() {
     if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.backToMis();
 
@@ -223,6 +252,10 @@ class Warnings {
                       value: item.value,
                       color,
                       group,
+                      // если нужен подбор по фармгруппе
+                      needChange:
+                        (warnIcons[subject.drugkey] && warnIcons[subject.drugkey].needChange) ||
+                        (item.type === "interdrug" && item.value > 0.5),
                     };
                   }
                 }
@@ -245,6 +278,148 @@ class Warnings {
     });
   }
 
+  /**
+  // метод проверки варнингов для формы подбора замены
+  * @param drugsChecked - выбранные для замены препараты (проверка идет между ними и теми, что в листе назначений, кроме заменяемого)
+  */
+  async checkFg(drugsChecked) {
+    // if (this.stores.actions.misurl && this.stores.actions.misurl.length > 0) this.backToMis();
+
+    this.stores.actions.loading = true;
+    let { active_language } = this.stores.actions;
+    // this.stores.db.clearData(false, true);
+    let data = _.cloneDeep(this.stores.actions.drugStructure);
+    let drugsFull = Array.from(this.stores.drugs.drug.values());
+    let liquidsFull = Array.from(this.stores.drugs.liquid.values());
+
+    // drug we will change
+    let myDrugKey = (this.stores.router.values && this.stores.router.values.drug) || null;
+
+    // drugs from fd and fg
+    let { drugsForFG } = this.stores.drugs;
+
+    drugsChecked.forEach((drug, i) => {
+      data.drugs.push(drugsForFG[drug]);
+    });
+
+    drugsFull.forEach((drugFull, i) => {
+      if (myDrugKey === drugFull.key) {
+        //maybe dosage
+      } else {
+        if (!data.drugs) data.drugs = [];
+        let { helpers, ...drug } = drugFull;
+        data.drugs.push(drug);
+      }
+    });
+    // liquidsFull.forEach((liquidFull, i) => {
+    //   let { helpers, ...liquid } = liquidFull;
+    //   if (liquid.group != 0) {
+    //     data.liquids.push(liquid);
+    //   }
+    // });
+
+    //data.service = "43"
+    data.active_language = active_language;
+
+    data.return_subjects = false;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: "check/Warnings", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      data,
+      success: async (data) => {
+        console.log("DATA", data);
+        if (data && data.warnings && _.isArray(data.warnings)) {
+          this.infoFg.names = _.clone(data.names);
+          this.infoFg.description = _.clone(data.description);
+          this.infoFg.guidance = _.clone(data.guidance);
+          this.infoFg.literature = _.clone(data.literature);
+          this.infoFg.outcome = _.clone(data.outcome);
+          this.infoFg.urls = _.clone(data.urls);
+          this.infoFg.hinttype = _.clone(data.hinttype);
+          this.infoFg.fields = _.clone(data.fields);
+
+          this.cautionsTitleFg = data.cautiontitle && data.names[data.cautiontitle];
+          this.cautionsFg =
+            data.cautionitems &&
+            data.cautionitems.map((caut) => {
+              return data.names[caut];
+            });
+
+          let warnGroups = {};
+          let warnIcons = {};
+          let warnForDrug = {};
+          let warnForGroup = {};
+          await data.warnings.forEach((item, i) => {
+            if (!item.id || item.id.length < 1) item.id = null; //moment().format('x').toString()
+            item.key = "warnkey_" + i;
+
+            let { group, color } = this.getGroup(item.value);
+            let wKey = `${item.type}_${group}`;
+
+            let current = this.warningFg.get(item.id) || {};
+            this.warningFg.set(item.key, _.assignIn(current, { group, color, ...item }));
+
+            let hint = data.hinttype[item.type] && data.names[data.hinttype[item.type]];
+
+            //разбивка по Драгам
+            if (item.subjects && _.isArray(item.subjects)) {
+              item.subjects.forEach((subject, s) => {
+                //создание варнингов по Драгам
+                if (!warnGroups[item.type]) {
+                  warnGroups[item.type] = {
+                    type: item.type,
+                    value: item.value,
+                    valuecolor: color,
+                    group,
+                    hint,
+                    hintarr: item.hint,
+                  };
+                } else {
+                  if (group > warnGroups[item.type].group) {
+                    warnGroups[item.type].value = item.value;
+                    warnGroups[item.type].valuecolor = color;
+                    warnGroups[item.type].group = group;
+                    warnGroups[item.type].hintarr = _.unionWith(warnGroups[item.type].hintarr, item.hint, _.isEqual);
+                  }
+                }
+                if (subject.type === "drug") {
+                  //иконки к Драгам
+                  if (!warnIcons[subject.drugkey] || group > warnIcons[subject.drugkey].group) {
+                    warnIcons[subject.drugkey] = {
+                      value: item.value,
+                      color,
+                      group,
+                      // если нужен подбор по фармгруппе
+                      needChange:
+                        (warnIcons[subject.drugkey] && warnIcons[subject.drugkey].needChange) ||
+                        (item.type === "interdrug" && item.value >= 0.5),
+                    };
+                  }
+                }
+              });
+            }
+          });
+
+          this.iconsFg = _.assignIn(this.warnIconsFg, warnIcons);
+          this.groupsFg = _.assignIn(this.groupsFg, warnGroups);
+        }
+
+        this.stores.actions.loading = false;
+      },
+      fail: (alerts) => {
+        this.stores.actions.loading = false;
+      },
+      always: (data) => {
+        this.stores.actions.makeAlerts(data);
+      },
+    });
+  }
+
+  /**
+  // метод получения протокола из МИСа
+  * @param protocol - айди протокола
+  */
   async protocol(protocol) {
     if (!protocol || protocol == "" || typeof protocol == "undefined") return;
     if (!this.stores.router) {
@@ -255,7 +430,7 @@ class Warnings {
     let { active_language } = this.stores.actions;
     this.stores.router.push("/");
     return POST({
-      path: "mis/Protocol", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: "mis/Protocol",
       data: { key: protocol, active_language },
       success: async (data) => {
         if (!data.drugs) {
@@ -363,6 +538,12 @@ class Warnings {
     });
   }
 
+  /**
+  // метод дополнительного текста для варнинга
+  * @param firstDrugId - айди первого драга в варнинге
+  * @param lastDrugId - айди последнго драга
+  * @param fieldId - айди поля в варнинге
+  */
   async getWarningInfo(firstDrugId, lastDrugId, fieldId) {
     const data = {};
 

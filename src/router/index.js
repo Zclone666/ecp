@@ -16,7 +16,7 @@ export default class Router {
       route: observable,
       match: observable,
       values: observable,
-      onLocation: action
+      onLocation: action,
     });
 
     // this.params = observable.map({});
@@ -53,6 +53,13 @@ export default class Router {
           //this.stores.actions.miskey = this.values.miskey;
         }
       }
+
+      if (this.values && this.values.page && this.values.page === "chosedv") {
+        if (this.values.drug) {
+          this.stores.drugs.drugsByFD(this.values.drug);
+        }
+      }
+
       // if(this.values && this.values.page) this.stores.actions.setCurrentPage(this.values.page)
     });
   }

@@ -1248,6 +1248,7 @@ td > .collapsable ul li{
   overflow-y: auto;
   padding-bottom: @relativeSmall*8;
   outline: none !important;
+  user-select: text !important;
 }
 .scrollwrapper.bottomMenu {
   padding-bottom: @relativeSmall*6;
@@ -1403,6 +1404,7 @@ ul.ui.list li {
 .ui.list .item .icon.warning.circle {
   text-shadow: 0.5px 0.5px 1px #bbb;
 }
+
 .ui.list .list .item i.icon,
 .ui.list .item i.icon {
   display: table-cell;
@@ -1500,6 +1502,89 @@ ul.ui.list li {
 }
 .ui.grid .column .icon.outline.circle {
   text-shadow: 0.5px 0.5px 2px #bbb;
+  font-size: 50px;
+  padding: 0;
+}
+.ui.grid.changefg .column .icon.outline.circle {
+  font-size: 40px;
+  padding: 0;
+}
+.changefg .conflict .big.icons > img {
+  width: 20px;
+  margin-left: 10px;
+  margin-top: 4px;
+}
+.changefg .conflict .big.icons {
+  line-height: 27px;
+  height: 40px;
+  width: 40px !important;
+  padding-top: 6px;
+}
+.changefg.grid {
+  float: right;
+  padding-right: 10px;
+}
+.changefg .conflict.column {
+  width: 54px !important;
+  padding-top: 0 !important;
+  overflow: visible;
+}
+.changefg .conflict.auto.column {
+  width: auto !important;
+}
+.fgdrugs {
+  margin-top: 2em;
+}
+.ui.styled.accordion .accordion .fgdrugs .content {
+  padding: 0 !important;
+}
+.fgdrugs .item {
+  position: relative;
+}
+.fgdrugs .item .border {
+  width: 5px;
+  height: calc(100% - 5px);
+  float: left;
+  margin-right: 10px;
+  display: block;
+  position: absolute;
+}
+.fgdrugs .item .content {
+  margin-left: 10px !important;
+}
+.fgdrugs .item .ui.feed .summary,
+.fgdrugs .ui.feed .meta {
+  white-space: normal !important;
+}
+
+.warnstack {
+  display: flex;
+  flex-direction: row-reverse;
+  padding-right: 21px;
+  padding-left: 0px;
+}
+.warnstack.open {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.ui.grid.changefg .conflict .big.icons.selected {
+  border-radius: 100%;
+  outline: 1px solid #fff;
+  background: #fff;
+}
+
+.changefg .warnstack .conflict.column {
+  margin-right: -49px;
+}
+.changefg .warnstack.open .conflict.column {
+  margin-right: 0;
+}
+.changefg .warncontainer {
+}
+.changefg .warncontainer.open {
+  margin-right: -13px;
+  padding-right: 0;
 }
 
 .ui.list .item .arrowBg {
@@ -1618,7 +1703,7 @@ ul.ui.list li {
   height: @relativeSmall*8;
 }
 .with-steps > .steps > .step > .content {
-  max-width: 90px;
+  max-width: 150px;
 }
 
 .birthdate {
@@ -1872,6 +1957,15 @@ ul.ui.list li:first-child:after {
   width: 100%;
   position: relative;
   text-indent: -9999px;
+}
+
+.ui.styled.accordion .title,
+.ui.styled.accordion .accordion .title {
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+.ui.styled.accordion .title.disabled,
+.ui.styled.accordion .accordion .title.disabled {
+  color: rgba(0, 0, 0, 0.4) !important;
 }
 
 @keyframes placeHolderShimmer {

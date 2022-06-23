@@ -60,7 +60,7 @@ const clarifications = {
     day9: { id: "rkNCAMMHq2Rpxc7Dell4yw==", tpl: [{ type: 'period', x: 9, timesx: 'days' }] },
     day10: { id: "XUIfYVzJRk6kHhzl4WuRRw==", tpl: [{ type: 'period', x: 10, timesx: 'days' }] },
 
-    week1: { id: "xwNS1WrhnSzD0o50kOBUMQ==", tpl: [{ type: 'period', x: 1, timesx: 'weeks' }] },
+    // week1: { id: "xwNS1WrhnSzD0o50kOBUMQ==", tpl: [{ type: 'period', x: 1, timesx: 'weeks' }] },
     week2: { id: "DW0hG34FIJ8zwtAOm39N0Q==", tpl: [{ type: 'period', x: 2, timesx: 'weeks' }] },
     week3: { id: "qo4gSuaNzs8FtHmkGXbSbA==", tpl: [{ type: 'period', x: 3, timesx: 'weeks' }] },
 
