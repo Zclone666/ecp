@@ -36,7 +36,7 @@ class Patients {
   }
 
   /**
-  // метод устанавливае текущего пациента
+  // метод устанавливает текущего пациента
   * @param patient - объект пациента
   */
   setCurrent = async (patient) => {
@@ -78,7 +78,7 @@ class Patients {
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
     squareIndex = parseFloat((0.007184 * Math.pow(growth, 0.725) * Math.pow(weight, 0.425)).toFixed(2));
     //parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
-    await _.assignIn(this.current, patientTpl, {
+    Object.assign(this.current, patientTpl, {
       id,
       email,
       fio,
@@ -113,6 +113,96 @@ class Patients {
 
       genpassport_exist,
     });
+    this.stores.actions.patientForm = {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      allergy,
+      birthdate,
+      disease,
+      // disease2,
+      labparams,
+      co_disease,
+      driving,
+      gestation,
+      growth,
+      lactation,
+      pregnancy,
+      sex,
+      trimester,
+      weight,
+      masIndex,
+      squareIndex,
+      mutations,
+
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+      main_address,
+
+      genpassport_exist,
+    };
+    this.stores.actions.patientPassport = {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    };
+    Object.assign(this.stores.actions.drugStructure.patient, {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      birthdate,
+      sex,
+      growth,
+      weight,
+      disease,
+      co_disease,
+      pregnancy,
+      gestation,
+      trimester,
+      lactation,
+      driving,
+      alcohol,
+      allergy,
+      mutations,
+      labparams,
+
+      genpassport_exist,
+
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    });
+    // console.log(this.current);
   };
 
   /**
@@ -694,8 +784,8 @@ class Patients {
         }
         if (data.patient) {
           let { id } = data.patient;
-          this.setPatient(data.patient);
-          await this.request(id);
+          this.setCurrent(data.patient);
+          // await this.request(id);
         }
         return data;
       },
