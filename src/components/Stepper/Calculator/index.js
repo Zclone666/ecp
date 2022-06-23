@@ -264,6 +264,13 @@ const Calculator = inject(
         return arr;
       }
 
+      componentDidMount() {
+        let { currUnit } = this.state;
+
+        if (!currUnit)
+          this.handleChangeUnit(null, { name: "currUnit", value: this.props.actions.calculatorForm.dosageUnit || 248 });
+      }
+
       render() {
         let {
           actions: {

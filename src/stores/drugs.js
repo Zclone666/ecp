@@ -363,7 +363,7 @@ class Drugs {
       ...currentDrug.calc,
       dosage: dos,
       count,
-      dosageUnit: dosageUnit == 999999 ? 248 : dosageUnit,
+      dosageUnit: dosageUnit == 999999 ? "248" : dosageUnit,
       dayCount,
       fullDosage,
       weightDosage,
