@@ -226,17 +226,19 @@ const Clinrec = inject(
         if (cources && cources[childId]) {
           return (
             <List.Item>
-              <Checkbox
-                checked={child.check}
-                onClick={() => this.check(childId)}
-                label={{
-                  children: (
-                    <List.Content className="large">
-                      <List.Header>{child.name}</List.Header>
-                    </List.Content>
-                  ),
-                }}
-              />
+              {false && (
+                <Checkbox
+                  checked={child.check}
+                  onClick={() => this.check(childId)}
+                  label={{
+                    children: (
+                      <List.Content className="large">
+                        <List.Header>{child.name}</List.Header>
+                      </List.Content>
+                    ),
+                  }}
+                />
+              )}
               <List.Content className="large">
                 <List.Item>
                   <Table celled>
