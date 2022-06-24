@@ -147,7 +147,7 @@ const resources = {
       no_information: "Нет информации",
       free_information: "Сводная информация",
       clinical_recommendations_for_diagnosis: "Клинические рекомендации по диагнозу",
-      clinical_recommendations: "Клинические рекоммендации",
+      clinical_recommendations: "Клинические рекомендации",
       remove_from_list: "Убрать из списка",
       solution: "Раствор",
       drag_two_components_for_solution: "Перетащите сюда не менее двух составляющих для раствора",

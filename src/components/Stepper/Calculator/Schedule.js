@@ -149,6 +149,7 @@ const Schedule = inject(
         interval = interval || [];
         _.keys(durations).forEach((durationKey, i) => {
           let duration = durations[durationKey];
+
           arr.push({
             key: i,
             text: UIText.duration[duration.id],
