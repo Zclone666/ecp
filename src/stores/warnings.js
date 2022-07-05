@@ -438,7 +438,8 @@ class Warnings {
           return;
         }
 
-        if (data.authkey) this.stores.actions.privateKey = data.authkey;
+        if (data.authkey) this.stores.actions.authkey = data.authkey;
+        if (data.key) this.stores.actions.privateKey = data.key;
 
         if (data.misurl) this.stores.actions.misurl = data.misurl;
 

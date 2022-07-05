@@ -1322,6 +1322,28 @@ class Drugs {
   }
 
   /**
+  // метод поиска драгов по нозологии, используется для отображения драгов внутри нозологии в строке поиска
+  * @param drug - концепт из строки поиска
+  */
+  async searchByNZ(drug) {
+    let { active_language } = this.stores.actions;
+    let data = {
+      drug,
+      active_language,
+    };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: "Drugs/ByNZ",
+      data,
+      success: async (data) => {
+        return [...data.childs, ...data.concepts];
+      },
+      fail: () => [],
+    });
+  }
+
+  /**
   // метод замены препарата в листе назнчения на один или несколько из формы подбора замены
   // а после запускает проверку на взаимодействия
   * @param drugKey - идентификатор драга в листе назначений
