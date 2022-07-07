@@ -713,22 +713,24 @@ const PatientForm = inject(
                   </Form.Field>
                 </Form.Group>
               )}
-              <List divided verticalAlign="middle">
-                {labparams &&
-                  labparams.map((item, i) => {
-                    return (
-                      <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                        <List.Content floated="right">
-                          <Button size="tiny" icon="delete" onClick={() => this.handleRemoveLabData(item, i)} />
-                        </List.Content>
-                        <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
-                        <List.Content>
-                          <List.Header>{item}</List.Header>
-                        </List.Content>
-                      </List.Item>
-                    );
-                  })}
-              </List>
+              {!misDisabled && false && (
+                <List divided verticalAlign="middle">
+                  {labparams &&
+                    labparams.map((item, i) => {
+                      return (
+                        <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
+                          <List.Content floated="right">
+                            <Button size="tiny" icon="delete" onClick={() => this.handleRemoveLabData(item, i)} />
+                          </List.Content>
+                          <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
+                          <List.Content>
+                            <List.Header>{item}</List.Header>
+                          </List.Content>
+                        </List.Item>
+                      );
+                    })}
+                </List>
+              )}
               {isWoman && !veryOld && (
                 <Responsive as={Form.Group} widths={"equal"} maxWidth={480}>
                   <Form.Field>
