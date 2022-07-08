@@ -142,6 +142,8 @@ const resources = {
       doctor: "Врач",
       explanation_recipe: "Пояснения к рецепту",
       available_certificates: "доступные сертификаты",
+      no_available_certificates: "Нет доступных сертификатов",
+      no_available_certificates_text: "У вас нет доступных сертификатов",
       select_certificate_for_signature: "Выберите сертификат для подписи",
 
       no_information: "Нет информации",

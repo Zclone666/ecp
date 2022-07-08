@@ -162,7 +162,7 @@ const Drug = inject(
         const { t } = this.props.actions;
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
-        // console.log(drug);
+        //console.log(drug);
         let selectedWarnings = warnIcons[selectedDrug];
 
         const drugWarnings = _.orderBy(

@@ -242,7 +242,7 @@ class Patients {
   */
   async request(id) {
     this.stores.actions.loading = true;
-    await this.stores.actions.resetAll();
+    await this.stores.actions.resetAll("patient_only");
     let { active_language } = this.stores.actions;
     let data = {
       key: this.stores.actions.privateKey,
