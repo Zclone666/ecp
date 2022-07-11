@@ -703,9 +703,16 @@ class Actions {
     this.authkey = (await localStorage.getItem("authkey")) || "";
     // return;
     if (this.stores.router.values.protocol) {
-      this.stores.warnings.protocol(this.stores.router.values.protocol);
-      this.loading = false;
-      return;
+      if (this.stores.router.match.name == "protocol") {
+        this.stores.warnings.protocol(this.stores.router.values.protocol);
+        this.loading = false;
+        return;
+      }
+      if (this.stores.router.match.name == "resultchecking") {
+        this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        this.loading = false;
+        return;
+      }
     }
 
     if (this.stores.router.values.code) {
