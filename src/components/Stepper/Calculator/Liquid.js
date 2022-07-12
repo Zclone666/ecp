@@ -330,7 +330,7 @@ const LiquidCalculator = inject(
                       size="big"
                       name="count"
                       numeric
-                      value={count != null ? count : 0}
+                      value={liqUnit && count != null ? getFromBase(liqUnit, count) : 0}
                       label={{
                         basic: true,
                         content: (liqUnit && (units[liqUnit].shortname || units[liqUnit].name)) || "",
