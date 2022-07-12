@@ -459,6 +459,25 @@ class Actions {
     this.stores.clinrecs.collectorAvailable = false;
 
     switch (flag) {
+      case "patient_only":
+        this.stores.patients.unsetCurrent();
+        structure.clinic_id = this.clinic.id;
+        structure.clinic_name = this.clinic.name;
+        structure.doctor_id = this.doctor.id;
+        structure.doctor_name = this.doctor.name;
+
+        _.assignIn(this.drugStructure, structure);
+        _.assignIn(this.patientPassport, {
+          id: null,
+          name: null,
+          email: null,
+          miscode: null,
+          misid: null,
+          fio: null,
+        });
+        this.stores.clinrecs.resetClinrecs();
+        this.stores.db.clearData(false, true);
+        break;
       case "patient":
         this.stores.patients.unsetCurrent();
         structure.clinic_id = this.clinic.id;
@@ -684,9 +703,16 @@ class Actions {
     this.authkey = (await localStorage.getItem("authkey")) || "";
     // return;
     if (this.stores.router.values.protocol) {
-      this.stores.warnings.protocol(this.stores.router.values.protocol);
-      this.loading = false;
-      return;
+      if (this.stores.router.match.name == "protocol") {
+        this.stores.warnings.protocol(this.stores.router.values.protocol);
+        this.loading = false;
+        return;
+      }
+      if (this.stores.router.match.name == "resultchecking") {
+        this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        this.loading = false;
+        return;
+      }
     }
 
     if (this.stores.router.values.code) {

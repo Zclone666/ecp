@@ -132,6 +132,7 @@ class Recipes {
   */
   getDataToSign = () => {
     let { active_language } = this.stores.actions;
+
     let data = {
       ...this.stores.actions.structure,
       drugs: this.stores.actions.structure.drugs.filter((drug) => this.drugKeysForPrescription.includes(drug.key)),
@@ -369,7 +370,21 @@ class Recipes {
 
     return POST({
       path: "prescript/NotSaveRecipePrint", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
-      data,
+      data: {
+        ...data,
+        drugs: this.stores.actions.structure.drugs
+          .filter((drug) => this.drugKeysForPrescription.includes(drug.key))
+          .map((d) => {
+            if (d?.dosage?.dosage?.length == 0 && d?.calc?.dosage?.[0] == 0) {
+              // if (d.calc.dosage && typeof d.calc.dosage == "array") {
+              //   d.calc.dosage = d.calc.dosage.map((item) => {
+              //     return parseInt(item);
+              //   });
+              // }
+              return { ...d, calc: { ...d.calc, count: null, countBaseUnit: null, countUnit: null, dayCount: null } };
+            } else return d;
+          }),
+      },
       success: async (data) => {
         // console.log(data);
         this.stores.actions.loading = false;
