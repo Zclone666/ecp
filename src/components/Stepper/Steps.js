@@ -68,52 +68,60 @@ const Steps = inject(
         let currStep = parseInt(values.step || 0);
 
         return (
-          <Step.Group attached="top" fluid unstackable ordered size="tiny">
-            {this.steps[way] &&
-              this.steps[way].map((step, i) => {
-                let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`;
-                let chosedName = "";
-                if (i > 0 && i <= currStep) {
-                  url += `/${i}`;
-                  // console.log(step.name);
-                  chosedName = nameshort[stepsData[step.name]] || names[stepsData[step.name]];
-                  if (step.name === "lf") chosedName = nameshort[stepsData.form] || names[stepsData.form];
-                } else if (i !== 0) {
-                  url = "";
-                } else {
-                  chosedName = {
-                    lf: t("dosage_form"),
-                    methods: t("mode_application"),
-                    "": "",
-                  }[way];
-                }
-                // console.log({step, stepsData});
-                if (step.name === "dosage" && currStep > i) {
+          <>
+            <Step.Group attached="top" fluid unstackable ordered size="tiny">
+              {this.steps[way] &&
+                this.steps[way].map((step, i) => {
+                  let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`;
+                  let chosedName = "";
+                  if (i > 0 && i <= currStep) {
+                    url += `/${i}`;
+                    // console.log(step.name);
+                    chosedName = nameshort[stepsData[step.name]] || names[stepsData[step.name]];
+                    if (step.name === "lf") chosedName = nameshort[stepsData.form] || names[stepsData.form];
+                  } else if (i !== 0) {
+                    url = "";
+                  } else {
+                    chosedName = {
+                      lf: t("dosage_form"),
+                      methods: t("mode_application"),
+                      "": "",
+                    }[way];
+                  }
                   // console.log({step, stepsData});
-                  chosedName =
-                    (stepsData.helpers.dosage && (stepsData.helpers.dosage.short || stepsData.helpers.dosage.full)) +
-                    ", " +
-                    (stepsData.helpers.pack && (stepsData.helpers.pack.short || stepsData.helpers.pack.full));
-                }
-                // console.log({ step, chosedName, stepsData, names });
-                return (
-                  <Step
-                    completed={currStep > i}
-                    key={"st" + i}
-                    active={currStep == i}
-                    as={i <= currStep ? RouterLink : Step}
-                    to={url}
-                  >
-                    {(currStep == i || viewType == "pc") && (
-                      <Step.Content>
-                        <Step.Title>{t(step.text)}</Step.Title>
-                        <Step.Description>{chosedName}</Step.Description>
-                      </Step.Content>
-                    )}
-                  </Step>
-                );
-              })}
-          </Step.Group>
+                  if (step.name === "dosage" && currStep > i) {
+                    // console.log({step, stepsData});
+                    chosedName =
+                      (stepsData.helpers.dosage && (stepsData.helpers.dosage.short || stepsData.helpers.dosage.full)) +
+                      ", " +
+                      (stepsData.helpers.pack && (stepsData.helpers.pack.short || stepsData.helpers.pack.full));
+                  }
+                  // console.log({ step, chosedName, stepsData, names });
+                  return (
+                    <Step
+                      completed={currStep > i}
+                      key={"st" + i}
+                      active={currStep == i}
+                      as={i <= currStep ? RouterLink : Step}
+                      to={url}
+                    >
+                      {(currStep == i || viewType == "pc") && (
+                        <Step.Content>
+                          <Step.Title>{t(step.text)}</Step.Title>
+                          <Step.Description>{chosedName}</Step.Description>
+                        </Step.Content>
+                      )}
+                    </Step>
+                  );
+                })}
+            </Step.Group>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: `${current.name} ${current.type === "TN" ? "<span><sup>TM</sup></span>" : ""}`,
+              }}
+              style={{ padding: 5, textAlign: "center", background: "#eee" }}
+            ></div>
+          </>
         );
       }
     }
