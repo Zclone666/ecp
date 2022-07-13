@@ -142,7 +142,8 @@ class Tools {
   convertFromBaseUnitToUnit(baseUnitId, unitId, value) {
     const units = this.unitsPrimary;
     // console.log({ baseUnitId, unitId, value, units });
-    if (baseUnitId == unitId || !units || !baseUnitId || !unitId) return value;
+    if (baseUnitId == unitId || !units || !baseUnitId || !unitId || !units[baseUnitId]) return value;
+
     const convertedValue =
       value *
       units[baseUnitId].find((u) => {

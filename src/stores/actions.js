@@ -704,12 +704,14 @@ class Actions {
     // return;
     if (this.stores.router.values.protocol) {
       if (this.stores.router.match.name == "protocol") {
-        this.stores.warnings.protocol(this.stores.router.values.protocol);
+        await this.stores.warnings.protocol(this.stores.router.values.protocol);
+        this.login();
         this.loading = false;
         return;
       }
       if (this.stores.router.match.name == "resultchecking") {
-        this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        await this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        this.login();
         this.loading = false;
         return;
       }
