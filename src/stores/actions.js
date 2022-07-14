@@ -1375,10 +1375,11 @@ class Actions {
   // метод разлогинивания (уничтожает authkey)
   */
   async logout() {
+    let authkey = await localStorage.getItem("authkey");
     return GET({
       path: createCsServerUrl(`/api/user/authexit`),
       data: {
-        authkey: localStorage.getItem("authkey"),
+        authkey,
       },
       always: async (data) => {
         this.makeAlerts(data);
