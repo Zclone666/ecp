@@ -208,6 +208,28 @@ class Tools {
     });
   }
 
+  async getAllService() {
+    let { active_language } = this.stores.actions;
+    let data = {
+      active_language,
+    };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: `info/Tech`,
+      data,
+      success: async (data) => {
+        console.log("DATA", data);
+        let { elements, names, recipedata, schedule, uitext, unitspharm, unitsprimary } = data;
+
+        this.unitsSchedule.freq = schedule.freq;
+        this.unitsSchedule.duration = schedule.duration;
+      },
+      fail: (alerts) => {},
+      always: (data) => {},
+    });
+  }
+
   getBaseUnit = (unitId) => {
     let unit = this.units[unitId];
     // console.log({ unit });

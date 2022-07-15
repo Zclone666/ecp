@@ -776,7 +776,7 @@ class Actions {
     let { privateKey, remember } = this.loginForm;
     let { active_language } = this;
     let data = {
-      key: privateKey,
+      key: privateKey || this.privateKey,
       authkey: this.authkey,
       active_language,
     };
@@ -861,6 +861,7 @@ class Actions {
           await localStorage.setItem("authkey", this.authkey);
           await localStorage.setItem("privateKey", this.loginForm.privateKey);
         }
+        this.stores.tools.getAllService();
         this.stores.tools.getUnitsPrimary();
         this.stores.tools.getUnitsPharm();
         this.stores.tools.getUnitsSchedule();
