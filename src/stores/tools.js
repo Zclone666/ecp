@@ -27,6 +27,8 @@ class Tools {
     duration: {},
   };
 
+  techReady = false;
+
   constructor({ stores }) {
     makeObservable(this, {
       ready: observable,
@@ -41,6 +43,7 @@ class Tools {
       unitsPrimary: observable,
       unitsComplex: observable,
       unitsSchedule: observable,
+      techReady: observable,
     });
 
     this.stores = stores;
@@ -104,6 +107,39 @@ class Tools {
     });
   }
 
+  async setUnitsPharm(data) {
+    // console.log(data);
+    let { names, nameshort, units, unitrefs, unitpharm } = data;
+    this.unitsPharm = data;
+    // kostyl
+    // if(units[99])
+    if (units[250 || units[99]]) {
+      names[99] = this.stores.actions.t("percent");
+      nameshort[99] = "%";
+      unitrefs[248].push("99");
+      unitpharm.push("99");
+      units[99] = _.cloneDeep(units[250]);
+      units[99][0].value = 10;
+
+      names[999999] = this.stores.actions.t("percent");
+      nameshort[999999] = "%";
+      // unitrefs[248].push("999999");
+      unitpharm.push("999999");
+      units[999999] = [
+        { action: "division", id: "248", value: 1000 },
+        // { action: "multiplication", id: "168", value: 0.1 },
+      ];
+      // units[99][0].value = 10;
+      // units[99][1].value = 10;
+      // console.log({ "%": units[99] });
+    }
+    // end kostyl
+
+    await this.setNames(names, nameshort);
+    this.setUnits(units, unitrefs, unitpharm);
+    this.stores.actions.loading = false;
+  }
+
   async stepByStepLoading(fn, arr) {
     if (this.loadingCounter < arr.length) {
       this.loading = true;
@@ -137,6 +173,11 @@ class Tools {
       fail: (alerts) => {},
       always: (data) => {},
     });
+  }
+
+  async setUnitsPrimary(data) {
+    let { names, nameshort, units, unitrefs } = data;
+    if (units) this.unitsPrimary = units;
   }
 
   convertFromBaseUnitToUnit(baseUnitId, unitId, value) {
@@ -220,10 +261,28 @@ class Tools {
       data,
       success: async (data) => {
         console.log("DATA", data);
-        let { elements, names, recipedata, schedule, uitext, unitspharm, unitsprimary } = data;
+        let {
+          elements, //
+          names,
+          recipedata, //
+          schedule,
+          uitext, //
+          unitspharm,
+          unitsprimary,
+        } = data;
+
+        this.stores.actions.setObject("elements", elements);
+        this.stores.actions.setObject("UIText", uitext);
+        this.stores.actions.setObject("recipeData", recipedata);
+        this.stores.actions.setObject("buttonTexts", names.text);
+
+        this.setUnitsPharm(unitspharm);
+        this.setUnitsPrimary(unitsprimary);
 
         this.unitsSchedule.freq = schedule.freq;
         this.unitsSchedule.duration = schedule.duration;
+
+        this.techReady = true;
       },
       fail: (alerts) => {},
       always: (data) => {},
@@ -473,6 +532,15 @@ class Tools {
 
   timeout(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async waitForTech(fn) {
+    if (this.techReady) {
+      return fn();
+    } else {
+      await this.timeout(200);
+      return this.waitForTech(fn);
+    }
   }
 }
 export default Tools;

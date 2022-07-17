@@ -598,6 +598,15 @@ class Actions {
   }
 
   /**
+  // сохранегие служебных данных (списки единиц измерения, тексовых строк на нужном языке и т.п.)
+  * @param name - название списка (и апи для него)
+  * @param data - объект (и апи для него)
+  */
+  async setObject(name, data) {
+    Object.assign(this[name], { ...data });
+  }
+
+  /**
   // получене названия элемнта для вкладки варнинга (опасность и доказательность)
   * @param name - название списка
   * @param value - значение
@@ -652,11 +661,13 @@ class Actions {
       this.active_language = "ru";
       await localStorage.setItem("lang", "ru");
     }
+    this.stores.tools.getAllService();
+    await this.stores.tools.waitForTech(() => {});
 
-    this.getObject("buttonTexts");
-    this.getObject("elements");
-    this.getObject("UIText");
-    this.getObject("recipeData");
+    // this.getObject("buttonTexts");
+    // this.getObject("elements");
+    // this.getObject("UIText");
+    // this.getObject("recipeData");
 
     this.loading = true;
     //------------PRIVATE KEY-------
@@ -861,10 +872,10 @@ class Actions {
           await localStorage.setItem("authkey", this.authkey);
           await localStorage.setItem("privateKey", this.loginForm.privateKey);
         }
-        this.stores.tools.getAllService();
-        this.stores.tools.getUnitsPrimary();
-        this.stores.tools.getUnitsPharm();
-        this.stores.tools.getUnitsSchedule();
+        // this.stores.tools.getAllService();
+        // this.stores.tools.getUnitsPrimary();
+        // this.stores.tools.getUnitsPharm();
+        // this.stores.tools.getUnitsSchedule();
 
         this.stores.patients.getList();
         // this.stores.patients.request()
