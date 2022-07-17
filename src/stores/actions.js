@@ -722,6 +722,7 @@ class Actions {
       }
       if (this.stores.router.match.name == "resultchecking") {
         await this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        this.misLinkLogin = true;
         this.login();
         this.loading = false;
         return;
@@ -1080,9 +1081,9 @@ class Actions {
     // return this.login();
     // data.active_language = active_language
     this.misLinkLogin = true;
-    this.stores.tools.getUnitsPrimary();
-    this.stores.tools.getUnitsPharm();
-    this.stores.tools.getUnitsSchedule();
+    // this.stores.tools.getUnitsPrimary();
+    // this.stores.tools.getUnitsPharm();
+    // this.stores.tools.getUnitsSchedule();
 
     await this.stores.patients.request(args.patient_id);
     await this.stores.patients.getList();
