@@ -70,6 +70,7 @@ class Actions {
 
   protocol = null;
   misLinkLogin = false;
+  resultChecking = false;
   topview_disabled = false;
   bottomview_disabled = false;
 
@@ -343,6 +344,7 @@ class Actions {
       isLiquidsOk: observable,
       protocol: observable,
       misLinkLogin: observable,
+      resultChecking: observable,
       topview_disabled: observable,
       bottomview_disabled: observable,
       checkData: observable,
@@ -722,6 +724,7 @@ class Actions {
       }
       if (this.stores.router.match.name == "resultchecking") {
         await this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        this.resultChecking = true;
         this.misLinkLogin = true;
         this.login();
         this.loading = false;
