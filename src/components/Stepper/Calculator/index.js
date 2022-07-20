@@ -375,6 +375,8 @@ const Calculator = inject(
         //
         // console.log({ currUnit, def, weights, dosage });
         //
+        let isMl = cnt.unit && cnt.unit.id == "168";
+
         return (
           <Segment basic>
             {isLiquid && (
@@ -408,7 +410,7 @@ const Calculator = inject(
                     />
                   </Form.Field>
                   <Form.Field width={3}>
-                    <label>{t("number_dose")}:</label>
+                    <label>{isMl ? t("volume_solution") : t("number_dose")}:</label>
                     <Input
                       disabled={disableAll}
                       size="big"

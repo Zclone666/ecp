@@ -260,6 +260,7 @@ const resources = {
       to_report: "Сообщить",
       cancel: "Отменить",
       number_dose: "Кол-во доз",
+      volume_solution: "Объем раствора",
 
       measurements: "ед. измерения",
       across: "через",
