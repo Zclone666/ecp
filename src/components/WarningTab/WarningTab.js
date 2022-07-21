@@ -56,7 +56,7 @@ const WarningTab = inject(
           return name;
         });
 
-        const fieldId = info?.fields[tab.id];
+        const fieldId = (info?.fields && info?.fields[tab.id]) || null;
         const firstDrugId = getDrug(arr.first[0]).id;
         const secondDrugId = arr.last && getDrug(arr.last[0]).id;
 
@@ -150,9 +150,15 @@ const WarningTab = inject(
                     return (
                       <List.Item key="1">
                         {i > 0 && <div className="warningline" style={{ backgroundColor: tab.color }}></div>}
-                        <List.Content style={!item.subjectid && !arr.last ? { padding: "8px 0", display: "flex", flexDirection: "row"} : {}}>
+                        <List.Content
+                          style={
+                            !item.subjectid && !arr.last
+                              ? { padding: "8px 0", display: "flex", flexDirection: "row" }
+                              : {}
+                          }
+                        >
                           <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
-                          {!!item.subjectid && drug.name}
+                          {!!item.subjectid && <div dangerouslySetInnerHTML={{ __html: drug.name }} />}
                         </List.Content>
                       </List.Item>
                     );
@@ -183,7 +189,7 @@ const WarningTab = inject(
                         )}
                         <List.Content>
                           <List.Header>{item.subjectid ? info.names[item.subjectid] : drug.name}</List.Header>
-                          {!!item.subjectid && drug.name}
+                          {!!item.subjectid && <div dangerouslySetInnerHTML={{ __html: drug.name }} />}
                         </List.Content>
                       </List.Item>
                     );
@@ -199,7 +205,10 @@ const WarningTab = inject(
                         if (!info.names[desc]) return null;
                         return (
                           <List.Item key={`desc_${d}`}>
-                            <div style={{ fontWeight: "bold", fontSize: "large", lineHeight: "normal" }} dangerouslySetInnerHTML={{ __html: info.names[desc] }} />
+                            <div
+                              style={{ fontWeight: "bold", fontSize: "large", lineHeight: "normal" }}
+                              dangerouslySetInnerHTML={{ __html: info.names[desc] }}
+                            />
                           </List.Item>
                         );
                       })}

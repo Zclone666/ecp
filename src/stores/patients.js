@@ -610,6 +610,7 @@ class Patients {
   async getList() {
     this.searchReady = false;
     let { active_language } = this.stores.actions;
+    if (!(this.stores.actions.doctor && this.stores.actions.doctor.id)) return;
     let data = {
       count: 30,
       doctor_id: (this.stores.actions.doctor && this.stores.actions.doctor.id) || null,

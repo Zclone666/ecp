@@ -477,6 +477,8 @@ class Recipes {
     //   }
     // });
 
+    let resultchecking = this.stores.actions.resultChecking;
+
     data.service = "43";
     data.active_language = active_language;
     data.return_subjects = false;
@@ -487,7 +489,7 @@ class Recipes {
     data.checker = this.stores.actions.clinrecCheckerData; //this.stores.clinrecs.checker;
 
     return POST({
-      path: "prescript/New", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
+      path: !resultchecking ? "prescript/New" : "prescript/RepealNew", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
       success: async (data) => {
         window.parent.postMessage(data, "*");
