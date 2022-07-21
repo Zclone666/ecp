@@ -260,7 +260,7 @@ class Tools {
       path: `info/Tech`,
       data,
       success: async (data) => {
-        console.log("DATA", data);
+        // console.log("DATA", data);
         let {
           elements, //
           names,
