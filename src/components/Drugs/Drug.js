@@ -208,16 +208,16 @@ const Drug = inject(
         // console.log({ dosage, nameshort, names, helpers });
 
         const dosageForm =
-          dosage.form && (nameshort[dosage.form] || names[dosage.form])
-            ? nameshort[dosage.form] || names[dosage.form]
+          dosage.form && (nameshort[dosage.form] || names[dosage.form] || dosage.form_name)
+            ? nameshort[dosage.form] || names[dosage.form] || dosage.form_name
             : "";
         const helpersDosage =
           helpers.dosage && (helpers.dosage.small || helpers.dosage.full)
             ? helpers.dosage.small || helpers.dosage.full
             : "";
         const dosageMethod =
-          dosage.method && (nameshort[dosage.method] || names[dosage.method])
-            ? nameshort[dosage.method] || names[dosage.method]
+          dosage.method && (nameshort[dosage.method] || names[dosage.method] || dosage.method_name)
+            ? nameshort[dosage.method] || names[dosage.method] || dosage.method_name
             : "";
 
         return (
