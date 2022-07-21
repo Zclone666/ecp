@@ -70,6 +70,7 @@ class Actions {
 
   protocol = null;
   misLinkLogin = false;
+  resultChecking = false;
   topview_disabled = false;
   bottomview_disabled = false;
 
@@ -343,6 +344,7 @@ class Actions {
       isLiquidsOk: observable,
       protocol: observable,
       misLinkLogin: observable,
+      resultChecking: observable,
       topview_disabled: observable,
       bottomview_disabled: observable,
       checkData: observable,
@@ -598,6 +600,15 @@ class Actions {
   }
 
   /**
+  // сохранегие служебных данных (списки единиц измерения, тексовых строк на нужном языке и т.п.)
+  * @param name - название списка (и апи для него)
+  * @param data - объект (и апи для него)
+  */
+  async setObject(name, data) {
+    Object.assign(this[name], { ...data });
+  }
+
+  /**
   // получене названия элемнта для вкладки варнинга (опасность и доказательность)
   * @param name - название списка
   * @param value - значение
@@ -652,11 +663,13 @@ class Actions {
       this.active_language = "ru";
       await localStorage.setItem("lang", "ru");
     }
+    this.stores.tools.getAllService();
+    await this.stores.tools.waitForTech(() => {});
 
-    this.getObject("buttonTexts");
-    this.getObject("elements");
-    this.getObject("UIText");
-    this.getObject("recipeData");
+    // this.getObject("buttonTexts");
+    // this.getObject("elements");
+    // this.getObject("UIText");
+    // this.getObject("recipeData");
 
     this.loading = true;
     //------------PRIVATE KEY-------
@@ -704,12 +717,16 @@ class Actions {
     // return;
     if (this.stores.router.values.protocol) {
       if (this.stores.router.match.name == "protocol") {
-        this.stores.warnings.protocol(this.stores.router.values.protocol);
+        await this.stores.warnings.protocol(this.stores.router.values.protocol);
+        this.login();
         this.loading = false;
         return;
       }
       if (this.stores.router.match.name == "resultchecking") {
-        this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        await this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        this.resultChecking = true;
+        this.misLinkLogin = true;
+        this.login();
         this.loading = false;
         return;
       }
@@ -774,7 +791,7 @@ class Actions {
     let { privateKey, remember } = this.loginForm;
     let { active_language } = this;
     let data = {
-      key: privateKey,
+      key: privateKey || this.privateKey,
       authkey: this.authkey,
       active_language,
     };
@@ -859,9 +876,10 @@ class Actions {
           await localStorage.setItem("authkey", this.authkey);
           await localStorage.setItem("privateKey", this.loginForm.privateKey);
         }
-        this.stores.tools.getUnitsPrimary();
-        this.stores.tools.getUnitsPharm();
-        this.stores.tools.getUnitsSchedule();
+        // this.stores.tools.getAllService();
+        // this.stores.tools.getUnitsPrimary();
+        // this.stores.tools.getUnitsPharm();
+        // this.stores.tools.getUnitsSchedule();
 
         this.stores.patients.getList();
         // this.stores.patients.request()
@@ -1066,9 +1084,9 @@ class Actions {
     // return this.login();
     // data.active_language = active_language
     this.misLinkLogin = true;
-    this.stores.tools.getUnitsPrimary();
-    this.stores.tools.getUnitsPharm();
-    this.stores.tools.getUnitsSchedule();
+    // this.stores.tools.getUnitsPrimary();
+    // this.stores.tools.getUnitsPharm();
+    // this.stores.tools.getUnitsSchedule();
 
     await this.stores.patients.request(args.patient_id);
     await this.stores.patients.getList();
@@ -1373,10 +1391,11 @@ class Actions {
   // метод разлогинивания (уничтожает authkey)
   */
   async logout() {
+    let authkey = await localStorage.getItem("authkey");
     return GET({
       path: createCsServerUrl(`/api/user/authexit`),
       data: {
-        authkey: localStorage.getItem("authkey"),
+        authkey,
       },
       always: async (data) => {
         this.makeAlerts(data);
