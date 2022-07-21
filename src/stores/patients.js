@@ -463,6 +463,13 @@ class Patients {
 
         drugs.forEach(async (drug, i) => {
           await this.stores.drugs.selectFromSearch(drug, false, false);
+          if (drug.dosage && drug.dosage.form && drug.dosage.form_name) {
+            // console.log("this.stores.tools.unitsPharm.names");
+            this.stores.tools.unitsPharm.names[drug.dosage.form] = drug.dosage.form_name;
+          }
+          if (drug.dosage && drug.dosage.method && drug.dosage.method_name) {
+            this.stores.tools.unitsPharm.names[drug.dosage.method] = drug.dosage.method_name;
+          }
         });
 
         await this.stores.tools.stepByStepLoading(this.stores.dosages.get, drugs);
