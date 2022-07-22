@@ -88,9 +88,9 @@ const ClinrecStartPage = inject(
                     checked={!!this.state.checked[clinrec.id]}
                     style={{ marginRight: "5px", fontSize: 16 }}
                     label={
-                      <>
+                      <label>
                         <strong>{clinrec.name}</strong> {clinrec.source}
-                      </>
+                      </label>
                     }
                   />
                 </div>
