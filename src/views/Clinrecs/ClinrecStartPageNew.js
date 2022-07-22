@@ -89,7 +89,7 @@ const ClinrecStartPage = inject(
                     style={{ marginRight: "5px", fontSize: 16 }}
                     label={
                       <>
-                        <strong>clinrec.name</strong> {clinrec.source}
+                        <strong>{clinrec.name}</strong> {clinrec.source}
                       </>
                     }
                   />
