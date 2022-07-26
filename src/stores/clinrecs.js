@@ -13,6 +13,7 @@ class Clinrecs {
   names = {};
   shortnames = {};
   diseaseSelect = [];
+  clinrecSelect = [];
   druglist = [];
   drugToClinrecHashset = {};
   collectorAvailable = false;
@@ -66,6 +67,9 @@ class Clinrecs {
     let { active_language } = this.stores.actions;
     this.stores.db.clearData(false, true);
     let data = _.cloneDeep(this.stores.actions.drugStructure);
+
+    data.patient = _.cloneDeep(this.stores.patients.current);
+
     let drugsFull = Array.from(this.stores.drugs.drug.values());
     let liquidsFull = Array.from(this.stores.drugs.liquid.values());
     drugsFull.forEach((drugFull, i) => {
@@ -83,10 +87,12 @@ class Clinrecs {
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
 
-    data.patient.disease = this.diseaseSelect;
+    data.clinicalGuidelines = this.clinrecSelect;
+
+    // data.patient.disease = this.diseaseSelect;
 
     return POST({
-      path: "tools/clinicalGuidelines",
+      path: !Object.keys(data.checker).length ? "tools/CGQuestionary" : "tools/clinicalGuidelines",
       data,
       success: async (data) => {
         this.names = _.assignIn(this.names, data.names);

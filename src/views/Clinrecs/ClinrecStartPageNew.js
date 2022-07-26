@@ -20,17 +20,24 @@ const ClinrecStartPage = inject(
         };
       }
 
+      clearChecked = () => {
+        this.setState({ checked: {} });
+      };
+
       proceedToClinrecs = () => {
         const { clinrecCheckerStep } = this.props.actions;
-        this.props.clinrecs.diseaseSelect = [];
-
-        if (this.props.patients.current) {
-          for (const [key, value] of Object.entries(this.state.checked)) {
-            if (value && !this.props.clinrecs.diseaseSelect.find((d) => d.id === value.id)) {
-              this.props.clinrecs.diseaseSelect.push(value);
-            }
-          }
-        }
+        this.props.clinrecs.clinrecSelect = [];
+        //
+        // if (this.props.patients.current) {
+        //   for (const [key, value] of Object.entries(this.state.checked)) {
+        //     if (value && !this.props.clinrecs.diseaseSelect.find((d) => d.id === value.id)) {
+        //       this.props.clinrecs.diseaseSelect.push(value);
+        //     }
+        //   }
+        // }
+        _.keys(this.state.checked).forEach((item, i) => {
+          if (this.state.checked[item]) this.props.clinrecs.clinrecSelect.push(this.state.checked[item].id);
+        });
 
         this.props.clinrecs.check(false);
         this.props.router.push(`/clinrec/checker/${clinrecCheckerStep}`);
