@@ -618,9 +618,55 @@ class Warnings {
         if (data.misurl) this.stores.actions.misurl = data.misurl;
 
         if (data && data.drugs && _.isArray(data.drugs)) {
-          await data.drugs.forEach(async (drug, i) => {
-            await this.stores.drugs.selectFromSearch(drug, true);
+          let { drugs } = data;
+          drugs = drugs.map((d) => {
+            if (d.helpers) return d;
+            let { dosage } = d;
+            dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
+            // console.log({ dosage });
+            const { names, nameshort } = this.stores.tools.unitsPharm;
+            nameshort[99] = "%";
+            // console.log({ d });
+            let helpers = {
+              dosage: {
+                short: "",
+                full:
+                  (dosage[0] && dosage[0]?.id_1
+                    ? `${_.map(dosage, "value_1").join(" + ")} ${nameshort[dosage[0].id_1]}`
+                    : "") || "",
+                id: dosage[0]?.id_1,
+              },
+              pack: { short: "", full: "", id: d?.dosage?.pack?.dosage?.id_1 || d?.calc?.countUnit },
+              type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
+              // url: "",
+              key: null,
+              way: "lf",
+              step: d?.dosage?.method && d?.dosage?.form ? "4" : "1",
+              // mnn: false,
+              // drugCache: null,
+            };
+            return {
+              ...d,
+              helpers,
+            };
           });
+          // console.log("drugs with helpers: ", drugs);
+
+          drugs.forEach(async (drug, i) => {
+            await this.stores.drugs.selectFromSearch(drug, false, false);
+            if (drug.dosage && drug.dosage.form && drug.dosage.form_name) {
+              // console.log("this.stores.tools.unitsPharm.names");
+              this.stores.tools.unitsPharm.names[drug.dosage.form] = drug.dosage.form_name;
+            }
+            if (drug.dosage && drug.dosage.method && drug.dosage.method_name) {
+              this.stores.tools.unitsPharm.names[drug.dosage.method] = drug.dosage.method_name;
+            }
+          });
+
+          await this.stores.tools.stepByStepLoading(this.stores.dosages.get, drugs);
+          // await data.drugs.forEach(async (drug, i) => {
+          //   await this.stores.drugs.selectFromSearch(drug, true);
+          // });
         }
 
         if (data.patient) {

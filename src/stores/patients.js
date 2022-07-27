@@ -630,6 +630,8 @@ class Patients {
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
 
+    if (!(data.authkey && data.authkey.length) && !(data.key && data.key.length)) return;
+
     // this[`${saveTo}Rows`] = observable([]);
 
     return POST({
