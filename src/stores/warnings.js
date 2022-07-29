@@ -616,6 +616,15 @@ class Warnings {
         if (data.key) this.stores.actions.privateKey = data.key;
 
         if (data.misurl) this.stores.actions.misurl = data.misurl;
+        if (data && data.liquids && _.isArray(data.liquids)) {
+          data.liquids.forEach(async (liquid, i) => {
+            if (liquid.group != null) {
+              await this.stores.drugs.liquid.set(liquid.group, liquid);
+            } else {
+              this.stores.drugs.deletedLiquids.push(liquid);
+            }
+          });
+        }
 
         if (data && data.drugs && _.isArray(data.drugs)) {
           let { drugs } = data;
