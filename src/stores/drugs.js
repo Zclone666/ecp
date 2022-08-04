@@ -4,7 +4,7 @@ import moment from "moment";
 
 import _ from "lodash";
 
-import { DrugModel, LiquidModel } from "../models";
+//import { DrugModel, LiquidModel } from "../models";
 
 import { DrugScheme, LiquidScheme } from "../schemes";
 
@@ -75,9 +75,10 @@ class Drugs {
   }
 
   get validateCurrentDrug() {
-    const validationContext = DrugModel.schema.newContext();
-    validationContext.validate(this.current);
-    return validationContext.validationErrors();
+    //const validationContext = DrugModel.schema.newContext();
+    //validationContext.validate(this.current);
+    //return validationContext.validationErrors();
+    return [];
   }
 
   /**
