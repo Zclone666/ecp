@@ -77,6 +77,13 @@ const clarifications = {
 
   },
 
+  durationsAlt: {
+    always: { id: "2EGGWxMaj1l/uy3xKU3/KQ==", tpl: [] },
+    before_canceling: { id: "lQ9LkaNuaG/IgjrmfEhzOQ==", tpl: [] },
+    everyday: { id: "0A2UphMxR6CRLdcLZZP42w==", tpl: [] },
+
+  },
+
   durationPresets: {
     day1: { id: "MCdgBksBJO2voZHSf+8z0Q==", tpl: [{ type: 'period', x: 1, timesx: 'days' }] },
     day2: { id: "55rf+bPPeuD5fdSYaG+iWQ==", tpl: [{ type: 'period', x: 2, timesx: 'days' }] },
