@@ -4,6 +4,8 @@ import moment from "moment";
 
 import _ from "lodash";
 
+//import { DrugModel, LiquidModel } from "../models";
+
 import { DrugScheme, LiquidScheme } from "../schemes";
 
 const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#fc7301", "#f42a03"];
@@ -70,6 +72,13 @@ class Drugs {
       // });
       // console.log(Array.from(this.liquid.values()));
     });
+  }
+
+  get validateCurrentDrug() {
+    //const validationContext = DrugModel.schema.newContext();
+    //validationContext.validate(this.current);
+    //return validationContext.validationErrors();
+    return [];
   }
 
   /**
@@ -371,7 +380,7 @@ class Drugs {
       dayWeightDosage,
     };
     // await this.drug.set(drug.key, currentDrug);
-
+    console.log(this.validateCurrentDrug);
     this.listChanged = true;
     await this.stores.dosages.dosage.set(drug.key, currentDosages);
     this.setBaseDosages(drug.key);
@@ -539,7 +548,7 @@ class Drugs {
       }
     });
 
-    let currLiquid = (await this.liquid.get(currGroup)) || {};
+    let currLiquid = (await this.liquid.get(currGroup)) || this.getNewLiquid();
 
     if (currLiquid.key) {
       currLiquid.edit = true;
@@ -631,6 +640,8 @@ class Drugs {
     let count = 0; //full value of liquid
     let unit = null; //dosage unit
     let liqUnit = null; //liquid unit
+    let liqCountUnit = null; //liquid count unit
+    let liqCountBaseUnit = null; //liquid count base unit
     let id = (route && route.liquid) || null;
     let ready = true;
 
@@ -662,6 +673,8 @@ class Drugs {
               };
               count += drug.calc.count;
               liqUnit = liqUnit || drug.dosage.pack.dosage.id_1;
+              liqCountUnit = liqCountUnit || drug.calc.countUnit;
+              liqCountBaseUnit = liqCountBaseUnit || drug.calc.countBaseUnit;
             }
           }
         } else {
@@ -673,6 +686,7 @@ class Drugs {
     //   weight, count, weights, counts, ready, unit, liqUnit, liquidUnits, dryUnits, id
     // });
     // this.listChanged = true
+    // console.log({ liqCountUnit, liqCountBaseUnit });
     return {
       weight,
       count,
@@ -682,6 +696,8 @@ class Drugs {
       unit,
       liqUnit,
       liquidUnits,
+      liqCountUnit,
+      liqCountBaseUnit,
       dryUnits,
       id,
     };
@@ -873,8 +889,20 @@ class Drugs {
     id = parseInt(id);
 
     let patientWeight = this.stores.patients.current.weight;
-    let { dosage, count, dosageUnit, dayCount, durationCount, durationUnit } = this.stores.actions.liquidForm.calc;
+    let {
+      dosage,
+      count,
+      countUnit,
+      countBaseUnit,
+      dosageUnit,
+      dayCount,
+      durationCount,
+      durationUnit,
+    } = this.stores.actions.liquidForm.calc;
     //.reduce((a, b) => a + b)
+    console.log({ countUnit, count });
+    // count = getToBase(countUnit, count);
+    // console.log({ countUnit, count });
     let fullDosage = _.map(dosage, (dos) => {
       return dos * count;
     });
@@ -901,6 +929,8 @@ class Drugs {
       count,
       dosageUnit,
       dayCount,
+      countUnit,
+      countBaseUnit,
       fullDosage,
       weightDosage,
       dayDosage,
@@ -936,7 +966,7 @@ class Drugs {
 
     let flag = false; //if dosages changed set true
 
-    let { ready, weights, counts, weight, count: calcCount, unit } = this.calcLiquid;
+    let { ready, weights, counts, weight, count: calcCount, unit, liqCountUnit, liqCountBaseUnit } = this.calcLiquid;
 
     let arr = [];
     this.drug.forEach((drug, key) => {
@@ -975,6 +1005,8 @@ class Drugs {
           dosageBaseUnit: "248",
           dosage: dosage,
           count: calcCount,
+          countUnit: current.calc.countUnit || liqCountUnit,
+          countBaseUnit: current.calc.countBaseUnit || liqCountBaseUnit,
           dosageUnit: unit,
           dayCount: 1,
           fullDosage: weight,
@@ -1023,6 +1055,8 @@ class Drugs {
           dosageBaseUnit,
           dosage,
           count,
+          countUnit,
+          countBaseUnit,
           dosageUnit,
           dayCount,
           fullDosage,
@@ -1059,6 +1093,8 @@ class Drugs {
           dosageBaseUnit,
           dosage,
           count,
+          countUnit: countUnit || liqCountUnit,
+          countBaseUnit: countBaseUnit || liqCountBaseUnit,
           dosageUnit,
           dayCount,
           fullDosage,

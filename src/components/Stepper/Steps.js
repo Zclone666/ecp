@@ -96,7 +96,15 @@ const Steps = inject(
                       ", " +
                       (stepsData.helpers.pack && (stepsData.helpers.pack.short || stepsData.helpers.pack.full));
                   }
-                  // console.log({ step, chosedName, stepsData, names });
+                  if (step.name === "lf" && currStep > i && !chosedName) {
+                    chosedName = current.dosage?.form_name;
+                    // console.log({ step, chosedName, stepsData, names, current });
+                  }
+                  if (step.name === "method" && currStep > i && !chosedName) {
+                    chosedName = current.dosage?.method_name;
+                    // console.log({ step, chosedName, stepsData, names, current });
+                  }
+
                   return (
                     <Step
                       completed={currStep > i}
