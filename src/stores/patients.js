@@ -452,13 +452,13 @@ class Patients {
             dosage: {
               short: "",
               full:
-                (dosage[0] && dosage[0]?.id_1
-                  ? `${_.map(dosage, "value_1").join(" + ")} ${nameshort[dosage[0].id_1]}`
+                (dosage.dosage[0] && dosage.dosage[0]?.id_1
+                  ? `${_.map(dosage.dosage, "value_1").join(" + ")} ${nameshort[dosage.dosage[0].id_1]}`
                   : "") || "",
-              id: dosage[0]?.id_1,
+              id: dosage.dosage[0]?.id_1,
             },
             pack: { short: "", full: "", id: d?.dosage?.pack?.dosage?.id_1 || d?.calc?.countUnit },
-            type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
+            type: _.isArray(dosage.dosage) && dosage.dosage.length > 1 ? "multi" : "simple",
             // url: "",
             key: null,
             way: "lf",
