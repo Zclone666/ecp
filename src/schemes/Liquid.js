@@ -17,6 +17,8 @@ export default {
     dosageBaseUnit: "248",
     dosage: [0],
     count: 0,
+    countBaseUnit: null,
+    countUnit: null,
     dosageUnit: "248",
     dayCount: 1,
     fullDosage: [0],
