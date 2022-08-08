@@ -431,8 +431,20 @@ class Patients {
         drugs = drugs.map((d) => {
           if (d.helpers) return d;
           let { dosage } = d;
-          dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
+          dosage.dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
           // console.log({ dosage });
+          // KOSTYL
+          if (!dosage.pack || !dosage.pack.id) {
+            dosage.pack = {
+              id: "",
+              dosage: {
+                id_1: d.calc?.countUnit,
+                type: "value",
+                value_1: 1,
+              },
+            };
+          }
+          // END KOSTYL
           const { names, nameshort } = this.stores.tools.unitsPharm;
           nameshort[99] = "%";
           // console.log({ d });
@@ -457,6 +469,7 @@ class Patients {
           return {
             ...d,
             helpers,
+            dosage,
           };
         });
         // console.log("drugs with helpers: ", drugs);
