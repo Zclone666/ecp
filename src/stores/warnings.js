@@ -186,6 +186,7 @@ class Warnings {
     data.return_subjects = false;
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+    console.log(this.stores.actions.privateKey);
     return POST({
       path: "check/Warnings", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
@@ -421,7 +422,7 @@ class Warnings {
   * @param protocol - айди протокола
   */
   async protocol(protocol) {
-    console.log("HERE HERE");
+    // console.log("HERE HERE");
     if (!protocol || protocol == "" || typeof protocol == "undefined") return;
     if (!this.stores.router) {
       return;
@@ -614,6 +615,7 @@ class Warnings {
 
         if (data.authkey) this.stores.actions.authkey = data.authkey;
         if (data.key) this.stores.actions.privateKey = data.key;
+        console.log(this.stores.actions.privateKey);
 
         if (data.misurl) this.stores.actions.misurl = data.misurl;
         if (data && data.liquids && _.isArray(data.liquids)) {
@@ -631,8 +633,19 @@ class Warnings {
           drugs = drugs.map((d) => {
             if (d.helpers) return d;
             let { dosage } = d;
-            dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
+            dosage.dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
             // console.log({ dosage });
+            // KOSTYL
+            dosage.pack = {
+              id: "",
+              dosage: {
+                id_1: d.calc?.countUnit,
+                type: "value",
+                value_1: 1,
+              },
+            };
+
+            // END KOSTYL
             const { names, nameshort } = this.stores.tools.unitsPharm;
             nameshort[99] = "%";
             // console.log({ d });
@@ -656,6 +669,7 @@ class Warnings {
             };
             return {
               ...d,
+              dosage,
               helpers,
             };
           });
