@@ -866,7 +866,7 @@ class Actions {
 
         // console.log(this.doctor);
 
-        this.privateKey = this.loginForm.privateKey;
+        this.privateKey = this.privateKey || this.loginForm.privateKey;
         this.stores.router.push("/");
         this.authorized = true;
         this.loading = false;
