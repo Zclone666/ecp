@@ -13,25 +13,25 @@ const DrugInterface = new SimpleSchema({
     label: "id",
     type: String,
     defaultValue: "",
-    required: false,
+    required: true,
   }, // айди ДВ или ТН
   main: {
     label: "main",
     type: Boolean,
     defaultValue: false,
     required: false,
-  }, // Название ДВ или ТН
+  }, //
   namesearch: {
     label: "namesearch",
     type: String,
     defaultValue: "",
     required: false,
-  }, // Название ДВ или ТН
+  }, // название вбитое в поисковую строку
   name: {
     label: "name",
     type: String,
     defaultValue: "",
-    required: false,
+    required: true,
   }, // Название ДВ или ТН
   title: {
     label: "title",
@@ -67,7 +67,7 @@ const DrugInterface = new SimpleSchema({
     label: "type",
     type: String,
     defaultValue: "",
-    required: false,
+    required: true,
   }, // ДВ или ТН
   liquid: {
     label: "liquid",
@@ -147,6 +147,10 @@ const DrugInterface = new SimpleSchema({
     defaultValue: false,
     required: false,
   },
+  repealdoc: { label: "repealdoc", type: String, defaultValue: null, required: false },
+  repealdate: { label: "repealdate", type: String, defaultValue: null, required: false },
+  repealproto: { label: "repealproto", type: String, defaultValue: null, required: false },
+
   solute: {
     label: "solute",
     type: Boolean,
@@ -187,6 +191,18 @@ const DrugInterface = new SimpleSchema({
     label: "calc",
     type: CalcModel,
     required: false,
+    // custom: function () {
+    //   let count = this.field("calc.count");
+    //   let dosage = this.field("calc.dosage");
+    //   let fullDosage = this.field("calc.fullDosage");
+    //   console.log({ count, dosage, fullDosage });
+    //   if (
+    //     !((!count.value && !dosage.value && !fullDosage.value) || (count.value && dosage.value && fullDosage.value))
+    //   ) {
+    //     return { name: this.key, type: "Неполные данные в calc", value: count.value };
+    //   }
+    //   return false;
+    // },
   },
   schedule: {
     label: "schedule",
