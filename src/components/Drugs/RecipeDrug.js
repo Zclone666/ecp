@@ -120,7 +120,7 @@ const RecipeDrug = inject(
 
         let obj = { dosage: [], rules: [] };
 
-        if (calc && calc.count && calc.countUnit && helpers.dosage && helpers.dosage.id) {
+        if (calc && calc.count && calc.countUnit) {
           // let str = ""; //`${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
           if (calc.fullDosage) {
             let dosageValue = getFromBase(drug.calc.dosageUnit, calc.dosage);
