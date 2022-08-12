@@ -131,7 +131,11 @@ const RecipeDrug = inject(
             obj.rules.push(`${_.map(fullDosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
           }
         }
-
+        if (dosage && dosage.method) {
+          obj.rules.push(names[dosage.method]);
+        } else if (dosage.method_name) {
+          obj.rules.push(dosage.method_name);
+        }
         if (freq_id && UIText && UIText.freq && UIText.freq[freq_id]) {
           obj.rules.push(UIText.freq[freq_id]);
         } else if (freq_name) {
