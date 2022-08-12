@@ -182,6 +182,14 @@ const DrugInterface = new SimpleSchema({
     defaultValue: 0,
     required: false,
   },
+
+  recipeCount: {
+    label: "recipeCount",
+    type: Number,
+    defaultValue: 0,
+    required: false,
+  },
+
   dosage: {
     label: "dosage",
     type: DosageModel,

@@ -386,7 +386,7 @@ class Drugs {
       dayWeightDosage,
     };
     // await this.drug.set(drug.key, currentDrug);
-    console.log(this.validateCurrentDrug);
+    // console.log(this.validateCurrentDrug);
     this.listChanged = true;
     await this.stores.dosages.dosage.set(drug.key, currentDosages);
     this.setBaseDosages(drug.key);

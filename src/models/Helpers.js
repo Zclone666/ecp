@@ -207,6 +207,44 @@ export const CalcModel = new SimpleSchema({
     type: Number,
     required: true,
   },
+  durationCount: {
+    type: Number,
+    required: false,
+  },
+  durationUnit: {
+    label: "durationUnit",
+    type: String,
+    defaultValue: null,
+    required: false,
+  },
+  fullSpeed: {
+    label: "fullSpeed",
+    type: Array,
+    defaultValue: [],
+    required: false,
+  },
+  "fullSpeed.$": {
+    type: Number,
+  },
+  liquidSpeed: {
+    label: "liquidSpeed",
+    type: Number,
+    required: false,
+  },
+  tintSpeed: {
+    label: "tintSpeed",
+    type: Number,
+    required: false,
+  },
+  weightSpeed: {
+    label: "weightSpeed",
+    type: Array,
+    defaultValue: [],
+    required: false,
+  },
+  "weightSpeed.$": {
+    type: Number,
+  },
 });
 export const ShceduleModel = new SimpleSchema({
   dateStart: {

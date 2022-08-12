@@ -48,6 +48,15 @@ const RecipeDrug = inject(
         this.setState({ text: value }, () => {});
         // }
       };
+
+      handleChangeCount = (e) => {
+        let { value } = e.target;
+        console.log({ value });
+        let { drugKey: key, drugs } = this.props;
+        let drug = drugs.drug.get(key);
+        drugs.drug.set(key, Object.assign(drug, { recipeCount: value }));
+        // this.setState({ text: value }, () => {});
+      };
       // undo = () => {
       //   this.setState({ from: 'dosage', text: null })
       // }
@@ -99,39 +108,46 @@ const RecipeDrug = inject(
         let {
           dosages: { getFromBase },
           tools: { names, shortnames, round },
-          drugs,
           drugKey: key,
-          actions: { UIText }
+          drugs,
+          actions: { UIText },
         } = this.props;
-        const { t } = this.props.actions;
-        let arr = [];
-
-        let drug = drugs.drug.get(key) || {};
-        let { freq, freq_id, duration, duration_id, calc, dosage, helpers, schedule } = drug;
+        helpers = helpers || {};
+        let drug = drugs.drug.get(key);
         let { finishAlternate } = schedule || {};
+        let { freq, freq_id, freq_name, duration, duration_id, duration_name, calc, dosage, helpers, schedule } =
+          drug || {};
 
-        if (calc && calc.fullDosage && helpers && helpers.dosage && helpers.dosage.id) {
-          let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
-          let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
-          arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
+        let obj = { dosage: [], rules: [] };
+
+        if (calc && calc.count && calc.countUnit && helpers.dosage && helpers.dosage.id) {
+          // let str = ""; //`${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
+          if (calc.fullDosage) {
+            let dosageValue = getFromBase(drug.calc.dosageUnit, calc.dosage);
+            let fullDosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
+            let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
+
+            obj.dosage.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
+            obj.rules.push(`${_.map(fullDosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
+          }
         }
 
-        if (freq_id && UIText.freq[freq_id]) {
-          arr.push(UIText.freq[freq_id]);
-        } else if (freq) {
-          arr.push(freq);
+        if (freq_id && UIText && UIText.freq && UIText.freq[freq_id]) {
+          obj.rules.push(UIText.freq[freq_id]);
+        } else if (freq_name) {
+          obj.rules.push(freq_name);
         }
         if (duration_id && UIText.duration[duration_id]) {
-          arr.push(UIText.duration[duration_id]);
-        } else if (duration) {
-          arr.push(duration);
+          obj.rules.push(UIText.duration[duration_id]);
+        } else if (duration_name) {
+          obj.rules.push(duration_name);
         }
-
-        if (finishAlternate && UIText.duration[finishAlternate]) arr.push(UIText.duration[finishAlternate]);
+        if (finishAlternate && UIText.duration[finishAlternate]) obj.rules.push(UIText.duration[finishAlternate]);
 
         return {
-          empty: arr.length < 1,
-          text: arr.join(", "),
+          // empty: arr.length < 1,
+          rules: obj.rules.join(", "),
+          dosage: obj.dosage.join(", "),
         };
       }
 
@@ -156,16 +172,7 @@ const RecipeDrug = inject(
         let names = drugDosages.names || {};
 
         let descArr = [];
-        let rules = this.renderRules();
-
-        if (dosage && dosage.form) descArr.push(names[dosage.form]);
-        if (helpers && helpers.dosage && helpers.dosage.small) descArr.push(helpers.dosage.small);
-        if (helpers && helpers.pack && helpers.pack.small) descArr.push(helpers.pack.small);
-        if (dosage && dosage.method) descArr.push(names[dosage.method]);
-        if (schedule && schedule.specials) descArr.push(schedule.specials);
-        if (!rules.empty) {
-          descArr.push(rules.text);
-        }
+        // let rules = this.renderRules();
 
         // if(dosage.form && names[dosage.form]) descArr.push(names[dosage.form])
         // if(dosage.method && names[dosage.method]) descArr.push(names[dosage.method])
@@ -212,7 +219,7 @@ const RecipeDrug = inject(
           drugKey: key,
           drugs,
           active,
-          recipes: { drugKeysForPrescription, maxcount }
+          recipes: { drugKeysForPrescription, maxcount },
         } = this.props;
         const { t } = this.props.actions;
         let { edit, text, from } = this.state;
@@ -223,12 +230,12 @@ const RecipeDrug = inject(
         // let selectedWarnings = warnIcons[selectedDrug]
         let drug = drugs.drug.get(key) || {};
         let drugDosages = dose.get(drug.id) || {};
-        let { name, mnnname, level, tn, type, dosage, schedule, helpers, specials } = drug;
+        let { name, mnnname, level, tn, type, dosage, schedule, helpers, specials, recipeCount } = drug;
 
         let names = drugDosages.names || {};
 
         // let descArr = []
-        // let rules = this.renderRules()
+        let rules = this.renderRules();
         //
         // if(dosage.form) descArr.push(names[dosage.form])
         // if(helpers.dosage && helpers.dosage.small) descArr.push(helpers.dosage.small)
@@ -241,7 +248,7 @@ const RecipeDrug = inject(
         // if(dosage.method && names[dosage.method]) descArr.push(names[dosage.method])
         // if(dosage.pack.dosage) descArr.push(dosage.pack.dosage)
         // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
-
+        // let recipeCount = 0;
         let { inputValue } = this;
         return (
           <List.Item>
@@ -278,11 +285,22 @@ const RecipeDrug = inject(
             <List.Content>
               <List.Content>
                 <List.Header>
-                  <span className="underlined">{mnnname}</span>
-                 
+                  Rp:
+                  <span className="underlined">{mnnname}</span> {rules.dosage}
                 </List.Header>
-                <List.Description>{inputValue}</List.Description>
-                <List.Description>{!edit && specials}</List.Description>
+                <List.Description>
+                  D.t.d: №
+                  <input
+                    type="text"
+                    value={recipeCount}
+                    name="recipeCount"
+                    onChange={this.handleChangeCount}
+                    className="recipeCount"
+                  />
+                </List.Description>
+                <List.Description>
+                  S.: {rules.rules} {!edit && specials && `(${specials})`}
+                </List.Description>
               </List.Content>
             </List.Content>
             {edit && (
@@ -295,7 +313,6 @@ const RecipeDrug = inject(
                   placeholder={t("special_instructions")}
                   onChange={this.handleChange}
                 />
-      
               </Form>
             )}
           </List.Item>
