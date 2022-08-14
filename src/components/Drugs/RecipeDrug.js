@@ -51,10 +51,12 @@ const RecipeDrug = inject(
 
       handleChangeCount = (e) => {
         let { value } = e.target;
-        console.log({ value });
+        // console.log({ value });
+
+        let count = _.isNaN(parseInt(value)) || value == "" ? "" : parseInt(value).toString();
         let { drugKey: key, drugs } = this.props;
         let drug = drugs.drug.get(key);
-        drugs.drug.set(key, Object.assign(drug, { recipeCount: value }));
+        drugs.drug.set(key, Object.assign(drug, { recipeCount: count }));
         // this.setState({ text: value }, () => {});
       };
       // undo = () => {
