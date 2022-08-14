@@ -4,7 +4,7 @@ import moment from "moment";
 
 import _ from "lodash";
 
-//import { DrugModel, LiquidModel } from "../models";
+import { DrugModel, LiquidModel } from "../models";
 
 import { DrugScheme, LiquidScheme } from "../schemes";
 
@@ -74,11 +74,17 @@ class Drugs {
     });
   }
 
+  validateDrug(drug) {
+    const validationContext = DrugModel.schema.newContext();
+    validationContext.validate(drug);
+    return validationContext.validationErrors();
+  }
+
   get validateCurrentDrug() {
-    //const validationContext = DrugModel.schema.newContext();
-    //validationContext.validate(this.current);
-    //return validationContext.validationErrors();
-    return [];
+    const validationContext = DrugModel.schema.newContext();
+    validationContext.validate(this.current);
+    return validationContext.validationErrors();
+    // return [];
   }
 
   /**
@@ -380,7 +386,7 @@ class Drugs {
       dayWeightDosage,
     };
     // await this.drug.set(drug.key, currentDrug);
-    console.log(this.validateCurrentDrug);
+    // console.log(this.validateCurrentDrug);
     this.listChanged = true;
     await this.stores.dosages.dosage.set(drug.key, currentDosages);
     this.setBaseDosages(drug.key);
@@ -1185,6 +1191,8 @@ class Drugs {
   * @param names - дополнительные строки наименований из метода Parse
   */
   selectFromSearch = async (concept, flag = false, getDosages = true, names) => {
+    let errs = this.stores.drugs.validateDrug(concept);
+    if (errs.length > 0) console.log({ name: concept.name, errs });
     let drug = this.getNew();
     if (!concept.calc) concept.calc = drug.calc;
     if (!concept.dosage) concept.dosage = drug.dosage;

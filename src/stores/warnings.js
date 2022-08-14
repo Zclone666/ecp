@@ -621,6 +621,8 @@ class Warnings {
         if (data && data.liquids && _.isArray(data.liquids)) {
           data.liquids.forEach(async (liquid, i) => {
             if (liquid.group != null) {
+              let errs = this.stores.drugs.validateDrug(liquid);
+              if (errs.length > 0) console.log({ name: `раствор ${liquid.group}`, errs });
               await this.stores.drugs.liquid.set(liquid.group, liquid);
             } else {
               this.stores.drugs.deletedLiquids.push(liquid);
