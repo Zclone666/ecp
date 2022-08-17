@@ -2,17 +2,19 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
 import RouterLink from "../../../router/a";
-import { List, Icon, Form, Segment, Input, Button, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
+import { List, Label, Icon, Form, Segment, Input, Button, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
 
 import clarifications from "../../../constants/hardcode";
 import { withTranslation } from "react-i18next";
 import { checkDouble, clearDouble } from "../../../lib/helpers";
 
+import Week from "./Week";
 import Schedule from "./Schedule";
 import Interval from "./Interval";
 import Drugs from "./Drugs";
 
 import _ from "lodash";
+import moment from "moment";
 
 const Calculator = inject(
   "db",
@@ -264,6 +266,67 @@ const Calculator = inject(
         return arr;
       }
 
+      renderAppointmentCalendar() {
+        let {
+          actions: {
+            scheduleForm,
+            calculatorForm: {
+              type,
+              dosage,
+              count,
+              countUnit,
+              dosageUnit,
+              dayCount,
+              fullDosage,
+              weightDosage,
+              dayDosage,
+              dayWeightDosage,
+            },
+          },
+          dosages: {
+            current: { drug, form, methodform, names },
+            calcValues,
+            getFromBase,
+          },
+        } = this.props;
+
+        let { currUnit } = this.state;
+        let { dosage: dos, count: cnt } = calcValues;
+
+        console.log({ countUnit, currUnit, cnt });
+
+        if (scheduleForm && scheduleForm.appointmentСalendar && scheduleForm.appointmentСalendar.length) {
+          return scheduleForm.appointmentСalendar.map((day, index) => {
+            return (
+              <Segment className="day" style={{ maxWidth: 160 }} key={"weekday_" + index} value="mon">
+                <Label attached="top">{moment(day.date, "x").format("DD.MM.YYYY")}</Label>
+
+                <Label>
+                  {day.timeReceipt &&
+                    day.timeReceipt.map((item, x) => {
+                      let fullDosage = _.map(
+                        dosage || dos,
+                        (dos) => getFromBase(currUnit, dos) * getFromBase(cnt.unit.id, item.count)
+                      );
+                      return (
+                        <div key={"daytime_" + index + x}>
+                          <span style={{ display: "inline-block", width: 50 }}>
+                            <Icon name="clock" />
+                            {item.hours}:{item.minutes}
+                          </span>
+                          <Label basic>
+                            {fullDosage.join(" + ") || ""} {cnt.unit.shortname}
+                          </Label>
+                        </div>
+                      );
+                    })}
+                </Label>
+              </Segment>
+            );
+          });
+        }
+      }
+
       componentDidMount() {
         let { currUnit } = this.state;
 
@@ -286,6 +349,7 @@ const Calculator = inject(
               dayDosage,
               dayWeightDosage,
             },
+            scheduleForm,
           },
           tools: { round, units, unitsSchedule },
           dosages: {
@@ -509,8 +573,13 @@ const Calculator = inject(
                   </Form.Field>
                 </Form.Group>
               </Form>
-              {!liquid && <Schedule />}
-              {/* <Interval /> */}
+              {false && !liquid && <Schedule />}
+              {scheduleForm && scheduleForm.appointmentСalendar && scheduleForm.appointmentСalendar.length && (
+                <div style={{ paddingBottom: "1em" }}>
+                  <Header attached="top">{t("scheduled")}</Header>
+                  <Segment attached>{this.renderAppointmentCalendar()}</Segment>
+                </div>
+              )}
               <Form>
                 <Form.Group>
                   <Form.Field width={16}>
