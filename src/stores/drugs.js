@@ -428,6 +428,7 @@ class Drugs {
       once,
       week,
       calendar,
+      appointmentСalendar,
     } = currentDrug.schedule;
     let {
       dosage: dos,
@@ -476,6 +477,7 @@ class Drugs {
       once,
       week,
       calendar,
+      appointmentСalendar,
     };
     this.stores.actions.drugStructure.specials = specials;
     this.listChanged = true;
