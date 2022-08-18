@@ -2,7 +2,20 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
 import RouterLink from "../../../router/a";
-import { List, Label, Icon, Form, Segment, Input, Button, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
+import {
+  List,
+  Label,
+  Icon,
+  Form,
+  Segment,
+  Input,
+  Button,
+  Dropdown,
+  Header,
+  TextArea,
+  Dimmer,
+  Popup,
+} from "semantic-ui-react";
 
 import clarifications from "../../../constants/hardcode";
 import { withTranslation } from "react-i18next";
@@ -269,6 +282,7 @@ const Calculator = inject(
       renderAppointmentCalendar() {
         let {
           actions: {
+            t,
             scheduleForm,
             calculatorForm: {
               type,
@@ -292,21 +306,25 @@ const Calculator = inject(
 
         let { currUnit } = this.state;
         let { dosage: dos, count: cnt } = calcValues;
+        let currUnitObj = dos.units[currUnit];
 
-        console.log({ countUnit, currUnit, cnt });
+        let secondName = currUnit
+          ? currUnitObj && (currUnitObj.shortname || currUnitObj.name)
+          : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name)) ||
+            (dos.unit && (dos.unit.shortname || dos.unit.name));
+        // console.log({ countUnit, currUnit, cnt });
 
         if (scheduleForm && scheduleForm.appointmentСalendar && scheduleForm.appointmentСalendar.length) {
           return scheduleForm.appointmentСalendar.map((day, index) => {
             return (
-              <Segment className="day" style={{ maxWidth: 160 }} key={"weekday_" + index} value="mon">
+              <Segment className="day" style={{ width: 160, minWidth: 160 }} key={"weekday_" + index} value="mon">
                 <Label attached="top">{moment(day.date, "x").format("DD.MM.YYYY")}</Label>
 
                 <Label>
                   {day.timeReceipt &&
                     day.timeReceipt.map((item, x) => {
-                      let fullDosage = _.map(
-                        dosage || dos,
-                        (dos) => getFromBase(currUnit, dos) * getFromBase(cnt.unit.id, item.count)
+                      let fullDosage = _.map(dosage || dos, (dos) =>
+                        parseFloat(getFromBase(currUnit, dos) * getFromBase(cnt.unit.id, item.count)).toFixed(2)
                       );
                       return (
                         <div key={"daytime_" + index + x}>
@@ -315,7 +333,21 @@ const Calculator = inject(
                             {item.hours}:{item.minutes}
                           </span>
                           <Label basic>
-                            {fullDosage.join(" + ") || ""} {cnt.unit.shortname}
+                            <Popup
+                              content={`${fullDosage.join(" + ") || ""}  ${secondName || t("mg")}`}
+                              trigger={
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    maxWidth: 43,
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {fullDosage.join(" + ") || ""} {secondName || t("mg")}
+                                </span>
+                              }
+                            />
                           </Label>
                         </div>
                       );
@@ -573,11 +605,13 @@ const Calculator = inject(
                   </Form.Field>
                 </Form.Group>
               </Form>
-              {false && !liquid && <Schedule />}
+              {!liquid && <Schedule />}
               {scheduleForm && scheduleForm.appointmentСalendar && scheduleForm.appointmentСalendar.length && (
                 <div style={{ paddingBottom: "1em" }}>
                   <Header attached="top">{t("scheduled")}</Header>
-                  <Segment attached>{this.renderAppointmentCalendar()}</Segment>
+                  <Segment.Group attached horizontal style={{ overflowX: "auto" }}>
+                    {this.renderAppointmentCalendar()}
+                  </Segment.Group>
                 </div>
               )}
               <Form>
