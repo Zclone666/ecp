@@ -2,17 +2,32 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
 import RouterLink from "../../../router/a";
-import { List, Icon, Form, Segment, Input, Button, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
+import {
+  List,
+  Label,
+  Icon,
+  Form,
+  Segment,
+  Input,
+  Button,
+  Dropdown,
+  Header,
+  TextArea,
+  Dimmer,
+  Popup,
+} from "semantic-ui-react";
 
 import clarifications from "../../../constants/hardcode";
 import { withTranslation } from "react-i18next";
 import { checkDouble, clearDouble } from "../../../lib/helpers";
 
+import Week from "./Week";
 import Schedule from "./Schedule";
 import Interval from "./Interval";
 import Drugs from "./Drugs";
 
 import _ from "lodash";
+import moment from "moment";
 
 const Calculator = inject(
   "db",
@@ -264,6 +279,86 @@ const Calculator = inject(
         return arr;
       }
 
+      renderAppointmentCalendar() {
+        let {
+          actions: {
+            t,
+            scheduleForm,
+            calculatorForm: {
+              type,
+              dosage,
+              count,
+              countUnit,
+              dosageUnit,
+              dayCount,
+              fullDosage,
+              weightDosage,
+              dayDosage,
+              dayWeightDosage,
+            },
+          },
+          dosages: {
+            current: { drug, form, methodform, names },
+            calcValues,
+            getFromBase,
+          },
+        } = this.props;
+
+        let { currUnit } = this.state;
+        let { dosage: dos, count: cnt } = calcValues;
+        let currUnitObj = dos.units[currUnit];
+
+        let secondName = currUnit
+          ? currUnitObj && (currUnitObj.shortname || currUnitObj.name)
+          : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name)) ||
+            (dos.unit && (dos.unit.shortname || dos.unit.name));
+        // console.log({ countUnit, currUnit, cnt });
+
+        if (scheduleForm && scheduleForm.appointmentСalendar && scheduleForm.appointmentСalendar.length) {
+          return scheduleForm.appointmentСalendar.map((day, index) => {
+            return (
+              <Segment className="day" style={{ width: 160, minWidth: 160 }} key={"weekday_" + index} value="mon">
+                <Label attached="top">{moment(day.date, "x").format("DD.MM.YYYY")}</Label>
+
+                <Label>
+                  {day.timeReceipt &&
+                    day.timeReceipt.map((item, x) => {
+                      let fullDosage = _.map(dosage || dos, (dos) =>
+                        parseFloat(getFromBase(currUnit, dos) * getFromBase(cnt.unit.id, item.count)).toFixed(2)
+                      );
+                      return (
+                        <div key={"daytime_" + index + x}>
+                          <span style={{ display: "inline-block", width: 50 }}>
+                            <Icon name="clock" />
+                            {item.hours}:{item.minutes}
+                          </span>
+                          <Label basic>
+                            <Popup
+                              content={`${fullDosage.join(" + ") || ""}  ${secondName || t("mg")}`}
+                              trigger={
+                                <span
+                                  style={{
+                                    display: "inline-block",
+                                    maxWidth: 43,
+                                    overflow: "hidden",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {fullDosage.join(" + ") || ""} {secondName || t("mg")}
+                                </span>
+                              }
+                            />
+                          </Label>
+                        </div>
+                      );
+                    })}
+                </Label>
+              </Segment>
+            );
+          });
+        }
+      }
+
       componentDidMount() {
         let { currUnit } = this.state;
 
@@ -286,6 +381,7 @@ const Calculator = inject(
               dayDosage,
               dayWeightDosage,
             },
+            scheduleForm,
           },
           tools: { round, units, unitsSchedule },
           dosages: {
@@ -510,7 +606,14 @@ const Calculator = inject(
                 </Form.Group>
               </Form>
               {!liquid && <Schedule />}
-              {/* <Interval /> */}
+              {scheduleForm && scheduleForm.appointmentСalendar && scheduleForm.appointmentСalendar.length && (
+                <div style={{ paddingBottom: "1em" }}>
+                  <Header attached="top">{t("scheduled")}</Header>
+                  <Segment.Group attached horizontal style={{ overflowX: "auto" }}>
+                    {this.renderAppointmentCalendar()}
+                  </Segment.Group>
+                </div>
+              )}
               <Form>
                 <Form.Group>
                   <Form.Field width={16}>

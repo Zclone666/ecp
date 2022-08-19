@@ -615,6 +615,12 @@ class Warnings {
 
         if (data.authkey) this.stores.actions.authkey = data.authkey;
         if (data.key) this.stores.actions.privateKey = data.key;
+
+        if (data.lang && this.stores.actions.active_language !== data.lang) {
+          this.stores.actions.active_language = data.lang;
+          this.stores.tools.getAllService();
+        }
+
         console.log(this.stores.actions.privateKey);
 
         if (data.misurl) this.stores.actions.misurl = data.misurl;

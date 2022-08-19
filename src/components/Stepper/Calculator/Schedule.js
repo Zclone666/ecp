@@ -120,6 +120,7 @@ const Schedule = inject(
       componentDidMount() {
         let {
           actions: {
+            UIText,
             scheduleForm: {
               dateStart,
               dateFinish,
@@ -131,8 +132,18 @@ const Schedule = inject(
               calendar,
             },
           },
+          drugs: { current },
         } = this.props;
 
+        setTimeout(() => {
+          let { duration, duration_id } = current;
+          //
+
+          if ((duration_id && duration_id.length) || (duration && duration.length)) {
+            // console.log({ duration, duration_id });
+            this.setState({ timeFromStart: duration || UIText.duration[duration_id] });
+          }
+        }, 300);
         this.props.actions.scheduleForm.dateStart =
           dateStart || moment(moment().format("DD.MM.YYYY"), "DD.MM.YYYY").format("x");
         // console.log(this.props.actions.scheduleForm.dateStart);
