@@ -385,6 +385,16 @@ const resources = {
       date_commencement_therapy: "Дата начала терапии",
     },
   },
+  en: {
+    translation: {
+      welcome: "Welcome",
+      contact_administrator: "Please, contact the administrator.",
+      attention_doctor_not_specified: "Attention! The doctor is not set.",
+      report_an_error: "Report an error", /// //// ///
+      notify_about_error: "Report an error",
+      enter_message_text: "Enter message text",
+    },
+  },
 };
 
 i18n

@@ -1071,7 +1071,7 @@ class Actions {
       this.makeAlerts({
         alerts: [
           {
-            title: `${this.t("welcome") || "Здравствуйте"}, ${this.doctor.name}`,
+            title: `${this.t("welcome")}, ${this.doctor.name}`,
             message: "",
             level: "info",
             sticky: false,
