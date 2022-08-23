@@ -122,6 +122,12 @@ const RecipeDrug = inject(
 
         let obj = { dosage: [], rules: [] };
 
+        if (dosage && dosage.form) {
+          obj.dosage.push(latshortnames[dosage.form] || latnames[dosage.form] || names[dosage.form]);
+        } else if (dosage.form_name) {
+          obj.dosage.push(dosage.form_name);
+        }
+
         if (calc && calc.count && calc.countUnit) {
           // let str = ""; //`${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
           if (calc.fullDosage) {
