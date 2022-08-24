@@ -63,6 +63,7 @@ const Recipe = inject(
           certificates: [],
           selectedCertificate: null,
           certificateSelectionDialog: false,
+          certificateNotAvailableDialog: false,
           wasSigned: false,
           signedData: null,
           savePending: false,
@@ -269,7 +270,11 @@ const Recipe = inject(
           })
           .then((certs) => Promise.all(certs.map(async (c) => ({ cert: c, valid: await c.isValid() }))));
         const validCertificates = availableCertificates.filter((c) => c.valid).map((c) => c.cert);
-        this.setState({ certificates: validCertificates, certificateSelectionDialog: true });
+        if (validCertificates && validCertificates.length > 0) {
+          this.setState({ certificates: validCertificates, certificateSelectionDialog: true });
+        } else {
+          this.setState({ certificates: validCertificates, certificateNotAvailableDialog: true });
+        }
       };
 
       sign = async () => {
@@ -326,7 +331,7 @@ const Recipe = inject(
       };
 
       render() {
-        let { open, openCode, printType } = this.state;
+        let { open, openCode, printType, certificateNotAvailableDialog } = this.state;
         let {
           actions: {
             drugStructure: { doctor_id: doctor, clinic_id: clinic, doctor_name: docName },
@@ -351,6 +356,7 @@ const Recipe = inject(
             statim,
             special,
             spectext,
+            drugKeysForPrescription,
           },
           patients: { current: patient },
         } = this.props;
@@ -407,12 +413,24 @@ const Recipe = inject(
                   {t("back")}
                 </Menu.Item>
                 {/* {!code && ( */}
-                <Menu.Item disabled={noEmail || !recipe_formid || this.state.savePending} onClick={this.save}>
+                <Menu.Item
+                  disabled={
+                    noEmail ||
+                    !recipe_formid ||
+                    this.state.savePending ||
+                    !drugKeysForPrescription ||
+                    drugKeysForPrescription.length < 1
+                  }
+                  onClick={this.save}
+                >
                   {t("send")}
                 </Menu.Item>
                 {/* )} */}
                 {/* {code && ( disabled={noEmail || !code}*/}
-                <Menu.Item onClick={() => this.state.sevingPending ? this.print() : this.notSavePrint()}>
+                <Menu.Item
+                  disabled={!drugKeysForPrescription || drugKeysForPrescription.length < 1}
+                  onClick={() => (this.state.sevingPending ? this.print() : this.notSavePrint())}
+                >
                   {t("print")}
                 </Menu.Item>
                 {printType !== "list" && (
@@ -765,7 +783,7 @@ const Recipe = inject(
                         <Form.Field width={4}>
                           <label>{t("date_commencement_therapy")}</label>
                           <Calendar
-                              name="dateStart"
+                            name="dateStart"
                             // value={moment(patient.datetherapy).format("x")}
                             minDate={new Date()}
                             onChange={this.handlePatientDataChange}
@@ -897,9 +915,7 @@ const Recipe = inject(
 
             <Modal onClose={() => this.setOpenCode(false)} onOpen={() => this.setOpenCode(true)} open={openCode}>
               <Modal.Header>{printType !== "list" ? t("code_pharmacy") : t("appointment_sheet_formed")}</Modal.Header>
-              <Modal.Content>
-                {printType !== "list" ? <Header as="h1">{code}</Header> : null}
-              </Modal.Content>
+              <Modal.Content>{printType !== "list" ? <Header as="h1">{code}</Header> : null}</Modal.Content>
               <Modal.Actions>
                 <Button
                   content={t("print")}
@@ -923,6 +939,19 @@ const Recipe = inject(
                   onClick={() => this.setOpenCode(false)}
                   positive
                 />
+              </Modal.Actions>
+            </Modal>
+            <Modal
+              onClose={() => this.setState({ certificateNotAvailableDialog: false })}
+              onOpen={() => this.setState({ certificateNotAvailableDialog: true })}
+              open={this.state.certificateNotAvailableDialog}
+            >
+              <Modal.Header>{t("no_available_certificates")}</Modal.Header>
+              <Modal.Content>{t("no_available_certificates_text")}</Modal.Content>
+              <Modal.Actions style={{ display: "flex", justifyContent: "end" }}>
+                <Button color="red" onClick={() => this.setState({ certificateNotAvailableDialog: false })}>
+                  {t("main_parser_cancel")}
+                </Button>
               </Modal.Actions>
             </Modal>
             <Modal

@@ -9,6 +9,7 @@ import ResetPass from "../views/ResetPass";
 import Manual from "../views/Manual";
 import LicenseAgreement from "../views/LicenseAgreement";
 import ClinrecStartPage from "../views/Clinrecs/ClinrecStartPage";
+import ClinrecStartPageNew from "../views/Clinrecs/ClinrecStartPageNew";
 
 export default {
   "/": { section: "main", name: "main", render: <Main /> },
@@ -47,6 +48,8 @@ export default {
 
   "/druginfo/:page": { section: "main", name: "druginfo", render: <Main /> },
 
+  "/fgreplace/:page/:drug": { section: "main", name: "fgreplace", render: <Main /> },
+
   "/crstartpage/:page": { section: "main", name: "crstartpage", render: <Main /> },
   "/clinrec/:page": { section: "main", name: "clinrec", render: <Main /> },
   "/clinrec/:page/:step": { section: "main", name: "clinrec", render: <Main /> },
@@ -62,6 +65,7 @@ export default {
   "/newpass": { section: "auth", name: "auth", render: <NewPass /> },
 
   "/protocol/:protocol": { section: "main", name: "protocol", render: <Main /> },
+  "/resultchecking/:protocol": { section: "main", name: "resultchecking", render: <Main /> },
   "/mispatient/:miskey": { section: "main", name: "mis", render: <Main /> },
   "/mispatient/:miskey/disabled": { section: "main", name: "mis", disabled: true, render: <Main /> },
 

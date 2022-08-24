@@ -14,6 +14,8 @@ import DrugInfo from "../DrugInfo";
 import Liquid from "../Liquid";
 import Clinrecs from "../Clinrecs";
 import ClinrecStartPage from "../Clinrecs/ClinrecStartPage";
+import ClinrecStartPageNew from "../Clinrecs/ClinrecStartPageNew";
+import FgReplace from "../FgReplace";
 
 const Page = inject(
   "router",
@@ -55,7 +57,8 @@ const Page = inject(
             druginfo: <DrugInfo />,
             liquid: <Liquid />,
             clinrec: <Clinrecs />,
-            crstartpage: <ClinrecStartPage />,
+            crstartpage: <ClinrecStartPageNew />,
+            fgreplace: <FgReplace />,
             none: <div />,
           }[name] || null
         );

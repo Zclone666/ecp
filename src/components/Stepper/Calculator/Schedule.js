@@ -83,9 +83,8 @@ const Schedule = inject(
         } else {
           switch (name) {
             case "finishAlternate":
-              this.props.actions.scheduleForm.finishAlternate = this.props.actions.scheduleForm.finishAlternate
-                ? null
-                : value;
+              this.props.actions.scheduleForm.finishAlternate =
+                this.props.actions.scheduleForm.finishAlternate == value ? null : value;
               this.setState({ timeFromStart: null });
               this.props.drugs.current.duration = null;
               this.props.drugs.current.duration_id = null;
@@ -121,6 +120,7 @@ const Schedule = inject(
       componentDidMount() {
         let {
           actions: {
+            UIText,
             scheduleForm: {
               dateStart,
               dateFinish,
@@ -132,11 +132,42 @@ const Schedule = inject(
               calendar,
             },
           },
+          drugs: { current },
         } = this.props;
 
+        setTimeout(() => {
+          let { duration, duration_id } = current;
+          //
+
+          if ((duration_id && duration_id.length) || (duration && duration.length)) {
+            // console.log({ duration, duration_id });
+            this.setState({ timeFromStart: duration || UIText.duration[duration_id] });
+          }
+        }, 300);
         this.props.actions.scheduleForm.dateStart =
           dateStart || moment(moment().format("DD.MM.YYYY"), "DD.MM.YYYY").format("x");
         // console.log(this.props.actions.scheduleForm.dateStart);
+      }
+
+      renderAlterDurations() {
+        let { durationsAlt } = clarifications;
+        let {
+          UIText,
+          scheduleForm: { interval },
+        } = this.props.actions;
+        let arr = [];
+        interval = interval || [];
+        _.keys(durationsAlt).forEach((durationKey, i) => {
+          let duration = durationsAlt[durationKey];
+
+          arr.push({
+            key: i,
+            text: UIText.duration[duration.id],
+            value: durationKey,
+            onClick: () => this.handleChange(null, { name: "finishAlternate", value: duration.id }),
+          });
+        });
+        return arr;
       }
 
       renderDurations() {
@@ -149,6 +180,7 @@ const Schedule = inject(
         interval = interval || [];
         _.keys(durations).forEach((durationKey, i) => {
           let duration = durations[durationKey];
+
           arr.push({
             key: i,
             text: UIText.duration[duration.id],
@@ -167,6 +199,7 @@ const Schedule = inject(
             activeDrugs,
             activeConflicts,
             stepsData,
+            UIText,
             scheduleForm: {
               dateStart,
               dateFinish,
@@ -257,26 +290,41 @@ const Schedule = inject(
                 </Form.Field>
                 <Form.Field width={5}>
                   <label>{t("or")}</label>
-                  <Responsive as={Button.Group} fluid size="big" minWidth={481}>
-                    <Button
-                      primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
-                      onClick={this.handleChange}
-                      name="finishAlternate"
-                      value="lQ9LkaNuaG/IgjrmfEhzOQ=="
-                    >
-                      {t("before_canceling")}
-                    </Button>
-                  </Responsive>
-                  <Responsive as={Button.Group} fluid maxWidth={480}>
-                    <Button
-                      primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
-                      onClick={this.handleChange}
-                      name="finishAlternate"
-                      value="lQ9LkaNuaG/IgjrmfEhzOQ=="
-                    >
-                      {t("before_canceling")}
-                    </Button>
-                  </Responsive>
+                  <Dropdown
+                    onClick={() => {
+                      this.dateFinish.current.hide();
+                    }}
+                    disabled={!dateStart || dateStart.length < 1}
+                    className={`big fluid button${finishAlternate ? " primary" : ""}`}
+                    primary={finishAlternate !== null}
+                    name={"finishAlternate"}
+                    text={(finishAlternate && UIText.duration[finishAlternate]) || t("choose")}
+                    options={this.renderAlterDurations()}
+                  />
+                  {false && (
+                    <Responsive as={Button.Group} fluid size="big" minWidth={481}>
+                      <Button
+                        primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
+                        onClick={this.handleChange}
+                        name="finishAlternate"
+                        value="lQ9LkaNuaG/IgjrmfEhzOQ=="
+                      >
+                        {t("before_canceling")}
+                      </Button>
+                    </Responsive>
+                  )}
+                  {false && (
+                    <Responsive as={Button.Group} fluid maxWidth={480}>
+                      <Button
+                        primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
+                        onClick={this.handleChange}
+                        name="finishAlternate"
+                        value="lQ9LkaNuaG/IgjrmfEhzOQ=="
+                      >
+                        {t("before_canceling")}
+                      </Button>
+                    </Responsive>
+                  )}
                 </Form.Field>
               </Form.Group>
 

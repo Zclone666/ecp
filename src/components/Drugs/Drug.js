@@ -51,6 +51,10 @@ const Drug = inject(
         let { drug } = this.props;
         await this.props.analogs.get(drug);
       };
+      getFD = async () => {
+        let { drug } = this.props;
+        await this.props.drugs.FDbyDrug(drug);
+      };
 
       getInfo = async () => {
         let { drug } = this.props;
@@ -105,10 +109,14 @@ const Drug = inject(
 
         let arr = [];
 
-        if (calc && calc.fullDosage && helpers.dosage && helpers.dosage.id) {
-          let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
-          let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
-          arr.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
+        if (calc && calc.count && calc.countUnit && helpers.dosage && helpers.dosage.id) {
+          let str = `${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
+          if (calc.fullDosage) {
+            let dosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
+            let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
+            str += ` (${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName})`;
+          }
+          arr.push(str);
         }
 
         if (freq_id && UIText && UIText.freq && UIText.freq[freq_id]) {
@@ -154,6 +162,7 @@ const Drug = inject(
         const { t } = this.props.actions;
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
+        //console.log(drug);
         let selectedWarnings = warnIcons[selectedDrug];
 
         const drugWarnings = _.orderBy(
@@ -199,16 +208,16 @@ const Drug = inject(
         // console.log({ dosage, nameshort, names, helpers });
 
         const dosageForm =
-          dosage.form && (nameshort[dosage.form] || names[dosage.form])
-            ? nameshort[dosage.form] || names[dosage.form]
+          dosage.form && (nameshort[dosage.form] || names[dosage.form] || dosage.form_name)
+            ? nameshort[dosage.form] || names[dosage.form] || dosage.form_name
             : "";
         const helpersDosage =
           helpers.dosage && (helpers.dosage.small || helpers.dosage.full)
             ? helpers.dosage.small || helpers.dosage.full
             : "";
         const dosageMethod =
-          dosage.method && (nameshort[dosage.method] || names[dosage.method])
-            ? nameshort[dosage.method] || names[dosage.method]
+          dosage.method && (nameshort[dosage.method] || names[dosage.method] || dosage.method_name)
+            ? nameshort[dosage.method] || names[dosage.method] || dosage.method_name
             : "";
 
         return (
@@ -216,6 +225,16 @@ const Drug = inject(
             <List.Content floated="right">
               <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
               <Responsive fireOnMount as={Button.Group} minWidth={misDisabled ? "1" : "481"}>
+                {maxItem && maxItem.needChange && (
+                  <Popup
+                    content={t("choose_replacement")}
+                    trigger={
+                      <Button as={RouterLink} to={`/fgreplace/chosefd/${ldrug.key}`} onClick={this.getFD} icon>
+                        <Icon name="refresh" />
+                      </Button>
+                    }
+                  />
+                )}
                 {!disabled && dosReady && (
                   <Popup
                     content={t("dosage")}
@@ -391,6 +410,15 @@ const Drug = inject(
               >
                 {!disabled && (
                   <Dropdown.Menu>
+                    {maxItem && maxItem.needChange && (
+                      <Dropdown.Item
+                        icon="refresh"
+                        as={RouterLink}
+                        to={`/fgreplace/chosefd/${ldrug.key}`}
+                        onClick={this.getFD}
+                        text={t("choose_replacement")}
+                      />
+                    )}
                     {dosReady && (
                       <Dropdown.Item
                         disabled={drug.group !== 0}

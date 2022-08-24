@@ -35,45 +35,50 @@ class Patients {
     autorun(() => {});
   }
 
-  setCurrent = async ({
-    id,
-    email,
-    fio,
-    miscode,
-    misid,
-    name,
-    birthdate,
-    sex,
-    growth,
-    weight,
-    disease,
-    co_disease,
-    labparams,
-    pregnancy,
-    gestation,
-    trimester,
-    lactation,
-    driving,
-    alcohol,
-    masIndex,
-    squareIndex,
-    allergy,
-    mutations,
-    lastname,
-    patronymic,
-    firstname,
-    snils,
-    policy_num,
-    medcard_num,
+  /**
+  // метод устанавливает текущего пациента
+  * @param patient - объект пациента
+  */
+  setCurrent = async (patient) => {
+    let {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      birthdate,
+      sex,
+      growth,
+      weight,
+      disease,
+      co_disease,
+      labparams,
+      pregnancy,
+      gestation,
+      trimester,
+      lactation,
+      driving,
+      alcohol,
+      masIndex,
+      squareIndex,
+      allergy,
+      mutations,
+      lastname,
+      patronymic,
+      firstname,
+      snils,
+      policy_num,
+      medcard_num,
 
-    main_address,
-    genpassport_exist,
-  }) => {
+      main_address,
+      genpassport_exist,
+    } = patient || {};
     let patientTpl = _.cloneDeep(PatientScheme);
     masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
     squareIndex = parseFloat((0.007184 * Math.pow(growth, 0.725) * Math.pow(weight, 0.425)).toFixed(2));
     //parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
-    await _.assignIn(this.current, patientTpl, {
+    Object.assign(this.current, patientTpl, {
       id,
       email,
       fio,
@@ -108,29 +113,136 @@ class Patients {
 
       genpassport_exist,
     });
+    this.stores.actions.patientForm = {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      allergy,
+      birthdate,
+      disease,
+      // disease2,
+      labparams,
+      co_disease,
+      driving,
+      gestation,
+      growth,
+      lactation,
+      pregnancy,
+      sex,
+      trimester,
+      weight,
+      masIndex,
+      squareIndex,
+      mutations,
+
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+      main_address,
+
+      genpassport_exist,
+    };
+    this.stores.actions.patientPassport = {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    };
+    Object.assign(this.stores.actions.drugStructure.patient, {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      birthdate,
+      sex,
+      growth,
+      weight,
+      disease,
+      co_disease,
+      pregnancy,
+      gestation,
+      trimester,
+      lactation,
+      driving,
+      alcohol,
+      allergy,
+      mutations,
+      labparams,
+
+      genpassport_exist,
+
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    });
+    // console.log(this.current);
   };
 
+  /**
+  // метод очищает объект текущего пациента
+  */
   unsetCurrent = () => {
     this.stores.actions.resetPatientPassport();
     _.assignIn(this.current, PatientScheme);
   };
 
+  /**
+  // метод возвращает клонированный объект текущего пациента
+  */
   getCurrent = () => {
     return _.cloneDeep(this.current);
   };
 
+  /**
+  // метод возвращает клонированный объект пациента по ключу
+  * @param key - ключ пациента
+  */
   getClone = async (key) => {
     let patient = await this.patient.get(key);
     return _.cloneDeep(patient);
   };
 
+  /**
+  // метод возвращает пустой объект пациента
+  */
   getNew = () => {
     return _.cloneDeep(PatientScheme);
   };
 
+  /**
+  // метод получает данные и терапию пациента по айди
+  * @param id - айди пациента
+  */
   async request(id) {
     this.stores.actions.loading = true;
-    await this.stores.actions.resetAll();
+    await this.stores.actions.resetAll("patient_only");
     let { active_language } = this.stores.actions;
     let data = {
       key: this.stores.actions.privateKey,
@@ -148,6 +260,11 @@ class Patients {
       success: async (data) => {
         if (data.patient && data.patient.id) {
           await this.setCurrent(data.patient);
+        }
+
+        if (data.lang && this.stores.actions.active_language !== data.lang) {
+          this.stores.actions.active_language = data.lang;
+          this.stores.tools.getAllService();
         }
 
         this.stores.clinrecs.collectorAvailable = data.is_collector_available;
@@ -319,8 +436,20 @@ class Patients {
         drugs = drugs.map((d) => {
           if (d.helpers) return d;
           let { dosage } = d;
-          dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
+          dosage.dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
           // console.log({ dosage });
+          // KOSTYL
+          if (!dosage.pack || !dosage.pack.id) {
+            dosage.pack = {
+              id: "",
+              dosage: {
+                id_1: d.calc?.countUnit,
+                type: "value",
+                value_1: 1,
+              },
+            };
+          }
+          // END KOSTYL
           const { names, nameshort } = this.stores.tools.unitsPharm;
           nameshort[99] = "%";
           // console.log({ d });
@@ -328,13 +457,13 @@ class Patients {
             dosage: {
               short: "",
               full:
-                (dosage[0] && dosage[0]?.id_1
-                  ? `${_.map(dosage, "value_1").join(" + ")} ${nameshort[dosage[0].id_1]}`
+                (dosage.dosage[0] && dosage.dosage[0]?.id_1
+                  ? `${_.map(dosage.dosage, "value_1").join(" + ")} ${nameshort[dosage.dosage[0].id_1]}`
                   : "") || "",
-              id: dosage[0]?.id_1,
+              id: dosage.dosage[0]?.id_1,
             },
             pack: { short: "", full: "", id: d?.dosage?.pack?.dosage?.id_1 || d?.calc?.countUnit },
-            type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
+            type: _.isArray(dosage.dosage) && dosage.dosage.length > 1 ? "multi" : "simple",
             // url: "",
             key: null,
             way: "lf",
@@ -345,12 +474,20 @@ class Patients {
           return {
             ...d,
             helpers,
+            dosage,
           };
         });
         // console.log("drugs with helpers: ", drugs);
 
         drugs.forEach(async (drug, i) => {
           await this.stores.drugs.selectFromSearch(drug, false, false);
+          if (drug.dosage && drug.dosage.form && drug.dosage.form_name) {
+            // console.log("this.stores.tools.unitsPharm.names");
+            this.stores.tools.unitsPharm.names[drug.dosage.form] = drug.dosage.form_name;
+          }
+          if (drug.dosage && drug.dosage.method && drug.dosage.method_name) {
+            this.stores.tools.unitsPharm.names[drug.dosage.method] = drug.dosage.method_name;
+          }
         });
 
         await this.stores.tools.stepByStepLoading(this.stores.dosages.get, drugs);
@@ -375,6 +512,98 @@ class Patients {
     });
   }
 
+  /**
+  // метод устанавливает поля формы редактирования пациента
+  * @param patient - объект пациента
+  */
+  setPatient(patient) {
+    let {
+      allergy,
+      birthdate,
+      disease,
+      disease2,
+      co_disease,
+      driving,
+      email,
+      fio,
+      gestation,
+      growth,
+      id,
+      lactation,
+      miscode,
+      misid,
+      name,
+      pregnancy,
+      sex,
+      trimester,
+      weight,
+      mutations,
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    } = patient;
+    co_disease = co_disease || [];
+    this.stores.actions.patientForm = {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      allergy,
+      birthdate,
+      disease,
+      disease2,
+      co_disease,
+      driving,
+      gestation,
+      growth,
+      lactation,
+      pregnancy,
+      sex,
+      trimester,
+      weight,
+      mutations,
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    };
+    this.stores.actions.patientPassport = {
+      id,
+      email,
+      fio,
+      miscode,
+      misid,
+      name,
+      lastname,
+      patronymic,
+      firstname,
+
+      snils,
+      policy_num,
+      medcard_num,
+
+      main_address,
+    };
+    return patient || {};
+  }
+
+  /**
+  // метод сохраняет пациента из формы редактирования пациента
+  * @param id - айди пациента
+  */
   async getPatient(id) {
     let { active_language } = this.stores.actions;
     let data = {
@@ -391,114 +620,8 @@ class Patients {
       data,
       success: async (data) => {
         // console.log('DATA', data);
-        let {
-          allergy,
-          birthdate,
-          disease,
-          disease2,
-          co_disease,
-          driving,
-          email,
-          fio,
-          gestation,
-          growth,
-          id,
-          lactation,
-          miscode,
-          misid,
-          name,
-          pregnancy,
-          sex,
-          trimester,
-          weight,
-          mutations,
-          lastname,
-          patronymic,
-          firstname,
 
-          snils,
-          policy_num,
-          medcard_num,
-
-          main_address,
-        } = data.patient;
-        // let { drugs } = data
-        co_disease = co_disease || [];
-        this.stores.actions.patientForm = {
-          id,
-          email,
-          fio,
-          miscode,
-          misid,
-          name,
-          allergy,
-          birthdate,
-          disease,
-          disease2,
-          co_disease,
-          driving,
-          gestation,
-          growth,
-          lactation,
-          pregnancy,
-          sex,
-          trimester,
-          weight,
-          mutations,
-          lastname,
-          patronymic,
-          firstname,
-
-          snils,
-          policy_num,
-          medcard_num,
-
-          main_address,
-        };
-        // this.stores.actions.drugStructure.patient = {
-        //   id,
-        //   key: id,
-        //   email,
-        //   fio,
-        //   miscode,
-        //   misid,
-        //   name,
-        //   allergy,
-        //   birthdate,
-        //   disease,
-        //   disease2,
-        //   co_disease,
-        //   driving,
-        //   gestation,
-        //   growth,
-        //   lactation,
-        //   pregnancy,
-        //   sex,
-        //   trimester,
-        //   weight,
-        // };
-        this.stores.actions.patientPassport = {
-          id,
-          email,
-          fio,
-          miscode,
-          misid,
-          name,
-          lastname,
-          patronymic,
-          firstname,
-
-          snils,
-          policy_num,
-          medcard_num,
-
-          main_address,
-        };
-
-        // drugs.forEach(async (drug, i) => {
-        //   await this.stores.drugs.selectFromSearch( drug )
-        // });
-        return data.patient || {};
+        return this.setPatient(data.patient);
       },
       fail: (alerts) => {},
       always: (data) => {},
@@ -506,9 +629,13 @@ class Patients {
   }
 
   //Tools/GetLastPatients
+  /**
+  // метод получает концепты последних 30 измененных пациентов для врача
+  */
   async getList() {
     this.searchReady = false;
     let { active_language } = this.stores.actions;
+    if (!(this.stores.actions.doctor && this.stores.actions.doctor.id)) return;
     let data = {
       count: 30,
       doctor_id: (this.stores.actions.doctor && this.stores.actions.doctor.id) || null,
@@ -520,6 +647,8 @@ class Patients {
 
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+
+    if (!(data.authkey && data.authkey.length) && !(data.key && data.key.length)) return;
 
     // this[`${saveTo}Rows`] = observable([]);
 
@@ -550,6 +679,11 @@ class Patients {
     });
   }
 
+  /**
+  // метод сохраняет в нужном формате список пациентов, полученный в методе getList
+  * @param patients - список айди пациентов
+  * @param names - объект айди => имя пациента
+  */
   async makeList({ patients, names }) {
     if (patients && _.isArray(patients)) {
       patients.forEach(async (patientId, i) => {
@@ -565,6 +699,9 @@ class Patients {
     }
   }
 
+  /**
+  // геттер возвращает массив пациентов для выпадашки с первым пустым элементом (чтоыб не выбирался первый по дефолту)
+  */
   get arr() {
     let arr = [
       {
@@ -578,6 +715,10 @@ class Patients {
     return arr;
   }
 
+  /**
+  // метод ищет возвращает объект пациента по айди
+  * @param id - айди пациента
+  */
   getById(id) {
     let res = {};
     Array.from(this.patient.values()).forEach((item, i) => {
@@ -586,6 +727,11 @@ class Patients {
     return res;
   }
 
+  /**
+  // метод побуквенного поиска пациента
+  * @param text - строка поиска
+  * @param saveTo - куда положить ответ
+  */
   async search(text, saveTo = "search") {
     this.searchReady = false;
     let { active_language } = this.stores.actions;
@@ -630,6 +776,9 @@ class Patients {
     });
   }
 
+  /**
+  // метод сохаранения пациента на бэк
+  */
   async save() {
     let { active_language } = this.stores.actions;
     let data = {
@@ -663,8 +812,8 @@ class Patients {
         }
         if (data.patient) {
           let { id } = data.patient;
-          this.getPatient(id);
-          await this.request(id);
+          this.setCurrent(data.patient);
+          // await this.request(id);
         }
         return data;
       },

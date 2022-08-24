@@ -95,7 +95,7 @@ const Main = inject(
 
       handleResultSelect = async (e, { result }) => {
         this.setState({ searchQuery: "" });
-        if (!["FG", "ATX"].includes(result.type)) {
+        if (!["FG", "ATX", "MKB10", "Nozology"].includes(result.type)) {
           this.props.drugs.selectFromSearch(result);
           const input = document.querySelector(".results.transition.result-wrapper");
           input.classList.remove("visible");
@@ -107,6 +107,17 @@ const Main = inject(
           input.classList.remove("visible");
           this.setState({ searchQuery: result.name });
           this.props.drugs.searchRows = await this.props.drugs.searchByFG(result);
+          this.props.drugs.searchReady = true;
+          // const input = document.querySelector(".results.transition.result-wrapper");
+          input.classList.add("visible");
+        } else if (["MKB10", "Nozology"].includes(result.type)) {
+          // console.log("fg or atx");
+          this.props.drugs.searchReady = false;
+
+          const input = document.querySelector(".results.transition.result-wrapper");
+          input.classList.remove("visible");
+          this.setState({ searchQuery: result.name });
+          this.props.drugs.searchRows = await this.props.drugs.searchByNZ(result);
           this.props.drugs.searchReady = true;
           // const input = document.querySelector(".results.transition.result-wrapper");
           input.classList.add("visible");
@@ -168,7 +179,7 @@ const Main = inject(
       };
 
       resultRenderer = ({ name, level, tn, type }) => {
-        const icon = ["FG", "ATX"].includes(type) ? "folder open" : "pills";
+        const icon = ["FG", "ATX", "MKB10", "Nozology"].includes(type) ? "folder open" : "pills";
 
         return (
           <div>
@@ -400,7 +411,7 @@ const Main = inject(
               {unselectedRows.length > 0 && (
                 <Menu secondary className={`bottom fixed`}>
                   <Menu.Item>
-                    {t("removed_string")}: {unselectedRows.length}
+                    {t("amount_of_drugs_removed")}: {unselectedRows.length}
                   </Menu.Item>
                   <Menu.Item onClick={this.returnDeleted}>
                     <Icon name="undo alternate" />
@@ -408,7 +419,7 @@ const Main = inject(
                   </Menu.Item>
                   <Menu.Item onClick={this.clearDeleted}>
                     <Icon name="delete" />
-                    {t("remove_nasovsev")}
+                    {t("delete_forever")}
                   </Menu.Item>
                 </Menu>
               )}

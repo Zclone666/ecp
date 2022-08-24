@@ -40,15 +40,14 @@ const Conflicts = inject(
           //this.props.actions.activeDrugs = warnGroups[groupId].ids
           this.props.actions.activeConflicts = [parseInt(groupId)];
         }
-
       };
       handleClick = (e, titleProps) => {
-        const { index } = titleProps
-        const { activeIndex } = this.state
-        const newIndex = activeIndex === index ? -1 : index
+        const { index } = titleProps;
+        const { activeIndex } = this.state;
+        const newIndex = activeIndex === index ? -1 : index;
 
-        this.setState({ activeIndex: newIndex })
-      }
+        this.setState({ activeIndex: newIndex });
+      };
       get conflicts() {
         let {
           actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
@@ -64,12 +63,16 @@ const Conflicts = inject(
             color: warn.valuecolor,
           };
         } else {
-          Array.from(warning.values()).forEach((warn, i) => {
+          _.orderBy(
+            Array.from(warning.values()),
+            ["step", "group", "value", "trust"],
+            ["asc", "desc", "desc", "desc"]
+          ).forEach((warn, i) => {
             //console.log({ ...warn });
             let found = _.find(warn.subjects, { drugkey: selectedDrug });
             //console.log({ type: warn.type, value: warn.value, found });
             if (_.find(warn.subjects, { drugkey: selectedDrug })) {
-              if (!conflictObj[warn.type] || conflictObj[warn.type].value < warn.value) {
+              if (!conflictObj[warn.type] || conflictObj[warn.type].step < warn.step) {
                 //console.log({ type: warn.type, value: warn.value });
                 conflictObj[warn.type] = {
                   value: warn.value,
@@ -99,28 +102,35 @@ const Conflicts = inject(
         let selectedWarnings = this.conflicts;
         let noSelections = _.isEmpty(selectedWarnings);
 
-        const mutationArray = []
+        const mutationArray = [];
         let group = null;
-        let groupType = []
+        let groupType = [];
 
         _.keys(groups).map((key, i) => {
           group = groups[key];
-          groupType = group.type.split("_")
+          groupType = group.type.split("_");
 
-          if (mutationArray.filter(elem => elem.valuecolor === group.valuecolor && elem.type === groupType[0]).length === 0) {
-            mutationArray.push({ valuecolor: group.valuecolor, typeOld: group.type, type: groupType[0], values: [{ key, ...group }] })
-
+          if (
+            mutationArray.filter((elem) => elem.valuecolor === group.valuecolor && elem.type === groupType[0])
+              .length === 0
+          ) {
+            mutationArray.push({
+              valuecolor: group.valuecolor,
+              typeOld: group.type,
+              type: groupType[0],
+              values: [{ key, ...group }],
+            });
           } else {
-            const index = mutationArray.findIndex(elem => elem.valuecolor === group.valuecolor && elem.type === groupType[0])
-            mutationArray[index].values.push({ key, ...group })
-
+            const index = mutationArray.findIndex(
+              (elem) => elem.valuecolor === group.valuecolor && elem.type === groupType[0]
+            );
+            mutationArray[index].values.push({ key, ...group });
           }
-        })
+        });
 
         return (
           <>
             <Grid as={Segment} basic style={{ marginTop: 0 }}>
-
               {mutationArray.map((item, i) => {
                 let color = (selectedWarnings[item.type] && selectedWarnings[item.type].color) || item.valuecolor;
                 let icon = item.type;
@@ -143,82 +153,50 @@ const Conflicts = inject(
                 }
                 // console.log('groups', noSelections, selectedWarnings, selectedWarnings[item.type], item);
                 if (item.values.length < 2) {
-                  return <Grid.Column key={"warn" + i} className="conflict">
-                    {!selectedConflict && selectedWarnings[item.values[0].key] ? (
-                      <RouterLink
-                        to={"/warning/" + item.values[0].key}
-                        className="conflicticon arrowBg"
-                        style={{ backgroundColor: color }}
-                      >
-                        <List.Icon
-                          name="arrow alternate circle down"
-                          style={{ color: "#FFF" }}
-                          size="large"
-                          onClick={() => { }}
-                        />
-                      </RouterLink>
-                    ) : (
-                        <RouterLink to={"/warning/" + item.values[0].key} className="conflicticon arrowBg none" >
-                        <List.Icon name="arrow alternate circle down" style={{ color: "#FFF" }} size="large" />
-                      </RouterLink>
-                    )}
-                    <Popup
-                      content={
-                        <>
-                          {item.values[0].hintarr && item.values[0].hintarr.length > 0 && <Header as="h5" content={item.values[0].hint} />}
-                          {(!item.values[0].hintarr || item.values[0].hintarr.length < 1) && item.values[0].hint}
-                          {item.values[0].hintarr && item.values[0].hintarr.length > 0 && (
-                            <List bulleted>
-                              {item.values[0].hintarr.map((hintId, x) => {
-                                return <List.Item key={"hint-" + i + "-" + x}>{names[hintId]}</List.Item>;
-                              })}
-                            </List>
-                          )}
-                        </>
-                      }
-                      trigger={
-                        <Icon.Group
-                          onClick={() => {
-                            this.selectConflict(item.values[0].key);
-                            this.setState({ activeIndex: null })
-                          }}
-                          size="big"
-                          className={noSelections || selectedWarnings[item.values[0].key] ? "selected" : "gray"}
+                  return (
+                    <Grid.Column key={"warn" + i} className="conflict">
+                      {!selectedConflict && selectedWarnings[item.values[0].key] ? (
+                        <RouterLink
+                          to={"/warning/" + item.values[0].key}
+                          className="conflicticon arrowBg"
+                          style={{ backgroundColor: color }}
                         >
-                          {item.type === "age" ? (
-                            <Icon as="img" src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`} />
-                          ) : (
-                            <Icon as="img" src={`/warnicons/${icon}.svg`} />
-                          )}
-                          <Icon size="big" name="circle outline" style={{ color }} />
-                          {item.type === "age" && age && <div className="agecontainer">{age || "!"}</div>}
-                        </Icon.Group>
-                      }
-                    />
-                  </Grid.Column>
-                } else {
-                  return <Grid.Column className={activeIndex !== i ? "conflict" : ""}
-                    style={activeIndex !== i ? { width: "auto", padding: "0" } : { width: "auto", paddingTop: 0, paddingRight: 0, overflow: "hidden" }}>
-
-                    <Accordion key={"warn" + i} className={activeIndex !== i ? "conflict" : ""} >
-                      {activeIndex !== i ? <Popup
+                          <List.Icon
+                            name="arrow alternate circle down"
+                            style={{ color: "#FFF" }}
+                            size="large"
+                            onClick={() => {}}
+                          />
+                        </RouterLink>
+                      ) : (
+                        <RouterLink to={"/warning/" + item.values[0].key} className="conflicticon arrowBg none">
+                          <List.Icon name="arrow alternate circle down" style={{ color: "#FFF" }} size="large" />
+                        </RouterLink>
+                      )}
+                      <Popup
                         content={
                           <>
-                            {item.values[0].hintarr && item.values[0].hintarr.length > 0 && <Header as="h5" content={item.values[0].hint} />}
+                            {item.values[0].hintarr && item.values[0].hintarr.length > 0 && (
+                              <Header as="h5" content={item.values[0].hint} />
+                            )}
+                            {(!item.values[0].hintarr || item.values[0].hintarr.length < 1) && item.values[0].hint}
+                            {item.values[0].hintarr && item.values[0].hintarr.length > 0 && (
+                              <List bulleted>
+                                {item.values[0].hintarr.map((hintId, x) => {
+                                  return <List.Item key={"hint-" + i + "-" + x}>{names[hintId]}</List.Item>;
+                                })}
+                              </List>
+                            )}
                           </>
                         }
-                        trigger={<Accordion.Title style={{ padding: "0" }}
-                          active={activeIndex === i}
-                          index={i}
-                          onClick={this.handleClick}
-                        >
+                        trigger={
                           <Icon.Group
-                            style={{
-                              boxShadow: `3px 0 0px ${color},  10px 0 0 -6px #eee,  11px 0 0px -4px ${color},  20px 0 0 -10px #eee`,
-                              borderRadius: "50%"
+                            onClick={() => {
+                              this.selectConflict(item.values[0].key);
+                              this.setState({ activeIndex: null });
                             }}
                             size="big"
-                            className={noSelections || selectedWarnings[item.typeOld] ? "selected" : "gray"}
+                            className={noSelections || selectedWarnings[item.values[0].key] ? "selected" : "gray"}
                           >
                             {item.type === "age" ? (
                               <Icon as="img" src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`} />
@@ -228,72 +206,136 @@ const Conflicts = inject(
                             <Icon size="big" name="circle outline" style={{ color }} />
                             {item.type === "age" && age && <div className="agecontainer">{age || "!"}</div>}
                           </Icon.Group>
-                        </Accordion.Title>}
-                      /> : null}
-                      <Accordion.Content active={activeIndex === i} style={{ display: activeIndex === i ? "flex" : "none" }}>
-
-                        {item.values.map((element) => {
-                          
-                          return (<Grid.Column key={"warn" + i} className="conflict" style={{ paddingTop: 0, paddingRight: 0 }}>
-                            {!selectedConflict && selectedWarnings[element.type] ? (
-                              <RouterLink
-                                to={"/warning/" + element.type}
-                                className="conflicticon arrowBg"
-                                style={{ backgroundColor: color }}
+                        }
+                      />
+                    </Grid.Column>
+                  );
+                } else {
+                  return (
+                    <Grid.Column
+                      className={activeIndex !== i ? "conflict" : ""}
+                      style={
+                        activeIndex !== i
+                          ? { width: "auto", padding: "0" }
+                          : { width: "auto", paddingTop: 0, paddingRight: 0, overflow: "hidden" }
+                      }
+                    >
+                      <Accordion key={"warn" + i} className={activeIndex !== i ? "conflict" : ""}>
+                        {activeIndex !== i ? (
+                          <Popup
+                            content={
+                              <>
+                                {item.values[0].hintarr && item.values[0].hintarr.length > 0 && (
+                                  <Header as="h5" content={item.values[0].hint} />
+                                )}
+                              </>
+                            }
+                            trigger={
+                              <Accordion.Title
+                                style={{ padding: "0" }}
+                                active={activeIndex === i}
+                                index={i}
+                                onClick={this.handleClick}
                               >
-                                <List.Icon
-                                  name="arrow alternate circle down"
-                                  style={{ color: "#FFF" }}
-                                  size="large"
-                                  onClick={() => { }}
-                                />
-                              </RouterLink>
-                            ) : (
-                                <RouterLink to={"/warning/" + element.type} className="conflicticon arrowBg none" >
-                                  <List.Icon name="arrow alternate circle down" style={{ color: "#FFF" }} size="large" />
-                              </RouterLink>
-                            )}
-                            <Popup
-                              content={
-                                <>
-                                  {element.hintarr && element.hintarr.length > 0 && <Header as="h5" content={element.hint} />}
-                                  {(!element.hintarr || element.hintarr.length < 1) && element.hint}
-                                  {element.hintarr && element.hintarr.length > 0 && (
-                                    <List bulleted>
-                                      {element.hintarr.map((hintId, x) => {
-                                        return <List.Item key={"hint-" + i + "-" + x}>{names[hintId]}</List.Item>;
-                                      })}
-                                    </List>
-                                  )}
-                                </>
-                              }
-                              trigger={
                                 <Icon.Group
-                                  onClick={() => this.selectConflict(element.key)}
+                                  style={{
+                                    boxShadow: `3px 0 0px ${color},  10px 0 0 -6px #eee,  11px 0 0px -4px ${color},  20px 0 0 -10px #eee`,
+                                    borderRadius: "50%",
+                                  }}
                                   size="big"
-                                  className={noSelections || selectedWarnings[element.key] ? "selected" : "gray"}
+                                  className={noSelections || selectedWarnings[item.typeOld] ? "selected" : "gray"}
                                 >
-                                  {element.type === "age" ? (
+                                  {item.type === "age" ? (
                                     <Icon as="img" src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`} />
                                   ) : (
                                     <Icon as="img" src={`/warnicons/${icon}.svg`} />
                                   )}
                                   <Icon size="big" name="circle outline" style={{ color }} />
-                                  {element.type === "age" && age && <div className="agecontainer">{age || "!"}</div>}
+                                  {item.type === "age" && age && <div className="agecontainer">{age || "!"}</div>}
                                 </Icon.Group>
-                              }
-                            />
-                          </Grid.Column>
-                          )
-                        })
-                        }
-
-                      </Accordion.Content>
-                    </Accordion>
-                  </Grid.Column>
+                              </Accordion.Title>
+                            }
+                          />
+                        ) : null}
+                        <Accordion.Content
+                          active={activeIndex === i}
+                          style={{ display: activeIndex === i ? "flex" : "none" }}
+                        >
+                          {item.values.map((element) => {
+                            return (
+                              <Grid.Column
+                                key={"warn" + i}
+                                className="conflict"
+                                style={{ paddingTop: 0, paddingRight: 0 }}
+                              >
+                                {!selectedConflict && selectedWarnings[element.type] ? (
+                                  <RouterLink
+                                    to={"/warning/" + element.type}
+                                    className="conflicticon arrowBg"
+                                    style={{ backgroundColor: color }}
+                                  >
+                                    <List.Icon
+                                      name="arrow alternate circle down"
+                                      style={{ color: "#FFF" }}
+                                      size="large"
+                                      onClick={() => {}}
+                                    />
+                                  </RouterLink>
+                                ) : (
+                                  <RouterLink to={"/warning/" + element.type} className="conflicticon arrowBg none">
+                                    <List.Icon
+                                      name="arrow alternate circle down"
+                                      style={{ color: "#FFF" }}
+                                      size="large"
+                                    />
+                                  </RouterLink>
+                                )}
+                                <Popup
+                                  content={
+                                    <>
+                                      {element.hintarr && element.hintarr.length > 0 && (
+                                        <Header as="h5" content={element.hint} />
+                                      )}
+                                      {(!element.hintarr || element.hintarr.length < 1) && element.hint}
+                                      {element.hintarr && element.hintarr.length > 0 && (
+                                        <List bulleted>
+                                          {element.hintarr.map((hintId, x) => {
+                                            return <List.Item key={"hint-" + i + "-" + x}>{names[hintId]}</List.Item>;
+                                          })}
+                                        </List>
+                                      )}
+                                    </>
+                                  }
+                                  trigger={
+                                    <Icon.Group
+                                      onClick={() => this.selectConflict(element.key)}
+                                      size="big"
+                                      className={noSelections || selectedWarnings[element.key] ? "selected" : "gray"}
+                                    >
+                                      {element.type === "age" ? (
+                                        <Icon
+                                          as="img"
+                                          src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`}
+                                        />
+                                      ) : (
+                                        <Icon as="img" src={`/warnicons/${icon}.svg`} />
+                                      )}
+                                      <Icon size="big" name="circle outline" style={{ color }} />
+                                      {element.type === "age" && age && (
+                                        <div className="agecontainer">{age || "!"}</div>
+                                      )}
+                                    </Icon.Group>
+                                  }
+                                />
+                              </Grid.Column>
+                            );
+                          })}
+                        </Accordion.Content>
+                      </Accordion>
+                    </Grid.Column>
+                  );
                 }
               })}
-             
             </Grid>
           </>
         );

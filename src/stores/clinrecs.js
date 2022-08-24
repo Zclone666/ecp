@@ -13,6 +13,7 @@ class Clinrecs {
   names = {};
   shortnames = {};
   diseaseSelect = [];
+  clinrecSelect = [];
   druglist = [];
   drugToClinrecHashset = {};
   collectorAvailable = false;
@@ -39,6 +40,9 @@ class Clinrecs {
     autorun(() => {});
   }
 
+  /**
+  // метод сброса клинреков
+  */
   resetClinrecs() {
     this.ready = false;
     this.checker = {};
@@ -54,11 +58,18 @@ class Clinrecs {
     this.clinicalGuidelinesExist = [];
   }
 
+  /**
+  // метод получения чекера для клинреков или самого клинрека
+  * @param flag - если true - получаем результат, иначе - чекер
+  */
   async check(flag = false) {
     this.stores.actions.loading = true;
     let { active_language } = this.stores.actions;
     this.stores.db.clearData(false, true);
     let data = _.cloneDeep(this.stores.actions.drugStructure);
+
+    data.patient = _.cloneDeep(this.stores.patients.current);
+
     let drugsFull = Array.from(this.stores.drugs.drug.values());
     let liquidsFull = Array.from(this.stores.drugs.liquid.values());
     drugsFull.forEach((drugFull, i) => {
@@ -76,10 +87,12 @@ class Clinrecs {
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
 
-    data.patient.disease = this.diseaseSelect;
+    data.clinicalGuidelines = this.clinrecSelect;
+
+    // data.patient.disease = this.diseaseSelect;
 
     return POST({
-      path: "tools/clinicalGuidelines",
+      path: !Object.keys(data.checker).length ? "tools/CGQuestionary" : "tools/clinicalGuidelines",
       data,
       success: async (data) => {
         this.names = _.assignIn(this.names, data.names);
@@ -131,6 +144,7 @@ class Clinrecs {
                   name: data.names[id],
                   parent: question.parent,
                   type: question.type,
+                  sort: question.sort,
                   helper: question.helper || null,
                   unit: question.unitid
                     ? shortnames[question.unitid] ||
@@ -151,6 +165,7 @@ class Clinrecs {
                       name: data.names[id],
                       parent: question.parent,
                       type: question.type,
+                      sort: question.sort,
                       unit: question.unitid
                         ? shortnames[question.unitid] ||
                           data.shortnames[question.unitid] ||
@@ -179,6 +194,9 @@ class Clinrecs {
     });
   }
 
+  /**
+  // метод проверки наличия клинреков
+  */
   async getClinicalGuidelinesExist() {
     // const data = {};
     // this.stores.actions.loading = true;
@@ -228,6 +246,11 @@ class Clinrecs {
     });
   }
 
+  /**
+  // рекурсивный метод получения плоского массива айди родительских элементов дерева клинрека до самого верхнего родителя
+  * @param childId - id элемента
+  * @param accumulator - массив для накопления id
+  */
   getRootClinrecId(childId, accumulator) {
     const result = accumulator ? accumulator : [];
     result.push(childId);
@@ -310,6 +333,12 @@ class Clinrecs {
   }
 
   iterator = 1;
+  /**
+  // рекурсивный метод получения выбранных драгов из клинрека и добвления их в лист назначений
+  * @param child - дочерний элемент в дереве клинрека
+  * @param clinrecId - id клинрека
+  * @param childId - id дочернего элемнта
+  */
   recursiveGetDrugs = (child = null, clinrecId = null, childId = null) => {
     // console.log("checker: ", this.checker);
     // console.log("drugToClinrecHashset ", this.drugToClinrecHashset);
