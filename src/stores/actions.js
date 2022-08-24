@@ -1415,8 +1415,9 @@ class Actions {
   t = (k) => {
     const defaultTexts = i18n.res;
     const ecptext = this?.UIText?.ecptext || {};
+    const ecptext2 = this?.buttonTexts || {};
     // console.log({ defaultTexts, ecptext });
-    const translation = { ...defaultTexts, ...ecptext };
+    const translation = { ...defaultTexts, ...ecptext, ...ecptext2 };
     return translation[k];
   };
 }

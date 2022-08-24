@@ -137,13 +137,15 @@ const RecipeDrug = inject(
               latshortnames[drug.calc.dosageUnit] ||
               latnames[drug.calc.dosageUnit] ||
               shortnames[drug.calc.dosageUnit] ||
-              names[drug.calc.dosageUnit];
+              names[drug.calc.dosageUnit] ||
+              "";
 
             let packDosageName =
               latshortnames[drug.dosage?.dosage[0]?.id_1] ||
               latnames[drug.dosage?.dosage[0]?.id_1] ||
               shortnames[drug.dosage?.dosage[0]?.id_1] ||
-              names[drug.dosage?.dosage[0]?.id_1];
+              names[drug.dosage?.dosage[0]?.id_1] ||
+              "";
             // console.log({ packDosageName });
             obj.dosage.push(
               `${_.map(drug.dosage?.dosage, (dos) =>
