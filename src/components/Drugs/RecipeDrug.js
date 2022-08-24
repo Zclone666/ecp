@@ -140,10 +140,10 @@ const RecipeDrug = inject(
               names[drug.calc.dosageUnit];
 
             let packDosageName =
-              latshortnames[drug.dosage?.dosage[0].id_1] ||
-              latnames[drug.dosage?.dosage[0].id_1] ||
-              shortnames[drug.dosage?.dosage[0].id_1] ||
-              names[drug.dosage?.dosage[0].id_1];
+              latshortnames[drug.dosage?.dosage[0]?.id_1] ||
+              latnames[drug.dosage?.dosage[0]?.id_1] ||
+              shortnames[drug.dosage?.dosage[0]?.id_1] ||
+              names[drug.dosage?.dosage[0]?.id_1];
             // console.log({ packDosageName });
             obj.dosage.push(
               `${_.map(drug.dosage?.dosage, (dos) =>
