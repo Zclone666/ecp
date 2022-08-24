@@ -34,7 +34,10 @@ class DrugInfo {
     autorun(() => {});
   }
 
-  //getLF
+  /**
+  // метод пполучения инструкций и доп инфо для драга
+  * @param drug_obj - драг
+  */
   async get(drug_obj) {
     this.ready = false;
     this.stores.actions.loading = true;

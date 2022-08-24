@@ -60,7 +60,7 @@ const clarifications = {
     day9: { id: "rkNCAMMHq2Rpxc7Dell4yw==", tpl: [{ type: 'period', x: 9, timesx: 'days' }] },
     day10: { id: "XUIfYVzJRk6kHhzl4WuRRw==", tpl: [{ type: 'period', x: 10, timesx: 'days' }] },
 
-    week1: { id: "xwNS1WrhnSzD0o50kOBUMQ==", tpl: [{ type: 'period', x: 1, timesx: 'weeks' }] },
+    // week1: { id: "xwNS1WrhnSzD0o50kOBUMQ==", tpl: [{ type: 'period', x: 1, timesx: 'weeks' }] },
     week2: { id: "DW0hG34FIJ8zwtAOm39N0Q==", tpl: [{ type: 'period', x: 2, timesx: 'weeks' }] },
     week3: { id: "qo4gSuaNzs8FtHmkGXbSbA==", tpl: [{ type: 'period', x: 3, timesx: 'weeks' }] },
 
@@ -74,6 +74,13 @@ const clarifications = {
     year1: { id: "84bZhPwPiy/sicBokOiUQA==", tpl: [{ type: 'period', x: 1, timesx: 'years' }] },
     year1_5: { id: "wIf4HYcTAEwOGcH5ytVHVQ==", tpl: [{ type: 'period', x: 18, timesx: 'months' }] },
     year2: { id: "aWOOuZwNyEIU8sQx0kl+0w==", tpl: [{ type: 'period', x: 2, timesx: 'years' }] },
+
+  },
+
+  durationsAlt: {
+    always: { id: "2EGGWxMaj1l/uy3xKU3/KQ==", tpl: [] },
+    before_canceling: { id: "lQ9LkaNuaG/IgjrmfEhzOQ==", tpl: [] },
+    everyday: { id: "0A2UphMxR6CRLdcLZZP42w==", tpl: [] },
 
   },
 

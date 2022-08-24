@@ -15,7 +15,7 @@ class DB {
   constructor({ stores }) {
     makeObservable(this, {
       ready: observable,
-      searchReady: observable
+      searchReady: observable,
     });
 
     this.stores = stores;
@@ -23,6 +23,12 @@ class DB {
 
     autorun(() => {});
   }
+
+  /**
+  // метод сброса данных
+  * @param withSelects - удалить лист назначений
+  * @param withWarnings - удалить данные проверки
+  */
   clearData(withSelects, withWarnings) {
     this.stores.actions.selectedDrug = null;
     this.stores.actions.selectedConflict = null;

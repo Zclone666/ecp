@@ -142,12 +142,14 @@ const resources = {
       doctor: "Врач",
       explanation_recipe: "Пояснения к рецепту",
       available_certificates: "доступные сертификаты",
+      no_available_certificates: "Нет доступных сертификатов",
+      no_available_certificates_text: "У вас нет доступных сертификатов",
       select_certificate_for_signature: "Выберите сертификат для подписи",
 
       no_information: "Нет информации",
       free_information: "Сводная информация",
       clinical_recommendations_for_diagnosis: "Клинические рекомендации по диагнозу",
-      clinical_recommendations: "Клинические рекоммендации",
+      clinical_recommendations: "Клинические рекомендации",
       remove_from_list: "Убрать из списка",
       solution: "Раствор",
       drag_two_components_for_solution: "Перетащите сюда не менее двух составляющих для раствора",
@@ -258,6 +260,7 @@ const resources = {
       to_report: "Сообщить",
       cancel: "Отменить",
       number_dose: "Кол-во доз",
+      volume_solution: "Объем раствора",
 
       measurements: "ед. измерения",
       across: "через",

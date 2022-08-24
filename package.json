@@ -43,6 +43,7 @@
     "save": "^2.4.0",
     "semantic-ui-less": "*",
     "semantic-ui-react": "^0.88.2",
+    "simpl-schema": "^1.12.2",
     "slick-carousel": "^1.8.1",
     "url-mapper": "^2.0.0"
   },

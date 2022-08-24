@@ -73,9 +73,10 @@ const LiquidCalculator = inject(
           drugs: { recalcLiquidParams },
           dosages: { getToBase, getFromBase },
         } = this.props;
-
+        // console.log({ name, value });
         value = clearDouble(value);
         let double = false;
+        console.log({ name, value });
 
         if (name === "specials") {
           this.props.actions.liquidForm[name] = value;
@@ -289,6 +290,7 @@ const LiquidCalculator = inject(
 
         let disableAll = !ready;
         let disableMulti = true;
+        // console.log({ count });
         // console.log(currUnit, def, fullDosage);
         // console.log(getFromBase(currUnit || def, fullDosage).join(" + "));
         return (
@@ -330,7 +332,7 @@ const LiquidCalculator = inject(
                       size="big"
                       name="count"
                       numeric
-                      value={count != null ? count : 0}
+                      value={liqUnit && count != null ? getFromBase(liqUnit, count) : 0}
                       label={{
                         basic: true,
                         content: (liqUnit && (units[liqUnit].shortname || units[liqUnit].name)) || "",

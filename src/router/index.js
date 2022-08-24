@@ -16,7 +16,7 @@ export default class Router {
       route: observable,
       match: observable,
       values: observable,
-      onLocation: action
+      onLocation: action,
     });
 
     // this.params = observable.map({});
@@ -41,9 +41,25 @@ export default class Router {
     autorun(() => {
       // console.log('ROUTER',this.values);
       // console.log(this.values.protocol);
-      if (this.values && this.values.protocol && typeof this.values.protocol !== "undefined") {
-        this.stores.warnings.protocol(this.values.protocol);
-      }
+      // console.log(this.match.name);
+      // if (
+      //   this.values &&
+      //   this.match.name == "protocol" &&
+      //   this.values.protocol &&
+      //   typeof this.values.protocol !== "undefined"
+      // ) {
+      //   console.log("HERE 1");
+      //   this.stores.warnings.protocol(this.values.protocol);
+      // }
+      // if (
+      //   this.values &&
+      //   this.match.name == "resultchecking" &&
+      //   this.values.protocol &&
+      //   typeof this.values.protocol !== "undefined"
+      // ) {
+      //   console.log("HERE 2");
+      //   this.stores.warnings.checkMisWarnings(this.values.protocol);
+      // }
       // console.log(this.values);
       // console.log(this.match);
       if (this.values && this.values.miskey && typeof this.values.miskey !== "undefined") {
@@ -53,6 +69,13 @@ export default class Router {
           //this.stores.actions.miskey = this.values.miskey;
         }
       }
+
+      if (this.values && this.values.page && this.values.page === "chosedv") {
+        if (this.values.drug) {
+          this.stores.drugs.drugsByFD(this.values.drug);
+        }
+      }
+
       // if(this.values && this.values.page) this.stores.actions.setCurrentPage(this.values.page)
     });
   }

@@ -83,6 +83,13 @@ const PatientForm = inject(
         }
       }
 
+      veryOld(birthdate) {
+        return (
+          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") <= 10 ||
+          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60
+        );
+      }
+
       handleChange = (e, { name, value }) => {
         if (!name && !value) {
           let { name, value } = e.target;
@@ -99,9 +106,7 @@ const PatientForm = inject(
         }
         const { birthdate } = this.props.patients.current;
         // console.log(errorValue);
-        let veryOld =
-          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") <= 12 ||
-          moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
+        let veryOld = this.veryOld(birthdate);
 
         if (name === "weight" || name === "growth") {
           value = clearDouble(value);
@@ -340,7 +345,7 @@ const PatientForm = inject(
 
         let isWoman = sex === "female";
         let isPregant = !!pregnancy;
-        let veryOld = moment().diff((birthdate && moment(birthdate, "x")) || moment(), "years") >= 60;
+        let veryOld = this.veryOld(birthdate);
         let { search_patient } = this.state;
 
         return (
@@ -708,22 +713,24 @@ const PatientForm = inject(
                   </Form.Field>
                 </Form.Group>
               )}
-              <List divided verticalAlign="middle">
-                {labparams &&
-                  labparams.map((item, i) => {
-                    return (
-                      <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                        <List.Content floated="right">
-                          <Button size="tiny" icon="delete" onClick={() => this.handleRemoveLabData(item, i)} />
-                        </List.Content>
-                        <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
-                        <List.Content>
-                          <List.Header>{item}</List.Header>
-                        </List.Content>
-                      </List.Item>
-                    );
-                  })}
-              </List>
+              {!misDisabled && false && (
+                <List divided verticalAlign="middle">
+                  {labparams &&
+                    labparams.map((item, i) => {
+                      return (
+                        <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
+                          <List.Content floated="right">
+                            <Button size="tiny" icon="delete" onClick={() => this.handleRemoveLabData(item, i)} />
+                          </List.Content>
+                          <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
+                          <List.Content>
+                            <List.Header>{item}</List.Header>
+                          </List.Content>
+                        </List.Item>
+                      );
+                    })}
+                </List>
+              )}
               {isWoman && !veryOld && (
                 <Responsive as={Form.Group} widths={"equal"} maxWidth={480}>
                   <Form.Field>
