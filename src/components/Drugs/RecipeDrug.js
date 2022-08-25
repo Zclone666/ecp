@@ -109,7 +109,7 @@ const RecipeDrug = inject(
       renderRules() {
         let {
           dosages: { getFromBase },
-          tools: { names, shortnames, round },
+          tools: { names, shortnames, latshortnames, latnames, round },
           drugKey: key,
           drugs,
           actions: { UIText },
@@ -122,33 +122,58 @@ const RecipeDrug = inject(
 
         let obj = { dosage: [], rules: [] };
 
+        if (dosage && dosage.form) {
+          obj.dosage.push(latshortnames[dosage.form] || latnames[dosage.form] || names[dosage.form]);
+        } else if (dosage.form_name) {
+          obj.dosage.push(dosage.form_name);
+        }
+
         if (calc && calc.count && calc.countUnit) {
           // let str = ""; //`${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
           if (calc.fullDosage) {
             let dosageValue = getFromBase(drug.calc.dosageUnit, calc.dosage);
             let fullDosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
-            let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
+            let dosageName =
+              latshortnames[drug.calc.dosageUnit] ||
+              latnames[drug.calc.dosageUnit] ||
+              shortnames[drug.calc.dosageUnit] ||
+              names[drug.calc.dosageUnit] ||
+              "";
 
-            obj.dosage.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
+            let packDosageName =
+              latshortnames[drug.dosage?.dosage[0]?.id_1] ||
+              latnames[drug.dosage?.dosage[0]?.id_1] ||
+              shortnames[drug.dosage?.dosage[0]?.id_1] ||
+              names[drug.dosage?.dosage[0]?.id_1] ||
+              "";
+            // console.log({ packDosageName });
+            obj.dosage.push(
+              `${_.map(drug.dosage?.dosage, (dos) =>
+                parseFloat(round(dos.value_2 ? dos.value_1 / dos.value_2 : dos.value_1))
+              ).join(" + ")} ${packDosageName}`
+            );
             obj.rules.push(`${_.map(fullDosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
           }
         }
         if (dosage && dosage.method) {
-          obj.rules.push(names[dosage.method]);
+          obj.rules.push(latshortnames[dosage.method] || latnames[dosage.method] || names[dosage.method]);
         } else if (dosage.method_name) {
           obj.rules.push(dosage.method_name);
         }
-        if (freq_id && UIText && UIText.freq && UIText.freq[freq_id]) {
-          obj.rules.push(UIText.freq[freq_id]);
+        if (freq_id && UIText && UIText.freq && (latnames[freq_id] || UIText.freq[freq_id])) {
+          obj.rules.push(latshortnames[freq_id] || latnames[freq_id] || UIText.freq[freq_id]);
         } else if (freq_name) {
           obj.rules.push(freq_name);
         }
-        if (duration_id && UIText.duration[duration_id]) {
-          obj.rules.push(UIText.duration[duration_id]);
+        if (duration_id && (latnames[duration_id] || UIText.duration[duration_id])) {
+          obj.rules.push(latnames[duration_id] || UIText.duration[duration_id]);
         } else if (duration_name) {
           obj.rules.push(duration_name);
         }
-        if (finishAlternate && UIText.duration[finishAlternate]) obj.rules.push(UIText.duration[finishAlternate]);
+        if (finishAlternate && UIText.duration[finishAlternate])
+          obj.rules.push(
+            latshortnames[finishAlternate] || latnames[finishAlternate] || UIText.duration[finishAlternate]
+          );
 
         return {
           // empty: arr.length < 1,

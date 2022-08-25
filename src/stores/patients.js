@@ -264,6 +264,7 @@ class Patients {
 
         if (data.lang && this.stores.actions.active_language !== data.lang) {
           this.stores.actions.active_language = data.lang;
+          await localStorage.setItem("lang", data.lang);
           this.stores.tools.getAllService();
         }
 

@@ -4,6 +4,8 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   ru: {
     translation: {
+      name_logo: "Электронный клинический фармаколог",
+      cdss: "Система поддержки принятия врачебных решений",
       // "Welcome to React": "добро пожаловать в экф",
       patient_patients: "Пациенты",
       main_menu_exit: "Выход",
@@ -306,7 +308,7 @@ const resources = {
       birth_min: "р.",
       year_birth_min: "г.р.",
 
-      welcome: "Здравствуйте",
+      greetings: "Здравствуйте",
 
       sm: "см",
       kg: "кг",
@@ -383,6 +385,16 @@ const resources = {
       sources: "Источники",
 
       date_commencement_therapy: "Дата начала терапии",
+    },
+  },
+  en: {
+    translation: {
+      greetings: "Welcome",
+      contact_administrator: "Please, contact the administrator.",
+      attention_doctor_not_specified: "Attention! The doctor is not set.",
+      report_an_error: "Report an error", /// //// ///
+      notify_about_error: "Report an error",
+      enter_message_text: "Enter message text",
     },
   },
 };

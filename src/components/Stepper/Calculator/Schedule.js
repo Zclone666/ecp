@@ -194,6 +194,7 @@ const Schedule = inject(
       render() {
         let {
           actions: {
+            active_language,
             selectedDrug,
             selectedConflict,
             activeDrugs,
@@ -253,7 +254,7 @@ const Schedule = inject(
                     onClear={this.onClear}
                     className="ui fluid big input "
                     placeholder="__.__.____"
-                    locale="ru"
+                    locale={active_language}
                   />
                 </Form.Field>
                 <Form.Field width={7}>
@@ -274,7 +275,7 @@ const Schedule = inject(
                       onClear={this.onClear}
                       className="ui fluid big input "
                       placeholder="__.__.____"
-                      locale="ru"
+                      locale={active_language}
                     />
                     <Dropdown
                       onClick={() => {

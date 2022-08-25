@@ -36,7 +36,7 @@ const Calendar = inject("actions")(
       };
       render() {
         let { value, minDate, maxDate, size, name } = this.props;
-        const { t } = this.props.actions;
+        const { t, active_language } = this.props.actions;
         let date =
           Math.abs(parseInt(value)) > 0 ? moment(parseInt(value) || moment().toDate()).format("DD.MM.YYYY") : "";
         //console.log({value});
@@ -55,7 +55,7 @@ const Calendar = inject("actions")(
             onClear={this.onClear}
             className={`ui fluid ${size || "big"} input`}
             // placeholder={t("date_birth")}
-            locale="ru"
+            locale={active_language}
             minDate={minDate}
             maxDate={maxDate}
           />

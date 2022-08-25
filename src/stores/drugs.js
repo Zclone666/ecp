@@ -203,7 +203,7 @@ class Drugs {
   // метод возвращает удаленный лист назначений
   */
   async returnList() {
-    this.unselectedLiquids.forEach(async (liquid, i) => {
+    this.unselectedLiquids.forEach(async (liquid) => {
       if (liquid.group != null) {
         await this.liquid.set(liquid.group, liquid);
       } else {
@@ -211,7 +211,7 @@ class Drugs {
       }
     });
 
-    this.unselectedRows.forEach(async (drug, i) => {
+    this.unselectedRows.forEach(async (drug) => {
       await this.selectFromSearch(drug, false, false);
     });
 
