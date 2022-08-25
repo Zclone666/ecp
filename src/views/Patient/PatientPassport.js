@@ -92,7 +92,7 @@ const PatientPassport = inject(
                     size="big"
                     name="lastname"
                     value={lastname || ""}
-                    placeholder={t("ivanov")}
+                    placeholder={t("lastname_placeholder")}
                     onChange={this.handleChange}
                   />
                 </Form.Field>
@@ -102,7 +102,7 @@ const PatientPassport = inject(
                     size="big"
                     name="firstname"
                     value={firstname || ""}
-                    placeholder={t("ivan")}
+                    placeholder={t("firstname_placeholder")}
                     onChange={this.handleChange}
                   />
                 </Form.Field>
@@ -112,7 +112,7 @@ const PatientPassport = inject(
                     size="big"
                     name="patronymic"
                     value={patronymic || ""}
-                    placeholder={t("ivanovich")}
+                    placeholder={t("patronymic_placeholder")}
                     onChange={this.handleChange}
                   />
                 </Form.Field>

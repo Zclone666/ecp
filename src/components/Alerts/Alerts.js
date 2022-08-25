@@ -13,6 +13,7 @@ const Alerts = inject("actions")(
       };
       render() {
         let { alerts, ...otherProps } = this.props.actions;
+        // console.log({ alerts });
         return (
           <div className={"alertbox" + (_.keys(alerts).length === 0 ? " empty" : "")}>
             {_.keys(alerts).map((key, i) => {
