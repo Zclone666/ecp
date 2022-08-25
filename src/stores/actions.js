@@ -844,7 +844,7 @@ class Actions {
           this.makeAlerts({
             alerts: [
               {
-                title: `${this.t("welcome")}, ${this.doctor.name}`,
+                title: `${this.t("greetings")}, ${this.doctor.name}`,
                 message: "",
                 level: "info",
                 sticky: false,
@@ -1071,7 +1071,7 @@ class Actions {
       this.makeAlerts({
         alerts: [
           {
-            title: `${this.t("welcome") || "Здравствуйте"}, ${this.doctor.name}`,
+            title: `${this.t("greetings")}, ${this.doctor.name}`,
             message: "",
             level: "info",
             sticky: false,
@@ -1415,8 +1415,9 @@ class Actions {
   t = (k) => {
     const defaultTexts = i18n.res;
     const ecptext = this?.UIText?.ecptext || {};
+    const ecptext2 = this?.buttonTexts || {};
     // console.log({ defaultTexts, ecptext });
-    const translation = { ...defaultTexts, ...ecptext };
+    const translation = { ...defaultTexts, ...ecptext, ...ecptext2 };
     return translation[k];
   };
 }

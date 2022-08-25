@@ -347,8 +347,8 @@ const Main = inject(
                     className={"menuhead"}
                     style={{ margin: "auto", marginLeft: "8px", fontWeight: "600" }}
                     as="h4"
-                    content="Электронный клинический фармаколог"
-                    subheader="система поддержки принятия врачебных решений"
+                    content={t("name_logo")}
+                    subheader={t("cdss")}
                   />
                 )}
 
