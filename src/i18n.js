@@ -36,6 +36,11 @@ const resources = {
       body_mass_index: "ИМТ",
       body_surface_area: "ППТ",
 
+      lastname_placeholder: "Иванов",
+      firstname_placeholder: "Иван",
+      patronymic_placeholder: "Иванович",
+      date_placeholder: "ДД.ММ.ГГГГ",
+
       kg_m2: "кг/м²",
       m2: "м²",
       underlying_disease: "Основное заболевание",
