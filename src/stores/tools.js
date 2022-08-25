@@ -331,7 +331,9 @@ class Tools {
 
         this.techReady = true;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => {
+        this.stores.actions.makeAlerts({ alerts });
+      },
       always: (data) => {},
     });
   }
@@ -514,7 +516,7 @@ class Tools {
         this.stores.actions.loading = false;
       },
       fail: (alerts) => {
-        this.stores.actions.makeAlerts(data);
+        this.stores.actions.makeAlerts(alerts);
         this.stores.actions.loading = false;
       },
       always(data) {},
