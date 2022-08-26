@@ -149,7 +149,7 @@ const Calculator = inject(
             fullDosage = [];
             fullDosage.push(getToBase(currUnit || def, value.split(" + ")));
             count = parseFloat((fullDosage[0] / dosage).toFixed(1));
-            console.log(count);
+            // console.log(count);
             // console.log({weight,fullDosage});
             // weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
             break;
