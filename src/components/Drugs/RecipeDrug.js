@@ -109,7 +109,7 @@ const RecipeDrug = inject(
       renderRules() {
         let {
           dosages: { getFromBase },
-          tools: { names, shortnames, round },
+          tools: { names, shortnames, latshortnames, latnames, round },
           drugKey: key,
           drugs,
           actions: { UIText },
@@ -122,14 +122,34 @@ const RecipeDrug = inject(
 
         let obj = { dosage: [], rules: [] };
 
+        if (dosage && dosage.form) {
+          obj.dosage.push(latshortnames[dosage.form] || latnames[dosage.form] || names[dosage.form]);
+        } else if (dosage.form_name) {
+          obj.dosage.push(dosage.form_name);
+        }
+
         if (calc && calc.count && calc.countUnit) {
           // let str = ""; //`${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
           if (calc.fullDosage) {
             let dosageValue = getFromBase(drug.calc.dosageUnit, calc.dosage);
             let fullDosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
-            let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
+            let dosageName =
+              // latshortnames[drug.calc.dosageUnit] ||
+              // latnames[drug.calc.dosageUnit] ||
+              shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit] || "";
 
-            obj.dosage.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
+            let packDosageName =
+              latshortnames[drug.dosage?.dosage[0]?.id_1] ||
+              latnames[drug.dosage?.dosage[0]?.id_1] ||
+              shortnames[drug.dosage?.dosage[0]?.id_1] ||
+              names[drug.dosage?.dosage[0]?.id_1] ||
+              "";
+            // console.log({ packDosageName });
+            obj.dosage.push(
+              `${_.map(drug.dosage?.dosage, (dos) =>
+                parseFloat(round(dos.value_2 ? dos.value_1 / dos.value_2 : dos.value_1))
+              ).join(" + ")} ${packDosageName}`
+            );
             obj.rules.push(`${_.map(fullDosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
           }
         }

@@ -262,6 +262,12 @@ class Patients {
           await this.setCurrent(data.patient);
         }
 
+        if (data.lang && this.stores.actions.active_language !== data.lang) {
+          this.stores.actions.active_language = data.lang;
+          await localStorage.setItem("lang", data.lang);
+          this.stores.tools.getAllService();
+        }
+
         this.stores.clinrecs.collectorAvailable = data.is_collector_available;
 
         let {
