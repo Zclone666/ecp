@@ -145,20 +145,30 @@ const Recipe = inject(
       };
 
       setPrintType = (printType, id) => {
+        let { recipeData } = this.props.actions;
         if (printType === "list") {
           // recipe_formid = id;
           this.props.recipes["recipe_formid"] = id;
-          // console.log(this.props.actions.recipeData.items, "this.props.actions.recipeData.items");
-          this.props.recipes["maxcount"] = this.props.actions.recipeData.items[id].maxcount;
+          // console.log(recipeData.items, "recipeData.items");
+          this.props.recipes["maxcount"] = recipeData.items[id].maxcount;
           this.props.recipes["drugKeysForPrescription"] = [];
-          this.props.recipes["formType"] = this.props.actions.recipeData.items[id].type;
+          this.props.recipes["formType"] = recipeData.items[id].type;
         }
 
-        // if (name == "recipe_formid") {
-        //   this.props.recipes["maxcount"] = this.props.actions.recipeData.items[value].maxcount;
-        //   this.props.recipes["drugKeysForPrescription"] = [];
-        //   this.props.recipes["formType"] = this.props.actions.recipeData.items[value].type;
-        // }
+        if (printType == "recipe" && recipeData.items) {
+          let [id, item] = _.find(Object.entries(recipeData.items), ([id, value]) => {
+            return value.type === "recipe" && value.default;
+          }) || [null, {}];
+
+          if (id) {
+            let defDuration = _.find(item.durations || [], "default");
+            if (defDuration) this.handleRecipeDataChange(null, { name: "recipe_endtimeitem", value: defDuration });
+            this.props.recipes["recipe_formid"] = id;
+            this.props.recipes["maxcount"] = recipeData.items[id].maxcount;
+            this.props.recipes["drugKeysForPrescription"] = [];
+            this.props.recipes["formType"] = recipeData.items[id].type;
+          }
+        }
         this.setState({ printType });
         // if (printType !== 'protocol') {
         this.next();
