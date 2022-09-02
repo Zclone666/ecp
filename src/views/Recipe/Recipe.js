@@ -211,6 +211,8 @@ const Recipe = inject(
           this.props.recipes["maxcount"] = this.props.actions.recipeData.items[value].maxcount;
           this.props.recipes["drugKeysForPrescription"] = [];
           this.props.recipes["formType"] = this.props.actions.recipeData.items[value].type;
+          let defDuration = _.find(this.props.actions.recipeData.items[value].durations || [], "default");
+          if (defDuration) this.handleRecipeDataChange(null, { name: "recipe_endtimeitem", value: defDuration });
         }
         if (name == "spectextPrompt") {
           this.setState({ spectextPrompt: value });
