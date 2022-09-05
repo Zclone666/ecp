@@ -73,13 +73,19 @@ class Drugs {
       // console.log(Array.from(this.liquid.values()));
     });
   }
-
+  /**
+  // метод валидации драга на соответствие модели
+  * @param drug - объект драга
+  */
   validateDrug(drug) {
     const validationContext = DrugModel.schema.newContext();
     validationContext.validate(drug);
     return validationContext.validationErrors();
   }
 
+  /**
+  // метод валидации текущего драга на соответствие модели
+  */
   get validateCurrentDrug() {
     const validationContext = DrugModel.schema.newContext();
     validationContext.validate(this.current);

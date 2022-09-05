@@ -14,7 +14,8 @@ const RecipeDrug = inject(
   "drugs",
   "dosages",
   "tools",
-  "recipes"
+  "recipes",
+  "warnings"
 )(
   observer(
     class RecipeDrug extends React.Component {
@@ -260,6 +261,12 @@ const RecipeDrug = inject(
 
         let names = drugDosages.names || {};
 
+        let urlArr = ["/concept/dozes"];
+        if (helpers.way) urlArr.push(helpers.way);
+        if (helpers.step) urlArr.push(helpers.step);
+
+        let url = urlArr.join("/");
+
         // let descArr = []
         let rules = this.renderRules();
         //
@@ -299,6 +306,9 @@ const RecipeDrug = inject(
                     <Icon name="undo" />
                   </Button>
                 )}
+                <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
+                  <Icon name="tint" />
+                </Button>
                 <Button icon onClick={this.edit}>
                   <Icon name={edit ? "check" : "edit"} />
                 </Button>
