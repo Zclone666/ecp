@@ -45,6 +45,8 @@ const Schedule = inject(
         // console.log({ name, value });
         const { t } = this.props.actions;
         if (name === "dateStart" || name === "dateFinish") {
+          // let dateReg = /^[0-9]{1,2}(\.[0-9]{0,2}(\.[0-9]{0,4})?)?$/gi;
+          // if (!dateReg.test(value)) return;
           if (name === "dateStart" && value === "Invalid date") {
             value = null;
             this.props.actions.scheduleForm.dateStart = null;
