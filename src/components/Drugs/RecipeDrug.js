@@ -256,7 +256,7 @@ const RecipeDrug = inject(
         let drug = drugs.drug.get(key) || {};
 
         let numero = 0;
-        if (drug.solute) return numero;
+        if (drug.calc.countUnit !== "342") return numero;
 
         if (drug.calc.count) numero = drug.calc.count;
         if (drug.calc.dayCount) numero = numero * drug.calc.dayCount;
