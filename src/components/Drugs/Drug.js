@@ -186,7 +186,6 @@ const Drug = inject(
 
         let urlArr = ["/concept/dozes"];
         // console.log({drug});
-        if (helpers.way) urlArr.push(helpers.way);
         if (helpers.step) urlArr.push(helpers.step);
 
         let url = urlArr.join("/");

@@ -521,8 +521,7 @@ class Recipes {
             type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
             // url: "",
             key: null,
-            way: "lf",
-            step: "4",
+            step: "2",
             // mnn: false,
             // drugCache: null,
           };

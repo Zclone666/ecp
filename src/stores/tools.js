@@ -332,9 +332,12 @@ class Tools {
         this.techReady = true;
       },
       fail: (alerts) => {
-        this.stores.actions.makeAlerts({ alerts });
+        // console.log({ alerts });
+        this.stores.actions.makeAlerts(alerts);
       },
-      always: (data) => {},
+      always: (data) => {
+        // console.log({ data });
+      },
     });
   }
 

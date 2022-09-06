@@ -4,12 +4,6 @@ import { inject, observer } from "mobx-react";
 import Slider from "react-slick";
 import RouterLink from "../../router/a";
 
-import WayChoice from "./WayChoice";
-import LF from "./LF";
-import DozeTypes from "./DozeTypes";
-import Methods from "./Methods";
-import Calculator from "./Calculator";
-
 import { Transition, Accordion, Icon, Step, Responsive } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
@@ -31,23 +25,13 @@ const Steps = inject(
         };
       }
       steps = {
-        lf: [
-          { name: "type", text: "form_input" },
-          { name: "lf", text: "dosage_form" },
-          { name: "dosage", text: "dosage" },
-          { name: "method", text: "mode_application" },
+        drug: [
+          { name: "type", text: ["mode_application", "dosage_form"] },
+          { name: "dosage", text: ["dosage"] },
         ],
-        methods: [
-          { name: "type", text: "form_input" },
-          { name: "method", text: "mode_application" },
-          { name: "lf", text: "dosage_form" },
-          { name: "dosage", text: "dosage" },
-        ],
-        "": [
-          { name: "type", text: "form_input" },
-          { name: "lf", text: "dosage_form" },
-          { name: "dosage", text: "dosage" },
-          { name: "method", text: "mode_application" },
+        liquid: [
+          { name: "type", text: ["mode_application", "dosage_form"] },
+          { name: "dosage", text: ["dosage"] },
         ],
       };
       render() {
@@ -59,7 +43,7 @@ const Steps = inject(
           viewType,
         } = this.props;
         const { t } = this.props.actions;
-        let way = values.way || "lf";
+        let way = "drug";
 
         let drugsDosage = dosage.get(current.id);
         // console.log({ drugsDosage });
@@ -72,7 +56,7 @@ const Steps = inject(
             <Step.Group attached="top" fluid unstackable ordered size="tiny">
               {this.steps[way] &&
                 this.steps[way].map((step, i) => {
-                  let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`;
+                  let url = !values.liquid ? `/concept/dozes` : `/liquid/calc/${values.liquid}/dozes`;
                   let chosedName = "";
                   if (i > 0 && i <= currStep) {
                     url += `/${i}`;
@@ -81,28 +65,31 @@ const Steps = inject(
                     if (step.name === "lf") chosedName = nameshort[stepsData.form] || names[stepsData.form];
                   } else if (i !== 0) {
                     url = "";
-                  } else {
-                    chosedName = {
-                      lf: t("dosage_form"),
-                      methods: t("mode_application"),
-                      "": "",
-                    }[way];
                   }
-                  // console.log({step, stepsData});
+
                   if (step.name === "dosage" && currStep > i) {
-                    // console.log({step, stepsData});
-                    chosedName =
-                      (stepsData.helpers.dosage && (stepsData.helpers.dosage.short || stepsData.helpers.dosage.full)) +
-                      ", " +
-                      (stepsData.helpers.pack && (stepsData.helpers.pack.short || stepsData.helpers.pack.full));
+                    let arr2 = [];
+                    if (stepsData.helpers.dosage)
+                      arr2.push(stepsData.helpers.dosage.short || stepsData.helpers.dosage.full);
+                    if (stepsData.helpers.pack && (stepsData.helpers.pack.short || stepsData.helpers.pack.full))
+                      arr2.push(stepsData.helpers.pack.short || stepsData.helpers.pack.full);
+                    chosedName = chosedName = arr2.join(", ");
                   }
-                  if (step.name === "lf" && currStep > i && !chosedName) {
-                    chosedName = current.dosage?.form_name;
-                    // console.log({ step, chosedName, stepsData, names, current });
-                  }
-                  if (step.name === "method" && currStep > i && !chosedName) {
-                    chosedName = current.dosage?.method_name;
-                    // console.log({ step, chosedName, stepsData, names, current });
+
+                  if (step.name === "type") {
+                    let arr1 = [];
+                    if (current.dosage?.method_name) {
+                      arr1.push(current.dosage?.method_name);
+                    } else if (stepsData.form) {
+                      arr1.push(nameshort[stepsData.method] || names[stepsData.method]);
+                    }
+                    if (current.dosage?.form_name) {
+                      arr1.push(current.dosage?.form_name);
+                    } else if (stepsData.form) {
+                      arr1.push(nameshort[stepsData.form] || names[stepsData.form]);
+                    }
+
+                    chosedName = arr1.join(", ");
                   }
 
                   return (
@@ -115,7 +102,7 @@ const Steps = inject(
                     >
                       {(currStep == i || viewType == "pc") && (
                         <Step.Content>
-                          <Step.Title>{t(step.text)}</Step.Title>
+                          <Step.Title>{step.text.map((item) => t(item)).join(", ")}</Step.Title>
                           <Step.Description>{chosedName}</Step.Description>
                         </Step.Content>
                       )}

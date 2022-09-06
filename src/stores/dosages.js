@@ -131,8 +131,8 @@ class Dosages {
 
         this.stores.actions.stepsData = {
           key: drug_obj.key,
-          way: "lf",
-          step: 4,
+          way: "methods",
+          step: 2,
           form: lf,
           method,
           pack: obj.pack,
@@ -523,82 +523,6 @@ class Dosages {
         key: this.stores.actions.stepsData.key,
         way,
         step,
-        form: null,
-        method: null,
-        pack: {},
-        dosage: [],
-        value: null,
-        helpers: {},
-      };
-      return;
-    }
-    if (way === "lf" && step == 2) {
-      this.stores.actions.calculatorForm = {
-        dosage: [0],
-        count: 1,
-        dosageUnit: "248",
-        dayCount: 1,
-        fullDosage: [0],
-        weightDosage: [0],
-        dayDosage: [0],
-        dayWeightDosage: [0],
-      };
-      this.stores.actions.stepsData = {
-        key: this.stores.actions.stepsData.key,
-        way,
-        step,
-        form: this.stores.actions.stepsData.form,
-        method: null,
-        pack: {},
-        dosage: [],
-        value: null,
-        helpers: {},
-      };
-      return;
-    }
-    if (way === "lf" && step == 3) {
-      this.stores.actions.stepsData.method = null;
-      return;
-    }
-    if (way === "methods" && step == "2") {
-      this.stores.actions.calculatorForm = {
-        dosage: [0],
-        count: 1,
-        dosageUnit: "248",
-        dayCount: 1,
-        fullDosage: [0],
-        weightDosage: [0],
-        dayDosage: [0],
-        dayWeightDosage: [0],
-      };
-      this.stores.actions.stepsData = {
-        key: this.stores.actions.stepsData.key,
-        way,
-        step,
-        form: null,
-        method: this.stores.actions.stepsData.method,
-        pack: {},
-        dosage: [],
-        value: null,
-        helpers: {},
-      };
-      return;
-    }
-    if (way === "methods" && step == "3") {
-      this.stores.actions.calculatorForm = {
-        dosage: [0],
-        count: 1,
-        dosageUnit: "248",
-        dayCount: 1,
-        fullDosage: [0],
-        weightDosage: [0],
-        dayDosage: [0],
-        dayWeightDosage: [0],
-      };
-      this.stores.actions.stepsData = {
-        key: this.stores.actions.stepsData.key,
-        way,
-        step,
         form: this.stores.actions.stepsData.form,
         method: this.stores.actions.stepsData.method,
         pack: {},
@@ -608,6 +532,82 @@ class Dosages {
       };
       return;
     }
+    // if (way === "lf" && step == 2) {
+    //   this.stores.actions.calculatorForm = {
+    //     dosage: [0],
+    //     count: 1,
+    //     dosageUnit: "248",
+    //     dayCount: 1,
+    //     fullDosage: [0],
+    //     weightDosage: [0],
+    //     dayDosage: [0],
+    //     dayWeightDosage: [0],
+    //   };
+    //   this.stores.actions.stepsData = {
+    //     key: this.stores.actions.stepsData.key,
+    //     way,
+    //     step,
+    //     form: this.stores.actions.stepsData.form,
+    //     method: null,
+    //     pack: {},
+    //     dosage: [],
+    //     value: null,
+    //     helpers: {},
+    //   };
+    //   return;
+    // }
+    // if (way === "lf" && step == 3) {
+    //   this.stores.actions.stepsData.method = null;
+    //   return;
+    // }
+    // if (way === "methods" && step == "2") {
+    //   // this.stores.actions.calculatorForm = {
+    //   //   dosage: [0],
+    //   //   count: 1,
+    //   //   dosageUnit: "248",
+    //   //   dayCount: 1,
+    //   //   fullDosage: [0],
+    //   //   weightDosage: [0],
+    //   //   dayDosage: [0],
+    //   //   dayWeightDosage: [0],
+    //   // };
+    //   // this.stores.actions.stepsData = {
+    //   //   key: this.stores.actions.stepsData.key,
+    //   //   way,
+    //   //   step,
+    //   //   form: null,
+    //   //   method: this.stores.actions.stepsData.method,
+    //   //   pack: {},
+    //   //   dosage: [],
+    //   //   value: null,
+    //   //   helpers: {},
+    //   // };
+    //   // return;
+    // }
+    // if (way === "methods" && step == "3") {
+    //   this.stores.actions.calculatorForm = {
+    //     dosage: [0],
+    //     count: 1,
+    //     dosageUnit: "248",
+    //     dayCount: 1,
+    //     fullDosage: [0],
+    //     weightDosage: [0],
+    //     dayDosage: [0],
+    //     dayWeightDosage: [0],
+    //   };
+    //   this.stores.actions.stepsData = {
+    //     key: this.stores.actions.stepsData.key,
+    //     way,
+    //     step,
+    //     form: this.stores.actions.stepsData.form,
+    //     method: this.stores.actions.stepsData.method,
+    //     pack: {},
+    //     dosage: [],
+    //     value: null,
+    //     helpers: {},
+    //   };
+    //   return;
+    // }
     if (!vals.dosage.value) return;
 
     // let baseDosage = vals.dosage.value

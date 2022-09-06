@@ -49,9 +49,10 @@ const DozeTypes = inject(
       };
       componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.state.current == this.props.actions.stepsData.form) return;
-        // console.log("HERE");
+        // console.log("HERE", this.state.current, this.props.actions.stepsData.form);
         this.setState({ current: this.props.actions.stepsData.form }, () => {
           let arr = this.currDosagesArr();
+          // console.log({ arr });
           this.setState({ arr });
         });
       }
@@ -59,7 +60,7 @@ const DozeTypes = inject(
       currDosagesArr() {
         let time = moment();
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
+          actions: { stepsData },
           drugs: { current },
           actions: { t },
           dosages: { dosage },
@@ -83,6 +84,7 @@ const DozeTypes = inject(
         // console.log({ c, cc });
         let arr = [];
         let noData = false;
+        // console.log({ form, stepsData });
         form[stepsData.form] &&
           form[stepsData.form].dosage.forEach((item, i) => {
             if (c + cc >= from && c + cc < to) {
@@ -228,7 +230,7 @@ const DozeTypes = inject(
         let { moreflag } = this.state;
         let currDosagesArr = this.state.arr;
         let way = values.way || "lf";
-        let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`;
+        let url = !values.liquid ? `/concept/dozes` : `/liquid/calc/${values.liquid}/dozes`;
         let currStep = parseInt(values.step || 0);
 
         let drugDosage = dosage.get(current.id);

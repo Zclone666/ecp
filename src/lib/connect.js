@@ -151,8 +151,8 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
     })
     .catch((error) => {
       // console.log("axios error");
-      // console.log(error);
-      return fail && fail(error);
+      // console.log({ error });
+      return fail && fail({ alerts: [error.response?.data?.alert] });
       // return false
     });
 };

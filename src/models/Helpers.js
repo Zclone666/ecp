@@ -356,12 +356,6 @@ export const HelpersModel = new SimpleSchema({
     defaultValue: null,
     required: false,
   },
-  way: {
-    label: "way",
-    type: String,
-    defaultValue: null,
-    required: false,
-  },
   step: {
     label: "step",
     type: String,

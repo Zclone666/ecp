@@ -4,10 +4,8 @@ import { inject, observer } from "mobx-react";
 import Slider from "react-slick";
 import RouterLink from "../../router/a";
 
-import WayChoice from "./WayChoice";
-import LF from "./LF";
 import DozeTypes from "./DozeTypes";
-import Methods from "./Methods";
+import MethodsForms from "./MethodsForms";
 import Calculator from "./Calculator";
 import Steps from "./Steps";
 
@@ -60,7 +58,6 @@ const Stepper = inject(
         } = this.props;
         // console.log({ next: values.step, prev: this.state.activeIndex });
         // console.log('HEREEE');
-        this.props.actions.stepsData.way = values.way;
         if (values.step !== prevState.activeIndex) {
           this.setState({ activeIndex: values.step }, () => {
             this.goTo(parseInt(this.state.activeIndex || 0));
@@ -91,8 +88,8 @@ const Stepper = inject(
         // let { names, nameshort } = drugsDosage
 
         let currStep = parseInt(values.step || 0);
-        let way = values.way || "";
-        if (isLiquid) way = "liquid";
+        let way = isLiquid ? "liquid" : "drug";
+
         // let selectedWarnings = warnings[selectedDrug]
         const settings = {
           dots: false,
@@ -104,46 +101,24 @@ const Stepper = inject(
           swipe: false,
           initialSlide: currStep,
         };
-        // console.log({ way });
         return (
           <Responsive className="h100 with-steps" fireOnMount columns="equal" onUpdate={this.handleOnUpdate}>
             {current.key && <Steps viewType={viewType} />}
             <Slider ref={this.sliderRef} {...settings}>
-              {
-                {
-                  "": <WayChoice />,
-                  lf: <WayChoice />,
-                  methods: <WayChoice />,
-                  liquid: <div className="scrollwrapper"></div>,
-                }[way]
-              }
               <div className="scrollwrapper">
                 {
                   {
-                    lf: <LF />,
-                    liquid: current.key ? <LF /> : <div />,
-                    methods: <Methods />,
-                    "": <LF />,
+                    drug: <MethodsForms />,
+                    liquid: <div className="scrollwrapper"></div>,
                   }[way]
                 }
               </div>
+
               <div className="scrollwrapper">
                 {
                   {
-                    lf: <DozeTypes />,
+                    drug: <DozeTypes />,
                     liquid: current.key ? <DozeTypes /> : <div />,
-                    methods: <LF />,
-                    "": <DozeTypes />,
-                  }[way]
-                }
-              </div>
-              <div className="scrollwrapper">
-                {
-                  {
-                    lf: <Methods />,
-                    liquid: current.key ? <Methods /> : <div />,
-                    methods: <DozeTypes />,
-                    "": <Methods />,
                   }[way]
                 }
               </div>

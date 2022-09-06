@@ -671,8 +671,7 @@ class Warnings {
               type: _.isArray(dosage.dosage) && dosage.dosage.length > 1 ? "multi" : "simple",
               // url: "",
               key: null,
-              way: "lf",
-              step: d?.dosage?.method && d?.dosage?.form ? "4" : "1",
+              step: d?.dosage?.method && d?.dosage?.form ? "2" : null,
               // mnn: false,
               // drugCache: null,
             };

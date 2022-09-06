@@ -88,13 +88,36 @@ class Drugs {
   }
 
   /**
+  // метод приведения драга к единообразному виду
+  * @param drug - драг
+  */
+  adapter = (drug) => {
+    let validArr = this.validateDrug(drug);
+    let dosages = this.stores.dosages.get(drug.id);
+    let drugVars = {
+      concentration: null,
+      concentrationUnit: null,
+      concentrationBaseUnit: null,
+    };
+  };
+
+  /**
+  // метод пересчета калькулятора
+  * @param name - имя измененного параметра
+  * @param value - новое значение
+  */
+  calculateCurrent = (name, value) => {};
+
+  calcValuesFromCurrent = () => {};
+
+  /**
   // метод устанавливает выбранный драг при работе с дозировками и расписанием приема
   * @param drug - драг
   * @param key - идентификатор драга
   * @param id - айди ДВ или ТН
   */
   setCurrent = async ({ drug, key, id }) => {
-    let drugTpl = _.cloneDeep(DrugScheme);
+    let drugTpl = _.cloneDeep(DrugModel.obj);
     drugTpl.key = key;
     drugTpl.id = id;
     await _.assignIn(this.current, drugTpl);
@@ -325,7 +348,7 @@ class Drugs {
       helpers: { dosage: hdosage, pack: hpack },
     } = drugData;
 
-    let { way, step } = values;
+    let { step } = values;
 
     let {
       dateStart,
@@ -358,7 +381,6 @@ class Drugs {
     };
     currentDrug.helpers = {
       key,
-      way,
       step,
       dosage: hdosage,
       pack: hpack,
@@ -418,7 +440,7 @@ class Drugs {
     let { specials } = currentDrug;
     // console.log({currentDrug});
     let { form, method, pack, dosage, value } = currentDrug.dosage;
-    let { key, way, step, dosage: hdosage, pack: hpack } = currentDrug.helpers;
+    let { key, step, dosage: hdosage, pack: hpack } = currentDrug.helpers;
     let {
       dateStart,
       dateFinish,
@@ -445,7 +467,6 @@ class Drugs {
 
     this.stores.actions.stepsData = {
       key,
-      way,
       step,
       form,
       method,
@@ -908,7 +929,7 @@ class Drugs {
       durationUnit,
     } = this.stores.actions.liquidForm.calc;
     //.reduce((a, b) => a + b)
-    console.log({ countUnit, count });
+    // console.log({ countUnit, count });
     // count = getToBase(countUnit, count);
     // console.log({ countUnit, count });
     let fullDosage = _.map(dosage, (dos) => {
@@ -1184,7 +1205,6 @@ class Drugs {
     });
   }
 
-  // concept from search, flag - if true, do not clear data
   /**
   // метод создания драга при выборе из побуквенного поиска и добавления в лист назначения
   * @param concept - концепт из поиска
@@ -1206,8 +1226,6 @@ class Drugs {
 
     await this.drug.set(drug.key, drug);
 
-    // _.assignIn(this.current, drug);
-
     if (getDosages) {
       await this.stores.dosages.get(drug, false, names);
     }
@@ -1226,7 +1244,6 @@ class Drugs {
   */
   async unselectDrug(drug, onlyProto = true) {
     if (drug.proto || !onlyProto) {
-      // this.deletedRows.push(drug);
       this.unselectedRows.push(drug);
     }
     if (drug.group && drug.group != 0) {
@@ -1234,7 +1251,7 @@ class Drugs {
       this.removeLiquids([drug.group]);
     }
     await this.drug.delete(drug.key);
-    // await this.stores.dosages.dosage.delete(drug.key)
+
     this.selectedRows = await _.xorWith(this.selectedRows, [drug], (a, b) => a.id === b.id);
     this.stores.db.clearData(false, true);
     this.checkLiquidsOk();
@@ -1265,26 +1282,9 @@ class Drugs {
         const { names } = data;
         if (data.drugs?.length === 0) this.stores.actions.makeAlerts(data);
         const filteredDrugs = data.drugs.filter((drug) => !!drug);
-        // if (filteredDrugs && filteredDrugs.length > 0 && _.isArray(filteredDrugs)) {
-        // await filteredDrugs.forEach((concept, i) => {
-        // filteredDrugs[i].key = String(Math.floor(10000000000 * Math.random())); //moment().format("x").toString();
-        // filteredDrugs[i].title = filteredDrugs[i].name;
-        // });
-        // }
-        // const { drugs } = data;
-        // console.log(
-        //   { filteredDrugs },
-        //   "asdasd: ",
-        //   filteredDrugs.map((d) => ({
-        //     ...d,
-        //     helpers: this.getNew().helpers,
-        //   }))
-        // );
-        // console.log("new drug: ", this.getNew());
         const drugs = filteredDrugs.map((d) => {
           let { dosage } = d;
           dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
-          // console.log({ dosage });
           let helpers = {
             dosage: {
               short: "",
@@ -1296,36 +1296,15 @@ class Drugs {
             },
             pack: { short: "", full: "", id: null },
             type: _.isArray(dosage) && dosage.length > 1 ? "multi" : "simple",
-            // url: "",
             key: null,
-            way: "lf",
-            step: 4,
-            // mnn: false,
-            // drugCache: null,
+
+            step: 2,
           };
-          // } else if (_.isArray(dosage) && dosage.length === 1) {
-          //   let val = dosage[0].value_2 ? dosage[0].value_1 / dosage[0].value_2 : dosage[0].value_1;
-          //   currPack.dosage.full += val + " " + names[dosage[0].id_1];
-          //   currPack.dosage.small += val + " " + (nameshort[dosage[0].id_1] || names[dosage[0].id_1]);
-          //   currPack.value = [val];
-          // }
-          // currPack.pack.full +=
-          //   names[packname] + ((pack && ", " + pack.value_1 + " " + (nameshort[pack.id_1] || names[pack.id_1])) || "");
-          // currPack.pack.small +=
-          //   (nameshort[packname] || names[packname]) +
-          //   ((pack && ", " + pack.value_1 + " " + (nameshort[pack.id_1] || names[pack.id_1])) || "");
           return {
             ...d,
             helpers,
           };
         });
-        // helpers: {
-        //   dosage: {
-        //     short: `${d.dosage[0].value_1} ${shortnames[d[0].id_1]}`,
-        //   },
-        // },
-        // calc: this.getNew().calc,
-        // }));
         drugs.forEach(async (drug, i) => {
           // console.log({ drug });
           await this.selectFromSearch(drug, false, true, names);
