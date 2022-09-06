@@ -6,6 +6,7 @@ import RouterLink from "../../router/a";
 import { Menu, List, Feed, Button, Responsive, Icon, Popup, Input, TextArea, Form, Checkbox } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
+import moment from "moment";
 
 const RecipeDrug = inject(
   "db",
@@ -210,6 +211,11 @@ const RecipeDrug = inject(
         return inputValue;
       }
 
+      componentDidMount() {
+        // this.setState({ numero: this.numero });
+        this.handleChangeCount({ target: { value: this.numero().toString() } });
+      }
+
       componentDidUpdate(prevProps, prevState) {
         let {
           drugs: { drug }, //drugs, drugsDosages, currDrug, setDosageParams
@@ -239,9 +245,29 @@ const RecipeDrug = inject(
         this.props.recipes["drugKeysForPrescription"].push(key);
       }
 
+      numero = () => {
+        let {
+          dosages: { dosage: dose },
+          drugKey: key,
+          drugs,
+          active,
+          recipes: { drugKeysForPrescription, maxcount },
+        } = this.props;
+        let drug = drugs.drug.get(key) || {};
+
+        let numero = 0;
+        if (drug.solute) return numero;
+
+        if (drug.calc.count) numero = drug.calc.count;
+        if (drug.calc.dayCount) numero = numero * drug.calc.dayCount;
+        if (drug.schedule && drug.schedule.dateStart && drug.schedule.dateFinish) {
+          numero = numero * moment(drug.schedule.dateFinish, "x").diff(moment(drug.schedule.dateStart, "x"), "days");
+        }
+        return parseInt(numero);
+      };
+
       render() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
           dosages: { dosage: dose },
           drugKey: key,
           drugs,
@@ -249,7 +275,7 @@ const RecipeDrug = inject(
           recipes: { drugKeysForPrescription, maxcount },
         } = this.props;
         const { t } = this.props.actions;
-        let { edit, text, from } = this.state;
+        let { edit, text, from, numero } = this.state;
 
         // console.log({ drugKeysForPrescription });
 
