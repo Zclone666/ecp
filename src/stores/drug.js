@@ -60,5 +60,9 @@ class Drug {
     let { dosage: packDosage } = this.current.dosage;
     let { calcValues, calcNames } = this;
   }
+
+  get concentration() {}
+  get count() {}
+  get dosage() {}
 }
 export default Drug;
