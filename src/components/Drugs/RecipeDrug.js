@@ -288,7 +288,6 @@ const RecipeDrug = inject(
         let names = drugDosages.names || {};
 
         let urlArr = ["/concept/dozes"];
-        if (helpers.way) urlArr.push(helpers.way);
         if (helpers.step) urlArr.push(helpers.step);
 
         let url = urlArr.join("/");
@@ -308,13 +307,14 @@ const RecipeDrug = inject(
         // if(dosage.pack.dosage) descArr.push(dosage.pack.dosage)
         // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
         // let recipeCount = 0;
-        let { inputValue } = this;
+        let checked = drugKeysForPrescription.includes(key);
         return (
           <List.Item>
             <List.Content floated="left">
               <Checkbox
+                disabled={recipeCount === "0"}
                 // disabled={!drugKeysForPrescription.includes(key) && drugKeysForPrescription.length >= maxcount}
-                checked={drugKeysForPrescription.includes(key)}
+                checked={checked}
                 onChange={() => this.addOrRemoveDrugToPrescription(key)}
               />
             </List.Content>
@@ -332,9 +332,11 @@ const RecipeDrug = inject(
                     <Icon name="undo" />
                   </Button>
                 )}
-                <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
-                  <Icon name="tint" />
-                </Button>
+                {false && (
+                  <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
+                    <Icon name="tint" />
+                  </Button>
+                )}
                 <Button icon onClick={this.edit}>
                   <Icon name={edit ? "check" : "edit"} />
                 </Button>
@@ -355,6 +357,7 @@ const RecipeDrug = inject(
                   <input
                     type="text"
                     value={recipeCount}
+                    style={recipeCount === "0" ? { border: "1px solid red" } : {}}
                     name="recipeCount"
                     onChange={this.handleChangeCount}
                     className="recipeCount"
