@@ -526,7 +526,7 @@ class Tools {
     });
   }
 
-  round = (val, dec = 3) => {
+  round = (val, dec = 4) => {
     let delimiter = Math.pow(10, dec);
     return Math.round(val * delimiter) / delimiter;
   };
