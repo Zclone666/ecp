@@ -308,11 +308,12 @@ const RecipeDrug = inject(
         // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
         // let recipeCount = 0;
         let checked = drugKeysForPrescription.includes(key);
+        let countFilled = recipeCount !== "0" && recipeCount !== "";
         return (
           <List.Item>
             <List.Content floated="left">
               <Checkbox
-                disabled={recipeCount === "0"}
+                disabled={!countFilled}
                 // disabled={!drugKeysForPrescription.includes(key) && drugKeysForPrescription.length >= maxcount}
                 checked={checked}
                 onChange={() => this.addOrRemoveDrugToPrescription(key)}
@@ -357,7 +358,7 @@ const RecipeDrug = inject(
                   <input
                     type="text"
                     value={recipeCount}
-                    style={recipeCount === "0" ? { border: "1px solid red" } : {}}
+                    style={!countFilled ? { border: "1px solid red" } : {}}
                     name="recipeCount"
                     onChange={this.handleChangeCount}
                     className="recipeCount"
