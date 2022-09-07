@@ -36,7 +36,7 @@ class Drug {
     });
     this._validateAndSet(drug);
   }
-  set drug(drug) {
+  _validateAndSet(drug) {
     const validationContext = this.model.schema.newContext();
     validationContext.validate(drug);
     const errs = validationContext.validationErrors();
