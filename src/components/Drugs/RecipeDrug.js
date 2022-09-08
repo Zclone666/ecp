@@ -6,6 +6,7 @@ import RouterLink from "../../router/a";
 import { Menu, List, Feed, Button, Responsive, Icon, Popup, Input, TextArea, Form, Checkbox } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
+import moment from "moment";
 
 const RecipeDrug = inject(
   "db",
@@ -210,6 +211,11 @@ const RecipeDrug = inject(
         return inputValue;
       }
 
+      componentDidMount() {
+        // this.setState({ numero: this.numero });
+        this.handleChangeCount({ target: { value: this.numero().toString() } });
+      }
+
       componentDidUpdate(prevProps, prevState) {
         let {
           drugs: { drug }, //drugs, drugsDosages, currDrug, setDosageParams
@@ -239,9 +245,29 @@ const RecipeDrug = inject(
         this.props.recipes["drugKeysForPrescription"].push(key);
       }
 
+      numero = () => {
+        let {
+          dosages: { dosage: dose },
+          drugKey: key,
+          drugs,
+          active,
+          recipes: { drugKeysForPrescription, maxcount },
+        } = this.props;
+        let drug = drugs.drug.get(key) || {};
+
+        let numero = 0;
+        if (drug.calc.countUnit !== "342") return numero;
+
+        if (drug.calc.count) numero = drug.calc.count;
+        if (drug.calc.dayCount) numero = numero * drug.calc.dayCount;
+        if (drug.schedule && drug.schedule.dateStart && drug.schedule.dateFinish) {
+          numero = numero * moment(drug.schedule.dateFinish, "x").diff(moment(drug.schedule.dateStart, "x"), "days");
+        }
+        return parseInt(numero);
+      };
+
       render() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
           dosages: { dosage: dose },
           drugKey: key,
           drugs,
@@ -249,7 +275,7 @@ const RecipeDrug = inject(
           recipes: { drugKeysForPrescription, maxcount },
         } = this.props;
         const { t } = this.props.actions;
-        let { edit, text, from } = this.state;
+        let { edit, text, from, numero } = this.state;
 
         // console.log({ drugKeysForPrescription });
 
@@ -262,7 +288,6 @@ const RecipeDrug = inject(
         let names = drugDosages.names || {};
 
         let urlArr = ["/concept/dozes"];
-        if (helpers.way) urlArr.push(helpers.way);
         if (helpers.step) urlArr.push(helpers.step);
 
         let url = urlArr.join("/");
@@ -282,13 +307,15 @@ const RecipeDrug = inject(
         // if(dosage.pack.dosage) descArr.push(dosage.pack.dosage)
         // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
         // let recipeCount = 0;
-        let { inputValue } = this;
+        let checked = drugKeysForPrescription.includes(key);
+        let countFilled = recipeCount !== "0" && recipeCount !== "";
         return (
           <List.Item>
             <List.Content floated="left">
               <Checkbox
+                disabled={!countFilled}
                 // disabled={!drugKeysForPrescription.includes(key) && drugKeysForPrescription.length >= maxcount}
-                checked={drugKeysForPrescription.includes(key)}
+                checked={checked}
                 onChange={() => this.addOrRemoveDrugToPrescription(key)}
               />
             </List.Content>
@@ -306,9 +333,11 @@ const RecipeDrug = inject(
                     <Icon name="undo" />
                   </Button>
                 )}
-                <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
-                  <Icon name="tint" />
-                </Button>
+                {false && (
+                  <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
+                    <Icon name="tint" />
+                  </Button>
+                )}
                 <Button icon onClick={this.edit}>
                   <Icon name={edit ? "check" : "edit"} />
                 </Button>
@@ -329,6 +358,7 @@ const RecipeDrug = inject(
                   <input
                     type="text"
                     value={recipeCount}
+                    style={!countFilled ? { border: "1px solid red" } : {}}
                     name="recipeCount"
                     onChange={this.handleChangeCount}
                     className="recipeCount"

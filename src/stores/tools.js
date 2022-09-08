@@ -127,7 +127,7 @@ class Tools {
       drug.calc.dosageUnit && arr.push(drug.calc.dosageUnit);
       drug.dosage.method && arr.push(drug.dosage.method);
       drug.dosage.form && arr.push(drug.dosage.form);
-      drug.dosage?.dosage[0]?.id_1 && arr.push(drug.dosage.dosage[0].id_1);
+      drug.dosage?.dosage && drug.dosage?.dosage[0]?.id_1 && arr.push(drug.dosage.dosage[0].id_1);
     });
 
     let { active_language } = this.stores.actions;
@@ -523,12 +523,12 @@ class Tools {
     });
   }
 
-  round = (val, dec = 3) => {
+  round = (val, dec = 4) => {
     let delimiter = Math.pow(10, dec);
     return Math.round(val * delimiter) / delimiter;
   };
 
-  getFromBase = (unitId, value, double = 4, name = null) => {
+  getFromBase = (unitId, value, double = 6, name = null) => {
     let { round } = this;
 
     let unit = this.units[unitId];
