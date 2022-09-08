@@ -55,6 +55,8 @@ class Drug {
     this._dosages = dosages;
   }
 
+  calcCache() {}
+
   get calc() {
     let { dosage, dosageUnit, dosageBaseUnit, count, countUnit, countBaseUnit } = this.current.calc;
     let { dosage: packDosage } = this.current.dosage;

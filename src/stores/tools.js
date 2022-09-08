@@ -127,7 +127,7 @@ class Tools {
       drug.calc.dosageUnit && arr.push(drug.calc.dosageUnit);
       drug.dosage.method && arr.push(drug.dosage.method);
       drug.dosage.form && arr.push(drug.dosage.form);
-      drug.dosage?.dosage[0]?.id_1 && arr.push(drug.dosage.dosage[0].id_1);
+      drug.dosage?.dosage && drug.dosage?.dosage[0]?.id_1 && arr.push(drug.dosage.dosage[0].id_1);
     });
 
     let { active_language } = this.stores.actions;
