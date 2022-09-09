@@ -23,6 +23,10 @@ class Drug {
     freqUnit: "",
     dayWeightDosageUnit: "",
   };
+  concentration: {
+    numerator: null, // числитель
+    denominator: null, // знаменатель
+  };
   //end-decorators
 
   constructor({ drug, model, stores }) {
@@ -50,9 +54,22 @@ class Drug {
       Object.assign(this.current, drug);
     }
   }
+  //{type: "ratio"||"value", value_1: 100, value_2: 5,(if ratio) id_1: "250"}
+  dosageItemFactory(dosageItem) {
+    let { getFromBase, units, unitarrs, getUnitWithComponents } = this.stores.tools;
+    let value = 0;
+    let unit = null;
+    if (dosageItem.id_2) {
+      // FIXME: // id_2 ?????
+    } else {
+      unit = getUnitWithComponents(dosageItem.id_1);
+    }
 
-  set dosages(dosages) {
-    this._dosages = dosages;
+    if (dosageItem.type === "value") {
+      value = dosageItem.value_1;
+    } else if (dosageItem.type === "ratio") {
+      value = dosageItem.value_1 / dosageItem.value_2;
+    }
   }
 
   calcCache() {}

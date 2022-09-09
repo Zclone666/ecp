@@ -348,31 +348,26 @@ class Tools {
   };
 
   setUnits = (units, unitrefs, unitpharm) => {
-    // console.log("units: ", this.units);
-    // _.keys(unitrefs).forEach( refkey => {
-    //   this.unitarrs.push([ refkey, ...unitrefs[refkey] ])
-    // })
-    // console.log({ unitpharm });
     _.keys(units).forEach((unitkey) => {
       let unit = units[unitkey];
       let newunit = {
         name: this.names[unitkey],
         shortname: this.shortnames[unitkey],
-        contains: unit,
+        contains: unit, // сожержит соотношение к другим единицам
         id: unitkey,
-        type: "simple",
-        arr: null,
-        show: unitpharm.includes(unitkey) || false,
+        type: "simple", // обычная единица измерения
+        arr: null, // ключ массива связанных единиц для простых единиц (не для комплексных)
+        show: unitpharm.includes(unitkey) || false, // указывает, отображать ли в калькуляторе
       };
 
-      if (unitrefs[unitkey])
-        this.unitarrs[unitkey] = newunit.show ? [unitkey, ...unitrefs[unitkey]] : unitrefs[unitkey];
+      // if (unitrefs[unitkey])
+      this.unitarrs[unitkey] = newunit.show ? [unitkey, ...(unitrefs[unitkey] || [])] : unitrefs[unitkey];
       if (unit.length < 1) {
-        newunit.type = "base";
+        newunit.type = "base"; // базовая ед. изм. (к ней приводятся все производные)
 
         newunit.arr = unitkey;
       } else if (unit.length > 1) {
-        newunit.type = "complex";
+        newunit.type = "complex"; // комплексная ед. изм (состоит из 2 или более ед. изм. с соотношением друг к другу)
         _.keys(unitrefs).forEach((refkey) => {
           if (unitrefs[refkey].includes(unitkey)) newunit.arr = refkey;
         });
@@ -386,17 +381,11 @@ class Tools {
         newunit.arr = "248";
       }
 
-      if (unitrefs[unitkey]) {
-        // this.unitarrs[unitkey] = (newunit.show ? [ unitkey, ...unitrefs[unitkey] ] : unitrefs[unitkey])
-        this.unitarrs[unitkey] = [unitkey, ...unitrefs[unitkey]];
-      }
-      // if(unitkey === '42'){
-      //   console.log(newunit);
+      // if (unitrefs[unitkey]) {
+      //   this.unitarrs[unitkey] = [unitkey, ...unitrefs[unitkey]];
       // }
-      // if(unitkey === '42') console.log(this.unitarrs[unitkey]);
       this.units[unitkey] = newunit;
     });
-    //console.log(this.units);
   };
 
   getUnitArr = (unitId) => {
@@ -415,6 +404,23 @@ class Tools {
     }
     // console.log(result);
     return result;
+  };
+
+  getUnitWithComponents = (unitId) => {
+    let unit = _.cloneDeep(this.units[unitId]);
+    if (!unit) return null;
+    if (unit.type === "complex") {
+      unit.components = unit.contains.map((c) => {
+        return { unit: _.cloneDeep(this.units[c.id]), relation: { action: c.action, value: c.value } };
+      });
+    } else if (unit.type === "simple") {
+      unit.components = unit.contains.map((c) => {
+        return { unit: _.cloneDeep(this.units[c.id]), relation: { action: c.action, value: c.value } };
+      });
+    } else {
+      unit.components = null;
+    }
+    return unit;
   };
 
   async searchClinic(text) {

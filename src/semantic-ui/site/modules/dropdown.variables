@@ -232,7 +232,7 @@
 /* Inline */
 @inlineIconMargin: 0em 0.5em 0em 0.25em;
 @inlineTextColor: inherit;
-@inlineTextFontWeight: bold;
+@inlineTextFontWeight: normal;
 @inlineMenuDistance: 0.25em;
 @inlineMenuBorderRadius: @borderRadius;
 

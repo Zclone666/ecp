@@ -1982,3 +1982,54 @@ ul.ui.list li:first-child:after {
   margin: 3px 5px;
   width: 35px;
 }
+
+.multiinput {
+  margin: 0em;
+  outline: none;
+  -webkit-appearance: none;
+  tap-highlight-color: rgba(255, 255, 255, 0);
+  line-height: 1.2142em;
+  padding: 0.25em 0 0.25em 0.25em;
+  font-size: 1em;
+  background: #ffffff;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 0;
+  box-shadow: 0em 0em 0em 0em transparent inset;
+  transition: color 0.1s ease, border-color 0.1s ease;
+  display: flex;
+  flex: 1 0 auto;
+}
+
+.multiinput > .ui.label {
+  margin: -0.25em 0 !important;
+}
+.multiinput-item {
+  background: #f9f9f9;
+  margin-right: 0.25em;
+  flex: 1;
+  display: flex;
+}
+.multiinput-item:not(:last-child)::after {
+  content: "+";
+  padding: 0.45em 0 0.45em 0.25em;
+  flex: 0 0 auto;
+  background: #fff;
+  vertical-align: bottom;
+}
+.multiinput-item > input {
+  border: none !important;
+  background: transparent !important;
+  padding: 0.5em 0.25em !important;
+  text-align: right;
+}
+.multiinput-item > .ui.dropdown {
+  padding: 0.5em 0 0 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+.multiinput-item > .ui.label {
+  background: transparent !important;
+  padding: 0.65em 0.3em 0 0.35em !important;
+  font-size: 1em;
+  font-weight: normal !important;
+}

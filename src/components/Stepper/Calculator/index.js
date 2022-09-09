@@ -26,6 +26,8 @@ import Schedule from "./Schedule";
 import Interval from "./Interval";
 import Drugs from "./Drugs";
 
+import MultiInput from "./MultiInput";
+
 import _ from "lodash";
 import moment from "moment";
 
@@ -485,27 +487,76 @@ const Calculator = inject(
             <Dimmer.Dimmable as={"div"} dimmed={disableAll}>
               <Form>
                 <Form.Group>
-                  <Form.Field width={4}>
-                    <label>{concetrationNeeded ? t("concentration") : t("dosage")}:</label>
-                    <Input
-                      readOnly={concetrationNeeded}
-                      disabled={disableAll || disableMulti}
-                      size="big"
-                      name="dosage"
-                      value={getFromBase(currUnit || def, currUnit === 999999 ? dosage / 10 : dosage).join(" + ") || ""}
-                      label={
-                        <Dropdown
-                          name="currUnit"
-                          onChange={this.handleChangeUnit}
-                          options={weights}
-                          value={currUnit || def}
-                        />
-                      }
-                      labelPosition="right"
-                      // placeholder="500"
-                      onChange={this.handleChange}
-                    />
-                  </Form.Field>
+                  {false && (
+                    <Form.Field width={4}>
+                      <label>{concetrationNeeded ? t("concentration") : t("dosage")}:</label>
+                      <Input
+                        readOnly={concetrationNeeded}
+                        disabled={disableAll || disableMulti}
+                        size="big"
+                        name="dosage"
+                        value={
+                          getFromBase(currUnit || def, currUnit === 999999 ? dosage / 10 : dosage).join(" + ") || ""
+                        }
+                        label={
+                          <Dropdown
+                            name="currUnit"
+                            onChange={this.handleChangeUnit}
+                            options={weights}
+                            value={currUnit || def}
+                          />
+                        }
+                        labelPosition="right"
+                        // placeholder="500"
+                        onChange={this.handleChange}
+                      />
+                    </Form.Field>
+                  )}
+                  <MultiInput
+                    width={7}
+                    title={concetrationNeeded ? t("concentration") : t("dosage")}
+                    items={[
+                      {
+                        id: 1,
+                        name: "мг",
+                        value: 50,
+                        unit: 11,
+                        arr: [
+                          {
+                            id: 11,
+                            shortname: "мг",
+                          },
+                          {
+                            id: 11,
+                            shortname: "г",
+                          },
+                        ],
+                      },
+                      {
+                        id: 2,
+                        name: "мг",
+                        value: 10,
+                        unit: 11,
+                        arr: [
+                          {
+                            id: 11,
+                            shortname: "мг",
+                          },
+                          {
+                            id: 11,
+                            shortname: "г",
+                          },
+                        ],
+                      },
+                      {
+                        id: 3,
+                        name: "ЕД",
+                        value: 50000,
+                        arr: [],
+                      },
+                    ]}
+                    denominator="мл"
+                  />
                   <Form.Field width={3}>
                     <label>{isMl ? t("volume_solution") : t("number_dose")}:</label>
                     <Input
@@ -520,20 +571,68 @@ const Calculator = inject(
                       onChange={this.handleChange}
                     />
                   </Form.Field>
-                  <Form.Field width={3}>
-                    <label>{t("motherwise_dose")}:</label>
-                    <Input
-                      disabled={disableAll || disableMulti}
-                      size="big"
-                      name="fullDosage"
-                      value={getFromBase(currUnit || def, fullDosage).join(" + ") || ""}
-                      label={{ basic: true, content: secondName || t("mg") }}
-                      labelPosition="right"
-                      placeholder="500"
-                      onChange={this.handleChange}
-                    />
-                  </Form.Field>
-                  <Form.Field width={3}>
+                  <MultiInput
+                    width={6}
+                    title={t("motherwise_dose")}
+                    items={[
+                      {
+                        id: 1,
+                        name: "мг",
+                        value: 50,
+                        unit: 11,
+                        arr: [
+                          {
+                            id: 11,
+                            shortname: "мг",
+                          },
+                          {
+                            id: 11,
+                            shortname: "г",
+                          },
+                        ],
+                      },
+                      {
+                        id: 2,
+                        name: "мг",
+                        value: 10,
+                        unit: 11,
+                        arr: [
+                          {
+                            id: 11,
+                            shortname: "мг",
+                          },
+                          {
+                            id: 11,
+                            shortname: "г",
+                          },
+                        ],
+                      },
+                      {
+                        id: 3,
+                        name: "ЕД",
+                        value: 50000,
+                        arr: [],
+                      },
+                    ]}
+                  />
+                  {false && (
+                    <Form.Field width={6}>
+                      <label>{t("motherwise_dose")}:</label>
+                      <Input
+                        disabled={disableAll || disableMulti}
+                        size="big"
+                        name="fullDosage"
+                        value={getFromBase(currUnit || def, fullDosage).join(" + ") || ""}
+                        label={{ basic: true, content: secondName || t("mg") }}
+                        labelPosition="right"
+                        placeholder="500"
+                        onChange={this.handleChange}
+                      />
+                    </Form.Field>
+                  )}
+                </Form.Group>
+                <Form.Group>
+                  <Form.Field width={5}>
                     <label>{t("body_mass")}:</label>
                     <Input
                       disabled={disableAll}
@@ -546,7 +645,7 @@ const Calculator = inject(
                       onChange={this.handleChange}
                     />
                   </Form.Field>
-                  <Form.Field width={3}>
+                  <Form.Field width={5}>
                     <label>{t("kg_body_weight")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}
@@ -559,10 +658,8 @@ const Calculator = inject(
                       onChange={this.handleChange}
                     />
                   </Form.Field>
-                </Form.Group>
-                <Form.Group>
                   {!liquid && (
-                    <Form.Field width={4}>
+                    <Form.Field width={6}>
                       <label>{t("multiplicity_reception")}:</label>
                       <Dropdown
                         disabled={disableAll}
@@ -577,7 +674,9 @@ const Calculator = inject(
                       />
                     </Form.Field>
                   )}
-                  <Form.Field width={6}>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Field width={8}>
                     <label>{t("daily_dose")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}
@@ -591,7 +690,7 @@ const Calculator = inject(
                       readOnly={true}
                     />
                   </Form.Field>
-                  <Form.Field width={6}>
+                  <Form.Field width={8}>
                     <label>{t("kg_weight_day")}:</label>
                     <Input
                       disabled={disableAll || disableMulti}

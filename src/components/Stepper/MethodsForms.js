@@ -25,7 +25,6 @@ const MethodsLF = inject(
         } = this.props;
         this.props.actions.stepsData.method = this.props.actions.stepsData.method === method ? null : method;
         if (this.props.actions.stepsData.method && this.props.actions.stepsData.form) {
-          // !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`;
           this.props.router.push(!values.liquid ? `/concept/dozes/1` : `/liquid/calc/${values.liquid}/dozes/1`);
         }
       };
@@ -34,7 +33,9 @@ const MethodsLF = inject(
           router: { values },
         } = this.props;
         this.props.actions.stepsData.form = this.props.actions.stepsData.form === form ? null : form;
-        this.props.router.push(!values.liquid ? `/concept/dozes/1` : `/liquid/calc/${values.liquid}/dozes/1`);
+        if (this.props.actions.stepsData.method && this.props.actions.stepsData.form) {
+          this.props.router.push(!values.liquid ? `/concept/dozes/1` : `/liquid/calc/${values.liquid}/dozes/1`);
+        }
       };
       render() {
         let {
