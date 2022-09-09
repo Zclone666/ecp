@@ -329,6 +329,8 @@ class Tools {
         this.unitsSchedule.freq = schedule.freq;
         this.unitsSchedule.duration = schedule.duration;
 
+        this.setNames(schedule.names);
+
         this.techReady = true;
       },
       fail: (alerts) => {
