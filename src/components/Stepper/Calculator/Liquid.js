@@ -158,7 +158,7 @@ const LiquidCalculator = inject(
           let freqItem = freq[freqKey];
           arr.push({
             key: freqKey,
-            text: freqKey,
+            text: this.props.tools.names[freqKey],
             value: freqKey,
             // onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
             //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)

@@ -256,7 +256,13 @@ const RecipeDrug = inject(
         let drug = drugs.drug.get(key) || {};
 
         let numero = 0;
-        if (drug.calc.countUnit !== "342") return numero;
+        if (
+          drug.calc.countUnit !== "342" ||
+          !drug.calc.count ||
+          !drug.calc.dayCount ||
+          !(drug.schedule && drug.schedule.dateStart && drug.schedule.dateFinish)
+        )
+          return numero;
 
         if (drug.calc.count) numero = drug.calc.count;
         if (drug.calc.dayCount) numero = numero * drug.calc.dayCount;
@@ -362,7 +368,8 @@ const RecipeDrug = inject(
                     name="recipeCount"
                     onChange={this.handleChangeCount}
                     className="recipeCount"
-                  />
+                  />{" "}
+                  {!countFilled && <span style={{ color: "red" }}> {t("fill_numero")}</span>}
                 </List.Description>
                 <List.Description>
                   S.: {rules.rules} {!edit && specials && `(${specials})`}

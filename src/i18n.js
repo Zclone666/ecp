@@ -140,6 +140,8 @@ const resources = {
       recipe_state_time: "Время действия рецепта",
       comment_prescription: "Комментарий к рецепту",
 
+      fill_numero: "Заполните поле!",
+
       print_recipe: "Печать рецепта",
       code_pharmacy: "Ваш код для аптеки",
       clinic: "Клиника",
