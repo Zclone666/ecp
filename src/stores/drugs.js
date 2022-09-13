@@ -315,7 +315,7 @@ class Drugs {
 
     currentDrug.edit = true;
     // console.log({ freq, duration });
-    currentDrug.freq = freq || null;
+    currentDrug.freq = freq ? this.stores.tools.names[freq] : null;
     currentDrug.freq_id = freq_id || null;
     currentDrug.duration = duration || null;
     currentDrug.duration_id = duration_id || null;
