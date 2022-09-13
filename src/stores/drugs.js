@@ -272,8 +272,8 @@ class Drugs {
           this.stores.drugs.drug.set(drug.key, current);
           // console.log('DATA', data);
         },
-        fail: (alerts) => {},
-        always: (data) => {},
+        fail: (alerts) => { },
+        always: (data) => { },
       });
     }
   }
@@ -315,7 +315,7 @@ class Drugs {
 
     currentDrug.edit = true;
     // console.log({ freq, duration });
-    currentDrug.freq = freq || null;
+    currentDrug.freq = freq ? this.stores.tools.names[freq] : null;
     currentDrug.freq_id = freq_id || null;
     currentDrug.duration = duration || null;
     currentDrug.duration_id = duration_id || null;
@@ -380,13 +380,38 @@ class Drugs {
       calendar,
     };
 
+    /**
+     * @desc shitfix
+     * @todo иногда значения в массиве строки, хотя должны быть числа, так же иногда бывают вложенные массивы
+     * @param {*} fullDosage 
+     */
+
+    const fullDosageFix = fullDosage => {
+      if (Array.isArray(fullDosage)) {
+        let fixedfullDosage = fullDosage.map(d => {
+
+          if (Array.isArray(d)) {
+            return +(d[0]);
+          } else {
+            return +d;
+          }
+        });
+
+        return fixedfullDosage;
+      } else {
+        return fullDosage
+
+      }
+
+    }
+
     currentDrug.calc = {
       ...currentDrug.calc,
       dosage: dos,
       count,
       dosageUnit: dosageUnit == 999999 ? "248" : dosageUnit,
       dayCount,
-      fullDosage,
+      fullDosage: fullDosageFix(fullDosage),
       weightDosage,
       dayDosage,
       dayWeightDosage,
