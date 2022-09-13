@@ -267,8 +267,12 @@ const RecipeDrug = inject(
         if (drug.calc.count) numero = drug.calc.count;
         if (drug.calc.dayCount) numero = numero * drug.calc.dayCount;
         if (drug.schedule && drug.schedule.dateStart && drug.schedule.dateFinish) {
-          numero = numero * moment(drug.schedule.dateFinish, "x").diff(moment(drug.schedule.dateStart, "x"), "days");
+          let startDate = moment(drug.schedule.dateStart, "x");
+          let finishDate = moment(drug.schedule.dateFinish, "x");
+
+          numero = numero * (finishDate.diff(startDate, "days") + 1);
         }
+        
         return parseInt(numero);
       };
 
