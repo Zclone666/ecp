@@ -148,7 +148,8 @@ const Calculator = inject(
           case "fullDosage":
             fullDosage = [];
             fullDosage.push(getToBase(currUnit || def, value.split(" + ")));
-            count = fullDosage[0] / dosage;
+            count = parseFloat((fullDosage[0] / dosage).toFixed(1));
+            // console.log(count);
             // console.log({weight,fullDosage});
             // weightDosage = !weight ? [0] : _.map( fullDosage, (dos) => { return dos/weight } )
             break;
@@ -270,7 +271,7 @@ const Calculator = inject(
           let freqItem = freq[freqKey];
           arr.push({
             key: freqKey,
-            text: freqKey,
+            text: this.props.tools.names[freqKey],
             value: freqKey,
             // onClick: () => this.props.actions.scheduleForm.interval = preset.tpl
             //onClick: () => this.props.actions.scheduleForm.interval = _.concat(preset.tpl, interval)

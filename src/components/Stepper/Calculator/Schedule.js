@@ -45,6 +45,8 @@ const Schedule = inject(
         // console.log({ name, value });
         const { t } = this.props.actions;
         if (name === "dateStart" || name === "dateFinish") {
+          // let dateReg = /^[0-9]{1,2}(\.[0-9]{0,2}(\.[0-9]{0,4})?)?$/gi;
+          // if (!dateReg.test(value)) return;
           if (name === "dateStart" && value === "Invalid date") {
             value = null;
             this.props.actions.scheduleForm.dateStart = null;
@@ -194,6 +196,7 @@ const Schedule = inject(
       render() {
         let {
           actions: {
+            active_language,
             selectedDrug,
             selectedConflict,
             activeDrugs,
@@ -253,7 +256,7 @@ const Schedule = inject(
                     onClear={this.onClear}
                     className="ui fluid big input "
                     placeholder="__.__.____"
-                    locale="ru"
+                    locale={active_language}
                   />
                 </Form.Field>
                 <Form.Field width={7}>
@@ -274,7 +277,7 @@ const Schedule = inject(
                       onClear={this.onClear}
                       className="ui fluid big input "
                       placeholder="__.__.____"
-                      locale="ru"
+                      locale={active_language}
                     />
                     <Dropdown
                       onClick={() => {

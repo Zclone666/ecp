@@ -6,6 +6,7 @@ import RouterLink from "../../router/a";
 import { Menu, List, Feed, Button, Responsive, Icon, Popup, Input, TextArea, Form, Checkbox } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
+import moment from "moment";
 
 const RecipeDrug = inject(
   "db",
@@ -14,7 +15,8 @@ const RecipeDrug = inject(
   "drugs",
   "dosages",
   "tools",
-  "recipes"
+  "recipes",
+  "warnings"
 )(
   observer(
     class RecipeDrug extends React.Component {
@@ -109,7 +111,7 @@ const RecipeDrug = inject(
       renderRules() {
         let {
           dosages: { getFromBase },
-          tools: { names, shortnames, round },
+          tools: { names, shortnames, latshortnames, latnames, round },
           drugKey: key,
           drugs,
           actions: { UIText },
@@ -122,14 +124,34 @@ const RecipeDrug = inject(
 
         let obj = { dosage: [], rules: [] };
 
+        if (dosage && dosage.form) {
+          obj.dosage.push(latshortnames[dosage.form] || latnames[dosage.form] || names[dosage.form]);
+        } else if (dosage.form_name) {
+          obj.dosage.push(dosage.form_name);
+        }
+
         if (calc && calc.count && calc.countUnit) {
           // let str = ""; //`${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
           if (calc.fullDosage) {
             let dosageValue = getFromBase(drug.calc.dosageUnit, calc.dosage);
             let fullDosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
-            let dosageName = shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit];
+            let dosageName =
+              // latshortnames[drug.calc.dosageUnit] ||
+              // latnames[drug.calc.dosageUnit] ||
+              shortnames[drug.calc.dosageUnit] || names[drug.calc.dosageUnit] || "";
 
-            obj.dosage.push(`${_.map(dosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
+            let packDosageName =
+              latshortnames[drug.dosage?.dosage[0]?.id_1] ||
+              latnames[drug.dosage?.dosage[0]?.id_1] ||
+              shortnames[drug.dosage?.dosage[0]?.id_1] ||
+              names[drug.dosage?.dosage[0]?.id_1] ||
+              "";
+            // console.log({ packDosageName });
+            obj.dosage.push(
+              `${_.map(drug.dosage?.dosage, (dos) =>
+                parseFloat(round(dos.value_2 ? dos.value_1 / dos.value_2 : dos.value_1))
+              ).join(" + ")} ${packDosageName}`
+            );
             obj.rules.push(`${_.map(fullDosageValue, (dos) => parseFloat(round(dos))).join(" + ")} ${dosageName}`);
           }
         }
@@ -189,6 +211,11 @@ const RecipeDrug = inject(
         return inputValue;
       }
 
+      componentDidMount() {
+        // this.setState({ numero: this.numero });
+        this.handleChangeCount({ target: { value: this.numero().toString() } });
+      }
+
       componentDidUpdate(prevProps, prevState) {
         let {
           drugs: { drug }, //drugs, drugsDosages, currDrug, setDosageParams
@@ -218,9 +245,39 @@ const RecipeDrug = inject(
         this.props.recipes["drugKeysForPrescription"].push(key);
       }
 
+      numero = () => {
+        let {
+          dosages: { dosage: dose },
+          drugKey: key,
+          drugs,
+          active,
+          recipes: { drugKeysForPrescription, maxcount },
+        } = this.props;
+        let drug = drugs.drug.get(key) || {};
+
+        let numero = 0;
+        if (
+          drug.calc.countUnit !== "342" ||
+          !drug.calc.count ||
+          !drug.calc.dayCount ||
+          !(drug.schedule && drug.schedule.dateStart && drug.schedule.dateFinish)
+        )
+          return numero;
+
+        if (drug.calc.count) numero = drug.calc.count;
+        if (drug.calc.dayCount) numero = numero * drug.calc.dayCount;
+        if (drug.schedule && drug.schedule.dateStart && drug.schedule.dateFinish) {
+          let startDate = moment(drug.schedule.dateStart, "x");
+          let finishDate = moment(drug.schedule.dateFinish, "x");
+
+          numero = numero * (finishDate.diff(startDate, "days") + 1);
+        }
+        
+        return parseInt(numero);
+      };
+
       render() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
           dosages: { dosage: dose },
           drugKey: key,
           drugs,
@@ -228,7 +285,7 @@ const RecipeDrug = inject(
           recipes: { drugKeysForPrescription, maxcount },
         } = this.props;
         const { t } = this.props.actions;
-        let { edit, text, from } = this.state;
+        let { edit, text, from, numero } = this.state;
 
         // console.log({ drugKeysForPrescription });
 
@@ -239,6 +296,11 @@ const RecipeDrug = inject(
         let { name, mnnname, level, tn, type, dosage, schedule, helpers, specials, recipeCount } = drug;
 
         let names = drugDosages.names || {};
+
+        let urlArr = ["/concept/dozes"];
+        if (helpers.step) urlArr.push(helpers.step);
+
+        let url = urlArr.join("/");
 
         // let descArr = []
         let rules = this.renderRules();
@@ -255,13 +317,15 @@ const RecipeDrug = inject(
         // if(dosage.pack.dosage) descArr.push(dosage.pack.dosage)
         // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
         // let recipeCount = 0;
-        let { inputValue } = this;
+        let checked = drugKeysForPrescription.includes(key);
+        let countFilled = recipeCount !== "0" && recipeCount !== "";
         return (
           <List.Item>
             <List.Content floated="left">
               <Checkbox
+                disabled={!countFilled}
                 // disabled={!drugKeysForPrescription.includes(key) && drugKeysForPrescription.length >= maxcount}
-                checked={drugKeysForPrescription.includes(key)}
+                checked={checked}
                 onChange={() => this.addOrRemoveDrugToPrescription(key)}
               />
             </List.Content>
@@ -277,6 +341,11 @@ const RecipeDrug = inject(
                     disabled={from === "dosage"}
                   >
                     <Icon name="undo" />
+                  </Button>
+                )}
+                {false && (
+                  <Button disabled={drug.group !== 0} as={RouterLink} to={url} onClick={this.getLF} icon>
+                    <Icon name="tint" />
                   </Button>
                 )}
                 <Button icon onClick={this.edit}>
@@ -299,10 +368,12 @@ const RecipeDrug = inject(
                   <input
                     type="text"
                     value={recipeCount}
+                    style={!countFilled ? { border: "1px solid red" } : {}}
                     name="recipeCount"
                     onChange={this.handleChangeCount}
                     className="recipeCount"
-                  />
+                  />{" "}
+                  {!countFilled && <span style={{ color: "red" }}> {t("fill_numero")}</span>}
                 </List.Description>
                 <List.Description>
                   S.: {rules.rules} {!edit && specials && `(${specials})`}

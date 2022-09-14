@@ -264,6 +264,7 @@ class Patients {
 
         if (data.lang && this.stores.actions.active_language !== data.lang) {
           this.stores.actions.active_language = data.lang;
+          await localStorage.setItem("lang", data.lang);
           this.stores.tools.getAllService();
         }
 
@@ -817,7 +818,9 @@ class Patients {
         }
         return data;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => {
+        this.stores.actions.makeAlerts({ alerts });
+      },
       always: (data) => {
         this.stores.actions.makeAlerts(data);
         this.stores.actions.loading = false;
