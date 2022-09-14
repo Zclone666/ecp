@@ -4,6 +4,8 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   ru: {
     translation: {
+      name_logo: "Электронный клинический фармаколог",
+      cdss: "Система поддержки принятия врачебных решений",
       // "Welcome to React": "добро пожаловать в экф",
       patient_patients: "Пациенты",
       main_menu_exit: "Выход",
@@ -33,6 +35,11 @@ const resources = {
       weight: "Вес",
       body_mass_index: "ИМТ",
       body_surface_area: "ППТ",
+
+      lastname_placeholder: "Иванов",
+      firstname_placeholder: "Иван",
+      patronymic_placeholder: "Иванович",
+      date_placeholder: "ДД.ММ.ГГГГ",
 
       kg_m2: "кг/м²",
       m2: "м²",
@@ -132,6 +139,8 @@ const resources = {
       recipe_form: "Форма рецептурного бланка",
       recipe_state_time: "Время действия рецепта",
       comment_prescription: "Комментарий к рецепту",
+
+      fill_numero: "Заполните поле!",
 
       print_recipe: "Печать рецепта",
       code_pharmacy: "Ваш код для аптеки",
@@ -306,7 +315,7 @@ const resources = {
       birth_min: "р.",
       year_birth_min: "г.р.",
 
-      welcome: "Здравствуйте",
+      greetings: "Здравствуйте",
 
       sm: "см",
       kg: "кг",
@@ -383,6 +392,16 @@ const resources = {
       sources: "Источники",
 
       date_commencement_therapy: "Дата начала терапии",
+    },
+  },
+  en: {
+    translation: {
+      greetings: "Welcome",
+      contact_administrator: "Please, contact the administrator.",
+      attention_doctor_not_specified: "Attention! The doctor is not set.",
+      report_an_error: "Report an error", /// //// ///
+      notify_about_error: "Report an error",
+      enter_message_text: "Enter message text",
     },
   },
 };

@@ -15,6 +15,8 @@ class Tools {
 
   names = {};
   shortnames = {};
+  latnames = {};
+  latshortnames = {};
 
   units = {};
   unitarrs = {};
@@ -37,6 +39,8 @@ class Tools {
       searchClinicRows: observable,
       names: observable,
       shortnames: observable,
+      latnames: observable,
+      latshortnames: observable,
       units: observable,
       unitarrs: observable,
       unitsPharm: observable,
@@ -98,6 +102,49 @@ class Tools {
 
         await this.setNames(names, nameshort);
         this.setUnits(units, unitrefs, unitpharm);
+        this.stores.actions.loading = false;
+      },
+      fail: (alerts) => {},
+      always: (data) => {
+        this.stores.actions.loading = false;
+      },
+    });
+  }
+
+  async getLatinNames(units) {
+    units = units || [];
+    this.stores.actions.loading = true;
+    if (units.length > 0 && units.every((unit) => _.keys(this.units).includes(unit))) {
+      return;
+    }
+
+    let arr = [];
+    this.stores.drugs.drug.forEach((drug, i) => {
+      drug.id && arr.push(drug.id);
+      drug.freq_id && arr.push(drug.freq_id);
+      drug.duration_id && arr.push(drug.duration_id);
+      drug.calc.countUnit && arr.push(drug.calc.countUnit);
+      drug.calc.dosageUnit && arr.push(drug.calc.dosageUnit);
+      drug.dosage.method && arr.push(drug.dosage.method);
+      drug.dosage.form && arr.push(drug.dosage.form);
+      drug.dosage?.dosage && drug.dosage?.dosage[0]?.id_1 && arr.push(drug.dosage.dosage[0].id_1);
+    });
+
+    let { active_language } = this.stores.actions;
+    let data = {
+      active_language: "la",
+      ids: arr,
+    };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: `info/Names`,
+      data,
+      success: async (data) => {
+        // console.log(data);
+        Object.assign(this.latnames, data.names);
+        Object.assign(this.latshortnames, data.shortnames);
+        // await this.setNames(names, nameshort);
         this.stores.actions.loading = false;
       },
       fail: (alerts) => {},
@@ -282,9 +329,13 @@ class Tools {
         this.unitsSchedule.freq = schedule.freq;
         this.unitsSchedule.duration = schedule.duration;
 
+        this.setNames(schedule.names);
+
         this.techReady = true;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => {
+        this.stores.actions.makeAlerts({ alerts });
+      },
       always: (data) => {},
     });
   }
@@ -467,19 +518,19 @@ class Tools {
         this.stores.actions.loading = false;
       },
       fail: (alerts) => {
-        this.stores.actions.makeAlerts(data);
+        this.stores.actions.makeAlerts(alerts);
         this.stores.actions.loading = false;
       },
       always(data) {},
     });
   }
 
-  round = (val, dec = 3) => {
+  round = (val, dec = 4) => {
     let delimiter = Math.pow(10, dec);
     return Math.round(val * delimiter) / delimiter;
   };
 
-  getFromBase = (unitId, value, double = 4, name = null) => {
+  getFromBase = (unitId, value, double = 6, name = null) => {
     let { round } = this;
 
     let unit = this.units[unitId];

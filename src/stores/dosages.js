@@ -212,7 +212,7 @@ class Dosages {
     // console.log('HERE, ' + drug_obj.key);
     // console.log({ "drug_obj.fpid": drug_obj.fpid });
     if (currentDosages && !flag && !drug_obj.fpid) {
-      await this.isSolute(drug_obj.key);
+      if (!drug_obj.dosage?.dosage?.length) await this.isSolute(drug_obj.key);
       await this.stores.drugs.setBaseDosages(drug_obj.key);
       // await this.stores.drugs.getDosageParams()
       return true;

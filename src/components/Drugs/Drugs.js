@@ -184,6 +184,12 @@ const Drugs = inject(
         }
       };
 
+      componentDidMount() {
+        if (this.props.isRecipe) {
+          this.props.tools.getLatinNames();
+        }
+      }
+
       render() {
         let {
           actions: { selectedDrug, makeLiquids, disabled, topview_disabled },
