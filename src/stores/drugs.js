@@ -405,11 +405,25 @@ class Drugs {
 
     }
 
+    /**
+     * @desc shitfix
+     * @todo иногда значения dosageUnit - число, хотя должна быть строка
+     * @param {*} dosageUnit 
+     */
+
+    const dosageUnitFix = dosageUnit => {
+      if (typeof dosageUnit === "number") {
+        return "" + dosageUnit;
+      }
+      return dosageUnit;
+
+    }
+
     currentDrug.calc = {
       ...currentDrug.calc,
       dosage: dos,
       count,
-      dosageUnit: dosageUnit == 999999 ? "248" : dosageUnit,
+      dosageUnit: dosageUnit == 999999 ? "248" : dosageUnitFix(dosageUnit),
       dayCount,
       fullDosage: fullDosageFix(fullDosage),
       weightDosage,
