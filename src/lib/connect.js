@@ -11,30 +11,30 @@ export const PRE_PATH = "";
 export const PRODUCTION = false;
 export const API_SERVER = (() => {
   if (window.location.host.includes("84.23.32.38:9031")) {
-    return "http://84.23.32.38:9004";
+    return "http://84.23.32.38:9074";
   } else if (
     // window.location.host.includes("localhost") ||
     window.location.host.includes("178.176.38.245:9031")
     // || window.location.host.includes("socmedica.dev")
   ) {
-    return "http://178.176.38.245:9004";
+    return "http://178.176.38.245:9074";
   }
   //------------------------------------
   return !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
-    ? "http://" + window.location.hostname + ":9004"
+    ? "http://" + window.location.hostname + ":9074"
     : SERVER === "prod" || window.location.host.includes("socmedica.com")
-    ? "https://service.socmedica.com:9004"
-    : "https://service.socmedica.dev:9004";
+    ? "https://service.socmedica.com:9074"
+    : "https://service.socmedica.dev:9074";
 })();
-// (window.location.host.includes("http://84.23.32.38:9031") ? "http://84.23.32.38:9004" : false) ||
+// (window.location.host.includes("http://84.23.32.38:9031") ? "http://84.23.32.38:9074" : false) ||
 // (window.location.host.includes("localhost") || window.location.host.includes("socmedica.dev")
-//   ? "178.176.38.245:9004"
+//   ? "178.176.38.245:9074"
 //   : false) ||
 // (!window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"]))
-//   ? "http://" + window.location.hostname + ":9004"
+//   ? "http://" + window.location.hostname + ":9074"
 //   : SERVER === "prod" || window.location.host.includes("socmedica.com")
-//   ? "https://service.socmedica.com:9004"
-//   : "https://service.socmedica.dev:9004";
+//   ? "https://service.socmedica.com:9074"
+//   : "https://service.socmedica.dev:9074";
 
 export const SERVICE = "108"; //"4";//43
 export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
