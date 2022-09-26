@@ -1,3 +1,3 @@
 export const SERVER = "prod";
-export const TYPE = "free";
+export const TYPE = "pro";
 // export const LOGIN = "disabled_privateKeyOnly";
