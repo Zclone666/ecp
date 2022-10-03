@@ -32,7 +32,7 @@ class Patients {
     this.patient = observable.map({}, "patient");
     this.last = observable.map({}, "last");
 
-    autorun(() => {});
+    autorun(() => { });
   }
 
   /**
@@ -307,6 +307,31 @@ class Patients {
           genpassport_exist,
         } = data.patient;
 
+
+        // FIO PARSING
+
+        if (!lastname && !firstname && !patronymic) {
+          const patronymicTest = /^.+(ич|вна|чна)$/i;
+          // name = " Иван  Васильевич Петров-Водкин";
+          name = name.trim();
+          name = name.replace(/\s+/g, ' ');
+          const nameArray = name.split(" ");
+
+          if (nameArray.length === 3) {
+            if (patronymicTest.test(nameArray[1])) {
+              lastname = nameArray[2];
+              firstname = nameArray[0];
+              patronymic = nameArray[1];
+            } else {
+              lastname = nameArray[0];
+              firstname = nameArray[1];
+              patronymic = nameArray[2];
+            }
+          }
+        }
+
+        // <== FIO PARSING
+
         let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
         let squareIndex = parseFloat((0.007184 * Math.pow(growth, 0.725) * Math.pow(weight, 0.425)).toFixed(2));
         this.stores.actions.patientForm = {
@@ -501,7 +526,7 @@ class Patients {
 
         return data.patient || {};
       },
-      fail: (alerts) => {},
+      fail: (alerts) => { },
       always: (data) => {
         this.stores.actions.makeAlerts(data);
         if (this.stores?.actions?.miskey) {
@@ -624,8 +649,8 @@ class Patients {
 
         return this.setPatient(data.patient);
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
