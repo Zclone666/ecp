@@ -191,6 +191,7 @@ class Warnings {
       path: "check/Warnings", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
       success: async (data) => {
+        console.log("1");
         //console.log('DATA', data);
         if (data && data.warnings && _.isArray(data.warnings)) {
           this.info.names = _.clone(data.names);
@@ -201,6 +202,7 @@ class Warnings {
           this.info.urls = _.clone(data.urls);
           this.info.hinttype = _.clone(data.hinttype);
           this.info.fields = _.clone(data.fields);
+          console.log("2");
 
           this.cautionsTitle = data.cautiontitle && data.names[data.cautiontitle];
           this.cautions =
@@ -213,6 +215,8 @@ class Warnings {
           let warnIcons = {};
           let warnForDrug = {};
           let warnForGroup = {};
+          
+        console.log("2");
           await data.warnings.forEach((item, i) => {
             if (!item.id || item.id.length < 1) item.id = null; //moment().format('x').toString()
             item.key = "warnkey_" + i;
@@ -264,10 +268,12 @@ class Warnings {
             }
           });
 
+          console.log("3");
           this.icons = _.assignIn(this.warnIcons, warnIcons);
           this.groups = _.assignIn(this.groups, warnGroups);
         }
 
+        console.log("4");
         this.stores.actions.loading = false;
       },
       fail: (alerts) => {
