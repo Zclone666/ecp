@@ -214,13 +214,14 @@ const Conflicts = inject(
                   return (
                     <Grid.Column
                       className={activeIndex !== i ? "conflict" : ""}
+                      key={"warn" + i}
                       style={
                         activeIndex !== i
                           ? { width: "auto", padding: "0" }
                           : { width: "auto", paddingTop: 0, paddingRight: 0, overflow: "hidden" }
                       }
                     >
-                      <Accordion key={"warn" + i} className={activeIndex !== i ? "conflict" : ""}>
+                      <Accordion className={activeIndex !== i ? "conflict" : ""}>
                         {activeIndex !== i ? (
                           <Popup
                             content={
@@ -261,10 +262,10 @@ const Conflicts = inject(
                           active={activeIndex === i}
                           style={{ display: activeIndex === i ? "flex" : "none" }}
                         >
-                          {item.values.map((element) => {
+                          {item.values.map((element, i2) => {
                             return (
                               <Grid.Column
-                                key={"warn" + i}
+                                key={`warnIcons_${i}_${i2}`}
                                 className="conflict"
                                 style={{ paddingTop: 0, paddingRight: 0 }}
                               >

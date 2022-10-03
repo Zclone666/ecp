@@ -2,8 +2,10 @@ image: docker:stable
 variables:
     PROJECT: "ecp2front"
     PROJECT_FREE: "ecp2frontfree"
+    PROJECT_FREE_NEWEMC: "ecp2frontfree-newemc"
     PORT: 9009
     PORT_FREE: 9031
+    PORT_FREE_NEWEMC: 9071
 
 
 include: 
