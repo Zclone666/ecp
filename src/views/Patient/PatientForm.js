@@ -121,10 +121,10 @@ const PatientForm = inject(
           this.props.patients.current.masIndex =
             this.props.patients.current.weight && this.props.patients.current.growth
               ? parseFloat(
-                  (this.props.patients.current.weight / Math.pow(this.props.patients.current.growth / 100, 2)).toFixed(
-                    2
-                  )
+                (this.props.patients.current.weight / Math.pow(this.props.patients.current.growth / 100, 2)).toFixed(
+                  2
                 )
+              )
               : 0;
           this.props.patients.current.squareIndex = parseFloat(
             (
@@ -273,6 +273,48 @@ const PatientForm = inject(
         }
       };
 
+      handleConfirmSearch = (e) => {
+        const { editForm } = this.props;
+        let { showPatientPassport, search_patient } = this.state;
+        let name = search_patient;
+        let lastname = "";
+        let firstname = "";
+        let patronymic = "";
+
+        if (!showPatientPassport) {
+          // FIO PARSING
+
+          const patronymicTest = /^.+(ич|вна|чна)$/i;
+          // name = " Иван  Васильевич Петров-Водкин";
+          name = name.trim();
+          name = name.replace(/\s+/g, ' ');
+
+          const nameArray = name.split(" ");
+
+          if (nameArray.length === 3) {
+            if (patronymicTest.test(nameArray[1])) {
+              lastname = nameArray[2];
+              firstname = nameArray[0];
+              patronymic = nameArray[1];
+            } else {
+              lastname = nameArray[0];
+              firstname = nameArray[1];
+              patronymic = nameArray[2];
+            }
+          }
+
+          // <== FIO PARSING
+
+          this.props.actions.patientPassport["lastname"] = lastname;
+          this.props.actions.patientPassport["firstname"] = firstname;
+          this.props.actions.patientPassport["patronymic"] = patronymic;
+        }
+
+        editForm && editForm();
+        this.setState({ showPatientPassport: !showPatientPassport });
+
+      };
+
       resultRenderer = ({ name, level, tn, type }) => {
         return (
           <div>
@@ -380,12 +422,12 @@ const PatientForm = inject(
                   </Form.Field>
                 )} */}
                 <Form.Field width={3}>
-                  <Button onClick={() => this.setState({ showPatientPassport: !showPatientPassport })}>
+                  <Button onClick={this.handleConfirmSearch}>
                     {showPatientPassport
                       ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
                       : id
-                      ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
-                      : t("patinet_card_passport_label")}
+                        ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
+                        : t("patinet_card_passport_label")}
                   </Button>
                 </Form.Field>
                 <Form.Field width={2}>

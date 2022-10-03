@@ -78,6 +78,7 @@ class Drugs {
   * @param drug - объект драга
   */
   validateDrug(drug) {
+    // return {"validateDrug":""};
     const validationContext = DrugModel.schema.newContext();
     validationContext.validate(drug);
     return validationContext.validationErrors();
@@ -87,6 +88,7 @@ class Drugs {
   // метод валидации текущего драга на соответствие модели
   */
   get validateCurrentDrug() {
+    // return {"validateCurrentDrug":""};
     const validationContext = DrugModel.schema.newContext();
     validationContext.validate(this.current);
     return validationContext.validationErrors();
@@ -405,11 +407,25 @@ class Drugs {
 
     }
 
+    /**
+     * @desc shitfix
+     * @todo иногда значения dosageUnit - число, хотя должна быть строка
+     * @param {*} dosageUnit 
+     */
+
+    const dosageUnitFix = dosageUnit => {
+      if (typeof dosageUnit === "number") {
+        return "" + dosageUnit;
+      }
+      return dosageUnit;
+
+    }
+
     currentDrug.calc = {
       ...currentDrug.calc,
       dosage: dos,
       count,
-      dosageUnit: dosageUnit == 999999 ? "248" : dosageUnit,
+      dosageUnit: dosageUnit == 999999 ? "248" : dosageUnitFix(dosageUnit),
       dayCount,
       fullDosage: fullDosageFix(fullDosage),
       weightDosage,
