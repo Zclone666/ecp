@@ -78,6 +78,7 @@ class Drugs {
   * @param drug - объект драга
   */
   validateDrug(drug) {
+    // return {"validateDrug":""};
     const validationContext = DrugModel.schema.newContext();
     validationContext.validate(drug);
     return validationContext.validationErrors();
@@ -87,6 +88,7 @@ class Drugs {
   // метод валидации текущего драга на соответствие модели
   */
   get validateCurrentDrug() {
+    // return {"validateCurrentDrug":""};
     const validationContext = DrugModel.schema.newContext();
     validationContext.validate(this.current);
     return validationContext.validationErrors();
