@@ -7,17 +7,14 @@ import AnimateHeight from "react-animate-height";
 import {
   // Menu,
   List,
-  Transition,
-  Button,
   Icon,
   Segment,
-  Label,
+  Responsive,
   Table,
   Dimmer,
   Header,
   Feed,
   Checkbox,
-  Responsive,
   Message,
 } from "semantic-ui-react";
 
@@ -52,13 +49,13 @@ const Clinrec = inject(
       };
 
       checkRecoursive = (id, check) => {
-        if (this.props.clinrecs.clinrec[id].type == "Drug") {
+        if (this.props.clinrecs.clinrec[id].type === "Drug") {
           this.props.clinrecs.clinrec[id].check = check;
         }
         let arr = _.cloneDeep(this.props.clinrecs.clinrec[id].childs);
-        if (this.props.clinrecs.clinrec[id].type == "OR" && arr[0]) {
+        if (this.props.clinrecs.clinrec[id].type === "OR" && arr[0]) {
           arr.forEach((item, i) => {
-            if (i == 0) {
+            if (i === 0) {
               this.checkRecoursive(item, check);
             } else {
               this.checkRecoursive(item, false);
@@ -219,7 +216,7 @@ const Clinrec = inject(
 
       renderRegimen = (child, childId) => {
         let {
-          clinrecs: { clinrec, cources },
+          clinrecs: { cources },
         } = this.props;
         let { t } = this.props.actions;
         // console.log({ cources, clinrec });
@@ -287,7 +284,7 @@ const Clinrec = inject(
 
       renderDrug = (obj) => {
         let {
-          clinrecs: { clinrec, names, shortnames },
+          clinrecs: { names, shortnames },
           warnings: { getGroup },
         } = this.props;
         // console.log(obj);
@@ -311,7 +308,7 @@ const Clinrec = inject(
             rules.push(names[item]);
           });
         }
-        let { color, group } = getGroup(obj.warning);
+        let { color } = getGroup(obj.warning);
 
         return (
           <List.Item className={`nowarnings`}>
@@ -383,15 +380,13 @@ const Clinrec = inject(
 
       renderTable = (obj) => {
         let {
-          clinrecs: { clinrec },
-          tools: { names, shortnames },
-          warnings: { getGroup },
+          tools: { shortnames },
         } = this.props;
         // console.log(obj);
         if (!obj) return null;
         // console.log({ obj });
         let { name, type, dosage, specials, freq, duration } = obj;
-        let { method_name, form_name, intervalpreset, schedulepreset, comment } = dosage;
+        let { method_name, form_name } = dosage;
         let helpers = {};
         if (dosage.dosage && dosage.dosage.length > 0) {
           helpers.dosage = {
@@ -469,7 +464,7 @@ const Clinrec = inject(
                       <List.Header>{child.name}</List.Header>
                       {child.comment && <List.Description>{child.comment}</List.Description>}
                       <List.Description>
-                        {child.type == "Unknown" ? "" : child.type + <br />}
+                        {child.type === "Unknown" ? "" : child.type + <br />}
                         {child.efficiency}
                       </List.Description>
                       <List.Item>
@@ -487,28 +482,20 @@ const Clinrec = inject(
         switch (child.type) {
           case "Drug":
             return this.renderDrug(child);
-            break;
           case "GroupSeq":
             return this.renderGroup(child);
-            break;
           case "Regimen":
             return this.renderRegimen(child, childId);
-            break;
           case "OR":
             return this.renderRadio(child, childId);
-            break;
           case "AND":
             return this.renderCheck(child, childId);
-            break;
           case "FG":
             return this.renderFG(child, childId);
-            break;
           case "Unknown":
             return this.renderFG(child, childId);
-            break;
           case "Select":
             return this.renderSelect(child, childId);
-            break;
           default:
             return this.renderRecoursive(child, childId);
         }
@@ -516,7 +503,6 @@ const Clinrec = inject(
 
       render() {
         let {
-          router,
           clinrecs: { clinrec, ready, hasTherapy },
         } = this.props;
         const { t } = this.props.actions;
@@ -539,7 +525,7 @@ const Clinrec = inject(
                         let course = clinrec[courseId];
                         if (!course) return null;
                         // console.log({item});
-                        let openMe = "calc" + courseId === opened || rec.childs.length == 1;
+                        let openMe = "calc" + courseId === opened || rec.childs.length === 1;
                         return (
                           <List.Item key={"calc" + i} style={{ cursor: "pointer" }}>
                             {rec.childs.length > 1 && <List.Icon name={`angle ${openMe ? "down" : "right"}`} />}

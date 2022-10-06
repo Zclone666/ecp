@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { inject, observer } from "mobx-react";
-import { List, Menu, Responsive, Segment, Checkbox, Popup, Icon, Header, Message } from "semantic-ui-react";
+import { List, Menu, Segment, Checkbox, Popup, Icon, Header, Message } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
@@ -60,10 +60,10 @@ const ClinrecStartPage = inject(
                 )}
                 {sick.clinicalreference && _.keys(sick.clinicalreference).length
                   ? _.keys(sick.clinicalreference).map((id) => {
-                      let item = { id, ...sick.clinicalreference[id] };
-                      return this.renderClinrec(item);
-                    })
-                  : sick.items?.length == 0 && <Message size="tiny">Нет доступных клинреков</Message>}
+                    let item = { id, ...sick.clinicalreference[id] };
+                    return this.renderClinrec(item);
+                  })
+                  : sick.items?.length === 0 && <Message size="tiny">Нет доступных клинреков</Message>}
               </List.Content>
             </List.Item>
           );
@@ -111,9 +111,6 @@ const ClinrecStartPage = inject(
         const { t } = this.props.actions;
         // console.log("state: ", this.state);
         const { clinicalGuidelinesExist } = this.props.clinrecs;
-        const diseases = this.props.patients.current.disease
-          .map((d) => d.id)
-          .concat(this.props.patients.current.co_disease.map((d) => d.id));
 
         const disabled = !_.findKey(this.state.checked, function (o) {
           return o;

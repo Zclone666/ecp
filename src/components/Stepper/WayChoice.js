@@ -3,17 +3,17 @@ import { inject, observer } from 'mobx-react';
 
 import RouterLink from '../../router/a'
 import {
-  Responsive,
   Grid,
   Card,
   Icon,
-  Segment
+  Segment,
+  Responsive
 } from 'semantic-ui-react'
 import { withTranslation } from "react-i18next";
 // import _ from 'lodash';
 
 const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observer(class WayChoice extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       viewType: 0
@@ -21,13 +21,13 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
   }
   handleOnUpdate = (event, data) => {
     // console.log({event, data});
-    if( data.width > 479 ){
+    if (data.width > 479) {
       this.setState({ viewType: 'columns' })
-    }else{
+    } else {
       this.setState({ viewType: 'rows' })
     }
   }
-  render(){
+  render() {
     let {
       router: { values }
     } = this.props

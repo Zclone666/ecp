@@ -13,7 +13,6 @@ import Analog from "../Analog";
 import DrugInfo from "../DrugInfo";
 import Liquid from "../Liquid";
 import Clinrecs from "../Clinrecs";
-import ClinrecStartPage from "../Clinrecs/ClinrecStartPage";
 import ClinrecStartPageNew from "../Clinrecs/ClinrecStartPageNew";
 import FgReplace from "../FgReplace";
 
@@ -34,14 +33,13 @@ const Page = inject(
         //this.contextRef = createRef()
       }
 
-      saveDoze = () => {};
+      saveDoze = () => { };
 
       back = () => {
         this.props.router.push("/");
       };
 
       render() {
-        let page = (this.props.router.values && this.props.router.values.page) || "none";
         let name = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
         return (
           {

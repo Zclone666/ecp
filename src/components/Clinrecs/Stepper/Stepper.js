@@ -2,14 +2,11 @@ import React, { Component, createRef } from "react";
 import { inject, observer } from "mobx-react";
 
 import Slider from "react-slick";
-import RouterLink from "../../../router/a";
 
-import Binary from "../Checker/Binary";
-import Value from "../Checker/Value";
 import Page from "../Checker/Page";
 import Clinrec from "../Clinrec";
 
-import { Transition, Accordion, Icon, Step, Responsive, List, Header } from "semantic-ui-react";
+import { Icon, Step, Responsive, Header } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 import "./Stepper.css";
@@ -51,9 +48,9 @@ const Stepper = inject(
           router: { values },
         } = this.props;
 
-        if (values.step == "result" && prevState.activeIndex > _.keys(checker).length) return;
+        if (values.step === "result" && prevState.activeIndex > _.keys(checker).length) return;
 
-        if (values.step == "result") {
+        if (values.step === "result") {
           this.setState({ activeIndex: _.keys(checker).length + 1 }, () => {
             this.props.actions.clinrecCheckerStep = this.state.activeIndex;
             this.goTo(parseInt(this.state.activeIndex - 1 || 0));
@@ -81,11 +78,9 @@ const Stepper = inject(
       };
 
       render() {
-        let { activeIndex, viewType } = this.state;
         let {
-          router: { values },
           clinrecs: { checker },
-          actions: { clinrecCheckerStep, clinrecCheckerData },
+          actions: { clinrecCheckerStep }, // , clinrecCheckerData
           patients: {
             current: { disease },
           },
@@ -132,8 +127,6 @@ const Stepper = inject(
             >
               <Slider ref={this.sliderRef} {...settings}>
                 {_.keys(checker).map((id, i) => {
-                  let page = checker[id];
-                  let parentFlag = null;
                   // console.log({id, page});
                   return <Page id={id} key={"page" + id} />;
                 })}

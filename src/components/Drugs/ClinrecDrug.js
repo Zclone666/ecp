@@ -1,11 +1,7 @@
 import React, { Fragment } from "react";
 import { inject, observer } from "mobx-react";
 
-import { useDrag } from "react-dnd";
-
-import RouterLink from "../../router/a";
-
-import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "semantic-ui-react";
+import { List, Feed, Responsive } from "semantic-ui-react";
 
 import _ from "lodash";
 
@@ -22,7 +18,7 @@ const ClinrecDrug = inject("actions", "router", "tools", "drugs", "warnings", "d
     let {
       dosages: { getFromBase },
       tools: { names, shortnames, round },
-      drug: { freq, duration, calc, dosage, helpers },
+      drug: { freq, duration, calc, helpers },
       drug,
       actions: { UIText },
     } = this.props;
@@ -50,9 +46,7 @@ const ClinrecDrug = inject("actions", "router", "tools", "drugs", "warnings", "d
     let {
       actions: { selectedDrug, selectedConflict },
       router: { values },
-      drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage: dose },
-      warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
       drug,
       active,
       style,
@@ -72,7 +66,6 @@ const ClinrecDrug = inject("actions", "router", "tools", "drugs", "warnings", "d
     if (helpers.way) urlArr.push(helpers.way);
     if (helpers.step) urlArr.push(helpers.step);
 
-    let url = urlArr.join("/");
     // let url = `/liquid/calc/${values.liquid}${(drugDosages.url && drugDosages.url.replace('/concept', '')) || '/dozes'}`
     let className = selectedDrug === drug.key ? "selected" : "";
     className += selectedDrug === drug.key || active || (!selectedDrug && !selectedConflict) ? "" : " unused";
@@ -89,7 +82,7 @@ const ClinrecDrug = inject("actions", "router", "tools", "drugs", "warnings", "d
               <Feed.Summary>
                 <span className="underlined">
                   {/* {name} */}
-                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
                 </span>
                 {type === "TN" && (
                   <span>
@@ -117,7 +110,7 @@ const ClinrecDrug = inject("actions", "router", "tools", "drugs", "warnings", "d
                 <Feed.Summary>
                   <span className="underlined">
                     {/* {name} */}
-                    <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                    <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
                   </span>
                   {type === "TN" && (
                     <span>

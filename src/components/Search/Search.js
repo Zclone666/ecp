@@ -3,16 +3,13 @@ import cx from 'classnames'
 import { Search, SearchResults } from 'semantic-ui-react'
 
 class SearchInput extends Search {
-  constructor(props){
-    super(props)
 
-  }
   renderResultsMenu = () => {
     const { open } = this.state
-    const { resultClassName, height } = this.props
+    const { resultclassname, height } = this.props
     const resultsClasses = open ? 'visible' : ''
     const menuContent = this.renderMenuContent()
-    const classes = cx(resultsClasses, resultClassName)
+    const classes = cx(resultsClasses, resultclassname)
 
     if (!menuContent) return
 
