@@ -8,8 +8,6 @@ import NewPass from "../views/NewPass";
 import ResetPass from "../views/ResetPass";
 import Manual from "../views/Manual";
 import LicenseAgreement from "../views/LicenseAgreement";
-import ClinrecStartPage from "../views/Clinrecs/ClinrecStartPage";
-import ClinrecStartPageNew from "../views/Clinrecs/ClinrecStartPageNew";
 
 export default {
   "/": { section: "main", name: "main", render: <Main /> },

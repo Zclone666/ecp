@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
-import RouterLink from "../../../router/a";
-import { List, Icon, Form, Label, Segment, Input, Button, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
+import { Icon, Form, Label, Segment, Input, Dropdown, Header, TextArea, Dimmer } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import clarifications from "../../../constants/hardcode";
 
 import { checkDouble, clearDouble } from "../../../lib/helpers";
 
@@ -33,7 +31,8 @@ const LiquidCalculator = inject(
       }
       handleChangeUnit = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         // console.log({ name, value });
         this.setState({ [name]: value });
@@ -67,16 +66,13 @@ const LiquidCalculator = inject(
         let {
           actions: {
             liquidForm: {
-              calc: { dosage, count, dosageUnit, dayCount, durationCount, durationUnit },
+              calc: { durationCount },
             },
           },
           drugs: { recalcLiquidParams },
-          dosages: { getToBase, getFromBase },
         } = this.props;
         // console.log({ name, value });
         value = clearDouble(value);
-        let double = false;
-        console.log({ name, value });
 
         if (name === "specials") {
           this.props.actions.liquidForm[name] = value;
@@ -84,15 +80,14 @@ const LiquidCalculator = inject(
         }
 
         if (!checkDouble(value)) {
-          double = true;
-          if (name == "patient.weight") {
+          if (name === "patient.weight") {
             this.props.patients.current.weight = value;
             // weight = parseFloat(value)
           } else {
             this.props.actions.liquidForm.calc[name] = value;
           }
           return;
-        } else if (value != parseFloat(value) && !(value.split(" + ") && value.split(" + ").length > 1)) {
+        } else if (value !== parseFloat(value) && !(value.split(" + ") && value.split(" + ").length > 1)) {
           return;
         }
 
@@ -118,8 +113,8 @@ const LiquidCalculator = inject(
       };
 
       setPreset = (e, { value }) => {
-        let { getToBase, getFromBase, calcValues } = this.props.dosages;
-        let { dayCount, dayDosage, dayWeightDosage } = this.props.actions.liquidForm.calc;
+        let { getToBase } = this.props.dosages;
+        let { dayCount } = this.props.actions.liquidForm.calc;
         let { freq } = this.props.tools.unitsSchedule;
         let preset = { tpl: freq[value] };
         // this.props.drugs.current.freq = value;
@@ -133,11 +128,11 @@ const LiquidCalculator = inject(
 
         let unitCount = getToBase(preset.tpl[0].unit_1, preset.tpl[0].value_1) / dayInMinutes;
 
-        if (preset.tpl[0].type == "count") {
+        if (preset.tpl[0].type === "count") {
           dayCount = unitCount;
           // dayDosage = _.map( (fullDosage || [0]), (dos) => { return preset.tpl[0].value_1 * dos } )
           // dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return preset.tpl[0].value_1 * dos } )
-        } else if (preset.tpl[0].type == "every") {
+        } else if (preset.tpl[0].type === "every") {
           dayCount = 1 / unitCount;
           // dayDosage = _.map( (fullDosage || [0]), (dos) => { return dos/unitCount } )
           // dayWeightDosage = _.map( (weightDosage || [0]), (dos) => { return dos/unitCount } )
@@ -155,7 +150,6 @@ const LiquidCalculator = inject(
         let arr = [];
         // interval = interval || []
         _.keys(freq).forEach((freqKey, i) => {
-          let freqItem = freq[freqKey];
           arr.push({
             key: freqKey,
             text: this.props.tools.names[freqKey],
@@ -212,9 +206,8 @@ const LiquidCalculator = inject(
             weightUnits.push({
               key: unitkey,
               value: unitkey,
-              text: `${unit.shortname || unit.name}/${
-                (liqUnit && (units[liqUnit].shortname || units[liqUnit].name)) || ""
-              }`,
+              text: `${unit.shortname || unit.name}/${(liqUnit && (units[liqUnit].shortname || units[liqUnit].name)) || ""
+                }`,
             });
           }
         });
@@ -223,23 +216,17 @@ const LiquidCalculator = inject(
         return { weightUnits, currWeightUnitName };
       }
 
-      get valueUnits() {}
 
       render() {
         let {
           patients: { current: weight },
           actions: {
             liquidForm: {
-              name, // Название ДВ или ТН
-              group, // группа раствора (0 - нет раствора, больше 0 - раствор)
               specials,
               freq,
-              duration,
               calc: {
                 dosage,
                 count,
-                dosageUnit,
-                dayCount,
                 fullDosage,
                 weightDosage,
                 dayDosage,
@@ -251,20 +238,10 @@ const LiquidCalculator = inject(
                 tintSpeed,
                 liquidSpeed,
               },
-              schedule: {
-                dateStart,
-                dateFinish,
-                finishAlternate,
-                clarifications, //уточнения
-                interval,
-                once,
-                week,
-                calendar,
-              },
             },
           },
           drugs: { calcLiquid },
-          tools: { round, units, unitarrs },
+          tools: { units },
           dosages: { getFromBase },
           router: { values },
           isLiquid,
@@ -277,10 +254,6 @@ const LiquidCalculator = inject(
         let {
           ready,
           liqUnit,
-          weights: cWeights,
-          counts: cCounts,
-          weight: cWeight,
-          count: calcCount,
           unit,
         } = calcLiquid;
 
@@ -289,7 +262,6 @@ const LiquidCalculator = inject(
         let def = unit || "248";
 
         let disableAll = !ready;
-        let disableMulti = true;
         // console.log({ count });
         // console.log(currUnit, def, fullDosage);
         // console.log(getFromBase(currUnit || def, fullDosage).join(" + "));

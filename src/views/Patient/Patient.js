@@ -3,7 +3,6 @@ import { observer, inject } from "mobx-react";
 
 import RouterLink from "../../router/a";
 
-import Spinner from "../../components/Spinner";
 import Slider from "react-slick";
 
 import PatientForm from "./PatientForm";
@@ -11,21 +10,10 @@ import PatientPassport from "./PatientPassport";
 import PatientsList from "./PatientsList";
 
 import {
-  Sidebar,
   Menu,
-  Icon,
-  // Search,
-  Segment,
-  Message,
-  List,
-  Feed,
-  Button,
-  Responsive,
-  Grid,
   Popup,
 } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const Patient = inject(
   "router",
@@ -186,7 +174,6 @@ const Patient = inject(
         let { misLinkLogin: misDisabled, t } = this.props.actions;
         // const { t } = this.props.actions;
         let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
-        let section = (this.props.router && this.props.router.match && this.props.router.match.name) || "none";
         let { step, edit } = this.state;
         const { disease, co_disease } = this.props.patients.current;
         const { firstname, lastname } = this.props.actions.patientPassport;

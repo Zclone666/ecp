@@ -1,18 +1,10 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
-import Slider from "react-slick";
 import RouterLink from "../../router/a";
 
-import WayChoice from "./WayChoice";
-import LF from "./LF";
-import DozeTypes from "./DozeTypes";
-import Methods from "./Methods";
-import Calculator from "./Calculator";
-
-import { Transition, Accordion, Icon, Step, Responsive } from "semantic-ui-react";
+import { Step } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const Steps = inject(
   "db",
@@ -109,11 +101,11 @@ const Steps = inject(
                     <Step
                       completed={currStep > i}
                       key={"st" + i}
-                      active={currStep == i}
+                      active={currStep === i}
                       as={i <= currStep ? RouterLink : Step}
                       to={url}
                     >
-                      {(currStep == i || viewType == "pc") && (
+                      {(currStep === i || viewType === "pc") && (
                         <Step.Content>
                           <Step.Title>{t(step.text)}</Step.Title>
                           <Step.Description>{chosedName}</Step.Description>

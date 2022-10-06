@@ -2,7 +2,6 @@ import React, { Component, createRef } from "react";
 import { inject, observer } from "mobx-react";
 
 import Slider from "react-slick";
-import RouterLink from "../../router/a";
 
 import WayChoice from "./WayChoice";
 import LF from "./LF";
@@ -11,9 +10,7 @@ import Methods from "./Methods";
 import Calculator from "./Calculator";
 import Steps from "./Steps";
 
-import { Transition, Accordion, Icon, Step, Responsive } from "semantic-ui-react";
-
-import _ from "lodash";
+import { Responsive } from "semantic-ui-react";
 
 const Stepper = inject(
   "db",
@@ -77,7 +74,7 @@ const Stepper = inject(
         }
       };
       render() {
-        let { activeIndex, viewType } = this.state;
+        let { viewType } = this.state;
         let {
           drugs: { current }, //drugs, currDrug, setDosageParams
           // dosages: { dosage, calcValues }, //drugsDosages

@@ -1,9 +1,6 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
 import BirthDate from "../../components/BirthDate";
 import Search from "../../components/Search";
 
@@ -14,20 +11,14 @@ import { checkDouble, clearDouble } from "../../lib/helpers";
 import { withTranslation } from "react-i18next";
 
 import {
-  Sidebar,
-  Menu,
   Icon,
   Divider,
   Segment,
-  Message,
-  List,
-  Feed,
-  Button,
   Responsive,
-  Grid,
+  List,
+  Button,
   Form,
   Input,
-  Checkbox,
   Header,
   Dropdown,
   Modal,
@@ -92,16 +83,17 @@ const PatientForm = inject(
 
       handleChange = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         const { editForm } = this.props;
         editForm();
 
         let errorValue = false;
-        if (name == "weight") {
+        if (name === "weight") {
           errorValue = isWeight(value);
         }
-        if (name == "growth") {
+        if (name === "growth") {
           errorValue = isGrowth(value);
         }
         const { birthdate } = this.props.patients.current;
@@ -152,7 +144,8 @@ const PatientForm = inject(
       };
       handleChangeToggle = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         const { editForm } = this.props;
         editForm();
@@ -345,21 +338,14 @@ const PatientForm = inject(
         const { t } = this.props.actions;
         const {
           id,
-          key,
           email,
-          name,
           fio,
-          snils,
-          miscode,
-          misid,
           birthdate,
           sex,
           growth,
           weight,
           masIndex,
           squareIndex,
-          disease,
-          co_disease,
           allergy,
           labparams,
           pregnancy,
@@ -381,9 +367,8 @@ const PatientForm = inject(
           showPatientPassport,
           showProtocol,
         } = this.state;
-        let searchReady = true,
-          searchRows = [],
-          searchQuery = "";
+
+        let searchReady = true;
 
         let isWoman = sex === "female";
         let isPregant = !!pregnancy;
@@ -408,7 +393,7 @@ const PatientForm = inject(
                     })}
                     results={this.listSearch}
                     value={search_patient}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
                 <Form.Field width={3}>
@@ -528,7 +513,7 @@ const PatientForm = inject(
                     results={diseaseRows}
                     value={search_disease}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -563,7 +548,7 @@ const PatientForm = inject(
                     results={diseaseRows}
                     value={search_co_disease}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -702,7 +687,7 @@ const PatientForm = inject(
                     results={allergyRows}
                     value={search_allergy}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -796,7 +781,7 @@ const PatientForm = inject(
                         {t("trimester")}
                       </Button>
                       <Button
-                        primary={trimester == 1}
+                        primary={Number(trimester) === 1}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -805,7 +790,7 @@ const PatientForm = inject(
                         1
                       </Button>
                       <Button
-                        primary={trimester == 2}
+                        primary={Number(trimester) === 2}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -814,7 +799,7 @@ const PatientForm = inject(
                         2
                       </Button>
                       <Button
-                        primary={trimester == 3}
+                        primary={Number(trimester) === 3}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -919,7 +904,7 @@ const PatientForm = inject(
                         {t("trimester")}
                       </Button>
                       <Button
-                        primary={trimester == 1}
+                        primary={Number(trimester) === 1}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -928,7 +913,7 @@ const PatientForm = inject(
                         1
                       </Button>
                       <Button
-                        primary={trimester == 2}
+                        primary={Number(trimester) === 2}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -937,7 +922,7 @@ const PatientForm = inject(
                         2
                       </Button>
                       <Button
-                        primary={trimester == 3}
+                        primary={Number(trimester) === 3}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"

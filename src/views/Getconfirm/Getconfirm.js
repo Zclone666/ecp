@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
-import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui-react";
+import { Button, Form, Grid, Header, Message, Segment } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import RouterLink from "../../router/a";
 
@@ -24,9 +24,9 @@ const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends
   render() {
     let {
       projectTitle,
-      getConfirmForm: { code, email, service },
+      getConfirmForm: { email },
     } = this.props.actions;
-    let {t} = this.props;
+    let { t } = this.props;
     return (
       <div className="login-form height100perc">
         <Grid padded textAlign="center" style={{ height: "100%" }} verticalAlign="middle">
@@ -52,12 +52,12 @@ const Getconfirm = inject("router", "actions")(observer(class Getconfirm extends
                   />
 
                   <Button disabled={!this.state.filled} fluid size="huge" color="grey" onClick={this.handleGetConfirm}>
-                  {t("send")}
+                    {t("send")}
                   </Button>
                 </Segment>
               </Form>
               <Message className="squared">
-              {t("already_registered")} <RouterLink to="/login">{t("come_in")}</RouterLink>
+                {t("already_registered")} <RouterLink to="/login">{t("come_in")}</RouterLink>
                 <br />
                 {t("already_have_code")} <RouterLink to="/confirm">{t("confirm")}</RouterLink>
               </Message>

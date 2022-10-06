@@ -1,4 +1,4 @@
-import { observable, action, autorun, computed, observe, makeObservable } from "mobx";
+import { observable, autorun, observe, makeObservable } from "mobx";
 import { POST } from "../lib/connect";
 // import moment from "moment";
 
@@ -80,10 +80,10 @@ class Recipes {
       ready: observable.box(true),
     };
 
-    autorun(() => {});
+    autorun(() => { });
 
     observe(this, (change) => {
-      if (change.name == "recipeDiseaseId") {
+      if (change.name === "recipeDiseaseId") {
         this.getMKB10();
       }
     });
@@ -189,7 +189,7 @@ class Recipes {
       drugs: this.stores.actions.structure.drugs
         .filter((drug) => this.drugKeysForPrescription.includes(drug.key))
         .map((d) => {
-          if (d?.dosage?.dosage?.length == 0 && d?.calc?.dosage?.[0] == 0) {
+          if (d?.dosage?.dosage?.length === 0 && d?.calc?.dosage?.[0] === 0) {
             // if (d.calc.dosage && typeof d.calc.dosage == "array") {
             //   d.calc.dosage = d.calc.dosage.map((item) => {
             //     return parseInt(item);
@@ -287,8 +287,8 @@ class Recipes {
       success: async (data) => {
         this.mkb10code = data.code;
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   };
 
@@ -375,7 +375,7 @@ class Recipes {
         drugs: this.stores.actions.structure.drugs
           .filter((drug) => this.drugKeysForPrescription.includes(drug.key))
           .map((d) => {
-            if (d?.dosage?.dosage?.length == 0 && d?.calc?.dosage?.[0] == 0) {
+            if (d?.dosage?.dosage?.length === 0 && d?.calc?.dosage?.[0] === 0) {
               // if (d.calc.dosage && typeof d.calc.dosage == "array") {
               //   d.calc.dosage = d.calc.dosage.map((item) => {
               //     return parseInt(item);
@@ -499,7 +499,7 @@ class Recipes {
         // proto: "603e496c807d66e3e342b3b2"
         // proto_date: "2021_03"
 
-        let { misproto, newdrugs, newliquids, proto, proto_date } = data;
+        let { newdrugs, newliquids } = data;
 
         //-----------
         newdrugs = newdrugs.map((d) => {
@@ -507,7 +507,7 @@ class Recipes {
           let { dosage } = d;
           dosage = _.isArray(dosage.dosage) ? dosage.dosage : [dosage.dosage];
           // console.log({ dosage });
-          const { names, nameshort } = this.stores.tools.unitsPharm;
+          const { nameshort } = this.stores.tools.unitsPharm;
           let helpers = {
             dosage: {
               short: "",

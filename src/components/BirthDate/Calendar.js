@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { Form } from "semantic-ui-react";
 import { DatePickerInput } from "rc-datepicker";
 import { withTranslation } from "react-i18next";
 import { inject, observer } from "mobx-react";
 import "./Calendar.css";
 
 import moment from "moment";
+
+// eslint-disable-next-line no-unused-vars
 import ru from "moment/locale/ru";
+
 moment.locale("ru");
 moment().utc(0);
 const Calendar = inject("actions")(

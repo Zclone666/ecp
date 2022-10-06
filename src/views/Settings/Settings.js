@@ -1,14 +1,8 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
-import Slider from "react-slick";
-
-import { Menu, Icon, Segment, List, Divider, Button, Form, Header, Input, Checkbox } from "semantic-ui-react";
+import { Menu, Segment, Divider, Form, Header, Checkbox } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const Settings = inject(
   "router",
@@ -33,7 +27,7 @@ const Settings = inject(
           protocol: null,
           rf_ban: null,
 
-          genetic_passport: null, 
+          genetic_passport: null,
           lactation: null,
           pregnancy: null,
           car_driving: null,
@@ -64,7 +58,7 @@ const Settings = inject(
       }
 
       render() {
-        const { zhnvlp_fed, zhnvlp_reg, protocol, rf_ban, genetic_passport, lactation,pregnancy,car_driving,clinical_recommendations } = this.state; //this.props.actions.profile.settings || {};
+        const { zhnvlp_fed, zhnvlp_reg, protocol, rf_ban, genetic_passport, lactation, pregnancy, car_driving, clinical_recommendations } = this.state; //this.props.actions.profile.settings || {};
         const { t } = this.props.actions;
         return (
           <div className="h100">

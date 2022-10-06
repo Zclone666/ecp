@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { List, Form, Input, Dropdown, Select } from "semantic-ui-react";
+import { List, Form, Input, Select } from "semantic-ui-react";
 
 const Value = inject("tools")(
   observer(
@@ -14,7 +14,8 @@ const Value = inject("tools")(
       handleChange = (e, { name, value }) => {
         let { onChange } = this.props;
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         if (value === "" || value === 0 || value === "0" || value === "." || value.split(".")[1] === "") {
           onChange({ name, value: value });
@@ -27,7 +28,8 @@ const Value = inject("tools")(
         let { name, value, onChange } = this.props;
         let { getFromBase, getToBase } = this.props.tools;
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         // console.log({ unitid });
         //
@@ -35,7 +37,7 @@ const Value = inject("tools")(
         let resValue = "";
         if (value) {
           baseValue = getToBase(currUnit, value);
-          resValue = getFromBase(unitid, baseValue, unitid == 78 ? 2 : 0)[0].toString();
+          resValue = getFromBase(unitid, baseValue, Number(unitid) === 78 ? 2 : 0)[0].toString();
         }
 
         onChange({ name, value: resValue, unitid });
@@ -85,7 +87,7 @@ const Value = inject("tools")(
                 {unit ? (
                   <Input
                     label={
-                      unitid == 78 ? (
+                      Number(unitid) === 78 ? (
                         <Select
                           basic
                           compact

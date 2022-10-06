@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { inject, observer } from "mobx-react";
-import { List, Menu, Responsive, Segment, Checkbox, Popup } from "semantic-ui-react";
+import { List, Menu, Segment, Checkbox, Popup } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
@@ -26,7 +26,7 @@ const ClinrecStartPage = inject(
         let checkedNew = {};
         if (Array.isArray(clinicalGuidelinesExist) && !this.state.start) {
           this.setState({ start: true });
-          clinicalGuidelinesExist.map((item) => {
+          clinicalGuidelinesExist.forEach((item) => {
             if (item.exist) {
               checkedNew = {
                 ...checkedNew,
@@ -48,7 +48,7 @@ const ClinrecStartPage = inject(
         this.props.clinrecs.diseaseSelect = [];
 
         if (this.props.patients.current) {
-          for (const [key, value] of Object.entries(this.state.checked)) {
+          for (const [, value] of Object.entries(this.state.checked)) {
             if (value && !this.props.clinrecs.diseaseSelect.find((d) => d.id === value.id)) {
               this.props.clinrecs.diseaseSelect.push(value);
             }
@@ -63,9 +63,6 @@ const ClinrecStartPage = inject(
         const { t } = this.props.actions;
         // console.log("state: ", this.state);
         const { clinicalGuidelinesExist } = this.props.clinrecs;
-        const diseases = this.props.patients.current.disease
-          .map((d) => d.id)
-          .concat(this.props.patients.current.co_disease.map((d) => d.id));
         // console.log({ clinicalGuidelinesExist });
         // console.log(this.state.checked);
         const disabled = !_.findKey(this.state.checked, function (o) {

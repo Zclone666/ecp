@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/iframe-has-title */
 import React, { Component, createRef } from 'react';
 // import { observer, inject } from 'mobx-react';
-import { Checkbox, Container, Divider, Embed, Form, Header, Segment, } from 'semantic-ui-react';
+import { Checkbox, Container, Divider, Form, Header, Segment, } from 'semantic-ui-react';
 // import BlockSlider from '../../components/Blocks/BlockSlider';
 // import BlockSearch from '../../components/Blocks/BlockSearch';
 // import BlockBlock from '../../components/Blocks/BlockBlock';
@@ -317,7 +317,7 @@ class FormChecker extends Component {
                                     label='в стационаре'
                                     name='mestoDia'
                                     value='1'
-                                    checked={this.state.data.mestoDia == '1'}
+                                    checked={String(this.state.data.mestoDia) === '1'}
                                     onChange={this.handleChangeDataCh}
                                 />
                             </Form.Field>
@@ -327,7 +327,7 @@ class FormChecker extends Component {
                                     label='амбулаторно'
                                     name='mestoDia'
                                     value='2'
-                                    checked={this.state.data.mestoDia == '2'}
+                                    checked={String(this.state.data.mestoDia) === '2'}
                                     onChange={this.handleChangeDataCh}
                                 />
                             </Form.Field>
@@ -366,7 +366,7 @@ class FormChecker extends Component {
                                     label='в стационаре'
                                     name='mestoLuch'
                                     value='1'
-                                    checked={this.state.data.mestoLuch == '1'}
+                                    checked={String(this.state.data.mestoLuch) === '1'}
                                     onChange={this.handleChangeDataCh}
                                 />
                             </Form.Field>
@@ -376,7 +376,7 @@ class FormChecker extends Component {
                                     label='в дневном стационаре '
                                     name='mestoLuch'
                                     value='2'
-                                    checked={this.state.data.mestoLuch == '2'}
+                                    checked={String(this.state.data.mestoLuch) === '2'}
                                     onChange={this.handleChangeDataCh}
                                 />
                             </Form.Field>
@@ -414,7 +414,7 @@ class FormChecker extends Component {
                                     label='в стационаре'
                                     name='mestoTer'
                                     value='1'
-                                    checked={this.state.data.mestoTer == '1'}
+                                    checked={String(this.state.data.mestoTer) === '1'}
                                     onChange={this.handleChangeDataCh}
                                 />
                             </Form.Field>
@@ -424,7 +424,7 @@ class FormChecker extends Component {
                                     label='амбулаторно'
                                     name='mestoTer'
                                     value='2'
-                                    checked={this.state.data.mestoTer == '2'}
+                                    checked={String(this.state.data.mestoTer) === '2'}
                                     onChange={this.handleChangeDataCh}
                                 />
                             </Form.Field>
@@ -434,7 +434,7 @@ class FormChecker extends Component {
                                     label='в дневном стационаре'
                                     name='mestoTer'
                                     value='3'
-                                    checked={this.state.data.mestoTer == '3'}
+                                    checked={String(this.state.data.mestoTer) === '3'}
                                     onChange={this.handleChangeDataCh}
                                 />
                             </Form.Field>
