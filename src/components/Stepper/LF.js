@@ -10,22 +10,18 @@ import { withTranslation } from "react-i18next";
 import _ from 'lodash';
 
 const LF = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class LF extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
 
     }
   }
-  setLF = ( lf ) => {
+  setLF = (lf) => {
     this.props.actions.stepsData.form = lf
   }
-  render(){
+  render() {
     let {
       actions: {
-        selectedDrug,
-        selectedConflict,
-        activeDrugs,
-        activeConflicts,
         stepsData,
       },
       drugs: { current }, //drugs, currDrug, setDosageParams
@@ -40,21 +36,21 @@ const LF = inject('db', 'actions', 'router', 'drugs', 'dosages')(observer(class 
 
     let drugDosage = dosage.get(current.id) || {}
     //console.log('drugDosage', drugDosage);
-    let { drug, form, methodform, names } = drugDosage
+    let { form, methodform, names } = drugDosage
 
     let iterator = (stepsData.way === 'methods' && stepsData.method) ? methodform[stepsData.method] : _.keys(form)
 
     return (
       <List animated divided selection className='dozelist' verticalAlign='middle' size='large' >
-        {iterator.map(( lfid, i ) => {
+        {iterator.map((lfid, i) => {
           let lfItem = form[lfid]
 
-          return(
+          return (
             <List.Item
-              key={'doze'+i}
+              key={'doze' + i}
               disabled={(values.liquid && !lfItem.solute)}
               as={RouterLink}
-              to={`${url}/${currStep+1}`}
+              to={`${url}/${currStep + 1}`}
               onClick={() => this.setLF(lfid, lfItem)}
             >
               <List.Content floated='right'>

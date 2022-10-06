@@ -1,18 +1,11 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import moment from "moment";
 
 import {
-  List,
   Icon,
   Form,
-  Segment,
-  Input,
   Button,
   Dropdown,
-  Responsive,
-  Checkbox,
-  Grid,
   Label,
 } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
@@ -30,7 +23,7 @@ const ref_minutes = ["minute", "minutes", "minut"],
   ref_days = ["day", "a_day", "days"],
   ref_weeks = ["week_time", "weeks", "week_min"],
   ref_months = ["month", "a_month", "months"],
-  ref_years = ["year", "of_the_year", "years"],
+  // ref_years = ["year", "of_the_year", "years"],
   ref_times = ["once", "times", "once"];
 
 const Interval = inject(
@@ -50,7 +43,8 @@ const Interval = inject(
       }
       handleChange = (e, { name, type, value, index }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         let { interval } = this.props.actions.scheduleForm;
 
@@ -277,10 +271,8 @@ const Interval = inject(
         let { presets } = clarifications;
         let {
           UIText,
-          scheduleForm: { interval },
         } = this.props.actions;
         let arr = [];
-        interval = interval || [];
         _.keys(presets).forEach((presetKey, i) => {
           let preset = presets[presetKey];
           arr.push({
@@ -295,20 +287,20 @@ const Interval = inject(
       }
 
       render() {
-        let {
-          actions: {
-            selectedDrug,
-            selectedConflict,
-            activeDrugs,
-            activeConflicts,
-            stepsData,
-            scheduleForm: { interval },
-          },
-          dosages: {
-            current: { drug, form, methodform, names },
-          },
-          router: { values },
-        } = this.props;
+        // let {
+        //   actions: {
+        //     selectedDrug,
+        //     selectedConflict,
+        //     activeDrugs,
+        //     activeConflicts,
+        //     stepsData,
+        //     scheduleForm: { interval },
+        //   },
+        //   dosages: {
+        //     current: { drug, form, methodform, names },
+        //   },
+        //   router: { values },
+        // } = this.props;
 
         const { t } = this.props.actions;
 

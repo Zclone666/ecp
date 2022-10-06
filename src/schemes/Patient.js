@@ -27,7 +27,6 @@ export default {
   lastname: null,
   patronymic: null,
   firstname: null,
-  snils: null,
   policy_num: null,
   medcard_num: null,
   main_address: null,

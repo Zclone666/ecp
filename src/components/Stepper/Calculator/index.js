@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
-import RouterLink from "../../../router/a";
 import {
-  List,
   Label,
   Icon,
   Form,
   Segment,
   Input,
-  Button,
   Dropdown,
   Header,
   TextArea,
@@ -17,13 +14,10 @@ import {
   Popup,
 } from "semantic-ui-react";
 
-import clarifications from "../../../constants/hardcode";
 import { withTranslation } from "react-i18next";
 import { checkDouble, clearDouble } from "../../../lib/helpers";
 
-import Week from "./Week";
 import Schedule from "./Schedule";
-import Interval from "./Interval";
 import Drugs from "./Drugs";
 
 import _ from "lodash";
@@ -48,7 +42,8 @@ const Calculator = inject(
       }
       handleChangeUnit = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         // console.log({ name, value });
         this.setState({ [name]: value });
@@ -58,13 +53,15 @@ const Calculator = inject(
       handleChange = (e, { name, value }) => {
         // console.log({ name, value });
         let { getToBase, calcValues } = this.props.dosages;
-        let { dosage: dos, count: cnt } = calcValues;
+        let { dosage: dos } = calcValues;
         let { currUnit } = this.state;
         let def = (dos.firstUnit && dos.firstUnit.id) || (dos.unit && dos.unit.id) || 248;
 
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
+
         let weight = parseFloat(this.props.patients.current.weight);
         //console.log({name, value}, !!value);
         //value = _.map( value, (dos) => dos.split(',').join('.') )
@@ -79,7 +76,7 @@ const Calculator = inject(
         }
         if (!checkDouble(value)) {
           double = true;
-          if (name == "patient.weight") {
+          if (name === "patient.weight") {
             this.props.patients.current.weight = value;
             // weight = parseFloat(value)
           } else {
@@ -87,12 +84,12 @@ const Calculator = inject(
             this.props.actions.calculatorForm[name] = value;
           }
           return;
-        } else if (value != parseFloat(value) && !(value.split(" + ") && value.split(" + ").length > 1)) {
+        } else if (value !== parseFloat(value) && !(value.split(" + ") && value.split(" + ").length > 1)) {
           return;
         }
         //value = parseFloat(value)
 
-        if (name == "patient.weight" && !double) {
+        if (name === "patient.weight" && !double) {
           this.props.patients.current.weight = parseFloat(value);
           weight = parseFloat(value);
         } else {
@@ -119,8 +116,8 @@ const Calculator = inject(
             weightDosage = !weight
               ? [0]
               : _.map(fullDosage, (dos) => {
-                  return dos / weight;
-                });
+                return dos / weight;
+              });
             // console.log({ dosage, value, fullDosage });
             break;
           case "count":
@@ -133,17 +130,17 @@ const Calculator = inject(
             weightDosage = !weight
               ? [0]
               : _.map(fullDosage, (dos) => {
-                  return dos / weight;
-                });
+                return dos / weight;
+              });
             break;
           case "patient.weight":
             //fullDosage = _.map( dosage, (dos) => { return count*dos } )
             weightDosage = !weight
               ? [0]
               : _.map(fullDosage, (dos) => {
-                  // console.log({dos,weight, res: dos/weight});
-                  return dos / weight;
-                });
+                // console.log({dos,weight, res: dos/weight});
+                return dos / weight;
+              });
             break;
           case "fullDosage":
             fullDosage = [];
@@ -169,8 +166,8 @@ const Calculator = inject(
         dayWeightDosage = !weight
           ? [0]
           : _.map(weightDosage, (dos) => {
-              return dos * dayCount;
-            });
+            return dos * dayCount;
+          });
 
         // this.props.actions.calculatorForm.dosage = dosage
         // this.props.actions.calculatorForm.count = count
@@ -207,7 +204,7 @@ const Calculator = inject(
       };
 
       setPreset = (e, { value }) => {
-        let { getToBase, getFromBase, calcValues } = this.props.dosages;
+        let { getToBase } = this.props.dosages;
         let { freq } = this.props.tools.unitsSchedule;
         let preset = { tpl: freq[value] }; //_.find(presets, { 'id': value});
         let {
@@ -221,6 +218,7 @@ const Calculator = inject(
           dayDosage,
           dayWeightDosage,
         } = this.props.actions.calculatorForm;
+
         this.props.drugs.current.freq = value;
         this.props.drugs.current.freq_id = preset.tpl[0].id;
         this.props.actions.scheduleForm.interval = preset.tpl;
@@ -230,7 +228,7 @@ const Calculator = inject(
         let unitCount = getToBase(preset.tpl[0].unit_1, preset.tpl[0].value_1) / dayInMinutes;
         // let unitCount = 1
         // console.log({unitCount});
-        if (preset.tpl[0].type == "count") {
+        if (preset.tpl[0].type === "count") {
           dayCount = unitCount;
           dayDosage = _.map(fullDosage || [0], (dos) => {
             return preset.tpl[0].value_1 * dos;
@@ -238,7 +236,7 @@ const Calculator = inject(
           dayWeightDosage = _.map(weightDosage || [0], (dos) => {
             return preset.tpl[0].value_1 * dos;
           });
-        } else if (preset.tpl[0].type == "every") {
+        } else if (preset.tpl[0].type === "every") {
           dayCount = 1 / unitCount;
           dayDosage = _.map(fullDosage || [0], (dos) => {
             return dos / unitCount;
@@ -268,7 +266,6 @@ const Calculator = inject(
         let arr = [];
         // interval = interval || []
         _.keys(freq).forEach((freqKey, i) => {
-          let freqItem = freq[freqKey];
           arr.push({
             key: freqKey,
             text: this.props.tools.names[freqKey],
@@ -286,20 +283,10 @@ const Calculator = inject(
             t,
             scheduleForm,
             calculatorForm: {
-              type,
               dosage,
-              count,
-              countUnit,
-              dosageUnit,
-              dayCount,
-              fullDosage,
-              weightDosage,
-              dayDosage,
-              dayWeightDosage,
             },
           },
           dosages: {
-            current: { drug, form, methodform, names },
             calcValues,
             getFromBase,
           },
@@ -312,7 +299,7 @@ const Calculator = inject(
         let secondName = currUnit
           ? currUnitObj && (currUnitObj.shortname || currUnitObj.name)
           : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name)) ||
-            (dos.unit && (dos.unit.shortname || dos.unit.name));
+          (dos.unit && (dos.unit.shortname || dos.unit.name));
         // console.log({ countUnit, currUnit, cnt });
 
         if (scheduleForm && scheduleForm.appointmentСalendar && scheduleForm.appointmentСalendar.length) {
@@ -375,8 +362,6 @@ const Calculator = inject(
               type,
               dosage,
               count,
-              dosageUnit,
-              dayCount,
               fullDosage,
               weightDosage,
               dayDosage,
@@ -384,9 +369,8 @@ const Calculator = inject(
             },
             scheduleForm,
           },
-          tools: { round, units, unitsSchedule },
+          tools: { units },
           dosages: {
-            current: { drug, form, methodform, names },
             calcValues,
             getFromBase,
           },
@@ -399,7 +383,6 @@ const Calculator = inject(
         } = this.props;
         const { t } = this.props.actions;
         let { currUnit } = this.state;
-        let freqFirst = _.keys(unitsSchedule.freq)[0];
         let weights = [];
         let { dosage: dos, count: cnt } = calcValues;
 
@@ -436,7 +419,7 @@ const Calculator = inject(
         let secondName = currUnit
           ? currUnitObj && (currUnitObj.shortname || currUnitObj.name)
           : (dos.firstUnit && (dos.firstUnit.shortname || dos.firstUnit.name)) ||
-            (dos.unit && (dos.unit.shortname || dos.unit.name));
+          (dos.unit && (dos.unit.shortname || dos.unit.name));
         let def = (dos.firstUnit && dos.firstUnit.id) || (dos.unit && dos.unit.id) || 248;
 
         let liquid = (values && values.liquid) || null;
@@ -472,7 +455,7 @@ const Calculator = inject(
         //
         // console.log({ currUnit, def, weights, dosage });
         //
-        let isMl = cnt.unit && cnt.unit.id == "168";
+        let isMl = cnt.unit && String(cnt.unit.id) === "168";
 
         return (
           <Segment basic>

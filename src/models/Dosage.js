@@ -58,4 +58,4 @@ const DosageInterface = new SimpleSchema({
   },
 });
 
-export default DrugInterface;
+export default DosageInterface;

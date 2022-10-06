@@ -1,6 +1,5 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
-import moment from "moment";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
 
 import _ from "lodash";
 
@@ -31,7 +30,7 @@ class Analogs {
 
     this.analog = observable.map({}, "analog");
 
-    autorun(() => {});
+    autorun(() => { });
   }
 
   /**
@@ -100,8 +99,8 @@ class Analogs {
         // this.dosage.set( drug.key, _.extend(current, { drug, form, methodform, names, nameshort, units, url: '/concept/dozes/' }) );
         // if(units && units.length > 0) this.stores.tools.getUnitsPharm(units)
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 }

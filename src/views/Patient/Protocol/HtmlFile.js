@@ -1,6 +1,9 @@
+/* eslint-disable no-dupe-keys */
+/**
+ * @desc найти где это, и понять можно ли исправить невалидный lineHeight="108%"
+ */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Header } from 'semantic-ui-react';
 
 class HtmlFile extends Component {
 

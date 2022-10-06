@@ -5,7 +5,7 @@ import RouterLink from "../../router/a";
 
 // import Conflict from "./Conflict";
 
-import { Menu, List, Feed, Button, Responsive, Icon, Grid, Segment, Popup, Header, Accordion } from "semantic-ui-react";
+import { List, Icon, Grid, Popup, Header, Accordion } from "semantic-ui-react";
 
 import _ from "lodash";
 import moment from "moment";
@@ -23,11 +23,6 @@ const Conflicts = inject(
         this.state = { activeIndex: null };
       }
       selectConflict = (groupId) => {
-        let {
-          actions: { selectedDrugFg, selectedConflictFg, activeDrugsFg, activeConflictsFg },
-          drugs: { selectedRows },
-          warnings: { warningFg, groupsFg }, //warnings, warnGroups
-        } = this.props;
         // console.log(groupId, "groupIdgroupIdgroupId");
         if (this.props.actions.selectedConflictFg === groupId) {
           this.props.actions.selectedDrugFg = null;
@@ -50,9 +45,8 @@ const Conflicts = inject(
       };
       get conflicts() {
         let {
-          actions: { selectedDrugFg, selectedConflictFg, activeDrugsFg, activeConflictsFg },
-          drugs: { selectedRows },
-          warnings: { warningFg, groupsFg, iconsFg }, // warnings, warnGroups, warnIcons
+          actions: { selectedDrugFg, selectedConflictFg },
+          warnings: { warningFg, groupsFg }, // warnings, warnGroups, warnIcons
         } = this.props;
         let conflictObj = {};
         if (selectedConflictFg) {
@@ -65,7 +59,6 @@ const Conflicts = inject(
         } else {
           Array.from(warningFg.values()).forEach((warn, i) => {
             //console.log({ ...warn });
-            let found = _.find(warn.subjects, { drugkey: selectedDrugFg });
             //console.log({ type: warn.type, value: warn.value, found });
             if (_.find(warn.subjects, { drugkey: selectedDrugFg })) {
               if (!conflictObj[warn.type] || conflictObj[warn.type].value < warn.value) {
@@ -86,11 +79,9 @@ const Conflicts = inject(
 
       render() {
         let {
-          actions: { selectedDrugFg, selectedConflictFg, activeDrugsFg, activeConflictsFg, patientForm },
-          drugs: { selectedRows },
+          actions: { selectedConflictFg, patientForm },
           warnings: {
             infoFg: { names },
-            warningFg,
             groupsFg,
           }, //warnings, warnGroups
         } = this.props;
@@ -102,7 +93,7 @@ const Conflicts = inject(
         let group = null;
         let groupType = [];
 
-        _.keys(groupsFg).map((key, i) => {
+        _.keys(groupsFg).forEach((key, i) => {
           group = groupsFg[key];
           groupType = group.type.split("_");
 
@@ -308,7 +299,7 @@ const Conflicts = inject(
                                       name="arrow alternate circle down"
                                       style={{ color: "#FFF" }}
                                       size="large"
-                                      onClick={() => {}}
+                                      onClick={() => { }}
                                     />
                                   </RouterLink>
                                 ) : (

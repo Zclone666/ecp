@@ -1,8 +1,6 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
 import Dozes from "../Dozes";
 
 import Calculator from "../../components/Stepper/Calculator/Liquid";
@@ -10,15 +8,6 @@ import Calculator from "../../components/Stepper/Calculator/Liquid";
 import {
   Sidebar,
   Menu,
-  Icon,
-  // Search,
-  Segment,
-  Message,
-  List,
-  Feed,
-  Button,
-  Responsive,
-  Grid,
 } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 
@@ -66,12 +55,12 @@ const Liquid = inject(
       };
 
       render() {
-        let showPage = !!(this.props.router.values && this.props.router.values.page);
-        let liquid = !!(this.props.router.values && this.props.router.values.liquid);
         let {
           drugs: { current },
         } = this.props;
+
         const { t } = this.props.actions;
+
         return (
           <Sidebar.Pushable>
             <Menu className="bottom fixed menu two item huge main">

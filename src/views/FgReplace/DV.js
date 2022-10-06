@@ -1,13 +1,12 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { withTranslation } from "react-i18next";
 
-import RouterLink from "../../router/a";
 import Loader from "../../components/Loader";
 import Conflicts from "../../components/Conflicts/ConflictsFG";
 import FGconflict from "./FGconflict";
 
-import { Transition, Accordion, Icon, Step, Responsive, List, Header, Checkbox } from "semantic-ui-react";
+import { Accordion, Icon, List, Header, Checkbox } from "semantic-ui-react";
 import _ from "lodash";
 
 const DV = inject(
@@ -33,7 +32,7 @@ const DV = inject(
         };
       }
 
-      onChange = ({ name, value, unitid }) => {};
+      onChange = ({ name, value, unitid }) => { };
       handleClick = (e, { index }) => {
         this.setState({ activeIndex: index === this.state.activeIndex ? -1 : index });
       };
@@ -75,7 +74,7 @@ const DV = inject(
       }
 
       render() {
-        let { activeIndex, activeSubIndex, viewType, checked, openFor } = this.state;
+        let { activeIndex, activeSubIndex, checked, openFor } = this.state;
         const { t } = this.props.actions;
         let { fds } = this.props.drugs;
 
@@ -120,8 +119,8 @@ const DV = inject(
                                                 name={"drugForChange"}
                                                 label={item.name}
                                               />
-                                              {openFor == item.id && <Conflicts />}
-                                              {openFor == item.id && <FGconflict />}
+                                              {openFor === item.id && <Conflicts />}
+                                              {openFor === item.id && <FGconflict />}
                                             </List.Item>
                                           );
                                         })}

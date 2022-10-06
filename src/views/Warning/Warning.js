@@ -1,16 +1,11 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
 
 import WarningTab from "../../components/WarningTab";
 
 import {
   // Sidebar,
   Menu,
-  Tab,
   Statistic,
   Dropdown,
   Icon,
@@ -100,9 +95,8 @@ const Warning = inject(
 
       get tabs() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
-          drugs: { selectedRows },
-          warnings: { warning, groups, icons }, //warnings, warnGroups, warnIcons
+          actions: { selectedDrug, selectedConflict },
+          warnings: { warning, groups }, //warnings, warnGroups, warnIcons
           router: { values },
         } = this.props;
 
@@ -149,11 +143,11 @@ const Warning = inject(
       }
 
       renderTabs() {
-        let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, getElement },
-          drugs: { selectedRows },
-          warnings: { warning, groups, icons }, //warnings, warnGroups, warnIcons
-        } = this.props;
+        // let {
+        //   actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, getElement },
+        //   drugs: { selectedRows },
+        //   warnings: { warning, groups, icons }, //warnings, warnGroups, warnIcons
+        // } = this.props;
         let { activeIndex } = this.state;
 
         //console.log({ length: this.tabs.length});
@@ -185,11 +179,11 @@ const Warning = inject(
         });
       }
       renderMenuItems() {
-        let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, getElement },
-          drugs: { selectedRows },
-          warnings: { warning, groups, icons }, //warnings, warnGroups, warnIcons
-        } = this.props;
+        // let {
+        //   actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, getElement },
+        //   drugs: { selectedRows },
+        //   warnings: { warning, groups, icons }, //warnings, warnGroups, warnIcons
+        // } = this.props;
 
         let arr = this.tabs.slice(11);
         // console.log({arr, tabs: this.tabs});
@@ -213,7 +207,7 @@ const Warning = inject(
           actions: { getWarnElement },
         } = this.props;
         const { t } = this.props.actions;
-        let { activeIndex, open } = this.state;
+        let { activeIndex } = this.state;
         let widths = this.tabs.length ? (this.tabs.length < 13 ? this.tabs.length : 12) : 1;
         let warn = this.tabs[activeIndex];
         let interaction = getWarnElement("interaction", warn.value);
@@ -272,7 +266,7 @@ const Warning = inject(
                 <Button color="red" onClick={() => this.setState({ errorTextDialog: false, errorText: "" })}>
                   {t("cancel")}
                 </Button>
-                <Button color="blue" onClick={this.sendErrorText} disabled={this.state.errorText.length == 0}>
+                <Button color="blue" onClick={this.sendErrorText} disabled={this.state.errorText.length === 0}>
                   {t("to_report")}
                 </Button>
               </Modal.Actions>
