@@ -1,3 +1,7 @@
+/* eslint-disable no-eval */
+/**
+ * Непонятно почему нельзя было вручную поделить, без eval, пока оставляем
+ */
 const clarifications = {
   //clarifications
   period: {
@@ -28,8 +32,8 @@ const clarifications = {
     perDay5: { id: "Ft9B9+D8Yr0lbepkIW5m9A==", tpl: [{ type: 'count', x: 5, timesx: 'days', multiplicate: 5 }] },
 
     //count week
-    perWeek1: { id: "pdKXge8w/eC+6L635qb2YA==", tpl: [{ type: 'count', x: 1, timesx: 'weeks', multiplicate: eval(1/7) }] },
-    perWeek2: { id: "AmkBNmf+thJ8dohSe+s+RA==", tpl: [{ type: 'count', x: 2, timesx: 'weeks', multiplicate: eval(2/7) }] },
+    perWeek1: { id: "pdKXge8w/eC+6L635qb2YA==", tpl: [{ type: 'count', x: 1, timesx: 'weeks', multiplicate: eval(1 / 7) }] },
+    perWeek2: { id: "AmkBNmf+thJ8dohSe+s+RA==", tpl: [{ type: 'count', x: 2, timesx: 'weeks', multiplicate: eval(2 / 7) }] },
 
     //every
     every30min: { id: "BJ6ybdRulIhypOEQtOpszQ==", tpl: [{ type: 'every', x: 30, timesx: 'minutes', multiplicate: 48 }] },
@@ -39,12 +43,12 @@ const clarifications = {
     every4hours: { id: "QaZjko/HrJx2RYSxfahsZg==", tpl: [{ type: 'every', x: 4, timesx: 'hours', multiplicate: 6 }] },
 
     //every
-    onceIn2days: { id: "PC59kILvXj+gK1I513yvqA==", tpl: [{ type: 'every', x: 2, timesx: 'days', multiplicate: eval(1/2) }] },
-    onceIn3days: { id: "wsZymWx36purT46zC9kJyA==", tpl: [{ type: 'every', x: 3, timesx: 'days', multiplicate: eval(1/3) }] },
-    onceIn4days: { id: "HjM4QHQn8D6WrCf7on3AtA==", tpl: [{ type: 'every', x: 4, timesx: 'days', multiplicate: eval(1/4) }] },
+    onceIn2days: { id: "PC59kILvXj+gK1I513yvqA==", tpl: [{ type: 'every', x: 2, timesx: 'days', multiplicate: eval(1 / 2) }] },
+    onceIn3days: { id: "wsZymWx36purT46zC9kJyA==", tpl: [{ type: 'every', x: 3, timesx: 'days', multiplicate: eval(1 / 3) }] },
+    onceIn4days: { id: "HjM4QHQn8D6WrCf7on3AtA==", tpl: [{ type: 'every', x: 4, timesx: 'days', multiplicate: eval(1 / 4) }] },
 
     //every
-    onceIn3months: { id: "tuOuBQ1wHSnBcZ8utQhA4g==", tpl: [{ type: 'every', x: 3, timesx: 'months', multiplicate: eval(1/90) }] },
+    onceIn3months: { id: "tuOuBQ1wHSnBcZ8utQhA4g==", tpl: [{ type: 'every', x: 3, timesx: 'months', multiplicate: eval(1 / 90) }] },
   },
 
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { Checkbox, List, Button, Icon, Popup } from "semantic-ui-react";
+import { List } from "semantic-ui-react";
 import Binary from "./Binary";
 import Value from "./Value";
 import _ from "lodash";
@@ -14,17 +14,15 @@ const Group = inject(
       onChange = ({ name, value }) => {
         let {
           group,
-          header,
           pageid,
           onChange,
           clinrecs: { checker },
-          actions: { clinrecCheckerStep, clinrecCheckerData },
         } = this.props;
         let page = checker[pageid];
         _.orderBy(page.arr, ["parent", "sort"], ["desc", "asc"]).forEach((item, i) => {
           // console.log({ name, "item.id": item.id });
-          if (item.parent == group) {
-            if (item.id == name) {
+          if (item.parent === group) {
+            if (item.id === name) {
               onChange({ name, value: 1 });
             } else {
               onChange({ name: item.id, value: 0 });
@@ -38,8 +36,8 @@ const Group = inject(
           group,
           header,
           pageid,
-          clinrecs: { checker, names },
-          actions: { clinrecCheckerStep, clinrecCheckerData },
+          clinrecs: { checker },
+          actions: { clinrecCheckerData },
         } = this.props;
         let page = checker[pageid];
 
@@ -49,7 +47,7 @@ const Group = inject(
 
             <List.List>
               {_.orderBy(page.arr, ["parent", "sort"], ["desc", "asc"]).map((item, x) => {
-                if (item.parent != group) {
+                if (item.parent !== group) {
                   return null;
                 }
 

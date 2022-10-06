@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import { withTranslation } from "react-i18next";
 import RouterLink from '../../router/a';
 
@@ -9,7 +9,7 @@ import RouterLink from '../../router/a';
 const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass extends Component {
   constructor(props) {
     super(props);
-    this.state = { filled: null}
+    this.state = { filled: null }
   }
   handleResetPass = (e) => {
     e.preventDefault()
@@ -19,12 +19,12 @@ const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass ext
     let { name, value } = e.target;
     let { resetPassForm } = this.props.actions
     this.props.actions.resetPassForm[name] = value;
-    this.setState({ filled: ( resetPassForm.email.length > 5 ) })
+    this.setState({ filled: (resetPassForm.email.length > 5) })
   }
 
-  render () {
+  render() {
     let { projectTitle, resetPassForm: { email } } = this.props.actions
-    let {t} = this.props;
+    let { t } = this.props;
     return (
       <div className='login-form height100perc'>
 
@@ -56,7 +56,7 @@ const ResetPass = inject('router', 'db', 'actions')(observer(class ResetPass ext
                   />
 
                   <Button
-                    disabled = {!this.state.filled}
+                    disabled={!this.state.filled}
                     fluid size='huge' color='grey'
                     onClick={this.handleResetPass}
                   >

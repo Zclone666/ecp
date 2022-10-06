@@ -9,7 +9,6 @@ import InfoItems from "../../components/InfoItems";
 
 import { Menu } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const Analog = inject(
   "router",

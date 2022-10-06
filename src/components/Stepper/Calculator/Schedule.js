@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import moment from "moment";
 
-import RouterLink from "../../../router/a";
-import { List, Icon, Form, Segment, Input, Button, Dropdown, Responsive } from "semantic-ui-react";
+import { Form, Segment, Input, Button, Dropdown } from "semantic-ui-react";
 
 import { DatePickerInput } from "rc-datepicker";
 import { withTranslation } from "react-i18next";
@@ -11,7 +10,6 @@ import _ from "lodash";
 
 import Week from "./Week";
 import Interval from "./Interval";
-import Calendar from "./Calendar";
 
 import clarifications from "../../../constants/hardcode";
 
@@ -40,7 +38,8 @@ const Schedule = inject(
       }
       handleChange = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         // console.log({ name, value });
         const { t } = this.props.actions;
@@ -86,7 +85,7 @@ const Schedule = inject(
           switch (name) {
             case "finishAlternate":
               this.props.actions.scheduleForm.finishAlternate =
-                this.props.actions.scheduleForm.finishAlternate == value ? null : value;
+                this.props.actions.scheduleForm.finishAlternate === value ? null : value;
               this.setState({ timeFromStart: null });
               this.props.drugs.current.duration = null;
               this.props.drugs.current.duration_id = null;
@@ -125,13 +124,6 @@ const Schedule = inject(
             UIText,
             scheduleForm: {
               dateStart,
-              dateFinish,
-              finishAlternate,
-              clarifications, //уточнения
-              interval,
-              once,
-              week,
-              calendar,
             },
           },
           drugs: { current },
@@ -155,10 +147,8 @@ const Schedule = inject(
         let { durationsAlt } = clarifications;
         let {
           UIText,
-          scheduleForm: { interval },
         } = this.props.actions;
         let arr = [];
-        interval = interval || [];
         _.keys(durationsAlt).forEach((durationKey, i) => {
           let duration = durationsAlt[durationKey];
 
@@ -176,10 +166,8 @@ const Schedule = inject(
         let { durations } = clarifications;
         let {
           UIText,
-          scheduleForm: { interval },
         } = this.props.actions;
         let arr = [];
-        interval = interval || [];
         _.keys(durations).forEach((durationKey, i) => {
           let duration = durations[durationKey];
 
@@ -197,28 +185,14 @@ const Schedule = inject(
         let {
           actions: {
             active_language,
-            selectedDrug,
-            selectedConflict,
-            activeDrugs,
-            activeConflicts,
-            stepsData,
             UIText,
             scheduleForm: {
               dateStart,
               dateFinish,
               finishAlternate,
-              clarifications, //уточнения
-              interval,
-              once,
-              week,
               format,
-              calendar,
             },
           },
-          dosages: {
-            current: { drug, form, methodform, names },
-          },
-          router: { values },
         } = this.props;
         let { t } = this.props.actions;
         let { timeFromStart } = this.state;
@@ -230,7 +204,7 @@ const Schedule = inject(
         //
         // console.log({dateStart, dateFinish});
         // let dateFinish = 0
-        let sex = "male";
+
         return (
           <Segment>
             <Form>
@@ -305,7 +279,7 @@ const Schedule = inject(
                     options={this.renderAlterDurations()}
                   />
                   {false && (
-                    <Responsive as={Button.Group} fluid size="big" minWidth={481}>
+                    <Segment basic as={Button.Group} fluid size="big" minWidth={481}>
                       <Button
                         primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
                         onClick={this.handleChange}
@@ -314,10 +288,10 @@ const Schedule = inject(
                       >
                         {t("before_canceling")}
                       </Button>
-                    </Responsive>
+                    </Segment>
                   )}
                   {false && (
-                    <Responsive as={Button.Group} fluid maxWidth={480}>
+                    <Segment basic as={Button.Group} fluid maxWidth={480}>
                       <Button
                         primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
                         onClick={this.handleChange}
@@ -326,7 +300,7 @@ const Schedule = inject(
                       >
                         {t("before_canceling")}
                       </Button>
-                    </Responsive>
+                    </Segment>
                   )}
                 </Form.Field>
               </Form.Group>
@@ -335,7 +309,7 @@ const Schedule = inject(
                 <Form.Group>
                   <Form.Field className="fluid">
                     <label>{t("terms_accepted")}</label>
-                    <Responsive as={Button.Group} fluid widths={3} minWidth={481}>
+                    <Segment basic as={Button.Group} fluid widths={3} minWidth={481}>
                       <Button
                         primary={format === "interval"}
                         onClick={this.handleChange}
@@ -350,8 +324,8 @@ const Schedule = inject(
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
                         {t("by_day_week")}
                       </Button>
-                    </Responsive>
-                    <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
+                    </Segment>
+                    <Segment basic as={Button.Group} fluid widths={2} maxWidth={480}>
                       <Button
                         primary={format === "interval"}
                         onClick={this.handleChange}
@@ -363,12 +337,12 @@ const Schedule = inject(
                       <Button primary={format === "once"} onClick={this.handleChange} name="format" value="once">
                         {t("single")}
                       </Button>
-                    </Responsive>
-                    <Responsive as={Button.Group} fluid widths={1} maxWidth={480}>
+                    </Segment>
+                    <Segment basic as={Button.Group} fluid widths={1} maxWidth={480}>
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
                         {t("by_day_week")}
                       </Button>
-                    </Responsive>
+                    </Segment>
                   </Form.Field>
                 </Form.Group>
               )}

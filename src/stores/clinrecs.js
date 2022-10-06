@@ -1,5 +1,5 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
 import moment from "moment";
 
 import _ from "lodash";
@@ -37,7 +37,7 @@ class Clinrecs {
     this.stores = stores;
     this.router = stores.router;
 
-    autorun(() => {});
+    autorun(() => { });
   }
 
   /**
@@ -99,7 +99,7 @@ class Clinrecs {
         //has pharm therapy
         if (data.Cources && _.keys(data.Cources).length > 0) this.hasTherapy = true;
         _.keys(data.ClinRec).forEach((id, i) => {
-          if (data.ClinRec[id].type == "Drug") {
+          if (data.ClinRec[id].type === "Drug") {
             this.hasTherapy = true;
           }
         });
@@ -111,7 +111,6 @@ class Clinrecs {
           this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
         } else {
           let pages = {};
-          let questions = [];
           let pageOfGroup = {};
           if (data && data.checker) {
             let { shortnames } = this.stores.tools;
@@ -148,9 +147,9 @@ class Clinrecs {
                   helper: question.helper || null,
                   unit: question.unitid
                     ? shortnames[question.unitid] ||
-                      data.shortnames[question.unitid] ||
-                      data.names[question.unitid] ||
-                      null
+                    data.shortnames[question.unitid] ||
+                    data.names[question.unitid] ||
+                    null
                     : null,
                   unitid: question.unitid,
                   value: question.value,
@@ -168,9 +167,9 @@ class Clinrecs {
                       sort: question.sort,
                       unit: question.unitid
                         ? shortnames[question.unitid] ||
-                          data.shortnames[question.unitid] ||
-                          data.names[question.unitid] ||
-                          null
+                        data.shortnames[question.unitid] ||
+                        data.names[question.unitid] ||
+                        null
                         : null,
                       unitid: question.unitid,
                       value: question.value,
@@ -186,7 +185,7 @@ class Clinrecs {
 
         this.stores.actions.loading = false;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => { },
       always: (data) => {
         this.stores.actions.loading = false;
         this.stores.actions.makeAlerts(data);
@@ -238,7 +237,7 @@ class Clinrecs {
         // console.log(data);
         if (data.result) this.clinicalGuidelinesExist = data.result;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => { },
       always: (data) => {
         this.stores.actions.loading = false;
         this.stores.actions.makeAlerts(data);
@@ -328,7 +327,7 @@ class Clinrecs {
       fail: (alerts) => {
         this.stores.actions.loading = false;
       },
-      always: (data) => {},
+      always: (data) => { },
     });
   }
 
@@ -345,7 +344,7 @@ class Clinrecs {
     // console.log({ child });
     this.iterator++;
     if (child && child.check === false) return;
-    if (child && child.type == "Drug" && child.check) {
+    if (child && child.type === "Drug" && child.check) {
       let drug = {
         name: child.drug.name,
         id: child.drug.id,
@@ -361,7 +360,7 @@ class Clinrecs {
       // console.log(drug);
       // this.drugToClinrecHashset[drug.id] = clinrecId;
       _.keys(this.clinrec).forEach((id, i) => {
-        if (this.clinrec[id]?.drug?.id == drug.id) {
+        if (this.clinrec[id]?.drug?.id === drug.id) {
           const idInArray = [];
           idInArray.push(id);
           this.drugToClinrecHashset[drug.id] = idInArray;

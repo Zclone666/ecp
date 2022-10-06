@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import moment from "moment";
 
-import { List, Icon, Form, Segment, Input, Button, Dropdown, Responsive, Checkbox } from "semantic-ui-react";
+import { Form, Segment, Responsive, Checkbox } from "semantic-ui-react";
 
 import Day from "./Day";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const Week = inject(
   "db",
@@ -29,18 +27,19 @@ const Week = inject(
       }
       handleChange = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         // console.log({ name, value });
       };
       render() {
-        let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
-          dosages: {
-            current: { drug, form, methodform, names },
-          },
-          router: { values },
-        } = this.props;
+        // let {
+        //   actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
+        //   dosages: {
+        //     current: { drug, form, methodform, names },
+        //   },
+        //   router: { values },
+        // } = this.props;
         let { t } = this.props.actions;
 
         let weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];

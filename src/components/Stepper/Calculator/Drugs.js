@@ -58,7 +58,7 @@ const LiquidDrugs = inject( 'actions', 'drugs' )(observer(class LiquidDrugs exte
 			liquid
 		} = this.props
 		let {
-			groups, grouped, iterator, canDrag
+			 grouped, // iterator, canDrag, groups,
 		} = this.drugsWithGroups
 		
 		

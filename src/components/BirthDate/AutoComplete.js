@@ -15,11 +15,8 @@ const ref_days = ["день", "дня", "дней"],
   ref_years = ["год", "года", "лет"];
 
 class MySearch extends Search {
-  constructor(props) {
-    super(props);
-  }
   renderSearchInput = (rest) => {
-    const { icon, input } = this.props;
+    const { input } = this.props;
     const { value } = this.state;
 
     return Input.create(input, {
@@ -35,10 +32,10 @@ class MySearch extends Search {
   };
   renderResultsMenu = () => {
     const { open } = this.state;
-    const { resultClassName, height } = this.props;
+    const { resultclassname, height } = this.props;
     const resultsClasses = open ? "visible" : "";
     const menuContent = this.renderMenuContent();
-    const classes = cx(resultsClasses, resultClassName);
+    const classes = cx(resultsClasses, resultclassname);
 
     if (!menuContent) return;
 
@@ -125,7 +122,7 @@ class AutoComplete extends Component {
     );
   };
   render() {
-    const { isLoading, searchQuery, results } = this.state;
+    const { isLoading, results } = this.state;
     const { value } = this.props;
     let { trans: t } = this.props;
 
@@ -141,7 +138,7 @@ class AutoComplete extends Component {
         results={results}
         value={value}
         resultRenderer={this.resultRenderer}
-        resultClassName="result-wrapper"
+        resultclassname="result-wrapper"
       />
     );
   }

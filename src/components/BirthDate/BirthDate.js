@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Icon, Button } from "semantic-ui-react";
+import { Form, Button } from "semantic-ui-react";
 
 import AutoComplete from "./AutoComplete";
 import Calendar from "./Calendar";
@@ -43,8 +43,8 @@ class BirthDate extends Component {
       if (ref_months.includes(val)) month = parseInt(resArr[i - 1]);
       if (ref_weeks.includes(val)) week = parseInt(resArr[i - 1]);
       if (ref_days.includes(val)) day = parseInt(resArr[i - 1]);
-      if (val == "рождения" || val == "р.") birthyear = parseInt(resArr[i - 2]);
-      if (val == "г.р.") birthyear = parseInt(resArr[i - 1]);
+      if (val === "рождения" || val === "р.") birthyear = parseInt(resArr[i - 2]);
+      if (val === "г.р.") birthyear = parseInt(resArr[i - 1]);
     });
     // console.log({ year, month, week, day });
     // console.log(moment().format('DD.MM.YYYY'));
@@ -61,7 +61,6 @@ class BirthDate extends Component {
   };
   handleChangeDate = (e, { value }) => {
     // console.log({ value });
-    let { onChange, name } = this.props;
     let years = moment().diff(moment(moment(value).toDate()), "years");
     let months = moment()
       .add({ years: -years })

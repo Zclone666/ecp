@@ -1,15 +1,8 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
-import Slider from "react-slick";
-
 import { Segment, List, Button } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
-
 const Clinics = inject("router", "db", "actions", "patients")(observer(class Clinics extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +29,6 @@ const Clinics = inject("router", "db", "actions", "patients")(observer(class Cli
   };
   render() {
     let {
-      patients,
       actions: {
         checkData,
         drugStructure: { clinic_id },
@@ -53,7 +45,7 @@ const Clinics = inject("router", "db", "actions", "patients")(observer(class Cli
                   <Button>{t("select")}</Button>
                 </List.Content>
                 <List.Icon
-                  name={clinic_id == lpu.id ? "check square outline" : "square outline"}
+                  name={clinic_id === lpu.id ? "check square outline" : "square outline"}
                   verticalAlign="middle"
                 />
                 <List.Content className="large">
