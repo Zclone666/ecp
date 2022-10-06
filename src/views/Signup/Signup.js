@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
-import { Button, Form, Grid, Header, Image, Message, Segment, Link, Modal } from "semantic-ui-react";
+import { Button, Form, Grid, Header, Message, Segment, Modal } from "semantic-ui-react";
 
 import Search from "../../components/Search";
 
@@ -32,8 +32,8 @@ const Signup = inject(
         this.props.actions.signin();
       };
       handleCheck = async (e) => {
-        let { name, value } = e.target;
-        if (name == "email") {
+        let { name } = e.target;
+        if (name === "email") {
           this.props.actions.checkUserUmkb();
         }
       };
@@ -114,12 +114,11 @@ const Signup = inject(
             middleName,
             lpuName,
             department,
-            clinicEncryptedId,
           },
         } = this.props.actions;
-        let { confirm_password, filled, checkPass, search_clinic } = this.state;
+        let { confirm_password, search_clinic } = this.state;
         let canInputPass = email.length > 1 && isEmailReg;
-        let { searchReady, searchClinicRows } = this.props.tools;
+        let { searchReady } = this.props.tools;
 
         const { t } = this.props.actions;
         // console.log({isEmailReg, email});
@@ -198,7 +197,7 @@ const Signup = inject(
                               })}
                               results={this.listSearch}
                               value={search_clinic}
-                              resultClassName="result-wrapper"
+                              resultclassname="result-wrapper"
                             />
                           </Form.Field>
                         </Form.Group>

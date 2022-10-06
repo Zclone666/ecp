@@ -1,11 +1,9 @@
 import React, { Fragment } from "react";
 import { inject, observer } from "mobx-react";
 
-import { useDrag } from "react-dnd";
-
 import RouterLink from "../../router/a";
 
-import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown, Visibility } from "semantic-ui-react";
+import { List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
@@ -26,17 +24,13 @@ const Drug = inject(
     class Drug extends React.Component {
       constructor(props) {
         super(props);
-        
+
         this.state = {
           open: true,
         };
       }
       getLF = async () => {
         let {
-          drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
-          dosages: { dosage },
-          warnings: { warning, groups }, //warnings, warnGroups
-          router: { location },
           drug,
         } = this.props;
         await this.props.drugs.setCurrent({ key: drug.key, id: drug.id });
@@ -69,10 +63,7 @@ const Drug = inject(
       selectDrug = (e, drugId) => {
         e.preventDefault();
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, misLinkLogin: misDisabled },
-          drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
-          dosages: { dosage },
-          warnings: { warning, groups: warnGroups }, //warnings, warnGroups
+          warnings: { warning }, //warnings, warnGroups
         } = this.props;
         let selectedWarnings = warning[drugId];
         let groups = [];
@@ -100,7 +91,7 @@ const Drug = inject(
         let {
           dosages: { getFromBase },
           tools: { names, shortnames, round },
-          drug: { freq, freq_id, duration, duration_id, calc, dosage, helpers, schedule },
+          drug: { freq, freq_id, duration, duration_id, calc, helpers, schedule },
           drug,
           actions: { UIText },
         } = this.props;
@@ -142,15 +133,12 @@ const Drug = inject(
           actions: {
             selectedDrug,
             selectedConflict,
-            activeDrugs,
-            activeConflicts,
             disabled,
             topview_disabled,
             misLinkLogin: misDisabled,
           },
-          drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
           dosages: { dosage: dose },
-          warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
+          warnings: { warning, icons: warnIcons }, //warnings, warnGroups, warnIcons
           drug: ldrug,
           active,
           style,
@@ -163,17 +151,16 @@ const Drug = inject(
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
         //console.log(drug);
-        let selectedWarnings = warnIcons[selectedDrug];
 
-        const drugWarnings = _.orderBy(
-          Array.from(warning.values()),
-          ["group", "step", "value", "trust"],
-          ["desc", "asc", "desc", "desc"]
-        );
-        const arrowColor = drugWarnings?.length > 0 ? drugWarnings[0].color : false;
+        // const drugWarnings = _.orderBy(
+        //   Array.from(warning.values()),
+        //   ["group", "step", "value", "trust"],
+        //   ["desc", "asc", "desc", "desc"]
+        // );
+        // const arrowColor = drugWarnings?.length > 0 ? drugWarnings[0].color : false;
         // console.log({ arrowColor, warnings: Array.from(warning.values()), drugWarnings });
         // console.log({ drug });
-        let { key, name, level, tn, type, dosage, helpers, specials, date } = drug;
+        let { name, type, dosage, helpers, specials, date } = drug;
         const dateOfPrescription = date ? moment(date, "x").format("DD.MM.YYYY") : "";
         let drugDosages = dose.get(drug.id) || {};
         let hasWarnings = warning.size > 0;
@@ -315,7 +302,7 @@ const Drug = inject(
                     name="arrow alternate circle right"
                     style={{ color: "#FFF" }}
                     size="large"
-                    onClick={() => {}}
+                    onClick={() => { }}
                   />
                 </RouterLink>
               ) : (

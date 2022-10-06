@@ -5,7 +5,6 @@ import RouterLink from "../../router/a";
 
 import { TYPE } from "../../constants";
 
-import Spinner from "../../components/Spinner";
 import Search from "../../components/Search";
 import Drugs from "../../components/Drugs";
 import Conflicts from "../../components/Conflicts";
@@ -28,7 +27,6 @@ import {
   Dropdown,
   Button,
   Responsive,
-  Grid,
   Modal,
   Flag,
   TextArea,
@@ -37,7 +35,7 @@ import {
 
 import _ from "lodash";
 
-const ifFree = TYPE == "free";
+const ifFree = TYPE === "free";
 
 const Main = inject(
   "router",
@@ -228,10 +226,9 @@ const Main = inject(
       }
 
       render() {
-        const { open, openCautions, openClearence, searchQuery, selectedDrug, selectedConflict, clinic } = this.state;
+        const { open, openCautions, openClearence, searchQuery, clinic } = this.state;
 
         let {
-          currentPage,
           height,
           active_language,
           makeLiquids,
@@ -248,24 +245,17 @@ const Main = inject(
           drugs: {
             searchReady,
             searchRows,
-            selectedRows,
             drug,
             deletedLiquids,
             deletedRows,
             unselectedRows,
-            unselectedLiquids,
             listChanged,
             drugsRemoved,
             checkLiquids,
           }, //drugs, drugsDosages, currDrug, setDosageParams
-          dosages: { dosage },
-          warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
+          warnings: { cautionsTitle, cautions }, //warnings, warnGroups
           actions: {
             patientForm: { disease, co_disease },
-
-            clinrecCheckerStep,
-            isPrescriptFilled,
-            patientPassport,
             drugStructure,
             checkData,
             disabled,
@@ -275,12 +265,11 @@ const Main = inject(
           //t,
         } = this.props;
         const { t } = this.props.actions;
-        let selectedWarnings = warning[selectedDrug];
         let showPage = !!(this.props.router.values && this.props.router.values.page);
         // console.log({ showPage, values: this.props.router.values, page: this.props.router.values.page });
         // console.log('router', this.props.router);
         // let showPage2 = true
-        const { id: patientId, email, fio } = patients.current;
+        const { id: patientId, fio } = patients.current;
         // console.log("patient Form: ", this.props.actions.patientForm);
         let isDisease = disease.length > 0 || co_disease.length > 0;
 
@@ -296,7 +285,6 @@ const Main = inject(
 
         let showMainBottomMenu =
           !(makeLiquids || !checkLiquids) && (drug.size > 0 || deletedRows.length > 0 || deletedLiquids.length > 0);
-        let showRevert = drug.size == 0 && deletedRows.length > 0;
 
         const texts = buttonTexts ? buttonTexts.text : null;
 
@@ -482,10 +470,10 @@ const Main = inject(
                       >
                         <Modal.Header>{cautionsTitle}</Modal.Header>
                         <Modal.Content>
-                          {cautions.length > 0 &&
+                          {cautions?.length > 0 &&
                             cautions.map((item, i) => {
                               return (
-                                <Message negative>
+                                <Message negative key={i}>
                                   <Message.Header>{item}</Message.Header>
                                 </Message>
                               );
@@ -629,26 +617,17 @@ const Main = inject(
                       <Dropdown
                         // disabled
                         item
-                        text={
-                          active_language == "ru" ? (
-                            <>
-                              Русский <Flag name="ru" />
-                            </>
-                          ) : (
-                            <>
-                              English <Flag name="gb" />
-                            </>
-                          )
-                        }
+                        // icon={active_language === "ru" ? <Flag name="ru" /> : <Flag name="gb" />}
+                        text={active_language === "ru" ? "Русский " : "English "}
                       >
                         <Dropdown.Menu>
                           <Dropdown.Item onClick={() => this.changeLang("en")}>
                             <Flag name="gb" />
-                            English
+                            English 
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => this.changeLang("ru")}>
                             <Flag name="ru" />
-                            Русский
+                            Русский 
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
@@ -691,12 +670,12 @@ const Main = inject(
                           results={searchRows}
                           value={searchQuery}
                           resultRenderer={this.resultRenderer}
-                          resultClassName="result-wrapper"
+                          resultclassname="result-wrapper"
                           minCharacters={2}
                           icon={
                             <Icon
                               name="pencil"
-                              style={{ cursor: "pointer", "pointer-events": "all" }}
+                              style={{ cursor: "pointer", "pointerEvents": "all" }}
                               onClick={() => {
                                 this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" });
                               }}
@@ -722,12 +701,12 @@ const Main = inject(
                           <Message info>
                             <Icon name="info" />
                             {t("main_search_tip")}&nbsp;{" "}
-                            <a
+                            <span
                               style={{ cursor: "pointer", textDecoration: "underline" }}
                               onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
                             >
                               {t("main_parser_tip")}
-                            </a>
+                            </span>
                           </Message>
                         </Segment>
                       )

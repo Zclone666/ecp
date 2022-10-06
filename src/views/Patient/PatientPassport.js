@@ -1,34 +1,15 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
-import BirthDate from "../../components/BirthDate";
-import Search from "../../components/Search";
 
 import MaskedInput from "react-text-mask";
 
 import {
-  Sidebar,
-  Menu,
-  Icon,
   // Search,
   Segment,
-  Message,
-  List,
-  Feed,
-  Button,
-  Responsive,
-  Grid,
   Form,
   Input,
-  Checkbox,
-  Header,
-  Dropdown,
 } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const PatientPassport = inject(
   "router",
@@ -55,9 +36,10 @@ const PatientPassport = inject(
         const { editForm } = this.props;
         editForm && editForm();
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
-        if (name == "medcard_num") {
+        if (name === "medcard_num") {
           this.props.actions.patientPassport["medcard_num"] = { default: value };
           return;
         }
@@ -66,12 +48,10 @@ const PatientPassport = inject(
 
       render() {
         const {
-          id,
           // name,
           email,
           // miscode,
           // misid,
-          fio,
           lastname,
           patronymic,
           firstname,

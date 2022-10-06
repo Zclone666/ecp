@@ -6,12 +6,9 @@ import {
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
-  Divider,
   Checkbox,
-  Confirm,
   Dropdown,
   Flag,
 } from "semantic-ui-react";
@@ -19,6 +16,10 @@ import RouterLink from "../../router/a";
 import { withTranslation } from "react-i18next";
 import { LOGIN } from "../../constants";
 
+
+/**
+ * @desc filled и filledCode скорее всего не нужны, везде идёт только присвоение, но нет использований
+ */
 const Login = inject(
   "router",
   "actions"
@@ -32,7 +33,7 @@ const Login = inject(
           filled: false,
           filledCode: false,
           showCode: false,
-          privateKeyOnly: LOGIN == "privateKeyOnly",
+          privateKeyOnly: LOGIN === "privateKeyOnly",
           showPassword: false,
         };
         const autofill = localStorage.getItem("autofill");
@@ -40,7 +41,7 @@ const Login = inject(
         const autofillEmail = localStorage.getItem("autofillEmail");
         const autofillPassword = localStorage.getItem("autofillPassword");
 
-        if (autofill == "yes") {
+        if (autofill === "yes") {
           this.props.actions.loginForm.email = autofillEmail ? autofillEmail : "";
           this.props.actions.loginForm.password = autofillPassword ? autofillPassword : "";
         }
@@ -69,7 +70,7 @@ const Login = inject(
           const { password, email } = this.props.actions.loginForm;
           const autofill = localStorage.getItem("autofill");
           // console.log({ autofill });
-          if (isOk && autofill != "yes") {
+          if (isOk && autofill !== "yes") {
             const autofillAsk = window.confirm(t("remember_your_email_password"));
             if (autofillAsk) {
               localStorage.setItem("autofillEmail", email);
@@ -99,7 +100,7 @@ const Login = inject(
         this.checkFilled();
       };
       render() {
-        let { filled, filledCode, showCode, showPassword } = this.state;
+        let { showCode, showPassword } = this.state;
         let {
           loginForm: { remember, email, password },
           projectTitle,
@@ -113,7 +114,7 @@ const Login = inject(
                 // disabled
                 item
                 text={
-                  active_language == "ru" ? (
+                  active_language === "ru" ? (
                     <>
                       Русский <Flag name="ru" />
                     </>

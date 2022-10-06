@@ -3,13 +3,7 @@ import { observer, inject } from "mobx-react";
 
 import Slider from "react-slick";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
-
 import Drugs from "../../components/Drugs";
-
-import { CREATE_API_URL } from "../../lib/connect";
 
 import PatientPassport from "../Patient/PatientPassport";
 
@@ -20,13 +14,11 @@ import _ from "lodash";
 
 import MaskedInput from "react-text-mask";
 
-import { getUserCertificates, Certificate, createDetachedSignature, createHash } from "crypto-pro";
+import { getUserCertificates, createDetachedSignature, createHash } from "crypto-pro";
 
 import {
   // Sidebar,
   Menu,
-  Tab,
-  Statistic,
   Input,
   Modal,
   Segment,
@@ -97,7 +89,6 @@ const Recipe = inject(
       };
 
       save = async () => {
-        const { t } = this.props.actions;
         this.setState({ savePending: true, sevingPending: true });
         let code = await this.props.recipes.save();
 
@@ -107,6 +98,7 @@ const Recipe = inject(
         this.setState({ code });
         this.setState({ openCode: true });
       };
+      
       print = async () => {
         let code = await this.props.recipes.print();
 
@@ -136,7 +128,7 @@ const Recipe = inject(
       };
 
       mail = async () => {
-        let code = await this.props.recipes.email();
+        await this.props.recipes.email();
       };
 
       back = () => {
@@ -155,7 +147,7 @@ const Recipe = inject(
           this.props.recipes["formType"] = recipeData.items[id].type;
         }
 
-        if (printType == "recipe" && recipeData.items) {
+        if (printType === "recipe" && recipeData.items) {
           let [id, item] = _.find(Object.entries(recipeData.items), ([id, value]) => {
             return value.type === "recipe" && value.default;
           }) || [null, {}];
@@ -192,9 +184,9 @@ const Recipe = inject(
         this.resetSign();
 
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
-        let { checkData } = this.props.actions;
 
         this.props.recipes[name] = value;
       };
@@ -204,43 +196,44 @@ const Recipe = inject(
         const { t } = this.props.actions;
         this.resetSign();
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
-        let { checkData } = this.props.actions;
-        if (name == "recipe_formid") {
+
+        if (name === "recipe_formid") {
           this.props.recipes["maxcount"] = this.props.actions.recipeData.items[value].maxcount;
           this.props.recipes["drugKeysForPrescription"] = [];
           this.props.recipes["formType"] = this.props.actions.recipeData.items[value].type;
           let defDuration = _.find(this.props.actions.recipeData.items[value].durations || [], "default");
           if (defDuration) this.handleRecipeDataChange(null, { name: "recipe_endtimeitem", value: defDuration });
         }
-        if (name == "spectextPrompt") {
+        if (name === "spectextPrompt") {
           this.setState({ spectextPrompt: value });
-          if (value == 1) {
+          if (Number(value) === 1) {
             this.props.recipes["spectext"] = t("weekly");
           }
-          if (value == 2) {
+          if (Number(value) === 2) {
             this.props.recipes["spectext"] = t("monthly");
           }
-          if (value == 3) {
+          if (Number(value) === 3) {
             this.props.recipes["spectext"] = "";
           }
           return;
         }
-        if (name == "recipe_endtimeitem" && value.value > 60) {
+        if (name === "recipe_endtimeitem" && value.value > 60) {
           this.props.recipes["special"] = true;
         }
-        if (name == "cito") {
+        if (name === "cito") {
           this.props.recipes["cito"] = !this.props.recipes["cito"];
-          if (this.props.recipes["cito"] == true) this.props.recipes["statim"] = false;
+          if (Boolean(this.props.recipes["cito"]) === true) this.props.recipes["statim"] = false;
           return;
         }
-        if (name == "statim") {
+        if (name === "statim") {
           this.props.recipes["statim"] = !this.props.recipes["statim"];
-          if (this.props.recipes["statim"] == true) this.props.recipes["cito"] = false;
+          if (Boolean(this.props.recipes["statim"]) === true) this.props.recipes["cito"] = false;
           return;
         }
-        if (name == "special") {
+        if (name === "special") {
           this.props.recipes["special"] = !this.props.recipes["special"];
           return;
         }
@@ -249,10 +242,13 @@ const Recipe = inject(
 
       handlePatientDataChange = (e, { name, value }) => {
         this.resetSign();
+
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
-        if (name == "medcard_num") {
+
+        if (name === "medcard_num") {
           this.props.patients.current["medcard_num"] = { default: value };
           return;
         }
@@ -343,7 +339,7 @@ const Recipe = inject(
       };
 
       render() {
-        let { open, openCode, printType, certificateNotAvailableDialog } = this.state;
+        let { open, openCode, printType } = this.state;
         let {
           actions: {
             drugStructure: { doctor_id: doctor, clinic_id: clinic, doctor_name: docName },
@@ -353,7 +349,6 @@ const Recipe = inject(
           },
           recipes: {
             code,
-            recipe_endtime,
             recipe_text,
             recipe_formid,
             recipe_endtimeitem,
@@ -362,8 +357,6 @@ const Recipe = inject(
             citizenCategory,
             financingSource,
             compensation,
-            insuranceNumber,
-            patientCard,
             cito,
             statim,
             special,
@@ -374,15 +367,6 @@ const Recipe = inject(
         } = this.props;
         const { t } = this.props.actions;
         const {
-          id,
-          // name,
-          email,
-          // miscode,
-          // misid,
-          fio,
-          lastname,
-          patronymic,
-          firstname,
           snils,
           policy_num,
           medcard_num,
@@ -547,12 +531,12 @@ const Recipe = inject(
                               !recipe_formid
                                 ? []
                                 : recipeData.items[recipe_formid].durations.map((item) => {
-                                    return {
-                                      key: item.id,
-                                      text: item.name,
-                                      value: item,
-                                    };
-                                  })
+                                  return {
+                                    key: item.id,
+                                    text: item.name,
+                                    value: item,
+                                  };
+                                })
                             }
                             placeholder={t("choose")}
                             name="recipe_endtimeitem"
@@ -617,7 +601,7 @@ const Recipe = inject(
                               name="mkb10code"
                               value={mkb10code}
                               onChange={this.handleChange}
-                              readOnly={recipeDiseaseId != t("manual_input_code")}
+                              readOnly={recipeDiseaseId !== t("manual_input_code")}
                             />
                           </Form.Field>
                         </Form.Group>
@@ -778,7 +762,7 @@ const Recipe = inject(
                               onChange={this.handleRecipeDataChange}
                             />
                           </Form.Field>
-                          {this.state.spectextPrompt == "3" && (
+                          {String(this.state.spectextPrompt) === "3" && (
                             <Form.Field width={10}>
                               <label>{t("indicate_vacation_frequency")}</label>
                               <Input

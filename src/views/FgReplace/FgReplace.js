@@ -10,7 +10,6 @@ import FD from "./FD";
 
 import { Menu } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const FgReplace = inject(
   "router",
