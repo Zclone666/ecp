@@ -26,7 +26,7 @@ import {
 
 import _ from "lodash";
 import moment from "moment";
-import { isGrowth, isWeight } from "../../serviceWorker";
+// import { isGrowth, isWeight } from "../../serviceWorker";
 
 const boxDisabled = !window.location.host.includes("socmedica") && !window.location.host.includes(["localhost"]);
 
