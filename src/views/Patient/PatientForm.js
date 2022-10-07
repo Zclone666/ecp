@@ -26,7 +26,7 @@ import {
 
 import _ from "lodash";
 import moment from "moment";
-import { isGrowth, isWeight } from "../../serviceWorker";
+// import { isGrowth, isWeight } from "../../serviceWorker";
 
 const boxDisabled = !window.location.host.includes("socmedica") && !window.location.host.includes(["localhost"]);
 
@@ -86,29 +86,39 @@ const PatientForm = inject(
           name = e.target.name;
           value = e.target.value;
         }
+        
         const { editForm } = this.props;
-        editForm();
 
-        let errorValue = false;
         if (name === "weight") {
-          errorValue = isWeight(value);
+          value = value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
+          // errorValue = isWeight(value);
+          if (value > 500) {
+            return;
+          }
         }
+
+        // let errorValue = false;
+
         if (name === "growth") {
-          errorValue = isGrowth(value);
+          value = value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
+          if (value > 275) {
+            return;
+          }
         }
+
+        editForm();
         const { birthdate } = this.props.patients.current;
-        // console.log(errorValue);
         let veryOld = this.veryOld(birthdate);
 
         if (name === "weight" || name === "growth") {
           value = clearDouble(value);
-          if (!errorValue) {
-            if (!checkDouble(value)) {
-              this.props.patients.current[name] = value;
-            } else {
-              this.props.patients.current[name] = parseFloat(value);
-            }
+          // if (!errorValue) {
+          if (!checkDouble(value)) {
+            this.props.patients.current[name] = value;
+          } else {
+            this.props.patients.current[name] = parseFloat(value);
           }
+          // }
 
           this.props.patients.current.masIndex =
             this.props.patients.current.weight && this.props.patients.current.growth
@@ -447,7 +457,7 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="growth"
-                    type="number"
+                    // type="number"
                     // error={growth < 8}
                     value={growth || ""}
                     label={{ basic: true, content: t("sm") }}
@@ -461,7 +471,7 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="weight"
-                    type="number"
+                    // type="number"
                     // error={weight < 3}
                     value={weight || ""}
                     label={{ basic: true, content: t("kg") }}
