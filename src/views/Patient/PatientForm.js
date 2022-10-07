@@ -274,7 +274,7 @@ const PatientForm = inject(
         let firstname = "";
         let patronymic = "";
 
-        if (!showPatientPassport) {
+        if (!showPatientPassport && !this.props.patients.current.id) {
           // FIO PARSING
 
           const patronymicTest = /^.+(ич|вна|чна)$/i;
