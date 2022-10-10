@@ -43,6 +43,19 @@ const PatientPassport = inject(
           this.props.actions.patientPassport["medcard_num"] = { default: value };
           return;
         }
+
+        if (name === "lastname") {
+          value = value.replace(/[^\u0400-\u04FF\s\-a-z]/gi, '');
+        }
+
+        if (name === "firstname") {
+          value = value.replace(/[^\u0400-\u04FF\s\-a-z]/gi, '');
+        }
+
+        if (name === "patronymic") {
+          value = value.replace(/[^\u0400-\u04FF\s\-a-z]/gi, '');
+        }
+
         this.props.actions.patientPassport[name] = value;
       };
 
