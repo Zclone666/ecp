@@ -818,7 +818,7 @@ class Patients {
   }
 
   /**
-  // метод сохаранения пациента на бэк
+  // метод сохранения пациента на бэк
   */
   async save() {
     let { active_language } = this.stores.actions;
@@ -855,6 +855,11 @@ class Patients {
           this.setCurrent(data.patient);
           // await this.request(id);
         }
+
+        /**
+         * @todo Можно оптимизировать, если запрашивать не каждый раз при изменение пациента, а только если изменились ФИО или емайл
+         */
+        this.stores.patients.getList();
         return data;
       },
       fail: (alerts) => {
