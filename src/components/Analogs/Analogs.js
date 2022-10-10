@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, setState } from "react";
 import { inject, observer } from "mobx-react";
 
 // import RouterLink from '../../../router/a'
@@ -32,6 +32,7 @@ const Analogs = inject(
 
         this.state = {
           opened: null,
+          disabled: false,
         };
       }
 
@@ -43,6 +44,7 @@ const Analogs = inject(
         }
       };
       setAnalog = async ({ id, drug }) => {
+
         let { router } = this.props;
         drug.fpid = id;
         drug.key = null;
@@ -58,16 +60,19 @@ const Analogs = inject(
         //   drugCache: null,
         // };
         let drugKey = router.values && router.values.page;
-        await this.props.drugs.unselectDrug({ key: drugKey });
-        await this.props.drugs.selectFromSearch(drug);
 
-        router.push("/");
+        this.setState({ disabled: true }, () => {
+          this.props.drugs.unselectDrug({ key: drugKey });
+          this.props.drugs.selectFromSearch(drug);
+          router.push("/");
+        });
+
       };
 
       render() {
         let { analogs, router } = this.props;
         const { t } = this.props.actions;
-        let { opened } = this.state;
+        let { opened, disabled } = this.state;
         let drugKey = router.values && router.values.page;
         let analogObj = analogs.analog.get(drugKey) || {};
         return (
@@ -106,7 +111,8 @@ const Analogs = inject(
                                       return (
                                         <Table.Row
                                           key={"analogItem" + x}
-                                          onClick={() => this.setAnalog({ drug: analog.drug, id: analogItem.id })}
+                                          disabled={disabled}
+                                          onClick={(e) => this.setAnalog({ drug: analog.drug, id: analogItem.id })}
                                         >
                                           <Table.Cell>{analogItem.name}</Table.Cell>
                                           <Table.Cell collapsing textAlign="right">
