@@ -43,7 +43,7 @@ const PatientPassport = inject(
           this.props.actions.patientPassport["medcard_num"] = { default: value };
           return;
         }
-
+        // for docker reload
         if (name === "lastname") {
           value = value.replace(/[^\u0400-\u04FF\s\-a-z]/gi, '');
         }
