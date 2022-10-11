@@ -87,7 +87,7 @@ const LiquidCalculator = inject(
             this.props.actions.liquidForm.calc[name] = value;
           }
           return;
-        } else if (value !== parseFloat(value) && !(value.split(" + ") && value.split(" + ").length > 1)) {
+        } else if (+value !== parseFloat(value) && !(value.split(" + ") && value.split(" + ").length > 1)) {
           return;
         }
 

@@ -45,13 +45,12 @@ const Calculator = inject(
           name = e.target.name;
           value = e.target.value;
         }
-        // console.log({ name, value });
+
         this.setState({ [name]: value });
         this.props.actions.calculatorForm.dosageUnit = value;
       };
 
       handleChange = (e, { name, value }) => {
-        // console.log({ name, value });
         let { getToBase, calcValues } = this.props.dosages;
         let { dosage: dos } = calcValues;
         let { currUnit } = this.state;
@@ -68,7 +67,7 @@ const Calculator = inject(
         //if(!_.isArray(value)) value = [value]
         //value = parseFloat(eval(value))
         value = clearDouble(value);
-        // console.log(value);
+
         let double = false;
         if (name === "specials") {
           this.props.actions.drugStructure.specials = value;
@@ -80,11 +79,10 @@ const Calculator = inject(
             this.props.patients.current.weight = value;
             // weight = parseFloat(value)
           } else {
-            // console.log(value);
             this.props.actions.calculatorForm[name] = value;
           }
           return;
-        } else if (value !== parseFloat(value) && !(value.split(" + ") && value.split(" + ").length > 1)) {
+        } else if (+value !== parseFloat(value) && !(value.split(" + ") && value.split(" + ").length > 1)) {
           return;
         }
         //value = parseFloat(value)
@@ -475,7 +473,7 @@ const Calculator = inject(
                       disabled={disableAll || disableMulti}
                       size="big"
                       name="dosage"
-                      value={getFromBase(currUnit || def, currUnit === 999999 ? dosage / 10 : dosage).join(" + ") || ""}
+                      value={getFromBase(currUnit || def, Number(currUnit) === 999999 ? dosage / 10 : dosage).join(" + ") || ""}
                       label={
                         <Dropdown
                           name="currUnit"
@@ -551,7 +549,7 @@ const Calculator = inject(
                         disabled={disableAll}
                         selection
                         // defaultValue={(current && current.freq) || null}
-                        value={current?.freq}
+                        value={current?.freq_id}
                         className="input big"
                         name={"dayCount"}
                         placeholder={t("select")}
