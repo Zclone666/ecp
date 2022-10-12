@@ -455,7 +455,7 @@ const Recipe = inject(
                     .filter(([id, value]) => value.type === "list")
                     .map(([id, value]) => {
                       return (
-                        <Grid.Column width={8}>
+                        <Grid.Column width={8} key={id}>
                           <Button onClick={() => this.setPrintType("list", id)} size="big" color="blue" fluid>
                             {value.name}
                             {/* {t("outpatient_appointment_list")} */}
