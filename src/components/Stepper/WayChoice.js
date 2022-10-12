@@ -48,7 +48,7 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to={`${url}/lf/1`}>
+                    <Card fluid as={RouterLink} to={`${url}/lf/1`}>
                       <div className='ui image cardbg'>
                         <Icon name='pills' className='rotated' />
                         <Icon name='pills' />
@@ -71,7 +71,7 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to={`${url}/methods/1`}>
+                    <Card fluid as={RouterLink} to={`${url}/methods/1`}>
                       <div className='ui image cardbg'>
                         <Icon name='syringe' className='rotated' />
                         <Icon name='syringe' />
@@ -97,7 +97,7 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to={`${url}/lf/1`}>
+                    <Card fluid as={RouterLink} to={`${url}/lf/1`}>
                       <div className='ui image cardbg'>
                         <Icon name='pills' className='rotated' />
                         <Icon name='pills' />
@@ -118,7 +118,7 @@ const WayChoice = inject('db', 'actions', 'drugs', 'warnings', 'router')(observe
                   verticalAlign='middle'
                 >
                   <Grid.Column style={{ maxWidth: 300 }}>
-                    <Card fluid href as={RouterLink} to={`${url}/methods/1`}>
+                    <Card fluid as={RouterLink} to={`${url}/methods/1`}>
                       <div className='ui image cardbg'>
                         <Icon name='syringe' className='rotated' />
                         <Icon name='syringe' />
