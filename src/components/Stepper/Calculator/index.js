@@ -493,7 +493,6 @@ const Calculator = inject(
                       disabled={disableAll}
                       size="big"
                       name="count"
-                      numeric
                       value={count != null ? count : cnt.value}
                       label={{ basic: true, content: (cnt.unit && (cnt.unit.shortname || cnt.unit.name)) || "" }}
                       labelPosition="right"
