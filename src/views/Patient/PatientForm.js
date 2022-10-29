@@ -1,9 +1,6 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
 import BirthDate from "../../components/BirthDate";
 import Search from "../../components/Search";
 
@@ -14,20 +11,14 @@ import { checkDouble, clearDouble } from "../../lib/helpers";
 import { withTranslation } from "react-i18next";
 
 import {
-  Sidebar,
-  Menu,
   Icon,
   Divider,
   Segment,
-  Message,
-  List,
-  Feed,
-  Button,
   Responsive,
-  Grid,
+  List,
+  Button,
   Form,
   Input,
-  Checkbox,
   Header,
   Dropdown,
   Modal,
@@ -35,7 +26,7 @@ import {
 
 import _ from "lodash";
 import moment from "moment";
-import { isGrowth, isWeight } from "../../serviceWorker";
+// import { isGrowth, isWeight } from "../../serviceWorker";
 
 const boxDisabled = !window.location.host.includes("socmedica") && !window.location.host.includes(["localhost"]);
 
@@ -92,31 +83,42 @@ const PatientForm = inject(
 
       handleChange = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
+        
         const { editForm } = this.props;
-        editForm();
 
-        let errorValue = false;
-        if (name == "weight") {
-          errorValue = isWeight(value);
+        if (name === "weight") {
+          value = value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
+          // errorValue = isWeight(value);
+          if (value > 500) {
+            return;
+          }
         }
-        if (name == "growth") {
-          errorValue = isGrowth(value);
+
+        // let errorValue = false;
+
+        if (name === "growth") {
+          value = value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
+          if (value > 275) {
+            return;
+          }
         }
+
+        editForm();
         const { birthdate } = this.props.patients.current;
-        // console.log(errorValue);
         let veryOld = this.veryOld(birthdate);
 
         if (name === "weight" || name === "growth") {
           value = clearDouble(value);
-          if (!errorValue) {
-            if (!checkDouble(value)) {
-              this.props.patients.current[name] = value;
-            } else {
-              this.props.patients.current[name] = parseFloat(value);
-            }
+          // if (!errorValue) {
+          if (!checkDouble(value)) {
+            this.props.patients.current[name] = value;
+          } else {
+            this.props.patients.current[name] = parseFloat(value);
           }
+          // }
 
           this.props.patients.current.masIndex =
             this.props.patients.current.weight && this.props.patients.current.growth
@@ -152,7 +154,8 @@ const PatientForm = inject(
       };
       handleChangeToggle = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         const { editForm } = this.props;
         editForm();
@@ -281,7 +284,7 @@ const PatientForm = inject(
         let firstname = "";
         let patronymic = "";
 
-        if (!showPatientPassport) {
+        if (!showPatientPassport && !this.props.patients.current.id) {
           // FIO PARSING
 
           const patronymicTest = /^.+(ич|вна|чна)$/i;
@@ -345,21 +348,14 @@ const PatientForm = inject(
         const { t } = this.props.actions;
         const {
           id,
-          key,
           email,
-          name,
           fio,
-          snils,
-          miscode,
-          misid,
           birthdate,
           sex,
           growth,
           weight,
           masIndex,
           squareIndex,
-          disease,
-          co_disease,
           allergy,
           labparams,
           pregnancy,
@@ -381,9 +377,8 @@ const PatientForm = inject(
           showPatientPassport,
           showProtocol,
         } = this.state;
-        let searchReady = true,
-          searchRows = [],
-          searchQuery = "";
+
+        let searchReady = true;
 
         let isWoman = sex === "female";
         let isPregant = !!pregnancy;
@@ -408,7 +403,7 @@ const PatientForm = inject(
                     })}
                     results={this.listSearch}
                     value={search_patient}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
                 <Form.Field width={3}>
@@ -462,7 +457,7 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="growth"
-                    type="number"
+                    // type="number"
                     // error={growth < 8}
                     value={growth || ""}
                     label={{ basic: true, content: t("sm") }}
@@ -476,7 +471,7 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="weight"
-                    type="number"
+                    // type="number"
                     // error={weight < 3}
                     value={weight || ""}
                     label={{ basic: true, content: t("kg") }}
@@ -528,7 +523,7 @@ const PatientForm = inject(
                     results={diseaseRows}
                     value={search_disease}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -563,7 +558,7 @@ const PatientForm = inject(
                     results={diseaseRows}
                     value={search_co_disease}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -702,7 +697,7 @@ const PatientForm = inject(
                     results={allergyRows}
                     value={search_allergy}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -796,7 +791,7 @@ const PatientForm = inject(
                         {t("trimester")}
                       </Button>
                       <Button
-                        primary={trimester == 1}
+                        primary={Number(trimester) === 1}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -805,7 +800,7 @@ const PatientForm = inject(
                         1
                       </Button>
                       <Button
-                        primary={trimester == 2}
+                        primary={Number(trimester) === 2}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -814,7 +809,7 @@ const PatientForm = inject(
                         2
                       </Button>
                       <Button
-                        primary={trimester == 3}
+                        primary={Number(trimester) === 3}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -919,7 +914,7 @@ const PatientForm = inject(
                         {t("trimester")}
                       </Button>
                       <Button
-                        primary={trimester == 1}
+                        primary={Number(trimester) === 1}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -928,7 +923,7 @@ const PatientForm = inject(
                         1
                       </Button>
                       <Button
-                        primary={trimester == 2}
+                        primary={Number(trimester) === 2}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -937,7 +932,7 @@ const PatientForm = inject(
                         2
                       </Button>
                       <Button
-                        primary={trimester == 3}
+                        primary={Number(trimester) === 3}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"

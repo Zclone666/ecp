@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
-import { Button, Form, Grid, Header, Image, Message, Segment, Modal, Icon } from "semantic-ui-react";
+import { Button, Form, Grid, Header, Message, Segment, Modal, Icon } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import RouterLink from "../../router/a";
 
@@ -47,9 +47,9 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
   render() {
     let {
       projectTitle,
-      newPassForm: { recoveryCode, email, newPassword },
+      newPassForm: { recoveryCode, email },
     } = this.props.actions;
-    let {t} = this.props;
+    let { t } = this.props;
     let { openResend } = this.state;
     return (
       <div className="login-form height100perc">
@@ -60,7 +60,7 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
                 {projectTitle}
               </Header>
               <Header as="h3" color="grey" textAlign="center">
-                {t("set")+" "+t("new_password")}
+                {t("set") + " " + t("new_password")}
                 {/* ЗАДАТЬ НОВЫЙ ПАРОЛЬ */}
               </Header>
               <Form size="large" onSubmit={this.handleNewPass}>
@@ -96,12 +96,12 @@ const NewPass = inject("router", "actions")(observer(class NewPass extends Compo
                     onChange={this.handleChange}
                   />
                   <Button disabled={!this.state.filled} fluid size="huge" color="grey" onClick={this.handleNewPass}>
-                  {t("confirm")}
+                    {t("confirm")}
                   </Button>
                 </Segment>
               </Form>
               <Message className="squared">
-              {t("already_registered")} <RouterLink to="/login">{t("come_in")}</RouterLink>
+                {t("already_registered")} <RouterLink to="/login">{t("come_in")}</RouterLink>
                 <br />
                 {t("or")} <RouterLink to="/resetpass">{t("send")}</RouterLink> {t("re_code_confirmation")}
               </Message>

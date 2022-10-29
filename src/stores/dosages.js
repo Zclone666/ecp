@@ -1,12 +1,10 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
-import moment from "moment";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
 
-import { checkDouble, clearDouble } from "../lib/helpers";
+import { checkDouble } from "../lib/helpers";
 
 import _ from "lodash";
 
-const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#fc7301", "#f42a03"];
 
 class Dosages {
   ready = false;
@@ -32,7 +30,7 @@ class Dosages {
 
     this.dosage = observable.map({}, "dosage");
 
-    autorun(() => {});
+    autorun(() => { });
   }
 
   /**
@@ -91,7 +89,7 @@ class Dosages {
         // console.log('DATA', data);
         let drugDosage = this.dosage.get(drug_obj.id);
         let { names, nameshort } = drugDosage;
-        let { dosage, fp, lf, method, methodform, name, shortname, pack, packname } = data;
+        let { dosage, lf, method, name, shortname, pack, packname } = data;
         await this.stores.tools.setNames(name, shortname);
         dosage = _.isArray(dosage) ? dosage : [dosage];
         let currPack = {
@@ -158,8 +156,8 @@ class Dosages {
 
         await this.stores.drugs.setDosageParams(`/concept/dozes/lf/4`);
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
@@ -262,8 +260,8 @@ class Dosages {
 
         return this.stores.tools.timeout(50);
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   };
 
@@ -278,7 +276,6 @@ class Dosages {
       actions: { t },
     } = this.stores;
 
-    let { dosage } = this;
     if (!current.id) return [];
     let drugDosage = this.dosage.get(current.id);
     // dosage.forEach((item, i) => {
@@ -287,7 +284,7 @@ class Dosages {
 
     // console.log({ current, drugDosage });
     if (!drugDosage) return [];
-    let { drug, form, methodform, names, nameshort } = drugDosage;
+    let { form, names, nameshort } = drugDosage;
 
     let arr = [];
     let noData = false;
@@ -298,7 +295,7 @@ class Dosages {
         if (_.isObject(item.dosage) && !_.isArray(item.dosage)) itemDosage = [item.dosage];
 
         if (!itemDosage) {
-          if (_.findIndex(arr, (itm) => itm.dosage && itm.dosage.small == this.stores.actions.t("no_data")) == -1) {
+          if (_.findIndex(arr, (itm) => itm.dosage && itm.dosage.small === this.stores.actions.t("no_data")) === -1) {
             noData = true;
             arr.push({
               dosage: {
@@ -359,22 +356,21 @@ class Dosages {
                 (names[pack.id] || "") +
                 ((pack.dosage &&
                   ", " +
-                    (pack.dosage.value_1 || "") +
-                    " " +
-                    (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
+                  (pack.dosage.value_1 || "") +
+                  " " +
+                  (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
                   "");
               currPack.pack.small +=
                 (nameshort[pack.id] || names[pack.id] || "") +
                 ((pack.dosage &&
                   ", " +
-                    (pack.dosage.value_1 || "") +
-                    " " +
-                    (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
+                  (pack.dosage.value_1 || "") +
+                  " " +
+                  (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
                   "");
               arr.push({ ...currPack });
             });
           } else {
-            let pack = item.pack[0];
             if (_.isArray(itemDosage) && itemDosage.length > 1) {
               currPack.dosage.full += _.map(itemDosage, "value_1").join(" + ") + " " + names[itemDosage[0].id_1];
               currPack.dosage.small +=
@@ -400,7 +396,7 @@ class Dosages {
       });
     if (noData && arr.length > 1) {
       _.remove(arr, function (itm) {
-        return itm.dosage && itm.dosage.small == t("no_data");
+        return itm.dosage && itm.dosage.small === t("no_data");
       });
     }
     return arr;
@@ -411,7 +407,6 @@ class Dosages {
   */
   get calcValues() {
     let drug = this.stores.drugs.current;
-    let dosages = this.current;
     let currDos = this.stores.actions.stepsData.helpers;
     let value = this.stores.actions.stepsData.value;
     let pack = this.stores.actions.stepsData.pack;
@@ -423,7 +418,6 @@ class Dosages {
     // console.log({ calcFromDrug, pack });
 
     let unit = (currDos.dosage && units[currDos.dosage.id]) || 248;
-    let packCountBaseUnit = pack && pack.dosage && pack.dosage.id_1 && units[pack.dosage.id_1]?.arr;
     // console.log({ packCountBaseUnit });
     let firstUnit = null;
     let secondUnit = null;
@@ -508,7 +502,7 @@ class Dosages {
       };
       return;
     }
-    if (step == 1 || step == "1") {
+    if (Number(step) === 1) {
       this.stores.actions.calculatorForm = {
         dosage: [0],
         count: 1,
@@ -532,7 +526,7 @@ class Dosages {
       };
       return;
     }
-    if (way === "lf" && step == 2) {
+    if (way === "lf" && Number(step) === 2) {
       this.stores.actions.calculatorForm = {
         dosage: [0],
         count: 1,
@@ -556,11 +550,11 @@ class Dosages {
       };
       return;
     }
-    if (way === "lf" && step == 3) {
+    if (way === "lf" && Number(step) === 3) {
       this.stores.actions.stepsData.method = null;
       return;
     }
-    if (way === "methods" && step == "2") {
+    if (way === "methods" && Number(step) === 2) {
       this.stores.actions.calculatorForm = {
         dosage: [0],
         count: 1,
@@ -584,7 +578,7 @@ class Dosages {
       };
       return;
     }
-    if (way === "methods" && step == "3") {
+    if (way === "methods" && Number(step) === 3) {
       this.stores.actions.calculatorForm = {
         dosage: [0],
         count: 1,

@@ -2,18 +2,19 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import moment from "moment";
 
-import RouterLink from "../../../router/a";
-import { List, Icon, Form, Segment, Input, Button, Dropdown, Responsive } from "semantic-ui-react";
+import { Form, Segment, Input, Button, Dropdown } from "semantic-ui-react";
 
-import { DatePickerInput } from "rc-datepicker";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 
+import DatePicker from "../../DatePicker";
+
 import Week from "./Week";
 import Interval from "./Interval";
-import Calendar from "./Calendar";
 
 import clarifications from "../../../constants/hardcode";
+
+
 
 function declension(forms, val) {
   const cases = [2, 0, 1, 1, 1, 2];
@@ -36,17 +37,18 @@ const Schedule = inject(
         this.state = {
           timeFromStart: null,
         };
-        this.dateFinish = React.createRef();
       }
+
       handleChange = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
-        // console.log({ name, value });
+        console.log({ name, value });
+
         const { t } = this.props.actions;
         if (name === "dateStart" || name === "dateFinish") {
-          // let dateReg = /^[0-9]{1,2}(\.[0-9]{0,2}(\.[0-9]{0,4})?)?$/gi;
-          // if (!dateReg.test(value)) return;
+
           if (name === "dateStart" && value === "Invalid date") {
             value = null;
             this.props.actions.scheduleForm.dateStart = null;
@@ -59,11 +61,15 @@ const Schedule = inject(
             this.props.actions.scheduleForm.finishAlternate = null;
           }
           if (name === "dateFinish" && value !== "Invalid date") {
-            value = moment(parseInt(moment(value, "x").add(1, "d").format("x")) - 1, "x");
+            // value = moment(parseInt(moment(value, "x").add(1, "d").format("x")) - 1, "x");
+            value = moment(parseInt(moment(value, "x").format("x")), "x");
           }
-          if (moment(value).format("x") !== "Invalid date")
+          if (moment(value).format("x") !== "Invalid date") {
             this.props.actions.scheduleForm[name] = moment(value).format("x");
-          if (name === "dateFinish") this.props.actions.scheduleForm.finishAlternate = null;
+          }
+          if (name === "dateFinish") {
+            this.props.actions.scheduleForm.finishAlternate = null;
+          }
           if (name === "dateStart" && this.props.actions.scheduleForm.dateFinish < moment(value).format("x")) {
             this.props.actions.scheduleForm.dateFinish = null;
             this.props.actions.scheduleForm.finishAlternate = null;
@@ -86,7 +92,7 @@ const Schedule = inject(
           switch (name) {
             case "finishAlternate":
               this.props.actions.scheduleForm.finishAlternate =
-                this.props.actions.scheduleForm.finishAlternate == value ? null : value;
+                this.props.actions.scheduleForm.finishAlternate === value ? null : value;
               this.setState({ timeFromStart: null });
               this.props.drugs.current.duration = null;
               this.props.drugs.current.duration_id = null;
@@ -125,13 +131,6 @@ const Schedule = inject(
             UIText,
             scheduleForm: {
               dateStart,
-              dateFinish,
-              finishAlternate,
-              clarifications, //уточнения
-              interval,
-              once,
-              week,
-              calendar,
             },
           },
           drugs: { current },
@@ -155,10 +154,8 @@ const Schedule = inject(
         let { durationsAlt } = clarifications;
         let {
           UIText,
-          scheduleForm: { interval },
         } = this.props.actions;
         let arr = [];
-        interval = interval || [];
         _.keys(durationsAlt).forEach((durationKey, i) => {
           let duration = durationsAlt[durationKey];
 
@@ -176,10 +173,8 @@ const Schedule = inject(
         let { durations } = clarifications;
         let {
           UIText,
-          scheduleForm: { interval },
         } = this.props.actions;
         let arr = [];
-        interval = interval || [];
         _.keys(durations).forEach((durationKey, i) => {
           let duration = durations[durationKey];
 
@@ -197,40 +192,21 @@ const Schedule = inject(
         let {
           actions: {
             active_language,
-            selectedDrug,
-            selectedConflict,
-            activeDrugs,
-            activeConflicts,
-            stepsData,
             UIText,
             scheduleForm: {
               dateStart,
               dateFinish,
               finishAlternate,
-              clarifications, //уточнения
-              interval,
-              once,
-              week,
               format,
-              calendar,
             },
           },
-          dosages: {
-            current: { drug, form, methodform, names },
-          },
-          router: { values },
         } = this.props;
         let { t } = this.props.actions;
         let { timeFromStart } = this.state;
-        // console.log({dateStart});
-        //
-        // console.log({dateStart, dateFinish});
-        dateStart = (dateStart && moment(dateStart, "x").format("DD.MM.YYYY")) || "";
-        dateFinish = (dateFinish && moment(dateFinish, "x").format("DD.MM.YYYY")) || "";
-        //
-        // console.log({dateStart, dateFinish});
-        // let dateFinish = 0
-        let sex = "male";
+
+        dateStart = (dateStart && moment(dateStart, "x").toDate()) || "";
+        dateFinish = (dateFinish && moment(dateFinish, "x").toDate()) || "";
+
         return (
           <Segment>
             <Form>
@@ -243,46 +219,23 @@ const Schedule = inject(
                     </span>
                     ):
                   </label>
-                  <DatePickerInput
-                    onChange={(value) => this.handleChange(null, { value, name: "dateStart" })}
-                    name="dateStart"
-                    value={dateStart}
-                    showOnInputClick={true}
-                    startMode="day"
-                    format="DD.MM.YYYY"
-                    returnFormat="DD.MM.YYYY"
-                    displayFormat="DD.MM.YYYY"
-                    validationFormat="DD.MM.YYYY"
-                    onClear={this.onClear}
-                    className="ui fluid big input "
-                    placeholder="__.__.____"
+                  <DatePicker
                     locale={active_language}
+                    selected={dateStart}
+                    onChange={(value) => this.handleChange(null, { value, name: "dateStart" })}
                   />
                 </Form.Field>
                 <Form.Field width={7}>
                   <label>{t("end_reception")}:</label>
                   <Input action>
-                    <DatePickerInput
-                      ref={this.dateFinish}
-                      onChange={(value) => this.handleChange(null, { value, name: "dateFinish" })}
-                      name="dateFinish"
-                      value={dateFinish}
-                      showOnInputClick={true}
-                      startMode="day"
-                      minDate={moment(dateStart, "DD.MM.YYYY")}
-                      format="DD.MM.YYYY"
-                      returnFormat="DD.MM.YYYY"
-                      displayFormat="DD.MM.YYYY"
-                      validationFormat="DD.MM.YYYY"
-                      onClear={this.onClear}
-                      className="ui fluid big input "
-                      placeholder="__.__.____"
+                    <DatePicker
                       locale={active_language}
+                      selected={dateFinish}
+                      minDate={dateStart}
+                      onChange={(value) => this.handleChange(null, { value, name: "dateFinish" })}
                     />
                     <Dropdown
-                      onClick={() => {
-                        this.dateFinish.current.hide();
-                      }}
+                      scrolling
                       disabled={!dateStart || dateStart.length < 1}
                       className="button"
                       name={"durations"}
@@ -294,18 +247,15 @@ const Schedule = inject(
                 <Form.Field width={5}>
                   <label>{t("or")}</label>
                   <Dropdown
-                    onClick={() => {
-                      this.dateFinish.current.hide();
-                    }}
                     disabled={!dateStart || dateStart.length < 1}
                     className={`big fluid button${finishAlternate ? " primary" : ""}`}
-                    primary={finishAlternate !== null}
+                    // primary={finishAlternate !== null}
                     name={"finishAlternate"}
                     text={(finishAlternate && UIText.duration[finishAlternate]) || t("choose")}
                     options={this.renderAlterDurations()}
                   />
                   {false && (
-                    <Responsive as={Button.Group} fluid size="big" minWidth={481}>
+                    <Segment basic as={Button.Group} fluid size="big" minWidth={481}>
                       <Button
                         primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
                         onClick={this.handleChange}
@@ -314,10 +264,10 @@ const Schedule = inject(
                       >
                         {t("before_canceling")}
                       </Button>
-                    </Responsive>
+                    </Segment>
                   )}
                   {false && (
-                    <Responsive as={Button.Group} fluid maxWidth={480}>
+                    <Segment basic as={Button.Group} fluid maxWidth={480}>
                       <Button
                         primary={finishAlternate === "lQ9LkaNuaG/IgjrmfEhzOQ=="}
                         onClick={this.handleChange}
@@ -326,7 +276,7 @@ const Schedule = inject(
                       >
                         {t("before_canceling")}
                       </Button>
-                    </Responsive>
+                    </Segment>
                   )}
                 </Form.Field>
               </Form.Group>
@@ -335,7 +285,7 @@ const Schedule = inject(
                 <Form.Group>
                   <Form.Field className="fluid">
                     <label>{t("terms_accepted")}</label>
-                    <Responsive as={Button.Group} fluid widths={3} minWidth={481}>
+                    <Segment basic as={Button.Group} fluid widths={3} minWidth={481}>
                       <Button
                         primary={format === "interval"}
                         onClick={this.handleChange}
@@ -350,8 +300,8 @@ const Schedule = inject(
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
                         {t("by_day_week")}
                       </Button>
-                    </Responsive>
-                    <Responsive as={Button.Group} fluid widths={2} maxWidth={480}>
+                    </Segment>
+                    <Segment basic as={Button.Group} fluid widths={2} maxWidth={480}>
                       <Button
                         primary={format === "interval"}
                         onClick={this.handleChange}
@@ -363,12 +313,12 @@ const Schedule = inject(
                       <Button primary={format === "once"} onClick={this.handleChange} name="format" value="once">
                         {t("single")}
                       </Button>
-                    </Responsive>
-                    <Responsive as={Button.Group} fluid widths={1} maxWidth={480}>
+                    </Segment>
+                    <Segment basic as={Button.Group} fluid widths={1} maxWidth={480}>
                       <Button primary={format === "week"} onClick={this.handleChange} name="format" value="week">
                         {t("by_day_week")}
                       </Button>
-                    </Responsive>
+                    </Segment>
                   </Form.Field>
                 </Form.Group>
               )}

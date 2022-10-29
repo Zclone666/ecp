@@ -3,15 +3,9 @@ import { observer, inject } from "mobx-react";
 
 import RouterLink from "../../router/a";
 
-import Spinner from "../../components/Spinner";
-import Slider from "react-slick";
-
-import PatientForm from "./PatientForm";
-import PatientPassport from "./PatientPassport";
-
 import Search from "../../components/Search";
 
-import { Segment, List, Button, Form, Input, Icon, Header } from "semantic-ui-react";
+import { Segment, List, Button, Form, Input, Header } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 import moment from "moment";
@@ -99,10 +93,8 @@ const PatientsList = inject(
 
       render() {
         let {
-          patients,
           patients: {
             searchReady,
-            searchRows,
             current: { id, email, fio },
           },
           // actions: {
@@ -129,7 +121,7 @@ const PatientsList = inject(
                     })}
                     results={this.listSearch}
                     value={search_patient}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -141,7 +133,7 @@ const PatientsList = inject(
                     size="big"
                     name="fio"
                     value={fio || ""}
-                    placeholder={t("ivan")+" "+t("ivanov")+ " "+t("ivanovich")}
+                    placeholder={t("ivan") + " " + t("ivanov") + " " + t("ivanovich")}
                     onChange={this.handleChange}
                   />
                 </Form.Field>

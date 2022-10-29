@@ -1,4 +1,4 @@
-import React, { Component, Fragment, createRef } from "react";
+import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
 import { Segment, List, Message, Header, Icon, Popup, Divider } from "semantic-ui-react";
@@ -23,10 +23,9 @@ const WarningTab = inject(
 
       componentDidMount() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, patientForm },
-          drugs: { drug, selectedRows },
+          actions: { patientForm },
+          drugs: { drug },
           warnings: { info },
-          router: { values },
           tab,
         } = this.props;
 
@@ -65,10 +64,9 @@ const WarningTab = inject(
 
       render() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, patientForm },
-          drugs: { drug, selectedRows },
+          actions: { patientForm },
+          drugs: { drug },
           warnings: { info, warningInfo },
-          router: { values },
           tab,
         } = this.props;
 
@@ -148,7 +146,7 @@ const WarningTab = inject(
                   arr.first.map((item, i) => {
                     let drug = getDrug(item);
                     return (
-                      <List.Item key="1">
+                      <List.Item key={`1_${i}`}>
                         {i > 0 && <div className="warningline" style={{ backgroundColor: tab.color }}></div>}
                         <List.Content
                           style={
@@ -183,7 +181,7 @@ const WarningTab = inject(
                   arr.last.map((item, i) => {
                     let drug = getDrug(item);
                     return (
-                      <List.Item key="3">
+                      <List.Item key={`3_${i}`}>
                         {i < arr.last.length - 1 && (
                           <div className="warningline" style={{ backgroundColor: tab.color }}></div>
                         )}
@@ -236,7 +234,7 @@ const WarningTab = inject(
                         if (lit && info.urls[lit]) {
                           return (
                             <Segment vertical key={`lit_${l}`}>
-                              <a href={info.urls[lit]} target="_blank">
+                              <a href={info.urls[lit]} target="_blank" rel="noopener noreferrer">
                                 {info.names[lit]} <Icon name="external alternate" />
                               </a>
                             </Segment>

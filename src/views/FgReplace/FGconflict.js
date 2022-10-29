@@ -1,13 +1,10 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { withTranslation } from "react-i18next";
 
-import RouterLink from "../../router/a";
-import Loader from "../../components/Loader";
-import Conflicts from "../../components/Conflicts/ConflictsFG";
 import ChangeFGDrug from "../../components/Drugs/ChangeFGDrug";
 
-import { Transition, Accordion, Icon, Step, Responsive, List, Header, Checkbox } from "semantic-ui-react";
+import { List, Header } from "semantic-ui-react";
 import _ from "lodash";
 
 const FgDrugs = inject(
@@ -34,9 +31,8 @@ const FgDrugs = inject(
       }
       get warnDrugs() {
         let {
-          actions: { selectedDrugFg, selectedConflictFg, activeDrugsFg, activeConflictsFg },
-          drugs: { drug },
-          warnings: { warningFg, groupsFg }, //warnings, warnGroups
+          actions: { selectedDrugFg, selectedConflictFg },
+          warnings: { warningFg }, //warnings, warnGroups
         } = this.props;
         let drugsObj = {};
 
@@ -101,9 +97,9 @@ const FgDrugs = inject(
       }
 
       render() {
-        let { selectedDrugFg, selectedConflictFg, activeDrugsFg, activeConflictsFg, patientForm } = this.props.actions;
+        let { selectedConflictFg } = this.props.actions;
         const { t, checkedFg, openForFg } = this.props.actions;
-        let { fds, drugs, drugsForFG } = this.props.drugs;
+        let { drugsForFG } = this.props.drugs;
 
         let drugKey = (this.props.router.values && this.props.router.values.drug) || "none";
         // console.log(selectedConflictFg);
@@ -113,12 +109,12 @@ const FgDrugs = inject(
             <List>
               {checkedFg.map((id, i) => {
                 let drug = drugsForFG[id];
-                return this.warnDrugs[drug.key] && drugKey != drug.key && openForFg != drug.id ? (
+                return this.warnDrugs[drug.key] && drugKey !== drug.key && openForFg !== drug.id ? (
                   <ChangeFGDrug key={"fgdrug" + i} active={this.warnDrugs[drug.key] || false} drug={drug} />
                 ) : null;
               })}
               {this.drugs.map((drug, i) => {
-                return this.warnDrugs[drug.key] && drugKey != drug.key ? (
+                return this.warnDrugs[drug.key] && drugKey !== drug.key ? (
                   <ChangeFGDrug key={"fgdrug" + i} active={this.warnDrugs[drug.key] || false} drug={drug} />
                 ) : null;
               })}

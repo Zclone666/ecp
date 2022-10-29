@@ -3,7 +3,7 @@ import { inject, observer } from "mobx-react";
 
 import RouterLink from "../../router/a";
 
-import { Menu, List, Feed, Button, Responsive, Icon, Popup, Input, TextArea, Form, Checkbox } from "semantic-ui-react";
+import {  List,  Button,  Icon,  TextArea, Form, Checkbox } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 import moment from "moment";
@@ -32,7 +32,7 @@ const RecipeDrug = inject(
       handleKeyDown = (e) => {
         e.preventDefault();
         let start = e.target.selectionStart;
-        let end = e.target.selectionEnd;
+
         setTimeout(() => {
           this.textRef.current.selectionStart = this.textRef.current.selectionEnd = start;
         }, 300);
@@ -55,7 +55,7 @@ const RecipeDrug = inject(
         let { value } = e.target;
         // console.log({ value });
 
-        let count = _.isNaN(parseInt(value)) || value == "" ? "" : parseInt(value).toString();
+        let count = _.isNaN(parseInt(value)) || value === "" ? "" : parseInt(value).toString();
         let { drugKey: key, drugs } = this.props;
         let drug = drugs.drug.get(key);
         drugs.drug.set(key, Object.assign(drug, { recipeCount: count }));
@@ -116,11 +116,10 @@ const RecipeDrug = inject(
           drugs,
           actions: { UIText },
         } = this.props;
-        helpers = helpers || {};
+        
         let drug = drugs.drug.get(key);
+        let {  freq_id, freq_name,  duration_id, duration_name, calc, dosage,  schedule } = drug || {};
         let { finishAlternate } = schedule || {};
-        let { freq, freq_id, freq_name, duration, duration_id, duration_name, calc, dosage, helpers, schedule } =
-          drug || {};
 
         let obj = { dosage: [], rules: [] };
 
@@ -133,7 +132,6 @@ const RecipeDrug = inject(
         if (calc && calc.count && calc.countUnit) {
           // let str = ""; //`${getFromBase(calc.countUnit, calc.count)} ${shortnames[calc.countUnit]}`;
           if (calc.fullDosage) {
-            let dosageValue = getFromBase(drug.calc.dosageUnit, calc.dosage);
             let fullDosageValue = getFromBase(drug.calc.dosageUnit, calc.fullDosage);
             let dosageName =
               // latshortnames[drug.calc.dosageUnit] ||
@@ -180,24 +178,24 @@ const RecipeDrug = inject(
       }
 
       get inputValue() {
-        let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
-          // drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
-          dosages: { dosage: dose },
-          // db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
-          drugKey: key,
-          drugs,
-          active,
-        } = this.props;
+        // let {
+        //   actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
+        //   // drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
+        //   dosages: { dosage: dose },
+        //   // db: { selectedRows, warnings, warnGroups, drugsDosages, warnIcons },
+        //   drugKey: key,
+        //   drugs,
+        //   active,
+        // } = this.props;
 
-        let { edit, text, from } = this.state;
+        let {  text, from } = this.state; // edit,
 
-        let drug = drugs.drug.get(key) || {};
+        // let drug = drugs.drug.get(key) || {};
 
-        let drugDosages = dose.get(drug.id) || {};
-        let { name, level, tn, type, dosage, schedule, helpers } = drug || {};
+        // let drugDosages = dose.get(drug.id) || {};
+        // let { name, level, tn, type, dosage, schedule, helpers } = drug || {};
 
-        let names = drugDosages.names || {};
+        // let names = drugDosages.names || {};
 
         let descArr = [];
         // let rules = this.renderRules();
@@ -221,9 +219,9 @@ const RecipeDrug = inject(
           drugs: { drug }, //drugs, drugsDosages, currDrug, setDosageParams
           drugKey: key,
         } = this.props;
-        let { inputValue } = this;
+        // let { inputValue } = this;
         let current = drug.get(key);
-        if (current.specials == this.state.text || this.state.edit) return;
+        if (current.specials === this.state.text || this.state.edit) return;
         this.setState({ text: current.specials }, () => {
           // let currDrug = drug.get(current.key)
           drug.set(current.key, _.extend(current, { specials: this.state.text }));
@@ -247,11 +245,11 @@ const RecipeDrug = inject(
 
       numero = () => {
         let {
-          dosages: { dosage: dose },
+          // dosages: { dosage: dose },
           drugKey: key,
           drugs,
-          active,
-          recipes: { drugKeysForPrescription, maxcount },
+          // active,
+          // recipes: { drugKeysForPrescription, maxcount },
         } = this.props;
         let drug = drugs.drug.get(key) || {};
 
@@ -278,24 +276,24 @@ const RecipeDrug = inject(
 
       render() {
         let {
-          dosages: { dosage: dose },
+          // dosages: { dosage: dose },
           drugKey: key,
           drugs,
-          active,
-          recipes: { drugKeysForPrescription, maxcount },
+          // active,
+          recipes: { drugKeysForPrescription }, // , maxcount
         } = this.props;
         const { t } = this.props.actions;
-        let { edit, text, from, numero } = this.state;
+        let { edit, text, from } = this.state; // , numero
 
         // console.log({ drugKeysForPrescription });
 
         // console.log({key});
         // let selectedWarnings = warnIcons[selectedDrug]
         let drug = drugs.drug.get(key) || {};
-        let drugDosages = dose.get(drug.id) || {};
-        let { name, mnnname, level, tn, type, dosage, schedule, helpers, specials, recipeCount } = drug;
+        // let drugDosages = dose.get(drug.id) || {};
+        let { mnnname, helpers, specials, recipeCount } = drug; // level, tn, type, dosage, schedule,  name,
 
-        let names = drugDosages.names || {};
+        // let names = drugDosages.names || {};
 
         let urlArr = ["/concept/dozes"];
         if (helpers.step) urlArr.push(helpers.step);
@@ -336,8 +334,7 @@ const RecipeDrug = inject(
                   <Button
                     title={t("cancellation_prescription")}
                     icon
-                    onClick={this.undo}
-                    icon
+                    onClick={this.undo}                    
                     disabled={from === "dosage"}
                   >
                     <Icon name="undo" />
