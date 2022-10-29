@@ -1,7 +1,6 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
-import moment from "moment";
-import { checkDouble, clearDouble } from "../lib/helpers";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
+import { checkDouble } from "../lib/helpers";
 
 import _ from "lodash";
 
@@ -52,7 +51,7 @@ class Tools {
 
     this.stores = stores;
     this.router = stores.router;
-    autorun(() => {});
+    autorun(() => { });
   }
 
   async getUnitsPharm(units) {
@@ -104,7 +103,7 @@ class Tools {
         this.setUnits(units, unitrefs, unitpharm);
         this.stores.actions.loading = false;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => { },
       always: (data) => {
         this.stores.actions.loading = false;
       },
@@ -130,7 +129,6 @@ class Tools {
       drug.dosage?.dosage && drug.dosage?.dosage[0]?.id_1 && arr.push(drug.dosage.dosage[0].id_1);
     });
 
-    let { active_language } = this.stores.actions;
     let data = {
       active_language: "la",
       ids: arr,
@@ -147,7 +145,7 @@ class Tools {
         // await this.setNames(names, nameshort);
         this.stores.actions.loading = false;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => { },
       always: (data) => {
         this.stores.actions.loading = false;
       },
@@ -213,30 +211,30 @@ class Tools {
       path: `tools/UnitsPrimary`,
       data,
       success: async (data) => {
-        let { names, nameshort, units, unitrefs } = data;
+        let { units } = data;
         if (units) this.unitsPrimary = units;
         //this.setNames(names, nameshort)
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
   async setUnitsPrimary(data) {
-    let { names, nameshort, units, unitrefs } = data;
+    let { units } = data;
     if (units) this.unitsPrimary = units;
   }
 
   convertFromBaseUnitToUnit(baseUnitId, unitId, value) {
     const units = this.unitsPrimary;
     // console.log({ baseUnitId, unitId, value, units });
-    if (baseUnitId == unitId || !units || !baseUnitId || !unitId || !units[baseUnitId]) return value;
+    if (baseUnitId === unitId || !units || !baseUnitId || !unitId || !units[baseUnitId]) return value;
 
     const convertedValue =
       value *
       units[baseUnitId].find((u) => {
         // console.log({ "u.id": u.id, unitId }, u.id == unitId);
-        return u.id == unitId;
+        return u.id === unitId;
       }).value;
     // console.log({ convertedValue });
     return convertedValue;
@@ -245,12 +243,12 @@ class Tools {
   convertFromUnitToBaseUnit(unitId, baseUnitId, value) {
     const units = this.unitsPrimary;
     // console.log({ baseUnitId, unitId, value, units });
-    if (baseUnitId == unitId || !units || !baseUnitId || !unitId) return value;
+    if (baseUnitId === unitId || !units || !baseUnitId || !unitId) return value;
     const convertedValue =
       value /
       units[baseUnitId].find((u) => {
         // console.log({ "u.id": u.id, unitId }, u.id == unitId);
-        return u.id == unitId;
+        return u.id === unitId;
       }).value;
     // console.log({ convertedValue });
     return convertedValue;
@@ -270,8 +268,8 @@ class Tools {
       success: async (data) => {
         console.log("DATA", data);
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
@@ -291,8 +289,8 @@ class Tools {
         this.unitsSchedule.freq = freq;
         this.unitsSchedule.duration = duration;
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
@@ -336,7 +334,7 @@ class Tools {
       fail: (alerts) => {
         this.stores.actions.makeAlerts({ alerts });
       },
-      always: (data) => {},
+      always: (data) => { },
     });
   }
 
@@ -381,7 +379,7 @@ class Tools {
         });
       }
 
-      if (unitkey == 99) {
+      if (Number(unitkey) === 99) {
         newunit.arr = "248";
       }
 
@@ -438,7 +436,7 @@ class Tools {
 
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
-
+    data.doctor_id = (this.stores.actions.doctor && this.stores.actions.doctor.id) || null;
     this.searchClinicRows = observable([]);
 
     return POST({
@@ -501,7 +499,7 @@ class Tools {
 
   async ReportError(message) {
     this.stores.actions.loading = true;
-    let { active_language, authkey, makeAlerts } = this.stores.actions;
+    let { active_language, authkey } = this.stores.actions;
 
     const data = {
       authkey,
@@ -521,7 +519,7 @@ class Tools {
         this.stores.actions.makeAlerts(alerts);
         this.stores.actions.loading = false;
       },
-      always(data) {},
+      always(data) { },
     });
   }
 

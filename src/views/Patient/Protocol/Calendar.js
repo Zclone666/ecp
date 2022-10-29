@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { Form } from "semantic-ui-react";
 import { DatePickerInput } from "rc-datepicker";
 
 import "./Calendar.css";
 
 import moment from "moment";
+
+// eslint-disable-next-line no-unused-vars
 import ru from "moment/locale/ru";
 moment.locale("ru");
 class Calendar extends Component {

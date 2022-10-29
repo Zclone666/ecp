@@ -31,7 +31,7 @@ class AlertItem extends React.Component {
     }
   }
   render() {
-    let { code, title, message, level, sticky, button } = this.props;
+    let { code, title, message, level, button } = this.props;
     let { open } = this.state;
 
     return (
@@ -48,7 +48,7 @@ class AlertItem extends React.Component {
         >
           {title && <Message.Header>{title}</Message.Header>}
           {message && (
-            <p>{code != 200 && message.includes(":") ? message.substring(message.indexOf(":") + 1) : message}</p>
+            <p>{Number(code) !== 200 && message.includes(":") ? message.substring(message.indexOf(":") + 1) : message}</p>
           )}
           {button && button.text && (
             <Button

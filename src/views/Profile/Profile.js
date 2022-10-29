@@ -1,14 +1,8 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
-import Slider from "react-slick";
-
-import { Menu, Icon, Segment, List, Divider, Button, Form, Header, Input } from "semantic-ui-react";
+import { Menu, Segment, List, Divider, Button, Form, Header, Input } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const Profile = inject(
   "router",
@@ -47,22 +41,12 @@ const Profile = inject(
         this.props.actions.getProfile();
       }
 
-  render() {
-    const { id, fio, firstname, lastname, patronymic, sex, snils, diploms, licenses, emails, phone } =
-      this.props.actions.profile;
-      const { t } = this.props.actions;
-    let email = (emails.length > 0 && emails[0]) || "";
+      render() {
+        const { fio, firstname, lastname, patronymic, sex, snils, diploms, licenses, emails } =
+          this.props.actions.profile;
+        const { t } = this.props.actions;
+        let email = (emails.length > 0 && emails[0]) || "";
 
-        const settings = {
-          dots: false,
-          infinite: false,
-          speed: 500,
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          swipeToSlide: false,
-          swipe: false,
-          initialSlide: 0,
-        };
         return (
           <div className="h100">
             <Menu className="bottom fixed menu two item huge main">

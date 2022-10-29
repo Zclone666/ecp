@@ -1,15 +1,10 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
-
 import Analogs from "../../components/Analogs";
 
 import { Menu } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const Analog = inject(
   "router",

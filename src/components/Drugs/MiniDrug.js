@@ -1,11 +1,9 @@
 import React, { Fragment } from "react";
 import { inject, observer } from "mobx-react";
 
-import { useDrag } from "react-dnd";
-
 import RouterLink from "../../router/a";
 
-import { Menu, List, Feed, Button, Responsive, Icon, Popup, Dropdown } from "semantic-ui-react";
+import { List, Feed, Button, Responsive, Icon } from "semantic-ui-react";
 
 import _ from "lodash";
 
@@ -19,10 +17,6 @@ const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosa
   }
   getLF = async () => {
     let {
-      drugs: { current }, //drugs, drugsDosages, currDrug, setDosageParams
-      dosages: { dosage },
-      warnings: { warning, groups }, //warnings, warnGroups
-      router: { location },
       drug,
     } = this.props;
     await this.props.drugs.setCurrent({ key: drug.key, id: drug.id });
@@ -36,7 +30,7 @@ const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosa
     let {
       dosages: { getFromBase },
       tools: { names, shortnames, round },
-      drug: { freq, freq_id, duration, duration_id, calc, dosage, helpers, schedule },
+      drug: { freq, freq_id, duration, duration_id, calc, helpers, schedule },
       drug,
       actions: { UIText },
     } = this.props;
@@ -76,16 +70,14 @@ const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosa
     let {
       actions: { selectedDrug, selectedConflict },
       router: { values },
-      drugs: { selectedRows }, //drugs, drugsDosages, currDrug, setDosageParams
       dosages: { dosage: dose },
-      warnings: { warning, groups, icons: warnIcons }, //warnings, warnGroups, warnIcons
       drug,
       active,
       style,
       canDrag,
     } = this.props;
 
-    let { key, name, type, dosage, helpers } = drug;
+    let { name, type, dosage, helpers } = drug;
     let drugDosages = dose.get(drug.id) || {};
 
     let names = drugDosages.names || {};
@@ -119,7 +111,7 @@ const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosa
             <Feed.Content>
               <Feed.Summary>
                 <span className="underlined">
-                  <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                  <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
                   {/* {name} */}
                 </span>
                 {type === "TN" && (
@@ -148,7 +140,7 @@ const MiniDrug = inject("actions", "router", "tools", "drugs", "warnings", "dosa
                 <Feed.Summary>
                   <span className="underlined">
                     {/* {name} */}
-                    <div dangerouslySetInnerHTML={{ __html: name }} style={{display: "inline"}} />
+                    <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
                   </span>
                   {type === "TN" && (
                     <span>

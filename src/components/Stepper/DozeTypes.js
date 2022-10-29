@@ -5,7 +5,6 @@ import RouterLink from "../../router/a";
 import { List, Icon } from "semantic-ui-react";
 
 import _ from "lodash";
-import moment from "moment";
 
 const DozeTypes = inject(
   "db",
@@ -48,7 +47,7 @@ const DozeTypes = inject(
         });
       };
       componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.state.current == this.props.actions.stepsData.form) return;
+        if (this.state.current === this.props.actions.stepsData.form) return;
         // console.log("HERE");
         this.setState({ current: this.props.actions.stepsData.form }, () => {
           let arr = this.currDosagesArr();
@@ -57,12 +56,10 @@ const DozeTypes = inject(
       }
 
       currDosagesArr() {
-        let time = moment();
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
+          actions: { stepsData },
           drugs: { current },
           actions: { t },
-          dosages: { dosage },
         } = this.props;
         let { counter, c, cc } = this.state;
         let { from, to } = { from: counter * 50, to: (counter + 1) * 50 };
@@ -76,7 +73,7 @@ const DozeTypes = inject(
 
         // console.log({ current, drugDosage });
         if (!drugDosage) return [];
-        let { drug, form, methodform, names, nameshort } = drugDosage;
+        let { form, names, nameshort } = drugDosage;
 
         // let c = 0;
         // let cc = 0;
@@ -92,7 +89,7 @@ const DozeTypes = inject(
               if (_.isObject(item.dosage) && !_.isArray(item.dosage)) itemDosage = [item.dosage];
               if (!itemDosage) {
                 if (
-                  _.findIndex(arr, (itm) => itm.dosage && itm.dosage.small == this.props.actions.t("no_data")) == -1
+                  _.findIndex(arr, (itm) => itm.dosage && itm.dosage.small === this.props.actions.t("no_data")) === -1
                 ) {
                   noData = true;
                   arr.push({
@@ -160,17 +157,17 @@ const DozeTypes = inject(
                         (names[pack.id] || "") +
                         ((pack.dosage &&
                           ", " +
-                            (pack.dosage.value_1 || "") +
-                            " " +
-                            (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
+                          (pack.dosage.value_1 || "") +
+                          " " +
+                          (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
                           "");
                       currPack.pack.small +=
                         (nameshort[pack.id] || names[pack.id] || "") +
                         ((pack.dosage &&
                           ", " +
-                            (pack.dosage.value_1 || "") +
-                            " " +
-                            (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
+                          (pack.dosage.value_1 || "") +
+                          " " +
+                          (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
                           "");
 
                       arr.push({ ...currPack });
@@ -178,7 +175,6 @@ const DozeTypes = inject(
                     }
                   });
                 } else {
-                  let pack = item.pack[0];
                   if (_.isArray(itemDosage) && itemDosage.length > 1) {
                     currPack.dosage.full += _.map(itemDosage, "value_1").join(" + ") + " " + names[itemDosage[0].id_1];
                     currPack.dosage.small +=
@@ -210,7 +206,7 @@ const DozeTypes = inject(
           });
         if (noData && arr.length > 1) {
           _.remove(arr, function (itm) {
-            return itm.dosage && itm.dosage.small == t("no_data");
+            return itm.dosage && itm.dosage.small === t("no_data");
           });
         }
         // console.log({ c, cc });
@@ -220,9 +216,6 @@ const DozeTypes = inject(
 
       render() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
-          drugs: { current }, //drugs, currDrug, setDosageParams
-          dosages: { dosage }, //currDosagesArr }, //drugsDosages
           router: { values },
         } = this.props;
         let { moreflag } = this.state;
@@ -231,8 +224,6 @@ const DozeTypes = inject(
         let url = !values.liquid ? `/concept/dozes/${way}` : `/liquid/calc/${values.liquid}/dozes/${way}`;
         let currStep = parseInt(values.step || 0);
 
-        let drugDosage = dosage.get(current.id);
-        let { drug, form, methodform, names } = drugDosage || { drug: {}, form: [], methodform: [], names: [] };
 
         return (
           <List animated divided selection className="dozelist" verticalAlign="middle" size="large">

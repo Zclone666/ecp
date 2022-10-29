@@ -1,18 +1,11 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import moment from "moment";
 
 import {
-  List,
   Icon,
   Form,
-  Segment,
-  Input,
   Button,
   Dropdown,
-  Responsive,
-  Checkbox,
-  Grid,
   Label,
 } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
@@ -30,7 +23,6 @@ const ref_minutes = ["minute", "minutes", "minut"],
   ref_days = ["day", "a_day", "days"],
   ref_weeks = ["week_time", "weeks", "week_min"],
   ref_months = ["month", "a_month", "months"],
-  ref_years = ["year", "of_the_year", "years"],
   ref_times = ["once", "times", "once"];
 
 const Interval = inject(
@@ -50,14 +42,15 @@ const Interval = inject(
       }
       handleChange = (e, { name, type, value, index }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         let { interval } = this.props.actions.scheduleForm;
 
         interval[index][name] = value;
         this.props.actions.scheduleForm.interval = interval;
       };
-      handleAddConcept = (e, { name, value }) => {};
+      handleAddConcept = (e, { name, value }) => { };
       removeConcept = (i) => {
         // this.setState({ concepts })
       };
@@ -263,10 +256,10 @@ const Interval = inject(
         let { presets } = clarifications;
         let {
           UIText,
-          scheduleForm: { interval },
+          // scheduleForm: { interval },
         } = this.props.actions;
         let arr = [];
-        interval = interval || [];
+        // interval = interval || [];
         _.keys(presets).forEach((presetKey, i) => {
           let preset = presets[presetKey];
           arr.push({
@@ -281,60 +274,60 @@ const Interval = inject(
       }
 
       render() {
-        let {
-          actions: {
-            selectedDrug,
-            selectedConflict,
-            activeDrugs,
-            activeConflicts,
-            stepsData,
-            scheduleForm: { interval },
-          },
-          dosages: {
-            current: { drug, form, methodform, names },
-          },
-          router: { values },
-        } = this.props;
+        // let {
+        //   actions: {
+        //     selectedDrug,
+        //     selectedConflict,
+        //     activeDrugs,
+        //     activeConflicts,
+        //     stepsData,
+        //     scheduleForm: { interval },
+        //   },
+        //   dosages: {
+        //     current: { drug, form, methodform, names },
+        //   },
+        //   router: { values },
+        // } = this.props;
 
         const { t } = this.props.actions;
 
-        let concept_types = [
-          {
-            key: 1,
-            text: t("repeat"),
-            value: "every",
-            description: t("every_x_days"),
-            onClick: this.handleAddConcept,
-          },
-          {
-            key: 2,
-            text: t("period"),
-            value: "period",
-            description: t("x_days"),
-            onClick: this.handleAddConcept,
-          },
-          {
-            key: 4,
-            text: t("gap"),
-            value: "in",
-            description: t("through_x_days"),
-            onClick: this.handleAddConcept,
-          },
-          {
-            key: 5,
-            text: t("quantity"),
-            value: "count",
-            description: t("x_every_day"),
-            onClick: this.handleAddConcept,
-          },
-          {
-            key: 7,
-            text: t("time_receipt"),
-            value: "time",
-            description: "(7:30)",
-            onClick: this.handleAddConcept,
-          },
-        ];
+        // let concept_types = [
+        //   {
+        //     key: 1,
+        //     text: t("repeat"),
+        //     value: "every",
+        //     description: t("every_x_days"),
+        //     onClick: this.handleAddConcept,
+        //   },
+        //   {
+        //     key: 2,
+        //     text: t("period"),
+        //     value: "period",
+        //     description: t("x_days"),
+        //     onClick: this.handleAddConcept,
+        //   },
+        //   {
+        //     key: 4,
+        //     text: t("gap"),
+        //     value: "in",
+        //     description: t("through_x_days"),
+        //     onClick: this.handleAddConcept,
+        //   },
+        //   {
+        //     key: 5,
+        //     text: t("quantity"),
+        //     value: "count",
+        //     description: t("x_every_day"),
+        //     onClick: this.handleAddConcept,
+        //   },
+        //   {
+        //     key: 7,
+        //     text: t("time_receipt"),
+        //     value: "time",
+        //     description: "(7:30)",
+        //     onClick: this.handleAddConcept,
+        //   },
+        // ];
         return (
           <>
             <Form.Group>
