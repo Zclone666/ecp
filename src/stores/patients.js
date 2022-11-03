@@ -254,7 +254,7 @@ class Patients {
     await this.stores.drugs.clearProto();
 
     return POST({
-      path: `prescript/Actual`,
+      path: `prescript/Actual2`,
       data,
       success: async (data) => {
         console.time('FirstWay');
@@ -309,26 +309,27 @@ class Patients {
 
 
         // FIO PARSING
+        // Вроде как не нужно. Если понадобится - раскомментировать код ниже.
 
-        if (!lastname && !firstname && !patronymic) {
-          const patronymicTest = /^.+(ич|вна|чна)$/i;
-          // name = " Иван  Васильевич Петров-Водкин";
-          name = name.trim();
-          name = name.replace(/\s+/g, ' ');
-          const nameArray = name.split(" ");
+        // if (!lastname && !firstname && !patronymic) {
+        //   const patronymicTest = /^.+(ич|вна|чна)$/i;
+        //   // name = " Иван  Васильевич Петров-Водкин";
+        //   name = name.trim();
+        //   name = name.replace(/\s+/g, ' ');
+        //   const nameArray = name.split(" ");
 
-          if (nameArray.length === 3) {
-            if (patronymicTest.test(nameArray[1])) {
-              lastname = nameArray[2];
-              firstname = nameArray[0];
-              patronymic = nameArray[1];
-            } else {
-              lastname = nameArray[0];
-              firstname = nameArray[1];
-              patronymic = nameArray[2];
-            }
-          }
-        }
+        //   if (nameArray.length === 3) {
+        //     if (patronymicTest.test(nameArray[1])) {
+        //       lastname = nameArray[2];
+        //       firstname = nameArray[0];
+        //       patronymic = nameArray[1];
+        //     } else {
+        //       lastname = nameArray[0];
+        //       firstname = nameArray[1];
+        //       patronymic = nameArray[2];
+        //     }
+        //   }
+        // }
 
         // <== FIO PARSING
 
@@ -542,9 +543,15 @@ class Patients {
 
         return data.patient || {};
       },
-      fail: (alerts) => { },
+      fail: (alerts) => { 
+        console.log(alerts);
+        this.stores.actions.makeAlerts({alerts});
+        this.stores.actions.loading = false;
+      },
       always: (data) => {
+        console.log(data);
         this.stores.actions.makeAlerts(data);
+        this.stores.actions.loading = false;
         if (this.stores?.actions?.miskey) {
           setTimeout(() => {
             this.stores.warnings.check();
