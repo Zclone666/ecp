@@ -23,8 +23,8 @@ export const API_SERVER = (() => {
   return !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
     ? "http://" + window.location.hostname + ":9004"
     : SERVER === "prod" || window.location.host.includes("socmedica.com")
-    ? "https://service.socmedica.com:9004"
-    : "https://service.socmedica.dev:9004";
+      ? "https://service.socmedica.com:9004"
+      : "https://service.socmedica.dev:9004";
 })();
 // (window.location.host.includes("http://84.23.32.38:9031") ? "http://84.23.32.38:9004" : false) ||
 // (window.location.host.includes("localhost") || window.location.host.includes("socmedica.dev")
@@ -150,15 +150,37 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
       // return true
     })
     .catch((error) => {
-      // console.log("axios error");
-      // console.log(error);
-      return fail && fail(error);
-      // return false
+      console.log(error);
+      let alerts = [];
+      let title = "Server Error";
+      let message = error.message || "NETWORK_ERROR";
+
+      if (error && error.response && error.response.data) {
+        let data = error.response.data;
+        let errorObj = {};
+
+        if (data.alert && data.alert.message) {
+          errorObj = data.alert;
+          title = errorObj.title;
+          message = errorObj.message;
+        }
+
+        if (data.alerts && data.alerts.length && data.alerts[0].message) {
+          errorObj = data.alerts[0];
+          title = errorObj.title;
+          message = errorObj.message;
+        }
+      }
+
+      alerts = [{ message, level: "error", title }];
+      return fail && fail(alerts);
     });
 };
+
 export function isChildWindow(checkWindow = window) {
   return checkWindow.parent !== checkWindow;
 }
+
 export const GET = (params) => FETCH({ ...params, method: "get", path: `${params.path}${serialize(params.data)}` });
 export const DELETE = (params) => FETCH({ ...params, method: "delete" });
 export const POST = (params) => FETCH({ ...params, method: "post" });
