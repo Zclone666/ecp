@@ -254,7 +254,7 @@ class Patients {
     await this.stores.drugs.clearProto();
 
     return POST({
-      path: `prescript/Actual2`,
+      path: `prescript/Actual`,
       data,
       success: async (data) => {
         console.time('FirstWay');
