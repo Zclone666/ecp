@@ -79,6 +79,7 @@ const Stepper = inject(
 
       render() {
         let {
+          router: { values }, // Не трогать. Без получения values перестанут работать клинреки
           clinrecs: { checker },
           actions: { clinrecCheckerStep }, // , clinrecCheckerData
           patients: {
