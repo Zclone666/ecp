@@ -79,6 +79,8 @@ const Stepper = inject(
 
       render() {
         let {
+          // eslint-disable-next-line no-unused-vars
+          router: { values }, // Не трогать. Без получения values перестанут работать клинреки
           clinrecs: { checker },
           actions: { clinrecCheckerStep }, // , clinrecCheckerData
           patients: {
