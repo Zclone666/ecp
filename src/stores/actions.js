@@ -682,8 +682,9 @@ class Actions {
       const misKey = this.stores.router.values.miskey;
       //----- getting query parameters ------------
       const queryParams = new URLSearchParams(window.location.search);
-      const SETTING_bottomview_disabled = Number(queryParams.get("SETTING_bottomview")) === 0;
-      const SETTING_topview_disabled = Number(queryParams.get("SETTING_topview")) === 0;
+
+      const SETTING_bottomview_disabled = String(queryParams.get("SETTING_bottomview")) === "0";
+      const SETTING_topview_disabled = String(queryParams.get("SETTING_topview")) === "0";
       // console.log({
       //   SETTING_bottomview_disabled,
       //   SETTING_topview_disabled,
@@ -702,7 +703,7 @@ class Actions {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (String(data.alert.code) === "200" && data.alert.level === "success") {
+          if (Number(data.alert.code) === 200 && data.alert.level === "success") {
             this.fakeMisLogin(data);
             return true;
           } else {
@@ -793,7 +794,6 @@ class Actions {
     let data = {
       key: privateKey || this.privateKey,
       authkey: this.authkey,
-      doctor_id: (this.stores.actions.doctor && this.stores.actions.doctor.id) || null,
       active_language,
     };
     return POST({
@@ -1127,12 +1127,6 @@ class Actions {
 
     // data.active_language = active_language
     return;
-
-
-    /**
-     * @desc Непонятно что это, может пригодится
-     */
-    // eslint-disable-next-line no-unreachable
     return await POST({
       path: `https://cs.socmedica.com/api/umkb/checkRights`,
       data,
@@ -1228,7 +1222,7 @@ class Actions {
       data: dataSend,
       success: async (data) => {
         // console.log(data);
-        if (data && data.alerts && String(data.alerts[0].code) === "200") {
+        if (data && data.alerts && Number(data.alerts[0].code) === 200) {
           this.loginForm.email = _.cloneDeep(this.signinForm.email);
           this.signinForm.isEmailReg = false;
           this.signinForm.showUserAlreadyExistsDialog = true;
@@ -1251,7 +1245,7 @@ class Actions {
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        if (data && data.alerts && String(data.alerts[0].code) === "200") {
+        if (data && data.alerts && Number(data.alerts[0].code) === 200) {
           this.makeAlerts({
             alerts: [
               {
@@ -1382,7 +1376,7 @@ class Actions {
       fail: (alerts) => {
         // console.log({ alerts });
         this.loading = false;
-        if (alerts && alerts[0] && String(alerts[0].code) === "403") return false;
+        if (alerts && alerts[0] && Number(alerts[0].code) === 403) return false;
         return true;
         // console.log('FAIL', alerts);
       },
