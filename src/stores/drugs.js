@@ -1210,7 +1210,7 @@ class Drugs {
       fail: (alerts) => {
         this.searchReady = true;
         // console.log('fail', alerts);
-        this.stores.actions.makeAlerts(data);
+        this.stores.actions.makeAlerts(alerts);
       },
       always: (data) => {
         // this.stores.actions.makeAlerts(data)
