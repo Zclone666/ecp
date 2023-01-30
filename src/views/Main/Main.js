@@ -47,7 +47,8 @@ const Main = inject(
   "dosages",
   "diseases",
   "clinrecs",
-  "patients"
+  "patients",
+  "tools",
 )(
   observer(
     class Main extends Component {
@@ -69,7 +70,7 @@ const Main = inject(
         this.contextRef = createRef();
         this.searchInput = createRef();
         this.debouncedSearch = _.debounce(this.callSearchFunction, 500, {
-          leading: true,
+          leading: false,
         });
       }
 
@@ -94,7 +95,12 @@ const Main = inject(
       handleResultSelect = async (e, { result }) => {
         this.setState({ searchQuery: "" });
         if (!["FG", "ATX", "MKB10", "Nozology"].includes(result.type)) {
+
+
           this.props.drugs.selectFromSearch(result);
+          // this.props.drugs.selectFromSearch(result, false, false);
+
+
           const input = document.querySelector(".results.transition.result-wrapper");
           input.classList.remove("visible");
         } else if (["FG", "ATX"].includes(result.type)) {
@@ -123,6 +129,7 @@ const Main = inject(
       };
 
       callSearchFunction = (value) => {
+        console.log("search", value);
         this.props.drugs.search(value);
       };
 
@@ -227,6 +234,14 @@ const Main = inject(
 
       render() {
         const { open, openCautions, openClearence, searchQuery, clinic } = this.state;
+        const { tools } = this.props;
+
+        // console.log(this.props.tools.functional);
+
+        const canFindAddDeleteDrugs = tools.hasFunctional("FindAddDeleteDrugs");
+        const canCheckListDrugsInterface = tools.hasFunctional("CheckListDrugsInterface");
+        const canAppointmentTherapy = tools.hasFunctional("AppointmentTherapy");
+        const canExtractDocuments = tools.hasFunctional("ExtractDocuments");
 
         let {
           height,
@@ -285,6 +300,11 @@ const Main = inject(
 
         let showMainBottomMenu =
           !(makeLiquids || !checkLiquids) && (drug.size > 0 || deletedRows.length > 0 || deletedLiquids.length > 0);
+
+        if (!canCheckListDrugsInterface && !canFindAddDeleteDrugs) {
+          // bottomview_disabled = true;
+          showMainBottomMenu = false;
+        }
 
         const texts = buttonTexts ? buttonTexts.text : null;
 
@@ -413,7 +433,7 @@ const Main = inject(
               )}
               {disabled && showMainBottomMenu && (
                 <Menu className={`bottom fixed menu three item huge main`}>
-                  <Menu.Item onClick={() => this.handleResetAll("all")}>{t("main_drugs_reset")}</Menu.Item>
+                  {canFindAddDeleteDrugs && <Menu.Item onClick={() => this.handleResetAll("all")}>{t("main_drugs_reset")}</Menu.Item>}
                   <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
                     {t("main_drugs_check")}
                   </Menu.Item>
@@ -421,7 +441,7 @@ const Main = inject(
               )}
               {drug.size > 0 && !disabled && showMainBottomMenu && !bottomview_disabled && (
                 <Menu className={`bottom fixed menu three item huge main`}>
-                  <Modal
+                  {canFindAddDeleteDrugs && <Modal
                     closeIcon
                     onClose={() => this.setOpen(false, "openClearence")}
                     onOpen={() => this.setOpen(true, "openClearence")}
@@ -454,52 +474,55 @@ const Main = inject(
                         primary
                       />
                     </Modal.Actions>
-                  </Modal>
-                  <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
-                    {t("main_drugs_check")}
-                  </Menu.Item>
-                  {listChanged && editedDrugs ? (
-                    cautionsTitle ? (
-                      <Modal
-                        onClose={() => this.setOpen(false, "openCautions")}
-                        onOpen={() => this.setOpen(true, "openCautions")}
-                        open={openCautions}
-                        trigger={
-                          <Menu.Item className={editedDrugs ? "glowing" : ""}>{t("main_drugs_prescribe")}</Menu.Item>
-                        }
-                      >
-                        <Modal.Header>{cautionsTitle}</Modal.Header>
-                        <Modal.Content>
-                          {cautions?.length > 0 &&
-                            cautions.map((item, i) => {
-                              return (
-                                <Message negative key={i}>
-                                  <Message.Header>{item}</Message.Header>
-                                </Message>
-                              );
-                            })}
-                        </Modal.Content>
-                        <Modal.Actions>
-                          <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
-                            {t("main_parser_cancel")}
-                          </Button>
-                          <Button
-                            content={t("continue")}
-                            labelPosition="right"
-                            icon="checkmark"
-                            onClick={() => this.saveList()}
-                            positive
-                          />
-                        </Modal.Actions>
-                      </Modal>
-                    ) : (
-                      <Menu.Item className={editedDrugs ? "glowing" : ""} onClick={() => this.saveList()}>
-                        {t("main_drugs_prescribe")}
-                      </Menu.Item>
-                    )
-                  ) : (
-                    <Menu.Item onClick={() => this.goRecipe()}>{t("main_drugs_write")}</Menu.Item>
-                  )}
+                  </Modal>}
+
+                  {canCheckListDrugsInterface && <>
+                    <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
+                      {t("main_drugs_check")}
+                    </Menu.Item>
+
+                      {listChanged && editedDrugs ? (
+                        cautionsTitle ? (
+                          <Modal
+                            onClose={() => this.setOpen(false, "openCautions")}
+                            onOpen={() => this.setOpen(true, "openCautions")}
+                            open={openCautions}
+                            trigger={
+                              <Menu.Item className={editedDrugs ? "glowing" : ""}>{t("main_drugs_prescribe")}</Menu.Item>
+                            }
+                          >
+                            <Modal.Header>{cautionsTitle}</Modal.Header>
+                            <Modal.Content>
+                              {cautions?.length > 0 &&
+                                cautions.map((item, i) => {
+                                  return (
+                                    <Message negative key={i}>
+                                      <Message.Header>{item}</Message.Header>
+                                    </Message>
+                                  );
+                                })}
+                            </Modal.Content>
+                            <Modal.Actions>
+                              <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
+                                {t("main_parser_cancel")}
+                              </Button>
+                              <Button
+                                content={t("continue")}
+                                labelPosition="right"
+                                icon="checkmark"
+                                onClick={() => this.saveList()}
+                                positive
+                              />
+                            </Modal.Actions>
+                          </Modal>
+                        ) : canAppointmentTherapy &&
+                          <Menu.Item className={editedDrugs ? "glowing" : ""} onClick={() => this.saveList()}>
+                            {t("main_drugs_prescribe")}
+                          </Menu.Item>                        
+                      ) : 
+                        canExtractDocuments &&  <Menu.Item onClick={() => this.goRecipe()}>{t("main_drugs_write")}</Menu.Item>
+                      }
+                  </>}
                 </Menu>
               )}
 
@@ -623,11 +646,11 @@ const Main = inject(
                         <Dropdown.Menu>
                           <Dropdown.Item onClick={() => this.changeLang("en")}>
                             <Flag name="gb" />
-                            English 
+                            English
                           </Dropdown.Item>
                           <Dropdown.Item onClick={() => this.changeLang("ru")}>
                             <Flag name="ru" />
-                            Русский 
+                            Русский
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
@@ -653,7 +676,7 @@ const Main = inject(
               )}
 
               <Sidebar.Pusher dimmed={open || showPage} className="pusherwrapper">
-                {!disabled && !topview_disabled && (
+                {canFindAddDeleteDrugs && !disabled && !topview_disabled && (
                   <Menu className="fluid one item ui top huge text menu searchwrapper" style={{ margin: 0 }}>
                     <Menu.Item>
                       <Segment basic className="fluid">
@@ -696,8 +719,8 @@ const Main = inject(
                       <Drugs />
                     ) : (
                       !disabled &&
-                      !topview_disabled && (
-                        <Segment basic>
+                      !topview_disabled && 
+                        canFindAddDeleteDrugs && <Segment basic>
                           <Message info>
                             <Icon name="info" />
                             {t("main_search_tip")}&nbsp;{" "}
@@ -708,8 +731,7 @@ const Main = inject(
                               {t("main_parser_tip")}
                             </span>
                           </Message>
-                        </Segment>
-                      )
+                        </Segment>                      
                     )}
                   </Segment>
                   {drug.size > 0 && (
