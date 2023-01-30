@@ -29,6 +29,9 @@ class Tools {
   };
 
   techReady = false;
+  functional = [];
+  functionalReady = false;
+
 
   constructor({ stores }) {
     makeObservable(this, {
@@ -47,6 +50,8 @@ class Tools {
       unitsComplex: observable,
       unitsSchedule: observable,
       techReady: observable,
+      functional: observable,
+      functionalReady: observable,
     });
 
     this.stores = stores;
@@ -338,6 +343,96 @@ class Tools {
     });
   }
 
+  hasFunctional(functionalCode) {
+    if (!this) {
+      console.log("Для разработчика - Не нужно экстрактить функцию hasFunctional. Теряется контекст.");
+      return true;
+    }
+    // console.log(this);
+    // Если не из миса, то разрешены все функции
+    if (!this.stores.actions.misLinkLogin) {
+      return true;
+    }
+    return this.functional.includes(functionalCode);
+  }
+
+  async getFunctional() {
+    let { active_language } = this.stores.actions;
+    let data = {
+      active_language,
+    };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: `auth/functional`,
+      data,
+      success: async (data) => {
+        console.log("DATA", data);
+
+        if (data.result && data.result.length) {
+          this.functional = data.result;
+        }
+
+        /**
+         * @todo Это заглушка, нужно удалить, когда с сервера придут данные
+         * @description
+        
+        + Поиск, добавление и удаление ЛС    FindAddDeleteDrugs
+        + Подбор дозировки и способа применения ЛС   SelectDosageMethodUsingDrugs
+        + Подбор аналога ЛС     SelectAnalogDrugs
+        + Инструкции по медицинскому применению ЛС    InstructionMedicalUseDrugs
+        + Проверка списка препаратов (интерфейс)     CheckListDrugsInterface     
+        + Замены препарата SelectReplacementDrug
+        + Назначение фармакотерапии     AppointmentTherapy
+        + Выписка документов    ExtractDocuments
+        + Выписка рецепта   ExtractPrescription
+        + Выписка протокола консилиума   ExtractProtocolCouncil
+        + Выписка амбулаторного листа назначений    ExtractOutpatientAppointmentSheet
+        + Выписка электронного рецепта   ExtractPrescriptionEDS
+        + Поиск пациента    PatientSearch
+        + Автоматическая загрузка генетического паспорта   AutomaticLoadingGenPassport
+        + Ручное добавление мутаций гена    ManuallyAddGenMutations
+        + Добавление и редактирование пациента    AddAndEditPatient
+        + Подбор терапии по клиническим рекомендациям    SelectTherapyToClinicalRecommendations
+        + Последние выбранные пациенты     LatestSelectedPatients
+        - Проверка списка препаратов (прямой запрос, без формирования интерфейса)   CheckListDrugsNoInterface  
+         */
+
+        // this.functional = [
+        //   "FindAddDeleteDrugs", // строка поиска; кнопка Удалить препарат; кнопка Удалить раствор; кнопка "Убрать из раствора"; функция "Перетащить в раствор"; кнопка "Сбросить"; сообщение о том, что нужно внести препараты, если список пустой
+        //   "SelectDosageMethodUsingDrugs", // кнопка Капля у препата; кнопка Капля у раствора; 
+        //   "SelectAnalogDrugs", // кнопка Аналоги;
+        //   "CheckListDrugsInterface", // Кпопки Проверить и Назначить/Выписать
+        //   "InstructionMedicalUseDrugs", // клик по препарату
+        //   "SelectReplacementDrug", // Кнопка Подобрать замену
+        //   "AppointmentTherapy", // Кнопка Назначить
+        //   "ExtractDocuments", // кнопка Выписать
+        //   "ExtractPrescription", // кнопка Выписать рецепт
+        //   "ExtractProtocolCouncil", // кнопка Протокол консилиума
+        //   "ExtractOutpatientAppointmentSheet", // кнопка Выписка амбулаторного листа назначений
+        //   "ExtractPrescriptionEDS", // кнопка Подписать 
+        //   "AutomaticLoadingGenPassport", // кнопка загрузка генетического паспорта
+        //   "ManuallyAddGenMutations", // поля Мутация гена
+        //   "SelectTherapyToClinicalRecommendations", // кнопка Клинические рекомендации
+        //   "PatientSearch", // поле поиска пациентов
+        //   "LatestSelectedPatients", // блок со списком Последний выбранных пациентов
+        //   "AddAndEditPatient", // форма пациента накрывается слоем, для блокировки всех интерактивных элементов
+        // ];
+
+        // Если ни одного варианта выписки нету, то саму кнопку Выписать тоже убираем
+        if (!this.hasFunctional("ExtractProtocolCouncil") && !this.hasFunctional("ExtractPrescription") && !this.hasFunctional("ExtractOutpatientAppointmentSheet")) {
+          this.functional = this.functional.filter(key => key !== "ExtractDocuments");
+        }
+
+        this.functionalReady = true;
+      },
+      fail: (alerts) => {
+        this.stores.actions.makeAlerts({ alerts });
+      },
+      always: (data) => { },
+    });
+  }
+
   getBaseUnit = (unitId) => {
     let unit = this.units[unitId];
     // console.log({ unit });
@@ -589,6 +684,16 @@ class Tools {
     } else {
       await this.timeout(200);
       return this.waitForTech(fn);
+    }
+  }
+
+
+  async waitForFunctional(fn) {
+    if (this.functionalReady) {
+      return fn();
+    } else {
+      await this.timeout(200);
+      return this.waitForFunctional(fn);
     }
   }
 }

@@ -33,11 +33,11 @@ const Drug = inject(
         let {
           drug,
         } = this.props;
+        await this.props.dosages.get(drug);
         await this.props.drugs.setCurrent({ key: drug.key, id: drug.id });
-        // this.props.drugs.current = { ...drug };
+        this.props.drugs.current = { ...drug };
         await this.props.drugs.getDosageParams();
-        // await this.props.dosages.get(drug);
-        //this.props.db.GetDuration(drug)
+        // this.props.db.GetDuration(drug)
 
         // this.props.router.push('/concepts/dozes')
       };
@@ -145,7 +145,17 @@ const Drug = inject(
           minus,
           onRemove,
           canDrag,
+          tools,
         } = this.props;
+
+        
+        const canFindAddDeleteDrugs = tools.hasFunctional("FindAddDeleteDrugs");
+        const canSelectAnalogDrugs = tools.hasFunctional("SelectAnalogDrugs");
+        const canSelectDosageMethodUsingDrugs = tools.hasFunctional("SelectDosageMethodUsingDrugs");
+        const canInstructionMedicalUseDrugs = tools.hasFunctional("InstructionMedicalUseDrugs");
+        const canSelectReplacementDrug = tools.hasFunctional("SelectReplacementDrug");
+
+        canDrag = canFindAddDeleteDrugs === false ? false : canDrag; 
 
         const { t } = this.props.actions;
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
@@ -169,6 +179,10 @@ const Drug = inject(
         dosage = dosage || {};
         helpers = helpers || {};
 
+        /**
+         * @todo кнопка должна быть всегда активна, а дозировки запрашивать при клике на кнопку
+         */
+        // let dosReady = true;
         let dosReady = !!drugDosages.names;
 
         let urlArr = ["/concept/dozes"];
@@ -212,7 +226,7 @@ const Drug = inject(
             <List.Content floated="right">
               <div style={{ float: "left", marginRight: "8px" }}>{dateOfPrescription}</div>
               <Responsive fireOnMount as={Button.Group} minWidth={misDisabled ? "1" : "481"}>
-                {maxItem && maxItem.needChange && (
+                {canSelectReplacementDrug && maxItem && maxItem.needChange && (
                   <Popup
                     content={t("choose_replacement")}
                     trigger={
@@ -222,7 +236,7 @@ const Drug = inject(
                     }
                   />
                 )}
-                {!disabled && dosReady && (
+                {canSelectDosageMethodUsingDrugs && !disabled && dosReady && (
                   <Popup
                     content={t("dosage")}
                     trigger={
@@ -238,7 +252,7 @@ const Drug = inject(
                   </Button>
                 )}
 
-                {!disabled && (
+                {canSelectAnalogDrugs && !disabled && (
                   <Popup
                     content={t("analogues")}
                     trigger={
@@ -254,7 +268,7 @@ const Drug = inject(
                     }
                   />
                 )}
-                {!disabled && (
+                {canFindAddDeleteDrugs && !disabled && (
                   <Popup
                     content={t("delete")}
                     trigger={
@@ -264,7 +278,7 @@ const Drug = inject(
                     }
                   />
                 )}
-                {!disabled && minus && (
+                {canFindAddDeleteDrugs && !disabled && minus && (
                   <Popup
                     content={t("remove_from_solution")}
                     trigger={
@@ -275,7 +289,7 @@ const Drug = inject(
                   />
                 )}
               </Responsive>
-              {!disabled && minus && (
+              {canFindAddDeleteDrugs && !disabled && minus && (
                 <Responsive fireOnMount as={Button.Group} maxWidth={misDisabled ? "0" : "480"}>
                   <Popup
                     content={t("remove_from_solution")}
@@ -326,9 +340,10 @@ const Drug = inject(
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Summary>
+                    {canInstructionMedicalUseDrugs ? 
                     <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className="underlined">
                       <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
-                    </RouterLink>
+                    </RouterLink> : <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />}
                     {type === "TN" && (
                       <span>
                         <sup>TM</sup>
@@ -406,7 +421,7 @@ const Drug = inject(
                         text={t("choose_replacement")}
                       />
                     )}
-                    {dosReady && (
+                    {canSelectDosageMethodUsingDrugs && dosReady && (
                       <Dropdown.Item
                         disabled={drug.group !== 0}
                         icon="tint"
@@ -416,18 +431,18 @@ const Drug = inject(
                         text={t("dosage")}
                       />
                     )}
-                    {!dosReady && (
+                    {canSelectDosageMethodUsingDrugs && !dosReady && (
                       <Dropdown.Item disabled icon={<Icon loading name="circle notch" />} text={t("dosage")} />
                     )}
 
-                    <Dropdown.Item
+                    {canSelectAnalogDrugs && <Dropdown.Item
                       disabled={drug.group !== 0}
                       icon="font"
                       as={RouterLink}
                       to={`/analog/${drug.key}`}
                       onClick={this.getAnalog}
                       text={t("analogues")}
-                    />
+                    />}
                     <Dropdown.Item
                       icon="ellipsis horizontal"
                       as={RouterLink}
@@ -435,7 +450,7 @@ const Drug = inject(
                       text={t("more")}
                       onClick={this.getInfo}
                     />
-                    <Dropdown.Item icon="delete" onClick={this.unselectDrug} text={t("remove_from_list")} />
+                    {canFindAddDeleteDrugs && <Dropdown.Item icon="delete" onClick={this.unselectDrug} text={t("remove_from_list")} />}
                   </Dropdown.Menu>
                 )}
               </List.Content>

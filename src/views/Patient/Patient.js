@@ -20,7 +20,8 @@ const Patient = inject(
   "db",
   "actions",
   "patients",
-  "clinrecs"
+  "clinrecs",
+  "tools",
 )(
   observer(
     class Patient extends Component {
@@ -177,6 +178,10 @@ const Patient = inject(
         let { step, edit } = this.state;
         const { disease, co_disease } = this.props.patients.current;
         const { firstname, lastname } = this.props.actions.patientPassport;
+        
+        let { tools } = this.props;
+        const canSelectTherapyToClinicalRecommendations = tools.hasFunctional("SelectTherapyToClinicalRecommendations");
+
         switch (shownPage) {
           case "list":
             step = 0;
@@ -225,7 +230,7 @@ const Patient = inject(
                 {/* <Menu.Item onClick={() => this.saveForm(false)}>{t("pharmacotherapy_patient")}</Menu.Item> */}
                 {/* isDisease && */}
                 {/* || !firstname || !lastname */}
-                <Menu.Item disabled={misDisabled || !isDisease} onClick={this.getClinrecExist}>
+                <Menu.Item disabled={(misDisabled || !isDisease) || !canSelectTherapyToClinicalRecommendations} onClick={this.getClinrecExist}>
                   {/* <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}> */}
                   {t("clinical_recommendations_short")}
                   {/* </div> */}
