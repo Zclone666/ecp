@@ -63,14 +63,14 @@ const PatientForm = inject(
       componentDidMount() {
         if (!boxDisabled) {
           const fileSelector = document.getElementById("genpassport-upload");
-          fileSelector.addEventListener("change", this.handleFileUpload);
+          fileSelector && fileSelector.addEventListener("change", this.handleFileUpload);
         }
       }
 
       componentWillUnmount() {
         if (!boxDisabled) {
           const fileSelector = document.getElementById("genpassport-upload");
-          fileSelector.removeEventListener("change", this.handleFileUpload);
+          fileSelector && fileSelector.removeEventListener("change", this.handleFileUpload);
         }
       }
 
@@ -86,7 +86,7 @@ const PatientForm = inject(
           name = e.target.name;
           value = e.target.value;
         }
-        
+
         const { editForm } = this.props;
 
         if (name === "weight") {
@@ -368,6 +368,12 @@ const PatientForm = inject(
           genpassport_exist,
         } = this.props.patients.current;
 
+        let { tools } = this.props;
+        const canAutomaticLoadingGenPassport = tools.hasFunctional("AutomaticLoadingGenPassport");
+        const canManuallyAddGenMutations = tools.hasFunctional("ManuallyAddGenMutations");
+        const canPatientSearch = tools.hasFunctional("PatientSearch");
+        const canAddAndEditPatient = tools.hasFunctional("AddAndEditPatient");
+
         let { diseaseRows, allergyRows } = this.props.diseases;
         let {
           search_disease,
@@ -387,10 +393,18 @@ const PatientForm = inject(
 
         return (
           <Segment basic>
+            {!canAddAndEditPatient && <div style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              opacity: "0.4",
+              backgroundColor: "#FFF",
+              zIndex: "1",
+            }}></div>}
             <Form>
               <Form.Group>
                 <Form.Field width={7}>
-                  <Search
+                  {canPatientSearch && <Search
                     fluid
                     size="big"
                     name="patient"
@@ -404,7 +418,7 @@ const PatientForm = inject(
                     results={this.listSearch}
                     value={search_patient}
                     resultclassname="result-wrapper"
-                  />
+                  />}
                 </Form.Field>
                 <Form.Field width={3}>
                   <Header as="h2" content={fio} subheader={email} />
@@ -581,7 +595,7 @@ const PatientForm = inject(
                   );
                 })}
               </List>
-              {!misDisabled && (
+              {canManuallyAddGenMutations && (
                 <Form.Group style={{ alignItems: "flex-end" }} widths={1}>
                   <Form.Field width={4}>
                     <label>{t("gene_mutation")}</label>
@@ -643,7 +657,7 @@ const PatientForm = inject(
                   </Form.Field>
                 </Form.Group>
               )}
-              {!boxDisabled && (
+              {canAutomaticLoadingGenPassport && !boxDisabled && (
                 <Form.Group widths={1}>
                   <Form.Field width={16}>
                     <label>{t("genetic_passport")}</label>

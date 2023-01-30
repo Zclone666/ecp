@@ -41,7 +41,8 @@ const Recipe = inject(
   "db",
   "actions",
   "recipes",
-  "patients"
+  "patients",
+  "tools",
 )(
   observer(
     class Recipe extends Component {
@@ -98,7 +99,7 @@ const Recipe = inject(
         this.setState({ code });
         this.setState({ openCode: true });
       };
-      
+
       print = async () => {
         let code = await this.props.recipes.print();
 
@@ -364,6 +365,7 @@ const Recipe = inject(
             drugKeysForPrescription,
           },
           patients: { current: patient },
+          tools,
         } = this.props;
         const { t } = this.props.actions;
         const {
@@ -394,6 +396,11 @@ const Recipe = inject(
           swipe: false,
           initialSlide: 0,
         };
+
+        const canExtractPrescription = tools.hasFunctional("ExtractPrescription");
+        const canExtractPrescriptionEDS = tools.hasFunctional("ExtractPrescriptionEDS");
+        const canExtractProtocolCouncil = tools.hasFunctional("ExtractProtocolCouncil");
+        const canExtractOutpatientAppointmentSheet = tools.hasFunctional("ExtractOutpatientAppointmentSheet");
 
         return (
           <>
@@ -429,7 +436,7 @@ const Recipe = inject(
                 >
                   {t("print")}
                 </Menu.Item>
-                {printType !== "list" && (
+                {canExtractPrescriptionEDS && printType !== "list" && (
                   <Menu.Item
                     disabled={noEmail || !recipe_formid || this.state.wasSigned}
                     onClick={this.initiateSigningProcess}
@@ -451,7 +458,7 @@ const Recipe = inject(
                   <Grid.Column width={16}>
                     <Header>{t("choose_form")}</Header>
                   </Grid.Column>
-                  {Object.entries(recipeData.items)
+                  {canExtractOutpatientAppointmentSheet && Object.entries(recipeData.items)
                     .filter(([id, value]) => value.type === "list")
                     .map(([id, value]) => {
                       return (
@@ -480,17 +487,17 @@ const Recipe = inject(
                     </Button>{" "}
                   </Grid.Column> */}
 
-                  <Grid.Column width={8}>
+                  {canExtractPrescription && <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("recipe")} size="big" color="purple" fluid>
                       {t("writing_recipe")}
                     </Button>{" "}
-                  </Grid.Column>
+                  </Grid.Column>}
 
-                  <Grid.Column width={8}>
+                  {canExtractProtocolCouncil && <Grid.Column width={8}>
                     <Button onClick={() => this.setPrintType("protocol")} size="big" color="orange" fluid>
                       {t("council_minutes")}
                     </Button>{" "}
-                  </Grid.Column>
+                  </Grid.Column>}
                 </Grid>
               </div>
               <div className="scrollwrapper">
