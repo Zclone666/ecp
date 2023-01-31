@@ -301,7 +301,7 @@ const Main = inject(
         let showMainBottomMenu =
           !(makeLiquids || !checkLiquids) && (drug.size > 0 || deletedRows.length > 0 || deletedLiquids.length > 0);
 
-        if (!canCheckListDrugsInterface && !canFindAddDeleteDrugs) {
+        if (!canCheckListDrugsInterface && !canFindAddDeleteDrugs && !canExtractDocuments) {
           // bottomview_disabled = true;
           showMainBottomMenu = false;
         }
