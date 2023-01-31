@@ -327,7 +327,7 @@ const PatientForm = inject(
           </div>
         );
       };
-      
+
       handleClickDisabledFields = () => {
         this.props.actions.makeAlerts({
           alerts: [
@@ -413,7 +413,7 @@ const PatientForm = inject(
               backgroundColor: "#FFF",
               zIndex: "1",
             }}
-            onClick={this.handleClickDisabledFields}></div>}
+              onClick={this.handleClickDisabledFields}></div>}
             <Form>
               <Form.Group>
                 {canPatientSearch && <Form.Field width={7}>
@@ -433,7 +433,7 @@ const PatientForm = inject(
                     resultclassname="result-wrapper"
                   />
                 </Form.Field>}
-                <Form.Field width={canPatientSearch? 3: 10}>
+                <Form.Field width={canPatientSearch ? 3 : 10}>
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
                 {/* {this.props.patients.current.id && (
@@ -560,9 +560,10 @@ const PatientForm = inject(
                 {this.disease.map((item, i) => {
                   return (
                     <List.Item key={"disease" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button size="tiny" icon="delete" onClick={() => this.handleResultUnselect("disease", item)} />
                       </List.Content>
+                      }
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>{item.name}</List.Header>
@@ -595,13 +596,13 @@ const PatientForm = inject(
                 {this.co_disease.map((item, i) => {
                   return (
                     <List.Item key={"co_disease" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button
                           size="tiny"
                           icon="delete"
                           onClick={() => this.handleResultUnselect("co_disease", item)}
                         />
-                      </List.Content>
+                      </List.Content>}
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>{item.name}</List.Header>
@@ -697,9 +698,9 @@ const PatientForm = inject(
                   mutations.map((item, i) => {
                     return (
                       <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                        <List.Content floated="right">
+                        {canAddAndEditPatient && <List.Content floated="right">
                           <Button size="tiny" icon="delete" onClick={() => this.handleRemoveMutation(item, i)} />
-                        </List.Content>
+                        </List.Content>}
                         <List.Icon name="dna" size="big" verticalAlign="middle" />
                         <List.Content>
                           <List.Header>
@@ -734,9 +735,9 @@ const PatientForm = inject(
                 {allergy.map((item, i) => {
                   return (
                     <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button size="tiny" icon="delete" onClick={() => this.handleResultUnselect("allergy", item)} />
-                      </List.Content>
+                      </List.Content>}
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>
@@ -785,9 +786,9 @@ const PatientForm = inject(
                     labparams.map((item, i) => {
                       return (
                         <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                          <List.Content floated="right">
+                          {canAddAndEditPatient && <List.Content floated="right">
                             <Button size="tiny" icon="delete" onClick={() => this.handleRemoveLabData(item, i)} />
-                          </List.Content>
+                          </List.Content>}
                           <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                           <List.Content>
                             <List.Header>{item}</List.Header>
