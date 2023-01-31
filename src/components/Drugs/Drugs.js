@@ -287,7 +287,7 @@ const Drugs = inject(
                                   }}
                                   {...prov.droppableProps}
                                 >
-                                  {!grouped[liquid] && (
+                                  {canFindAddDeleteDrugs && !grouped[liquid] && (
                                     <div className={"abstext"}>{t("drag_two_components_for_solution")}</div>
                                   )}
                                   {grouped[liquid] && (
