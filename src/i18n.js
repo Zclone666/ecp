@@ -6,6 +6,7 @@ const resources = {
     translation: {
       name_logo: "Электронный клинический фармаколог",
       cdss: "Система поддержки принятия врачебных решений",
+      editing_disabled: "Редактирование запрещено",
       // "Welcome to React": "добро пожаловать в экф",
       patient_patients: "Пациенты",
       main_menu_exit: "Выход",

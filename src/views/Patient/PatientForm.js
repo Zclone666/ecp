@@ -35,7 +35,7 @@ const PatientForm = inject(
   "diseases",
   "actions",
   "patients",
-  "tools"
+  "tools",
 )(
   observer(
     class PatientForm extends Component {
@@ -327,6 +327,18 @@ const PatientForm = inject(
           </div>
         );
       };
+      
+      handleClickDisabledFields = () => {
+        this.props.actions.makeAlerts({
+          alerts: [
+            {
+              message: this.props.t("editing_disabled"),
+              level: "warning",
+            },
+          ],
+        });
+      };
+
       get disease() {
         const { disease } = this.props.patients.current;
         // console.log(this.props.patients.current);
@@ -400,11 +412,12 @@ const PatientForm = inject(
               opacity: "0.4",
               backgroundColor: "#FFF",
               zIndex: "1",
-            }}></div>}
+            }}
+            onClick={this.handleClickDisabledFields}></div>}
             <Form>
               <Form.Group>
-                <Form.Field width={7}>
-                  {canPatientSearch && <Search
+                {canPatientSearch && <Form.Field width={7}>
+                  <Search
                     fluid
                     size="big"
                     name="patient"
@@ -418,9 +431,9 @@ const PatientForm = inject(
                     results={this.listSearch}
                     value={search_patient}
                     resultclassname="result-wrapper"
-                  />}
-                </Form.Field>
-                <Form.Field width={3}>
+                  />
+                </Form.Field>}
+                <Form.Field width={canPatientSearch? 3: 10}>
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
                 {/* {this.props.patients.current.id && (
@@ -430,18 +443,20 @@ const PatientForm = inject(
                     )}
                   </Form.Field>
                 )} */}
-                <Form.Field width={3}>
-                  <Button onClick={this.handleConfirmSearch}>
-                    {showPatientPassport
-                      ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
-                      : id
-                        ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
-                        : t("patinet_card_passport_label")}
-                  </Button>
-                </Form.Field>
-                <Form.Field width={2}>
-                  <Button onClick={() => this.clearPatient()}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
-                </Form.Field>
+                {canAddAndEditPatient && <>
+                  <Form.Field width={3}>
+                    <Button onClick={this.handleConfirmSearch}>
+                      {showPatientPassport
+                        ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
+                        : id
+                          ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
+                          : t("patinet_card_passport_label")}
+                    </Button>
+                  </Form.Field>
+                  <Form.Field width={2}>
+                    <Button onClick={() => this.clearPatient()}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
+                  </Form.Field>
+                </>}
               </Form.Group>
               <Divider horizontal fitted />
 

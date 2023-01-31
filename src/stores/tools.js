@@ -396,32 +396,49 @@ class Tools {
         + Подбор терапии по клиническим рекомендациям    SelectTherapyToClinicalRecommendations
         + Последние выбранные пациенты     LatestSelectedPatients
         - Проверка списка препаратов (прямой запрос, без формирования интерфейса)   CheckListDrugsNoInterface  
+
+
+        + кнопки добавить, редактировать пациента
+        + имя сдвинул вместо поиска
+        + логику кнопки выписать
+
+        - обработку ошибки при емейле и затем проверку емейла
+        - крестики убрать в карточке пациента
+        - уведомление Редактирование недоступно
+
          */
 
         // this.functional = [
-        //   "FindAddDeleteDrugs", // строка поиска; кнопка Удалить препарат; кнопка Удалить раствор; кнопка "Убрать из раствора"; функция "Перетащить в раствор"; кнопка "Сбросить"; сообщение о том, что нужно внести препараты, если список пустой
-        //   "SelectDosageMethodUsingDrugs", // кнопка Капля у препата; кнопка Капля у раствора; 
-        //   "SelectAnalogDrugs", // кнопка Аналоги;
-        //   "CheckListDrugsInterface", // Кпопки Проверить и Назначить/Выписать
-        //   "InstructionMedicalUseDrugs", // клик по препарату
-        //   "SelectReplacementDrug", // Кнопка Подобрать замену
-        //   "AppointmentTherapy", // Кнопка Назначить
-        //   "ExtractDocuments", // кнопка Выписать
-        //   "ExtractPrescription", // кнопка Выписать рецепт
-        //   "ExtractProtocolCouncil", // кнопка Протокол консилиума
-        //   "ExtractOutpatientAppointmentSheet", // кнопка Выписка амбулаторного листа назначений
-        //   "ExtractPrescriptionEDS", // кнопка Подписать 
-        //   "AutomaticLoadingGenPassport", // кнопка загрузка генетического паспорта
-        //   "ManuallyAddGenMutations", // поля Мутация гена
-        //   "SelectTherapyToClinicalRecommendations", // кнопка Клинические рекомендации
-        //   "PatientSearch", // поле поиска пациентов
-        //   "LatestSelectedPatients", // блок со списком Последний выбранных пациентов
-        //   "AddAndEditPatient", // форма пациента накрывается слоем, для блокировки всех интерактивных элементов
+          // "FindAddDeleteDrugs", // строка поиска; кнопка Удалить препарат; кнопка Удалить раствор; кнопка "Убрать из раствора"; функция "Перетащить в раствор"; кнопка "Сбросить"; сообщение о том, что нужно внести препараты, если список пустой
+          // "SelectDosageMethodUsingDrugs", // кнопка Капля у препата; кнопка Капля у раствора; 
+          // "SelectAnalogDrugs", // кнопка Аналоги;
+          // "CheckListDrugsInterface", // Кпопки Проверить и Назначить/Выписать
+          // "InstructionMedicalUseDrugs", // клик по препарату
+          // "SelectReplacementDrug", // Кнопка Подобрать замену
+          // "AppointmentTherapy", // Кнопка Назначить
+          // "ExtractDocuments", // кнопка Выписать
+          // "ExtractPrescription", // кнопка Выписать рецепт
+          // "ExtractProtocolCouncil", // кнопка Протокол консилиума
+          // "ExtractOutpatientAppointmentSheet", // кнопка Выписка амбулаторного листа назначений
+          // "ExtractPrescriptionEDS", // кнопка Подписать 
+          // "AutomaticLoadingGenPassport", // кнопка загрузка генетического паспорта
+          // "ManuallyAddGenMutations", // поля Мутация гена
+          // "SelectTherapyToClinicalRecommendations", // кнопка Клинические рекомендации
+          // "PatientSearch", // поле поиска пациентов
+          // "LatestSelectedPatients", // блок со списком Последний выбранных пациентов
+          // "AddAndEditPatient", // форма пациента накрывается слоем, для блокировки всех интерактивных элементов
         // ];
 
         // Если ни одного варианта выписки нету, то саму кнопку Выписать тоже убираем
         if (!this.hasFunctional("ExtractProtocolCouncil") && !this.hasFunctional("ExtractPrescription") && !this.hasFunctional("ExtractOutpatientAppointmentSheet")) {
           this.functional = this.functional.filter(key => key !== "ExtractDocuments");
+        }
+
+        // Если хотя бы один вариант выписки есть, активируем кнопку Выписать (при этом, должна быть доступна проверка препаратов)
+        if (this.hasFunctional("ExtractProtocolCouncil") || this.hasFunctional("ExtractPrescription") || this.hasFunctional("ExtractOutpatientAppointmentSheet")) {
+          if (!this.functional.includes("ExtractDocuments") && this.hasFunctional("CheckListDrugsInterface")) {
+            this.functional.push("ExtractDocuments");
+          }
         }
 
         this.functionalReady = true;
