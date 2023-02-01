@@ -242,6 +242,7 @@ const Main = inject(
         const canCheckListDrugsInterface = tools.hasFunctional("CheckListDrugsInterface");
         const canAppointmentTherapy = tools.hasFunctional("AppointmentTherapy");
         const canExtractDocuments = tools.hasFunctional("ExtractDocuments");
+        const canAddAndEditPatient = tools.hasFunctional("AddAndEditPatient");
 
         let {
           height,
@@ -441,7 +442,7 @@ const Main = inject(
               )}
               {drug.size > 0 && !disabled && showMainBottomMenu && !bottomview_disabled && (
                 <Menu className={`bottom fixed menu three item huge main`}>
-                  {canFindAddDeleteDrugs && <Modal
+                  {canFindAddDeleteDrugs && canAddAndEditPatient && <Modal
                     closeIcon
                     onClose={() => this.setOpen(false, "openClearence")}
                     onOpen={() => this.setOpen(true, "openClearence")}
@@ -476,52 +477,60 @@ const Main = inject(
                     </Modal.Actions>
                   </Modal>}
 
+
+
+
+                  {canFindAddDeleteDrugs && !canAddAndEditPatient && <Menu.Item onClick={() => this.handleResetAll("list")}>
+                    {t("main_drugs_reset")}
+                  </Menu.Item>}
+
+
                   {canCheckListDrugsInterface && <>
                     <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
                       {t("main_drugs_check")}
                     </Menu.Item>
 
-                      {listChanged && editedDrugs ? (
-                        cautionsTitle ? (
-                          <Modal
-                            onClose={() => this.setOpen(false, "openCautions")}
-                            onOpen={() => this.setOpen(true, "openCautions")}
-                            open={openCautions}
-                            trigger={
-                              <Menu.Item className={editedDrugs ? "glowing" : ""}>{t("main_drugs_prescribe")}</Menu.Item>
-                            }
-                          >
-                            <Modal.Header>{cautionsTitle}</Modal.Header>
-                            <Modal.Content>
-                              {cautions?.length > 0 &&
-                                cautions.map((item, i) => {
-                                  return (
-                                    <Message negative key={i}>
-                                      <Message.Header>{item}</Message.Header>
-                                    </Message>
-                                  );
-                                })}
-                            </Modal.Content>
-                            <Modal.Actions>
-                              <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
-                                {t("main_parser_cancel")}
-                              </Button>
-                              <Button
-                                content={t("continue")}
-                                labelPosition="right"
-                                icon="checkmark"
-                                onClick={() => this.saveList()}
-                                positive
-                              />
-                            </Modal.Actions>
-                          </Modal>
-                        ) : canAppointmentTherapy &&
-                          <Menu.Item className={editedDrugs ? "glowing" : ""} onClick={() => this.saveList()}>
-                            {t("main_drugs_prescribe")}
-                          </Menu.Item>                        
-                      ) : 
-                        canExtractDocuments &&  <Menu.Item onClick={() => this.goRecipe()}>{t("main_drugs_write")}</Menu.Item>
-                      }
+                    {listChanged && editedDrugs ? (
+                      cautionsTitle ? (
+                        <Modal
+                          onClose={() => this.setOpen(false, "openCautions")}
+                          onOpen={() => this.setOpen(true, "openCautions")}
+                          open={openCautions}
+                          trigger={
+                            <Menu.Item className={editedDrugs ? "glowing" : ""}>{t("main_drugs_prescribe")}</Menu.Item>
+                          }
+                        >
+                          <Modal.Header>{cautionsTitle}</Modal.Header>
+                          <Modal.Content>
+                            {cautions?.length > 0 &&
+                              cautions.map((item, i) => {
+                                return (
+                                  <Message negative key={i}>
+                                    <Message.Header>{item}</Message.Header>
+                                  </Message>
+                                );
+                              })}
+                          </Modal.Content>
+                          <Modal.Actions>
+                            <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
+                              {t("main_parser_cancel")}
+                            </Button>
+                            <Button
+                              content={t("continue")}
+                              labelPosition="right"
+                              icon="checkmark"
+                              onClick={() => this.saveList()}
+                              positive
+                            />
+                          </Modal.Actions>
+                        </Modal>
+                      ) : canAppointmentTherapy &&
+                      <Menu.Item className={editedDrugs ? "glowing" : ""} onClick={() => this.saveList()}>
+                        {t("main_drugs_prescribe")}
+                      </Menu.Item>
+                    ) :
+                      canExtractDocuments && <Menu.Item onClick={() => this.goRecipe()}>{t("main_drugs_write")}</Menu.Item>
+                    }
                   </>}
                 </Menu>
               )}
@@ -719,19 +728,19 @@ const Main = inject(
                       <Drugs />
                     ) : (
                       !disabled &&
-                      !topview_disabled && 
-                        canFindAddDeleteDrugs && <Segment basic>
-                          <Message info>
-                            <Icon name="info" />
-                            {t("main_search_tip")}&nbsp;{" "}
-                            <span
-                              style={{ cursor: "pointer", textDecoration: "underline" }}
-                              onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
-                            >
-                              {t("main_parser_tip")}
-                            </span>
-                          </Message>
-                        </Segment>                      
+                      !topview_disabled &&
+                      canFindAddDeleteDrugs && <Segment basic>
+                        <Message info>
+                          <Icon name="info" />
+                          {t("main_search_tip")}&nbsp;{" "}
+                          <span
+                            style={{ cursor: "pointer", textDecoration: "underline" }}
+                            onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
+                          >
+                            {t("main_parser_tip")}
+                          </span>
+                        </Message>
+                      </Segment>
                     )}
                   </Segment>
                   {drug.size > 0 && (

@@ -409,24 +409,24 @@ class Tools {
          */
 
         // this.functional = [
-          // "FindAddDeleteDrugs", // строка поиска; кнопка Удалить препарат; кнопка Удалить раствор; кнопка "Убрать из раствора"; функция "Перетащить в раствор"; кнопка "Сбросить"; сообщение о том, что нужно внести препараты, если список пустой
-          // "SelectDosageMethodUsingDrugs", // кнопка Капля у препата; кнопка Капля у раствора; 
-          // "SelectAnalogDrugs", // кнопка Аналоги;
-          // "CheckListDrugsInterface", // Кпопки Проверить и Назначить/Выписать
-          // "InstructionMedicalUseDrugs", // клик по препарату
-          // "SelectReplacementDrug", // Кнопка Подобрать замену
-          // "AppointmentTherapy", // Кнопка Назначить
-          // "ExtractDocuments", // кнопка Выписать
-          // "ExtractPrescription", // кнопка Выписать рецепт
-          // "ExtractProtocolCouncil", // кнопка Протокол консилиума
-          // "ExtractOutpatientAppointmentSheet", // кнопка Выписка амбулаторного листа назначений
-          // "ExtractPrescriptionEDS", // кнопка Подписать 
-          // "AutomaticLoadingGenPassport", // кнопка загрузка генетического паспорта
-          // "ManuallyAddGenMutations", // поля Мутация гена
-          // "SelectTherapyToClinicalRecommendations", // кнопка Клинические рекомендации
-          // "PatientSearch", // поле поиска пациентов
-          // "LatestSelectedPatients", // блок со списком Последний выбранных пациентов
-          // "AddAndEditPatient", // форма пациента накрывается слоем, для блокировки всех интерактивных элементов
+        //   "FindAddDeleteDrugs", // строка поиска; кнопка Удалить препарат; кнопка Удалить раствор; кнопка "Убрать из раствора"; функция "Перетащить в раствор"; кнопка "Сбросить"; сообщение о том, что нужно внести препараты, если список пустой
+        //   "SelectDosageMethodUsingDrugs", // кнопка Капля у препата; кнопка Капля у раствора; 
+        //   "SelectAnalogDrugs", // кнопка Аналоги;
+        //   "CheckListDrugsInterface", // Кпопки Проверить и Назначить/Выписать
+        //   "InstructionMedicalUseDrugs", // клик по препарату
+        //   "SelectReplacementDrug", // Кнопка Подобрать замену
+        //   "AppointmentTherapy", // Кнопка Назначить
+        //   "ExtractDocuments", // кнопка Выписать
+        //   "ExtractPrescription", // кнопка Выписать рецепт
+        //   "ExtractProtocolCouncil", // кнопка Протокол консилиума
+        //   "ExtractOutpatientAppointmentSheet", // кнопка Выписка амбулаторного листа назначений
+        //   "ExtractPrescriptionEDS", // кнопка Подписать 
+        //   "AutomaticLoadingGenPassport", // кнопка загрузка генетического паспорта
+        //   "ManuallyAddGenMutations", // поля Мутация гена
+        //   "SelectTherapyToClinicalRecommendations", // кнопка Клинические рекомендации
+        //   "PatientSearch", // поле поиска пациентов
+        //   "LatestSelectedPatients", // блок со списком Последний выбранных пациентов
+        //   "AddAndEditPatient", // форма пациента накрывается слоем, для блокировки всех интерактивных элементов
         // ];
 
         // Если ни одного варианта выписки нету, то саму кнопку Выписать тоже убираем
