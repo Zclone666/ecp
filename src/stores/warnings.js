@@ -774,6 +774,9 @@ class Warnings {
         }
         // this.stores.actions.loading = false
 
+        this.stores.tools.getFunctional();
+        await this.stores.tools.waitForFunctional(() => { });
+        
         // setTimeout(() => {
 
         this.stores.actions.loading = false;

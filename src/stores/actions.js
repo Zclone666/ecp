@@ -670,13 +670,13 @@ class Actions {
     // this.getObject("elements");
     // this.getObject("UIText");
     // this.getObject("recipeData");
-
     this.loading = true;
     //------------PRIVATE KEY-------
     if (privateKeyOnly && localStorage.getItem("privateKey")) {
       await this.fakePrivateKeylogin(localStorage.getItem("privateKey"));
       return;
     }
+    
     //------------MIS---------------
     if (this.stores.router.values.miskey) {
       const misKey = this.stores.router.values.miskey;
@@ -710,6 +710,8 @@ class Actions {
             this.makeAlerts({ data: { alerts: data.alert } });
           }
         });
+        this.stores.tools.getFunctional();
+        await this.stores.tools.waitForFunctional(() => { });
       if (misAuthSuccess) return;
     }
 
@@ -759,7 +761,9 @@ class Actions {
       success: async (data) => {
         //console.log('logged', data);
         this.loginForm.privateKey = this.privateKey = (await localStorage.getItem("privateKey")) || "";
-        this.login();
+        await this.login();
+        this.stores.tools.getFunctional();
+        await this.stores.tools.waitForFunctional(() => { });
         // this.authorized = true
         // this.loading = false
 
@@ -904,6 +908,11 @@ class Actions {
         //   this.authorized = true
         //   this.loading = false
         //   this.stores.db.getFilters()
+        // }
+
+        // if (this.authkey) {
+        //   this.stores.tools.getFunctional();
+        //   await this.stores.tools.waitForFunctional(() => { });
         // }
       },
       fail: (alerts) => {

@@ -223,6 +223,7 @@ const Prescript = inject(
           patients: { current: patient },
           tools: { searchReady },
         } = this.props;
+
         const { t } = this.props.actions;
 
         doctor = doctor || doc.name;
@@ -265,7 +266,7 @@ const Prescript = inject(
                           leading: true,
                         })}
                         results={this.patientsListSearch}
-                        value={search_patient || patient?.fio}
+                        value={search_patient || patient?.fio || ""}
                         resultclassname="result-wrapper"
                       />
                       {/* {patient && patient.fio && <Label>{patient.fio}</Label>} */}
@@ -301,7 +302,7 @@ const Prescript = inject(
                     <label>{t("mail_patient")}</label>
                     <Input
                       name="email"
-                      value={patient.email}
+                      value={patient.email || ""}
                       onChange={this.handleChange}
                       placeholder="some@email.ru"
                     />
@@ -318,7 +319,7 @@ const Prescript = inject(
                       onResultSelect={this.handleResultSelect}
                       onSearchChange={this.handleSearchChange}
                       results={this.listSearch}
-                      value={search_clinic}
+                      value={search_clinic || ""}
                       resultclassname="result-wrapper"
                     />
                   </Form.Field>

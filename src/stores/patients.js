@@ -871,6 +871,7 @@ class Patients {
       },
       fail: (alerts) => {
         this.stores.actions.makeAlerts({ alerts });
+        this.stores.actions.loading = false;
       },
       always: (data) => {
         this.stores.actions.makeAlerts(data);

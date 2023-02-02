@@ -78,10 +78,18 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
   // const isChild = isChildWindow();
   let authkey = localStorage.getItem("authkey") || "";
   let data2 = {
-    ...data,
-    service: data.service || SERVICE,
+    ...data
     //key: AUTH_SERVICE_KEY
   };
+
+  /**
+   * @todo убрать эту проверку, когда сервер будет адекватно реагировать на наличие service, либо полностью выпилить отправку этого параметра, если беку он будет не нужен
+   * shitfix
+   */
+  if (path !== "auth/functional") {
+    data2.service = data.service || SERVICE;
+  }
+
   if (authkey) {
     // data2.authkey = authkey;
   }
