@@ -35,7 +35,7 @@ const PatientForm = inject(
   "diseases",
   "actions",
   "patients",
-  "tools"
+  "tools",
 )(
   observer(
     class PatientForm extends Component {
@@ -63,14 +63,14 @@ const PatientForm = inject(
       componentDidMount() {
         if (!boxDisabled) {
           const fileSelector = document.getElementById("genpassport-upload");
-          fileSelector.addEventListener("change", this.handleFileUpload);
+          fileSelector && fileSelector.addEventListener("change", this.handleFileUpload);
         }
       }
 
       componentWillUnmount() {
         if (!boxDisabled) {
           const fileSelector = document.getElementById("genpassport-upload");
-          fileSelector.removeEventListener("change", this.handleFileUpload);
+          fileSelector && fileSelector.removeEventListener("change", this.handleFileUpload);
         }
       }
 
@@ -86,7 +86,7 @@ const PatientForm = inject(
           name = e.target.name;
           value = e.target.value;
         }
-        
+
         const { editForm } = this.props;
 
         if (name === "weight") {
@@ -327,6 +327,18 @@ const PatientForm = inject(
           </div>
         );
       };
+
+      handleClickDisabledFields = () => {
+        this.props.actions.makeAlerts({
+          alerts: [
+            {
+              message: this.props.t("editing_disabled"),
+              level: "warning",
+            },
+          ],
+        });
+      };
+
       get disease() {
         const { disease } = this.props.patients.current;
         // console.log(this.props.patients.current);
@@ -368,6 +380,12 @@ const PatientForm = inject(
           genpassport_exist,
         } = this.props.patients.current;
 
+        let { tools } = this.props;
+        const canAutomaticLoadingGenPassport = tools.hasFunctional("AutomaticLoadingGenPassport");
+        const canManuallyAddGenMutations = tools.hasFunctional("ManuallyAddGenMutations");
+        const canPatientSearch = tools.hasFunctional("PatientSearch");
+        const canAddAndEditPatient = tools.hasFunctional("AddAndEditPatient");
+
         let { diseaseRows, allergyRows } = this.props.diseases;
         let {
           search_disease,
@@ -387,9 +405,18 @@ const PatientForm = inject(
 
         return (
           <Segment basic>
+            {!canAddAndEditPatient && <div style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              opacity: "0.4",
+              backgroundColor: "#FFF",
+              zIndex: "1",
+            }}
+              onClick={this.handleClickDisabledFields}></div>}
             <Form>
               <Form.Group>
-                <Form.Field width={7}>
+                {canPatientSearch && <Form.Field width={7}>
                   <Search
                     fluid
                     size="big"
@@ -405,8 +432,8 @@ const PatientForm = inject(
                     value={search_patient}
                     resultclassname="result-wrapper"
                   />
-                </Form.Field>
-                <Form.Field width={3}>
+                </Form.Field>}
+                <Form.Field width={canPatientSearch ? 3 : 10}>
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
                 {/* {this.props.patients.current.id && (
@@ -416,18 +443,20 @@ const PatientForm = inject(
                     )}
                   </Form.Field>
                 )} */}
-                <Form.Field width={3}>
-                  <Button onClick={this.handleConfirmSearch}>
-                    {showPatientPassport
-                      ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
-                      : id
-                        ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
-                        : t("patinet_card_passport_label")}
-                  </Button>
-                </Form.Field>
-                <Form.Field width={2}>
-                  <Button onClick={() => this.clearPatient()}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
-                </Form.Field>
+                {canAddAndEditPatient && <>
+                  <Form.Field width={3}>
+                    <Button onClick={this.handleConfirmSearch}>
+                      {showPatientPassport
+                        ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
+                        : id
+                          ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
+                          : t("patinet_card_passport_label")}
+                    </Button>
+                  </Form.Field>
+                  <Form.Field width={2}>
+                    <Button onClick={() => this.clearPatient()}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
+                  </Form.Field>
+                </>}
               </Form.Group>
               <Divider horizontal fitted />
 
@@ -531,9 +560,10 @@ const PatientForm = inject(
                 {this.disease.map((item, i) => {
                   return (
                     <List.Item key={"disease" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button size="tiny" icon="delete" onClick={() => this.handleResultUnselect("disease", item)} />
                       </List.Content>
+                      }
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>{item.name}</List.Header>
@@ -566,13 +596,13 @@ const PatientForm = inject(
                 {this.co_disease.map((item, i) => {
                   return (
                     <List.Item key={"co_disease" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button
                           size="tiny"
                           icon="delete"
                           onClick={() => this.handleResultUnselect("co_disease", item)}
                         />
-                      </List.Content>
+                      </List.Content>}
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>{item.name}</List.Header>
@@ -581,7 +611,7 @@ const PatientForm = inject(
                   );
                 })}
               </List>
-              {!misDisabled && (
+              {canManuallyAddGenMutations && (
                 <Form.Group style={{ alignItems: "flex-end" }} widths={1}>
                   <Form.Field width={4}>
                     <label>{t("gene_mutation")}</label>
@@ -643,7 +673,7 @@ const PatientForm = inject(
                   </Form.Field>
                 </Form.Group>
               )}
-              {!boxDisabled && (
+              {canAutomaticLoadingGenPassport && !boxDisabled && (
                 <Form.Group widths={1}>
                   <Form.Field width={16}>
                     <label>{t("genetic_passport")}</label>
@@ -668,9 +698,9 @@ const PatientForm = inject(
                   mutations.map((item, i) => {
                     return (
                       <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                        <List.Content floated="right">
+                        {canAddAndEditPatient && <List.Content floated="right">
                           <Button size="tiny" icon="delete" onClick={() => this.handleRemoveMutation(item, i)} />
-                        </List.Content>
+                        </List.Content>}
                         <List.Icon name="dna" size="big" verticalAlign="middle" />
                         <List.Content>
                           <List.Header>
@@ -705,9 +735,9 @@ const PatientForm = inject(
                 {allergy.map((item, i) => {
                   return (
                     <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button size="tiny" icon="delete" onClick={() => this.handleResultUnselect("allergy", item)} />
-                      </List.Content>
+                      </List.Content>}
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>
@@ -756,9 +786,9 @@ const PatientForm = inject(
                     labparams.map((item, i) => {
                       return (
                         <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                          <List.Content floated="right">
+                          {canAddAndEditPatient && <List.Content floated="right">
                             <Button size="tiny" icon="delete" onClick={() => this.handleRemoveLabData(item, i)} />
-                          </List.Content>
+                          </List.Content>}
                           <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                           <List.Content>
                             <List.Header>{item}</List.Header>

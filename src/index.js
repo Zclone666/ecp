@@ -14,6 +14,8 @@ import "matchmedia-polyfill/matchMedia.addListener";
 
 import "./i18n";
 
+// const a = !!{}[""]-"a";
+// console.log(a);
 ReactDOM.render(
     <App />,
   document.getElementById("root")

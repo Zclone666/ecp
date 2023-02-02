@@ -189,9 +189,13 @@ const Drugs = inject(
         let {
           actions: { makeLiquids, disabled, topview_disabled },
           drugs: { liquid: liquidList, checkLiquids },
-
+          tools,
           isRecipe,
         } = this.props;
+
+        const canFindAddDeleteDrugs = tools.hasFunctional("FindAddDeleteDrugs");
+        const canSelectDosageMethodUsingDrugs = tools.hasFunctional("SelectDosageMethodUsingDrugs");
+
         const { t } = this.props.actions;
         let { groups, grouped, iterator, canDrag } = this.drugsWithGroups;
 
@@ -283,7 +287,7 @@ const Drugs = inject(
                                   }}
                                   {...prov.droppableProps}
                                 >
-                                  {!grouped[liquid] && (
+                                  {canFindAddDeleteDrugs && !grouped[liquid] && (
                                     <div className={"abstext"}>{t("drag_two_components_for_solution")}</div>
                                   )}
                                   {grouped[liquid] && (
@@ -293,12 +297,12 @@ const Drugs = inject(
                                         color: liqObj.edit ? "#072c71" : "inherit",
                                       }}
                                     >
-                                      <Icon
+                                      {canFindAddDeleteDrugs && <Icon
                                         name="delete"
-                                        className="right floated"
+                                        className="right floated pointer"
                                         onClick={() => this.removeLiquid(grouped[liquid])}
-                                      />
-                                      {current && checkLiquids && !makeLiquids && (
+                                      />}
+                                      {canSelectDosageMethodUsingDrugs && current && checkLiquids && !makeLiquids && (
                                         <RouterLink
                                           disabled={!current}
                                           onClick={() => this.getLiqParams(liquid)}

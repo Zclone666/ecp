@@ -14,7 +14,8 @@ const PatientsList = inject(
   "router",
   "db",
   "actions",
-  "patients"
+  "patients",
+  "tools",
 )(
   observer(
     class PatientsList extends Component {
@@ -100,9 +101,12 @@ const PatientsList = inject(
           // actions: {
           //   patientPassport: { id, email, fio },
           // },
+          tools,
         } = this.props;
         const { t } = this.props.actions;
         let { search_patient } = this.state;
+
+        const canLatestSelectedPatients = tools.hasFunctional("LatestSelectedPatients");
         return (
           <Segment basic>
             <Form>
@@ -179,24 +183,26 @@ const PatientsList = inject(
                 </Form.Field>
               </Form.Group>
             </Form>
-            <Header>{t("latest_selected")}</Header>
-            <List animated divided selection className="dozelist" verticalAlign="middle" size="large">
-              {this.last.map((pat, i) => {
-                return (
-                  <List.Item key={"pat" + i} onClick={() => this.chose(pat.id)}>
-                    <List.Content floated="right">
-                      {pat.birthdate && <div className="price">{moment(pat.birthdate, "x").format("DD.MM.YYYY")}</div>}
-                    </List.Content>
+            {canLatestSelectedPatients && <>
+              <Header>{t("latest_selected")}</Header>
+              <List animated divided selection className="dozelist" verticalAlign="middle" size="large">
+                {this.last.map((pat, i) => {
+                  return (
+                    <List.Item key={"pat" + i} onClick={() => this.chose(pat.id)}>
+                      <List.Content floated="right">
+                        {pat.birthdate && <div className="price">{moment(pat.birthdate, "x").format("DD.MM.YYYY")}</div>}
+                      </List.Content>
 
-                    <List.Content className="large">
-                      <List.Header>{pat.name}</List.Header>
+                      <List.Content className="large">
+                        <List.Header>{pat.name}</List.Header>
 
-                      {pat.email && <List.Description>{pat.email}</List.Description>}
-                    </List.Content>
-                  </List.Item>
-                );
-              })}
-            </List>
+                        {pat.email && <List.Description>{pat.email}</List.Description>}
+                      </List.Content>
+                    </List.Item>
+                  );
+                })}
+              </List>
+            </>}
           </Segment>
         );
       }
