@@ -243,7 +243,7 @@ const Drugs = inject(
                                     // console.log({drug})
                                     return (
                                       <Draggable
-                                        isDragDisabled={!drug.solute || !canDrag}
+                                        isDragDisabled={!drug.solute || !canDrag || !canFindAddDeleteDrugs}
                                         draggableId={drug.key}
                                         index={i}
                                         key={`drug_${drug.key}`}
