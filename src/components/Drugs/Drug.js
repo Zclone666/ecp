@@ -352,7 +352,7 @@ const Drug = inject(
                     {specials && <Popup content={specials} trigger={<Icon name="file alternate" />} />}
                     <Feed.Date className={!dosReady ? "gradient" : ""}>
                       {dosageForm}
-                      {helpersDosage && `${dosageForm && ", "}${helpersDosage}`}
+                     {helpersDosage && `${dosageForm && ", "}`}<div dangerouslySetInnerHTML={{ __html: helpersDosage }} style={{ display: "inline" }} />
                       {/* {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
                   {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
                   {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""} */}
