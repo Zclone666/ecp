@@ -206,6 +206,7 @@ const Warning = inject(
         let {
           actions: { getWarnElement },
         } = this.props;
+
         const { t } = this.props.actions;
         let { activeIndex } = this.state;
         let widths = this.tabs.length ? (this.tabs.length < 13 ? this.tabs.length : 12) : 1;
