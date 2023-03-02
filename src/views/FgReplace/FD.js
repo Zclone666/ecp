@@ -1,10 +1,8 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { withTranslation } from "react-i18next";
-import RouterLink from "../../router/a";
 
-import { Transition, Accordion, Icon, Step, Responsive, List, Header, Checkbox } from "semantic-ui-react";
-import _ from "lodash";
+import { Icon, List, Header, Checkbox } from "semantic-ui-react";
 
 const FD = inject(
   "db",
@@ -26,14 +24,13 @@ const FD = inject(
         let drug = (this.props.router.values && this.props.router.values.drug) || "none";
 
         this.props.drugs.fdForSearch[drug].forEach((item, i) => {
-          if (item.id == id) {
+          if (item.id === id) {
             this.props.drugs.fdForSearch[drug][i].main = !item.main;
           }
         });
       };
 
       render() {
-        let { activeIndex, viewType } = this.state;
         const { t } = this.props.actions;
         const { fdForSearch } = this.props.drugs;
         let drug = (this.props.router.values && this.props.router.values.drug) || "none";

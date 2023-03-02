@@ -1,6 +1,5 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
-import moment, { relativeTimeThreshold } from "moment";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
 
 import _ from "lodash";
 
@@ -69,7 +68,7 @@ class Warnings {
     this.warning = observable.map({}, "warning");
     this.warningFg = observable.map({}, "warningFg");
 
-    autorun(() => {});
+    autorun(() => { });
   }
 
   getGroup(val) {
@@ -135,7 +134,7 @@ class Warnings {
     });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull;
-      if (liquid.group != 0) {
+      if (Number(liquid.group) !== 0) {
         data.liquids.push(liquid);
       }
     });
@@ -149,9 +148,9 @@ class Warnings {
     return POST({
       path: this.stores.actions.misurl, //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
-      success: async (data) => {},
-      fail: (alerts) => {},
-      always: (data) => {},
+      success: async (data) => { },
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
@@ -175,7 +174,7 @@ class Warnings {
     });
     liquidsFull.forEach((liquidFull, i) => {
       let { helpers, ...liquid } = liquidFull;
-      if (liquid.group != 0) {
+      if (Number(liquid.group) !== 0) {
         data.liquids.push(liquid);
       }
     });
@@ -191,6 +190,7 @@ class Warnings {
       path: "check/Warnings", //`https://dev.socmedica.com/2/api/ecp/GetInfoPrep`, //
       data,
       success: async (data) => {
+        console.log("1 resive data");
         //console.log('DATA', data);
         if (data && data.warnings && _.isArray(data.warnings)) {
           this.info.names = _.clone(data.names);
@@ -211,17 +211,27 @@ class Warnings {
 
           let warnGroups = {};
           let warnIcons = {};
-          let warnForDrug = {};
-          let warnForGroup = {};
+
+          console.log("2 clone data");
+
+          let warningsToStore = {};
+
+
           await data.warnings.forEach((item, i) => {
+            // console.log("cycle");
             if (!item.id || item.id.length < 1) item.id = null; //moment().format('x').toString()
             item.key = "warnkey_" + i;
 
             let { group, color } = this.getGroup(item.value);
-            let wKey = `${item.type}_${group}`;
 
+            // Тормоза в отдельный поток
+            // Вынесено за цикл
+            // setTimeout(()=>{
             let current = this.warning.get(item.id) || {};
-            this.warning.set(item.key, _.assignIn(current, { group, color, ...item }));
+            // this.warning.set(item.key, _.assignIn(current, { group, color, ...item }));
+            // });
+            warningsToStore[item.key] = _.assignIn(current, { group, color, ...item })
+
 
             let hint = data.hinttype[item.type] && data.names[data.hinttype[item.type]];
 
@@ -264,11 +274,15 @@ class Warnings {
             }
           });
 
+
+          this.warning.replace(warningsToStore);
+          console.log("3 warnings ready");
           this.icons = _.assignIn(this.warnIcons, warnIcons);
           this.groups = _.assignIn(this.groups, warnGroups);
         }
 
         this.stores.actions.loading = false;
+        console.log("4 END");
       },
       fail: (alerts) => {
         this.stores.actions.loading = false;
@@ -291,7 +305,6 @@ class Warnings {
     // this.stores.db.clearData(false, true);
     let data = _.cloneDeep(this.stores.actions.drugStructure);
     let drugsFull = Array.from(this.stores.drugs.drug.values());
-    let liquidsFull = Array.from(this.stores.drugs.liquid.values());
 
     // drug we will change
     let myDrugKey = (this.stores.router.values && this.stores.router.values.drug) || null;
@@ -349,15 +362,11 @@ class Warnings {
 
           let warnGroups = {};
           let warnIcons = {};
-          let warnForDrug = {};
-          let warnForGroup = {};
           await data.warnings.forEach((item, i) => {
             if (!item.id || item.id.length < 1) item.id = null; //moment().format('x').toString()
             item.key = "warnkey_" + i;
 
             let { group, color } = this.getGroup(item.value);
-            let wKey = `${item.type}_${group}`;
-
             let current = this.warningFg.get(item.id) || {};
             this.warningFg.set(item.key, _.assignIn(current, { group, color, ...item }));
 
@@ -423,7 +432,7 @@ class Warnings {
   */
   async protocol(protocol) {
     // console.log("HERE HERE");
-    if (!protocol || protocol == "" || typeof protocol == "undefined") return;
+    if (!protocol || protocol === "" || typeof protocol == "undefined") return;
     if (!this.stores.router) {
       return;
     }
@@ -462,14 +471,11 @@ class Warnings {
 
           let warnGroups = {};
           let warnIcons = {};
-          let warnForDrug = {};
-          let warnForGroup = {};
           await data.warnings.forEach((item, i) => {
             if (!item.id || item.id.length < 1) item.id = null; //moment().format('x').toString()
             item.key = "warnkey_" + i;
 
             let { group, color } = this.getGroup(item.value);
-            let wKey = `${item.type}_${group}`;
 
             let current = this.warning.get(item.id) || {};
             this.warning.set(item.key, _.assignIn(current, { group, color, ...item }));
@@ -537,7 +543,7 @@ class Warnings {
         });
         this.stores.router.push("/login");
       },
-      always: (data) => {},
+      always: (data) => { },
     });
   }
 
@@ -593,7 +599,7 @@ class Warnings {
   // }
   async checkMisWarnings(protocol) {
     // console.log("HERE ", protocol);
-    if (!protocol || protocol == "" || typeof protocol == "undefined") return;
+    if (!protocol || protocol === "" || typeof protocol == "undefined") return;
     if (!this.stores.router) {
       return;
     }
@@ -655,7 +661,7 @@ class Warnings {
             };
 
             // END KOSTYL
-            const { names, nameshort } = this.stores.tools.unitsPharm;
+            const { nameshort } = this.stores.tools.unitsPharm;
             nameshort[99] = "%";
             // console.log({ d });
             let helpers = {
@@ -718,15 +724,11 @@ class Warnings {
 
           let warnGroups = {};
           let warnIcons = {};
-          let warnForDrug = {};
-          let warnForGroup = {};
           await data.warnings.forEach((item, i) => {
             if (!item.id || item.id.length < 1) item.id = null; //moment().format('x').toString()
             item.key = "warnkey_" + i;
 
             let { group, color } = this.getGroup(item.value);
-            let wKey = `${item.type}_${group}`;
-
             let current = this.warning.get(item.id) || {};
             this.warning.set(item.key, _.assignIn(current, { group, color, ...item }));
 
@@ -772,6 +774,9 @@ class Warnings {
         }
         // this.stores.actions.loading = false
 
+        this.stores.tools.getFunctional();
+        await this.stores.tools.waitForFunctional(() => { });
+        
         // setTimeout(() => {
 
         this.stores.actions.loading = false;
@@ -794,7 +799,7 @@ class Warnings {
         });
         this.stores.router.push("/login");
       },
-      always: (data) => {},
+      always: (data) => { },
     });
   }
 }

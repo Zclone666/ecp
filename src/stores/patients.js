@@ -1,11 +1,10 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
 import moment from "moment";
 
 import { PatientScheme } from "../schemes";
 
 import _ from "lodash";
-import AlertItem from "../components/Alerts/Alert";
 
 class Patients {
   ready = false;
@@ -32,7 +31,7 @@ class Patients {
     this.patient = observable.map({}, "patient");
     this.last = observable.map({}, "last");
 
-    autorun(() => {});
+    autorun(() => { });
   }
 
   /**
@@ -258,6 +257,7 @@ class Patients {
       path: `prescript/Actual`,
       data,
       success: async (data) => {
+        console.time('FirstWay');
         if (data.patient && data.patient.id) {
           await this.setCurrent(data.patient);
         }
@@ -306,6 +306,32 @@ class Patients {
 
           genpassport_exist,
         } = data.patient;
+
+
+        // FIO PARSING
+        // Вроде как не нужно. Если понадобится - раскомментировать код ниже.
+
+        // if (!lastname && !firstname && !patronymic) {
+        //   const patronymicTest = /^.+(ич|вна|чна)$/i;
+        //   // name = " Иван  Васильевич Петров-Водкин";
+        //   name = name.trim();
+        //   name = name.replace(/\s+/g, ' ');
+        //   const nameArray = name.split(" ");
+
+        //   if (nameArray.length === 3) {
+        //     if (patronymicTest.test(nameArray[1])) {
+        //       lastname = nameArray[2];
+        //       firstname = nameArray[0];
+        //       patronymic = nameArray[1];
+        //     } else {
+        //       lastname = nameArray[0];
+        //       firstname = nameArray[1];
+        //       patronymic = nameArray[2];
+        //     }
+        //   }
+        // }
+
+        // <== FIO PARSING
 
         let masIndex = parseFloat((weight / Math.pow(growth / 100, 2)).toFixed(2));
         let squareIndex = parseFloat((0.007184 * Math.pow(growth, 0.725) * Math.pow(weight, 0.425)).toFixed(2));
@@ -424,7 +450,7 @@ class Patients {
 
         let { drugs, liquids } = data;
         co_disease = co_disease || [];
-
+        console.log("patient 1");
         liquids.forEach(async (liquid, i) => {
           if (liquid.group != null) {
             await this.stores.drugs.liquid.set(liquid.group, liquid);
@@ -432,7 +458,7 @@ class Patients {
             this.stores.drugs.deletedLiquids.push(liquid);
           }
         });
-
+        console.log("patient 2");
         // console.log("drugs: ", drugs);
         drugs = drugs.map((d) => {
           if (d.helpers) return d;
@@ -451,7 +477,7 @@ class Patients {
             };
           }
           // END KOSTYL
-          const { names, nameshort } = this.stores.tools.unitsPharm;
+          const { nameshort } = this.stores.tools.unitsPharm;
           nameshort[99] = "%";
           // console.log({ d });
           let helpers = {
@@ -479,31 +505,53 @@ class Patients {
           };
         });
         // console.log("drugs with helpers: ", drugs);
+        console.log("patient 3");
+
+        
+        // let namesToStore = {};
 
         drugs.forEach(async (drug, i) => {
+          /**
+           * @todo тормоза
+           */
           await this.stores.drugs.selectFromSearch(drug, false, false);
           if (drug.dosage && drug.dosage.form && drug.dosage.form_name) {
             // console.log("this.stores.tools.unitsPharm.names");
             this.stores.tools.unitsPharm.names[drug.dosage.form] = drug.dosage.form_name;
+
+            // namesToStore[drug.dosage.form]=drug.dosage.form_name;
           }
           if (drug.dosage && drug.dosage.method && drug.dosage.method_name) {
             this.stores.tools.unitsPharm.names[drug.dosage.method] = drug.dosage.method_name;
+            // namesToStore[drug.dosage.method]=drug.dosage.method_name;
           }
         });
 
-        await this.stores.tools.stepByStepLoading(this.stores.dosages.get, drugs);
+        // this.stores.tools.unitsPharm.names = {
+        //   ...this.stores.tools.unitsPharm.names,
+        //   ...namesToStore
+        // };
 
+        console.log("patient 4");
+        this.stores.tools.stepByStepLoading(this.stores.dosages.get, drugs);
+        console.log("patient 5");
         this.stores.actions.makeLiquids = false;
-
+        console.timeEnd('FirstWay');
         this.stores.actions.loading = false;
 
         // this.stores.drugs.listChanged = false;
 
         return data.patient || {};
       },
-      fail: (alerts) => {},
+      fail: (alerts) => { 
+        console.log(alerts);
+        this.stores.actions.makeAlerts({alerts});
+        this.stores.actions.loading = false;
+      },
       always: (data) => {
+        console.log(data);
         this.stores.actions.makeAlerts(data);
+        this.stores.actions.loading = false;
         if (this.stores?.actions?.miskey) {
           setTimeout(() => {
             this.stores.warnings.check();
@@ -624,8 +672,8 @@ class Patients {
 
         return this.setPatient(data.patient);
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
@@ -688,7 +736,6 @@ class Patients {
   async makeList({ patients, names }) {
     if (patients && _.isArray(patients)) {
       patients.forEach(async (patientId, i) => {
-        let patient = this.getById(patientId);
         let key = patientId || (moment().format("x") + i).toString();
 
         // let current = await this.patient.get(key) || {}
@@ -778,7 +825,7 @@ class Patients {
   }
 
   /**
-  // метод сохаранения пациента на бэк
+  // метод сохранения пациента на бэк
   */
   async save() {
     let { active_language } = this.stores.actions;
@@ -805,21 +852,26 @@ class Patients {
       success: async (data) => {
         // console.log({ data });
         if (data.patients) {
-          let { doc, id, lpu, patients, names } = data;
+          let { patients, names } = data;
           await this.makeList({ patients, names });
           await this.request(patients[0]);
           await this.getPatient(patients[0]);
           return this.getById(patients[0]);
         }
         if (data.patient) {
-          let { id } = data.patient;
           this.setCurrent(data.patient);
           // await this.request(id);
         }
+
+        /**
+         * @todo Можно оптимизировать, если запрашивать не каждый раз при изменение пациента, а только если изменились ФИО или емайл
+         */
+        this.stores.patients.getList();
         return data;
       },
       fail: (alerts) => {
         this.stores.actions.makeAlerts({ alerts });
+        this.stores.actions.loading = false;
       },
       always: (data) => {
         this.stores.actions.makeAlerts(data);

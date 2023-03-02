@@ -16,7 +16,7 @@ const MethodsLF = inject("db", "actions", "router", "drugs", "dosages")(observer
   };
   render() {
     let {
-      actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts, stepsData },
+      actions: { stepsData },
       drugs: { current }, //drugs, currDrug, setDosageParams
       dosages: { dosage }, //drugsDosages
       router: { values },
@@ -27,7 +27,7 @@ const MethodsLF = inject("db", "actions", "router", "drugs", "dosages")(observer
     let currStep = parseInt(values.step || 0);
 
     let drugDosage = dosage.get(current.id);
-    let { drug, form, methodform, names } = drugDosage || { drug: {}, form: [], methodform: [], names: [] };
+    let { form, methodform, names } = drugDosage || { drug: {}, form: [], methodform: [], names: [] };
 
     let iterator =
       stepsData.way === "lf" && stepsData.form

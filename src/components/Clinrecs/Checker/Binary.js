@@ -5,7 +5,7 @@ export default class Binary extends React.Component {
   handleChange = (e, { name, value }) => {
     let { onChange } = this.props;
     if (!name) {
-      let { name } = e.target;
+      name = e.target.name;
     }
     if (!value || typeof value === "undefined") {
       value = this.props.value;

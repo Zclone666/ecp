@@ -5,7 +5,6 @@ import RouterLink from "../../router/a";
 
 import { TYPE } from "../../constants";
 
-import Spinner from "../../components/Spinner";
 import Search from "../../components/Search";
 import Drugs from "../../components/Drugs";
 import Conflicts from "../../components/Conflicts";
@@ -28,7 +27,6 @@ import {
   Dropdown,
   Button,
   Responsive,
-  Grid,
   Modal,
   Flag,
   TextArea,
@@ -37,7 +35,7 @@ import {
 
 import _ from "lodash";
 
-const ifFree = TYPE == "free";
+const ifFree = TYPE === "free";
 
 const Main = inject(
   "router",
@@ -49,7 +47,8 @@ const Main = inject(
   "dosages",
   "diseases",
   "clinrecs",
-  "patients"
+  "patients",
+  "tools",
 )(
   observer(
     class Main extends Component {
@@ -71,7 +70,7 @@ const Main = inject(
         this.contextRef = createRef();
         this.searchInput = createRef();
         this.debouncedSearch = _.debounce(this.callSearchFunction, 500, {
-          leading: true,
+          leading: false,
         });
       }
 
@@ -96,7 +95,12 @@ const Main = inject(
       handleResultSelect = async (e, { result }) => {
         this.setState({ searchQuery: "" });
         if (!["FG", "ATX", "MKB10", "Nozology"].includes(result.type)) {
+
+
           this.props.drugs.selectFromSearch(result);
+          // this.props.drugs.selectFromSearch(result, false, false);
+
+
           const input = document.querySelector(".results.transition.result-wrapper");
           input.classList.remove("visible");
         } else if (["FG", "ATX"].includes(result.type)) {
@@ -125,6 +129,7 @@ const Main = inject(
       };
 
       callSearchFunction = (value) => {
+        console.log("search", value);
         this.props.drugs.search(value);
       };
 
@@ -228,10 +233,19 @@ const Main = inject(
       }
 
       render() {
-        const { open, openCautions, openClearence, searchQuery, selectedDrug, selectedConflict, clinic } = this.state;
+        const { open, openCautions, openClearence, searchQuery, clinic } = this.state;
+        const { tools } = this.props;
+
+        // console.log(this.props.tools.functional);
+
+        const canFindAddDeleteDrugs = tools.hasFunctional("FindAddDeleteDrugs");
+        const canCheckListDrugsInterface = tools.hasFunctional("CheckListDrugsInterface");
+        const canAppointmentTherapy = tools.hasFunctional("AppointmentTherapy");
+        const canExtractDocuments = tools.hasFunctional("ExtractDocuments");
+        const canAddAndEditPatient = tools.hasFunctional("AddAndEditPatient");
+        const canViewingPatientCard = tools.hasFunctional("ViewingPatientCard");
 
         let {
-          currentPage,
           height,
           active_language,
           makeLiquids,
@@ -248,24 +262,17 @@ const Main = inject(
           drugs: {
             searchReady,
             searchRows,
-            selectedRows,
             drug,
             deletedLiquids,
             deletedRows,
             unselectedRows,
-            unselectedLiquids,
             listChanged,
             drugsRemoved,
             checkLiquids,
           }, //drugs, drugsDosages, currDrug, setDosageParams
-          dosages: { dosage },
-          warnings: { warning, groups, cautionsTitle, cautions }, //warnings, warnGroups
+          warnings: { cautionsTitle, cautions }, //warnings, warnGroups
           actions: {
             patientForm: { disease, co_disease },
-
-            clinrecCheckerStep,
-            isPrescriptFilled,
-            patientPassport,
             drugStructure,
             checkData,
             disabled,
@@ -275,12 +282,11 @@ const Main = inject(
           //t,
         } = this.props;
         const { t } = this.props.actions;
-        let selectedWarnings = warning[selectedDrug];
         let showPage = !!(this.props.router.values && this.props.router.values.page);
         // console.log({ showPage, values: this.props.router.values, page: this.props.router.values.page });
         // console.log('router', this.props.router);
         // let showPage2 = true
-        const { id: patientId, email, fio } = patients.current;
+        const { id: patientId, fio } = patients.current;
         // console.log("patient Form: ", this.props.actions.patientForm);
         let isDisease = disease.length > 0 || co_disease.length > 0;
 
@@ -296,7 +302,11 @@ const Main = inject(
 
         let showMainBottomMenu =
           !(makeLiquids || !checkLiquids) && (drug.size > 0 || deletedRows.length > 0 || deletedLiquids.length > 0);
-        let showRevert = drug.size == 0 && deletedRows.length > 0;
+
+        if (!canCheckListDrugsInterface && !canFindAddDeleteDrugs && !canExtractDocuments) {
+          // bottomview_disabled = true;
+          showMainBottomMenu = false;
+        }
 
         const texts = buttonTexts ? buttonTexts.text : null;
 
@@ -352,7 +362,7 @@ const Main = inject(
                   />
                 )}
 
-                <Menu.Menu position="right">
+                {canViewingPatientCard && <Menu.Menu position="right">
                   <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>
                     <Menu.Item>
                       <Icon name={"bed"} className={patientId ? "" : " glowing"} />
@@ -401,7 +411,7 @@ const Main = inject(
                       </Menu.Item>
                     </Responsive>
                   )}
-                </Menu.Menu>
+                </Menu.Menu>}
               </Menu>
             )}
 
@@ -425,7 +435,7 @@ const Main = inject(
               )}
               {disabled && showMainBottomMenu && (
                 <Menu className={`bottom fixed menu three item huge main`}>
-                  <Menu.Item onClick={() => this.handleResetAll("all")}>{t("main_drugs_reset")}</Menu.Item>
+                  {canFindAddDeleteDrugs && <Menu.Item onClick={() => this.handleResetAll("all")}>{t("main_drugs_reset")}</Menu.Item>}
                   <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
                     {t("main_drugs_check")}
                   </Menu.Item>
@@ -433,7 +443,7 @@ const Main = inject(
               )}
               {drug.size > 0 && !disabled && showMainBottomMenu && !bottomview_disabled && (
                 <Menu className={`bottom fixed menu three item huge main`}>
-                  <Modal
+                  {canFindAddDeleteDrugs && canAddAndEditPatient && <Modal
                     closeIcon
                     onClose={() => this.setOpen(false, "openClearence")}
                     onOpen={() => this.setOpen(true, "openClearence")}
@@ -466,52 +476,63 @@ const Main = inject(
                         primary
                       />
                     </Modal.Actions>
-                  </Modal>
-                  <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
-                    {t("main_drugs_check")}
-                  </Menu.Item>
-                  {listChanged && editedDrugs ? (
-                    cautionsTitle ? (
-                      <Modal
-                        onClose={() => this.setOpen(false, "openCautions")}
-                        onOpen={() => this.setOpen(true, "openCautions")}
-                        open={openCautions}
-                        trigger={
-                          <Menu.Item className={editedDrugs ? "glowing" : ""}>{t("main_drugs_prescribe")}</Menu.Item>
-                        }
-                      >
-                        <Modal.Header>{cautionsTitle}</Modal.Header>
-                        <Modal.Content>
-                          {cautions.length > 0 &&
-                            cautions.map((item, i) => {
-                              return (
-                                <Message negative>
-                                  <Message.Header>{item}</Message.Header>
-                                </Message>
-                              );
-                            })}
-                        </Modal.Content>
-                        <Modal.Actions>
-                          <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
-                            {t("main_parser_cancel")}
-                          </Button>
-                          <Button
-                            content={t("continue")}
-                            labelPosition="right"
-                            icon="checkmark"
-                            onClick={() => this.saveList()}
-                            positive
-                          />
-                        </Modal.Actions>
-                      </Modal>
-                    ) : (
+                  </Modal>}
+
+
+
+
+                  {canFindAddDeleteDrugs && !canAddAndEditPatient && <Menu.Item onClick={() => this.handleResetAll("list")}>
+                    {t("main_drugs_reset")}
+                  </Menu.Item>}
+
+
+                  {canCheckListDrugsInterface && <>
+                    <Menu.Item disabled={false && ifFree} onClick={this.getInfoPrep}>
+                      {t("main_drugs_check")}
+                    </Menu.Item>
+
+                    {listChanged && editedDrugs ? (
+                      cautionsTitle ? (
+                        <Modal
+                          onClose={() => this.setOpen(false, "openCautions")}
+                          onOpen={() => this.setOpen(true, "openCautions")}
+                          open={openCautions}
+                          trigger={
+                            <Menu.Item className={editedDrugs ? "glowing" : ""}>{t("main_drugs_prescribe")}</Menu.Item>
+                          }
+                        >
+                          <Modal.Header>{cautionsTitle}</Modal.Header>
+                          <Modal.Content>
+                            {cautions?.length > 0 &&
+                              cautions.map((item, i) => {
+                                return (
+                                  <Message negative key={i}>
+                                    <Message.Header>{item}</Message.Header>
+                                  </Message>
+                                );
+                              })}
+                          </Modal.Content>
+                          <Modal.Actions>
+                            <Button color="black" onClick={() => this.setOpen(false, "openCautions")}>
+                              {t("main_parser_cancel")}
+                            </Button>
+                            <Button
+                              content={t("continue")}
+                              labelPosition="right"
+                              icon="checkmark"
+                              onClick={() => this.saveList()}
+                              positive
+                            />
+                          </Modal.Actions>
+                        </Modal>
+                      ) : canAppointmentTherapy &&
                       <Menu.Item className={editedDrugs ? "glowing" : ""} onClick={() => this.saveList()}>
                         {t("main_drugs_prescribe")}
                       </Menu.Item>
-                    )
-                  ) : (
-                    <Menu.Item onClick={() => this.goRecipe()}>{t("main_drugs_write")}</Menu.Item>
-                  )}
+                    ) :
+                      canExtractDocuments && <Menu.Item onClick={() => this.goRecipe()}>{t("main_drugs_write")}</Menu.Item>
+                    }
+                  </>}
                 </Menu>
               )}
 
@@ -629,17 +650,8 @@ const Main = inject(
                       <Dropdown
                         // disabled
                         item
-                        text={
-                          active_language == "ru" ? (
-                            <>
-                              Русский <Flag name="ru" />
-                            </>
-                          ) : (
-                            <>
-                              English <Flag name="gb" />
-                            </>
-                          )
-                        }
+                        // icon={active_language === "ru" ? <Flag name="ru" /> : <Flag name="gb" />}
+                        text={active_language === "ru" ? "Русский " : "English "}
                       >
                         <Dropdown.Menu>
                           <Dropdown.Item onClick={() => this.changeLang("en")}>
@@ -674,7 +686,7 @@ const Main = inject(
               )}
 
               <Sidebar.Pusher dimmed={open || showPage} className="pusherwrapper">
-                {!disabled && !topview_disabled && (
+                {canFindAddDeleteDrugs && !disabled && !topview_disabled && (
                   <Menu className="fluid one item ui top huge text menu searchwrapper" style={{ margin: 0 }}>
                     <Menu.Item>
                       <Segment basic className="fluid">
@@ -691,12 +703,12 @@ const Main = inject(
                           results={searchRows}
                           value={searchQuery}
                           resultRenderer={this.resultRenderer}
-                          resultClassName="result-wrapper"
+                          resultclassname="result-wrapper"
                           minCharacters={2}
                           icon={
                             <Icon
                               name="pencil"
-                              style={{ cursor: "pointer", "pointer-events": "all" }}
+                              style={{ cursor: "pointer", "pointerEvents": "all" }}
                               onClick={() => {
                                 this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" });
                               }}
@@ -717,20 +729,19 @@ const Main = inject(
                       <Drugs />
                     ) : (
                       !disabled &&
-                      !topview_disabled && (
-                        <Segment basic>
-                          <Message info>
-                            <Icon name="info" />
-                            {t("main_search_tip")}&nbsp;{" "}
-                            <a
-                              style={{ cursor: "pointer", textDecoration: "underline" }}
-                              onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
-                            >
-                              {t("main_parser_tip")}
-                            </a>
-                          </Message>
-                        </Segment>
-                      )
+                      !topview_disabled &&
+                      canFindAddDeleteDrugs && <Segment basic>
+                        <Message info>
+                          <Icon name="info" />
+                          {t("main_search_tip")}&nbsp;{" "}
+                          <span
+                            style={{ cursor: "pointer", textDecoration: "underline" }}
+                            onClick={() => this.setState({ manualDrugInputDialog: true, manualDrugInputText: "" })}
+                          >
+                            {t("main_parser_tip")}
+                          </span>
+                        </Message>
+                      </Segment>
                     )}
                   </Segment>
                   {drug.size > 0 && (

@@ -1,7 +1,6 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
-import moment from "moment";
-import { checkDouble, clearDouble } from "../lib/helpers";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
+import { checkDouble } from "../lib/helpers";
 
 import _ from "lodash";
 
@@ -30,6 +29,9 @@ class Tools {
   };
 
   techReady = false;
+  functional = [];
+  functionalReady = false;
+
 
   constructor({ stores }) {
     makeObservable(this, {
@@ -48,11 +50,13 @@ class Tools {
       unitsComplex: observable,
       unitsSchedule: observable,
       techReady: observable,
+      functional: observable,
+      functionalReady: observable,
     });
 
     this.stores = stores;
     this.router = stores.router;
-    autorun(() => {});
+    autorun(() => { });
   }
 
   async getUnitsPharm(units) {
@@ -104,7 +108,7 @@ class Tools {
         this.setUnits(units, unitrefs, unitpharm);
         this.stores.actions.loading = false;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => { },
       always: (data) => {
         this.stores.actions.loading = false;
       },
@@ -130,7 +134,6 @@ class Tools {
       drug.dosage?.dosage && drug.dosage?.dosage[0]?.id_1 && arr.push(drug.dosage.dosage[0].id_1);
     });
 
-    let { active_language } = this.stores.actions;
     let data = {
       active_language: "la",
       ids: arr,
@@ -147,7 +150,7 @@ class Tools {
         // await this.setNames(names, nameshort);
         this.stores.actions.loading = false;
       },
-      fail: (alerts) => {},
+      fail: (alerts) => { },
       always: (data) => {
         this.stores.actions.loading = false;
       },
@@ -213,30 +216,30 @@ class Tools {
       path: `tools/UnitsPrimary`,
       data,
       success: async (data) => {
-        let { names, nameshort, units, unitrefs } = data;
+        let { units } = data;
         if (units) this.unitsPrimary = units;
         //this.setNames(names, nameshort)
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
   async setUnitsPrimary(data) {
-    let { names, nameshort, units, unitrefs } = data;
+    let { units } = data;
     if (units) this.unitsPrimary = units;
   }
 
   convertFromBaseUnitToUnit(baseUnitId, unitId, value) {
     const units = this.unitsPrimary;
     // console.log({ baseUnitId, unitId, value, units });
-    if (baseUnitId == unitId || !units || !baseUnitId || !unitId || !units[baseUnitId]) return value;
+    if (baseUnitId === unitId || !units || !baseUnitId || !unitId || !units[baseUnitId]) return value;
 
     const convertedValue =
       value *
       units[baseUnitId].find((u) => {
         // console.log({ "u.id": u.id, unitId }, u.id == unitId);
-        return u.id == unitId;
+        return u.id === unitId;
       }).value;
     // console.log({ convertedValue });
     return convertedValue;
@@ -245,12 +248,12 @@ class Tools {
   convertFromUnitToBaseUnit(unitId, baseUnitId, value) {
     const units = this.unitsPrimary;
     // console.log({ baseUnitId, unitId, value, units });
-    if (baseUnitId == unitId || !units || !baseUnitId || !unitId) return value;
+    if (baseUnitId === unitId || !units || !baseUnitId || !unitId) return value;
     const convertedValue =
       value /
       units[baseUnitId].find((u) => {
         // console.log({ "u.id": u.id, unitId }, u.id == unitId);
-        return u.id == unitId;
+        return u.id === unitId;
       }).value;
     // console.log({ convertedValue });
     return convertedValue;
@@ -270,8 +273,8 @@ class Tools {
       success: async (data) => {
         console.log("DATA", data);
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
@@ -291,8 +294,8 @@ class Tools {
         this.unitsSchedule.freq = freq;
         this.unitsSchedule.duration = duration;
       },
-      fail: (alerts) => {},
-      always: (data) => {},
+      fail: (alerts) => { },
+      always: (data) => { },
     });
   }
 
@@ -336,7 +339,117 @@ class Tools {
       fail: (alerts) => {
         this.stores.actions.makeAlerts({ alerts });
       },
-      always: (data) => {},
+      always: (data) => { },
+    });
+  }
+
+  hasFunctional(functionalCode) {
+    if (!this) {
+      console.log("Для разработчика - Не нужно экстрактить функцию hasFunctional. Теряется контекст.");
+      return true;
+    }
+    // console.log(this);
+
+    // Если не из миса, то разрешены все функции
+    if (!this.stores.actions.misLinkLogin) {
+      return true;
+    }
+    return this.functional.includes(functionalCode);
+  }
+
+  async getFunctional() {
+    let { active_language } = this.stores.actions;
+    let data = {
+      active_language,
+    };
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+    return POST({
+      path: `auth/functional`,
+      data,
+      success: async (data) => {
+        console.log("DATA", data);
+
+        if (data.result && data.result.length) {
+          this.functional = data.result;
+        }
+
+        /**
+         * @todo Это заглушка, нужно удалить, когда с сервера придут данные
+         * @description
+        
+        + Поиск, добавление и удаление ЛС    FindAddDeleteDrugs
+        + Подбор дозировки и способа применения ЛС   SelectDosageMethodUsingDrugs
+        + Подбор аналога ЛС     SelectAnalogDrugs
+        + Инструкции по медицинскому применению ЛС    InstructionMedicalUseDrugs
+        + Проверка списка препаратов (интерфейс)     CheckListDrugsInterface     
+        + Замены препарата SelectReplacementDrug
+        + Назначение фармакотерапии     AppointmentTherapy
+        + Выписка документов    ExtractDocuments
+        + Выписка рецепта   ExtractPrescription
+        + Выписка протокола консилиума   ExtractProtocolCouncil
+        + Выписка амбулаторного листа назначений    ExtractOutpatientAppointmentSheet
+        + Выписка электронного рецепта   ExtractPrescriptionEDS
+        + Поиск пациента    PatientSearch
+        + Автоматическая загрузка генетического паспорта   AutomaticLoadingGenPassport
+        + Ручное добавление мутаций гена    ManuallyAddGenMutations
+        + Добавление и редактирование пациента    AddAndEditPatient
+        + Подбор терапии по клиническим рекомендациям    SelectTherapyToClinicalRecommendations
+        + Последние выбранные пациенты     LatestSelectedPatients
+        - Проверка списка препаратов (прямой запрос, без формирования интерфейса)   CheckListDrugsNoInterface  
+
+
+        + кнопки добавить, редактировать пациента
+        + имя сдвинул вместо поиска
+        + логику кнопки выписать
+
+        - обработку ошибки при емейле и затем проверку емейла
+        - крестики убрать в карточке пациента
+        - уведомление Редактирование недоступно
+
+         */
+
+        // this.functional = [
+        // "FindAddDeleteDrugs", // строка поиска; кнопка Удалить препарат; кнопка Удалить раствор; кнопка "Убрать из раствора"; функция "Перетащить в раствор"; кнопка "Сбросить"; сообщение о том, что нужно внести препараты, если список пустой
+        // "SelectDosageMethodUsingDrugs", // кнопка Капля у препата; кнопка Капля у раствора; 
+        // "SelectAnalogDrugs", // кнопка Аналоги;
+        // "CheckListDrugsInterface", // Кпопки Проверить и Назначить/Выписать
+        // "InstructionMedicalUseDrugs", // клик по препарату
+        // "SelectReplacementDrug", // Кнопка Подобрать замену
+        // "AppointmentTherapy", // Кнопка Назначить
+        // "ExtractDocuments", // кнопка Выписать
+        // "ExtractPrescription", // кнопка Выписать рецепт
+        // "ExtractProtocolCouncil", // кнопка Протокол консилиума
+        // "ExtractOutpatientAppointmentSheet", // кнопка Выписка амбулаторного листа назначений
+        // "ExtractPrescriptionEDS", // кнопка Подписать 
+        // "AutomaticLoadingGenPassport", // кнопка загрузка генетического паспорта
+        // "ManuallyAddGenMutations", // поля Мутация гена
+        // "SelectTherapyToClinicalRecommendations", // кнопка Клинические рекомендации
+        // "PatientSearch", // поле поиска пациентов
+        // "LatestSelectedPatients", // блок со списком Последний выбранных пациентов
+        // "AddAndEditPatient", // форма пациента накрывается слоем, для блокировки всех интерактивных элементов
+        // "ViewingPatientCard", // просмотр карты пациента
+        // ];
+
+        // Если ни одного варианта выписки нету, то саму кнопку Выписать тоже убираем
+        if (!data.result.includes("ExtractProtocolCouncil") && !data.result.includes("ExtractPrescription") && !data.result.includes("ExtractOutpatientAppointmentSheet")) {
+          this.functional = this.functional.filter(key => key !== "ExtractDocuments");
+        }
+
+        // Если хотя бы один вариант выписки есть, активируем кнопку Выписать (при этом, должна быть доступна проверка препаратов)
+        if (data.result.includes("ExtractProtocolCouncil") || data.result.includes("ExtractPrescription") || data.result.includes("ExtractOutpatientAppointmentSheet")) {
+          if (!this.functional.includes("ExtractDocuments") && data.result.includes("CheckListDrugsInterface")) {
+            this.functional.push("ExtractDocuments");
+          }
+        }
+
+        console.log(this.functional);
+        this.functionalReady = true;
+      },
+      fail: (alerts) => {
+        this.stores.actions.makeAlerts({ alerts });
+      },
+      always: (data) => { },
     });
   }
 
@@ -381,7 +494,7 @@ class Tools {
         });
       }
 
-      if (unitkey == 99) {
+      if (Number(unitkey) === 99) {
         newunit.arr = "248";
       }
 
@@ -438,7 +551,7 @@ class Tools {
 
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
-
+    data.doctor_id = (this.stores.actions.doctor && this.stores.actions.doctor.id) || null;
     this.searchClinicRows = observable([]);
 
     return POST({
@@ -501,7 +614,7 @@ class Tools {
 
   async ReportError(message) {
     this.stores.actions.loading = true;
-    let { active_language, authkey, makeAlerts } = this.stores.actions;
+    let { active_language, authkey } = this.stores.actions;
 
     const data = {
       authkey,
@@ -521,7 +634,7 @@ class Tools {
         this.stores.actions.makeAlerts(alerts);
         this.stores.actions.loading = false;
       },
-      always(data) {},
+      always(data) { },
     });
   }
 
@@ -591,6 +704,16 @@ class Tools {
     } else {
       await this.timeout(200);
       return this.waitForTech(fn);
+    }
+  }
+
+
+  async waitForFunctional(fn) {
+    if (this.functionalReady) {
+      return fn();
+    } else {
+      await this.timeout(200);
+      return this.waitForFunctional(fn);
     }
   }
 }

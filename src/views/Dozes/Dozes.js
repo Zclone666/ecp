@@ -1,27 +1,12 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
-
 import Stepper from "../../components/Stepper";
 
 import {
-  Sidebar,
   Menu,
-  Icon,
-  // Search,
-  Segment,
-  Message,
-  List,
-  Feed,
-  Button,
-  Responsive,
-  Grid,
 } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
-import _ from "lodash";
 
 const Dozes = inject(
   "router",

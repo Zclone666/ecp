@@ -3,15 +3,9 @@ import { observer, inject } from "mobx-react";
 
 import RouterLink from "../../router/a";
 
-import Spinner from "../../components/Spinner";
-import Slider from "react-slick";
-
-import PatientForm from "./PatientForm";
-import PatientPassport from "./PatientPassport";
-
 import Search from "../../components/Search";
 
-import { Segment, List, Button, Form, Input, Icon, Header } from "semantic-ui-react";
+import { Segment, List, Button, Form, Input, Header } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 import _ from "lodash";
 import moment from "moment";
@@ -20,7 +14,8 @@ const PatientsList = inject(
   "router",
   "db",
   "actions",
-  "patients"
+  "patients",
+  "tools",
 )(
   observer(
     class PatientsList extends Component {
@@ -99,18 +94,19 @@ const PatientsList = inject(
 
       render() {
         let {
-          patients,
           patients: {
             searchReady,
-            searchRows,
             current: { id, email, fio },
           },
           // actions: {
           //   patientPassport: { id, email, fio },
           // },
+          tools,
         } = this.props;
         const { t } = this.props.actions;
         let { search_patient } = this.state;
+
+        const canLatestSelectedPatients = tools.hasFunctional("LatestSelectedPatients");
         return (
           <Segment basic>
             <Form>
@@ -129,7 +125,7 @@ const PatientsList = inject(
                     })}
                     results={this.listSearch}
                     value={search_patient}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -141,7 +137,7 @@ const PatientsList = inject(
                     size="big"
                     name="fio"
                     value={fio || ""}
-                    placeholder={t("ivan")+" "+t("ivanov")+ " "+t("ivanovich")}
+                    placeholder={t("ivan") + " " + t("ivanov") + " " + t("ivanovich")}
                     onChange={this.handleChange}
                   />
                 </Form.Field>
@@ -187,24 +183,26 @@ const PatientsList = inject(
                 </Form.Field>
               </Form.Group>
             </Form>
-            <Header>{t("latest_selected")}</Header>
-            <List animated divided selection className="dozelist" verticalAlign="middle" size="large">
-              {this.last.map((pat, i) => {
-                return (
-                  <List.Item key={"pat" + i} onClick={() => this.chose(pat.id)}>
-                    <List.Content floated="right">
-                      {pat.birthdate && <div className="price">{moment(pat.birthdate, "x").format("DD.MM.YYYY")}</div>}
-                    </List.Content>
+            {canLatestSelectedPatients && <>
+              <Header>{t("latest_selected")}</Header>
+              <List animated divided selection className="dozelist" verticalAlign="middle" size="large">
+                {this.last.map((pat, i) => {
+                  return (
+                    <List.Item key={"pat" + i} onClick={() => this.chose(pat.id)}>
+                      <List.Content floated="right">
+                        {pat.birthdate && <div className="price">{moment(pat.birthdate, "x").format("DD.MM.YYYY")}</div>}
+                      </List.Content>
 
-                    <List.Content className="large">
-                      <List.Header>{pat.name}</List.Header>
+                      <List.Content className="large">
+                        <List.Header>{pat.name}</List.Header>
 
-                      {pat.email && <List.Description>{pat.email}</List.Description>}
-                    </List.Content>
-                  </List.Item>
-                );
-              })}
-            </List>
+                        {pat.email && <List.Description>{pat.email}</List.Description>}
+                      </List.Content>
+                    </List.Item>
+                  );
+                })}
+              </List>
+            </>}
           </Segment>
         );
       }

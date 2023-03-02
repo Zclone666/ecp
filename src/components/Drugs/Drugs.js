@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import RouterLink from "../../router/a";
 
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
@@ -14,7 +12,6 @@ import {
   // Menu,
   List,
   // Feed,
-  Button,
   // Responsive,
   Icon,
 } from "semantic-ui-react";
@@ -39,9 +36,8 @@ const Drugs = inject(
 
       get warnDrugs() {
         let {
-          actions: { selectedDrug, selectedConflict, activeDrugs, activeConflicts },
-          drugs: { drug },
-          warnings: { warning, groups }, //warnings, warnGroups
+          actions: { selectedDrug, selectedConflict },
+          warnings: { warning }, //warnings, warnGroups
         } = this.props;
         let drugsObj = {};
 
@@ -101,7 +97,6 @@ const Drugs = inject(
       get drugsWithGroups() {
         let {
           drugs: { drug: drugs },
-          dosages: { dosage },
         } = this.props;
 
         let groups = [];
@@ -192,12 +187,15 @@ const Drugs = inject(
 
       render() {
         let {
-          actions: { selectedDrug, makeLiquids, disabled, topview_disabled },
-          drugs: { drug: drugs, liquid: liquidList, checkLiquids },
-          warnings: { warning }, //warnings, warnGroups
-          dosages: { dosage },
+          actions: { makeLiquids, disabled, topview_disabled },
+          drugs: { liquid: liquidList, checkLiquids },
+          tools,
           isRecipe,
         } = this.props;
+
+        const canFindAddDeleteDrugs = tools.hasFunctional("FindAddDeleteDrugs");
+        const canSelectDosageMethodUsingDrugs = tools.hasFunctional("SelectDosageMethodUsingDrugs");
+
         const { t } = this.props.actions;
         let { groups, grouped, iterator, canDrag } = this.drugsWithGroups;
 
@@ -217,109 +215,35 @@ const Drugs = inject(
                 onDragEnd={this.onDragEnd}
               >
                 <List divided selection verticalAlign="middle" size="big" className={isRecipe ? "" : "drugslist"}>
-                  {groups.map((liquid, l) => {
-                    let current = liquidList.get(liquid);
-                    if (liquid === 0) {
-                      return (
-                        <Droppable
-                          isCombineEnabled
-                          droppableId={`drug_place_${liquid}`}
-                          type="DRUG"
-                          key={`drug_place_${liquid}`}
-                        >
-                          {(prov, snap) => {
-                            return (
-                              <div
-                                ref={prov.innerRef}
-                                style={{
-                                  backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
-                                  borderColor: borderColors[liquid],
-                                }}
-                                {...prov.droppableProps}
-                              >
-                                {grouped[liquid].map((drug, i) => {
-                                  // let dosages = dosage.get(drug.key)
-                                  // let isLiquid = (dosages && dosages.solute)
-                                  // console.log({drug})
-                                  return (
-                                    <Draggable
-                                      isDragDisabled={!drug.solute || !canDrag}
-                                      draggableId={drug.key}
-                                      index={i}
-                                      key={`drug_${drug.key}`}
-                                    >
-                                      {(provided, snapshot) => (
-                                        <div
-                                          ref={provided.innerRef}
-                                          {...provided.draggableProps}
-                                          {...provided.dragHandleProps}
-                                          className={snapshot.isDragging ? "dragging" : ""}
-                                        >
-                                          <Drug
-                                            canDrag={!(!drug.solute || !canDrag)}
-                                            active={warnDrugs[drug.key] || false}
-                                            drug={drug}
-                                            key={`drug_${i}`}
-                                          />
-                                        </div>
-                                      )}
-                                    </Draggable>
-                                  );
-                                })}
-                                {prov.placeholder}
-                              </div>
-                            );
-                          }}
-                        </Droppable>
-                      );
-                    } else if (!topview_disabled) {
-                      return (
-                        <Droppable droppableId={`drug_place_${liquid}`} type="DRUG" key={`drug_place_${liquid}`}>
-                          {(prov, snap) => {
-                            let liqObj = liquidList.get(liquid) || {};
-                            return (
-                              <div
-                                className={`liquidcontainer${snap.isDraggingOver ? " active" : ""}`}
-                                ref={prov.innerRef}
-                                style={{
-                                  backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
-                                  borderColor: grouped[liquid] ? borderColors[liquid] : borderColors[0],
-                                }}
-                                {...prov.droppableProps}
-                              >
-                                {!grouped[liquid] && (
-                                  <div className={"abstext"}>{t("drag_two_components_for_solution")}</div>
-                                )}
-                                {grouped[liquid] && (
-                                  <div
-                                    className={"text"}
-                                    style={{
-                                      color: liqObj.edit ? "#072c71" : "inherit",
-                                    }}
-                                  >
-                                    <Icon
-                                      name="delete"
-                                      className="right floated"
-                                      onClick={() => this.removeLiquid(grouped[liquid])}
-                                    />
-                                    {current && checkLiquids && !makeLiquids && (
-                                      <RouterLink
-                                        disabled={!current}
-                                        onClick={() => this.getLiqParams(liquid)}
-                                        to={"/liquid/calc/" + liquid}
-                                      >
-                                        <Icon name="lab" className="right floated" />
-                                      </RouterLink>
-                                    )}
-                                    {t("solution")} {liquid}
-                                  </div>
-                                )}
 
-                                {grouped[liquid] &&
-                                  grouped[liquid].map((drug, i) => {
+                  { // eslint-disable-next-line array-callback-return
+                    groups.map((liquid, l) => {
+                      let current = liquidList.get(liquid);
+                      if (liquid === 0) {
+                        return (
+                          <Droppable
+                            isCombineEnabled
+                            droppableId={`drug_place_${liquid}`}
+                            type="DRUG"
+                            key={`drug_place_${liquid}`}
+                          >
+                            {(prov, snap) => {
+                              return (
+                                <div
+                                  ref={prov.innerRef}
+                                  style={{
+                                    backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
+                                    borderColor: borderColors[liquid],
+                                  }}
+                                  {...prov.droppableProps}
+                                >
+                                  {grouped[liquid].map((drug, i) => {
+                                    // let dosages = dosage.get(drug.key)
+                                    // let isLiquid = (dosages && dosages.solute)
+                                    // console.log({drug})
                                     return (
                                       <Draggable
-                                        isDragDisabled
+                                        isDragDisabled={!drug.solute || !canDrag || !canFindAddDeleteDrugs}
                                         draggableId={drug.key}
                                         index={i}
                                         key={`drug_${drug.key}`}
@@ -332,31 +256,107 @@ const Drugs = inject(
                                             className={snapshot.isDragging ? "dragging" : ""}
                                           >
                                             <Drug
-                                              style={{
-                                                backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
-                                              }}
+                                              canDrag={!(!drug.solute || !canDrag)}
                                               active={warnDrugs[drug.key] || false}
                                               drug={drug}
                                               key={`drug_${i}`}
-                                              minus={true}
-                                              onRemove={() => this.onRemove(drug.key, grouped[liquid])}
                                             />
                                           </div>
                                         )}
                                       </Draggable>
                                     );
                                   })}
-                                {prov.placeholder}
-                                {grouped[liquid] && grouped[liquid].length === 1 && (
-                                  <div className={"bottomtext"}>{t("add_one_element")}</div>
-                                )}
-                              </div>
-                            );
-                          }}
-                        </Droppable>
-                      );
-                    }
-                  })}
+                                  {prov.placeholder}
+                                </div>
+                              );
+                            }}
+                          </Droppable>
+                        );
+                      } else if (!topview_disabled) {
+                        return (
+                          <Droppable droppableId={`drug_place_${liquid}`} type="DRUG" key={`drug_place_${liquid}`}>
+                            {(prov, snap) => {
+                              let liqObj = liquidList.get(liquid) || {};
+                              return (
+                                <div
+                                  className={`liquidcontainer${snap.isDraggingOver ? " active" : ""}`}
+                                  ref={prov.innerRef}
+                                  style={{
+                                    backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
+                                    borderColor: grouped[liquid] ? borderColors[liquid] : borderColors[0],
+                                  }}
+                                  {...prov.droppableProps}
+                                >
+                                  {canFindAddDeleteDrugs && !grouped[liquid] && (
+                                    <div className={"abstext"}>{t("drag_two_components_for_solution")}</div>
+                                  )}
+                                  {grouped[liquid] && (
+                                    <div
+                                      className={"text"}
+                                      style={{
+                                        color: liqObj.edit ? "#072c71" : "inherit",
+                                      }}
+                                    >
+                                      {canFindAddDeleteDrugs && <Icon
+                                        name="delete"
+                                        className="right floated pointer"
+                                        onClick={() => this.removeLiquid(grouped[liquid])}
+                                      />}
+                                      {canSelectDosageMethodUsingDrugs && current && checkLiquids && !makeLiquids && (
+                                        <RouterLink
+                                          disabled={!current}
+                                          onClick={() => this.getLiqParams(liquid)}
+                                          to={"/liquid/calc/" + liquid}
+                                        >
+                                          <Icon name="lab" className="right floated" />
+                                        </RouterLink>
+                                      )}
+                                      {t("solution")} {liquid}
+                                    </div>
+                                  )}
+
+                                  {grouped[liquid] &&
+                                    grouped[liquid].map((drug, i) => {
+                                      return (
+                                        <Draggable
+                                          isDragDisabled
+                                          draggableId={drug.key}
+                                          index={i}
+                                          key={`drug_${drug.key}`}
+                                        >
+                                          {(provided, snapshot) => (
+                                            <div
+                                              ref={provided.innerRef}
+                                              {...provided.draggableProps}
+                                              {...provided.dragHandleProps}
+                                              className={snapshot.isDragging ? "dragging" : ""}
+                                            >
+                                              <Drug
+                                                style={{
+                                                  backgroundColor: snap.isDraggingOver ? colors[liquid] : "",
+                                                }}
+                                                active={warnDrugs[drug.key] || false}
+                                                drug={drug}
+                                                key={`drug_${i}`}
+                                                minus={true}
+                                                onRemove={() => this.onRemove(drug.key, grouped[liquid])}
+                                              />
+                                            </div>
+                                          )}
+                                        </Draggable>
+                                      );
+                                    })}
+                                  {prov.placeholder}
+                                  {grouped[liquid] && grouped[liquid].length === 1 && (
+                                    <div className={"bottomtext"}>{t("add_one_element")}</div>
+                                  )}
+                                </div>
+                              );
+                            }}
+                          </Droppable>
+                        );
+                      }
+                    })}
                 </List>
               </DragDropContext>
             )}

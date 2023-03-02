@@ -1,14 +1,11 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
 import moment from "moment";
 
 import _ from "lodash";
 
-import { DrugModel, LiquidModel } from "../models";
-
+// import { DrugModel } from "../models";
 import { DrugScheme, LiquidScheme } from "../schemes";
-
-const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#fc7301", "#f42a03"];
 
 class Drugs {
   //start-decorators
@@ -78,18 +75,20 @@ class Drugs {
   * @param drug - объект драга
   */
   validateDrug(drug) {
-    const validationContext = DrugModel.schema.newContext();
-    validationContext.validate(drug);
-    return validationContext.validationErrors();
+    return {"validateDrug":""};
+    // const validationContext = DrugModel.schema.newContext();
+    // validationContext.validate(drug);
+    // return validationContext.validationErrors();
   }
 
   /**
   // метод валидации текущего драга на соответствие модели
   */
   get validateCurrentDrug() {
-    const validationContext = DrugModel.schema.newContext();
-    validationContext.validate(this.current);
-    return validationContext.validationErrors();
+    return {"validateCurrentDrug":""};
+    // const validationContext = DrugModel.schema.newContext();
+    // validationContext.validate(this.current);
+    // return validationContext.validationErrors();
     // return [];
   }
 
@@ -169,7 +168,7 @@ class Drugs {
     }
     drug.calc.countBaseUnit = drug.calc.countBaseUnit || units[248].arr;
     drug.calc.countUnit =
-      drug.calc.countUnit || Object.values(units).find((u) => u.arr == drug.calc.countBaseUnit).id || units[248].id;
+      drug.calc.countUnit || Object.values(units).find((u) => u.arr === drug.calc.countBaseUnit).id || units[248].id;
 
     //const countUnit = Object.values(units).find((unit) => unit.arr == drug.calc.countBaseUnit).id;
   };
@@ -306,11 +305,6 @@ class Drugs {
     let currentDrug = this.drug.get(drug.key) || {};
     let currentDosages = this.stores.dosages.dosage.get(drug.id) || {};
 
-    let { calcValues, getFromBase } = this.stores.dosages;
-    let def =
-      (calcValues.dosage.firstUnit && calcValues.dosage.firstUnit.id) ||
-      (calcValues.dosage.unit && calcValues.dosage.unit.id);
-
     let { freq, freq_id, duration, duration_id } = drug;
 
     currentDrug.edit = true;
@@ -405,11 +399,25 @@ class Drugs {
 
     }
 
+    /**
+     * @desc shitfix
+     * @todo иногда значения dosageUnit - число, хотя должна быть строка
+     * @param {*} dosageUnit 
+     */
+
+    const dosageUnitFix = dosageUnit => {
+      if (typeof dosageUnit === "number") {
+        return "" + dosageUnit;
+      }
+      return dosageUnit;
+
+    }
+
     currentDrug.calc = {
       ...currentDrug.calc,
       dosage: dos,
       count,
-      dosageUnit: dosageUnit == 999999 ? "248" : dosageUnit,
+      dosageUnit: Number(dosageUnit) === 999999 ? "248" : dosageUnitFix(dosageUnit),
       dayCount,
       fullDosage: fullDosageFix(fullDosage),
       weightDosage,
@@ -429,7 +437,6 @@ class Drugs {
   */
   getDosageParams = async () => {
     // console.log("\n getting dosage params \n");
-    let drugData = this.stores.actions.stepsData;
 
     let drug = this.current;
     let currentDrug = (await this.drug.get(drug.key)) || {};
@@ -443,8 +450,6 @@ class Drugs {
         }
       });
     }
-
-    let { freq, freq_id, duration, duration_id } = drug;
 
     let { specials } = currentDrug;
     // console.log({currentDrug});
@@ -579,10 +584,10 @@ class Drugs {
     });
 
     await this.drug.forEach(async (drug, key) => {
-      if (drug.group == group && group !== 0) {
+      if (drug.group === group && group !== 0) {
         drug.edit = true;
       }
-      if (drug.group == currGroup && group == 0) {
+      if (drug.group === currGroup && group === 0) {
         drug.edit = true;
       }
     });
@@ -594,7 +599,7 @@ class Drugs {
       // await this.liquid.set( currGroup, currLiquid )
     }
 
-    if (group == 0) {
+    if (group === 0) {
       if (currLiquid.proto) {
         this.deletedLiquids.push(currLiquid);
       }
@@ -687,7 +692,7 @@ class Drugs {
     drugs.forEach((drugObj, key) => {
       let drug = { ...drugObj };
 
-      if (drug.group == id) {
+      if (drug.group === id) {
         if (drug.calc.dosage && drug.calc.dosage[0] > 0) {
           if (dryUnits.includes(drug.calc.dosageUnit)) {
             weights[drug.key] = {
@@ -772,7 +777,7 @@ class Drugs {
     });
 
     _.forEach(obj, async (counter, key) => {
-      if (counter > 1 && counter != 0 && key != 0) {
+      if (counter > 1 && counter !== 0 && key !== 0) {
         if (!this.liquid.get(key)) {
           await this.makeLiquid(key);
         }
@@ -823,7 +828,7 @@ class Drugs {
     if (!id) return;
     id = parseInt(id);
     this.drug.forEach((drug, i) => {
-      if (drug.group == id) drug.edit = true;
+      if (drug.group === id) drug.edit = true;
     });
 
     let current = (await this.liquid.get(id)) || {};
@@ -992,7 +997,6 @@ class Drugs {
     let {
       stores: {
         router: { values: route },
-        dosages: { getToBase, getFromBase },
       },
     } = this;
     id = id || (route && route.liquid) || null;
@@ -1005,7 +1009,7 @@ class Drugs {
 
     let flag = false; //if dosages changed set true
 
-    let { ready, weights, counts, weight, count: calcCount, unit, liqCountUnit, liqCountBaseUnit } = this.calcLiquid;
+    let { ready, weights, weight, count: calcCount, unit, liqCountUnit, liqCountBaseUnit } = this.calcLiquid;
 
     let arr = [];
     this.drug.forEach((drug, key) => {
@@ -1015,7 +1019,7 @@ class Drugs {
     });
 
     if (current.calc.dosage && current.calc.dosage[0] === 0) flag = true;
-    if (weight.length != current.calc.dosage.length || calcCount != current.calc.count) flag = true;
+    if (weight.length !== current.calc.dosage.length || calcCount !== current.calc.count) flag = true;
     if (!_.isEqual(_.keys(weights), arr)) flag = true;
     if (!_.isEqual(weight, current.calc.dosage)) flag = true;
     if (!ready) return;
@@ -1023,10 +1027,9 @@ class Drugs {
     // console.log('HEREs');
 
     //
-    let { name, group, specials, freq, edit, freq_id, duration, duration_id } = current;
+    let { name, group, specials, freq, freq_id, duration, duration_id } = current;
     // console.log('HERE 1');
     if (flag) {
-      let patientWeight = this.stores.patients.current.weight;
       let dosage = _.map(weight, (dos) => {
         return dos / calcCount;
       });
@@ -1199,7 +1202,7 @@ class Drugs {
           this[`${saveTo}Rows`] = observable([]);
           this[`${saveTo}Rows`] = await _.unionWith(data.concepts, this[`${saveTo}Rows`], (a, b) => a.id === b.id);
           this.searchReady = true;
-        } else if (data.concepts && data.concepts.length == 0 && _.isArray(data.concepts)) {
+        } else if (data.concepts && data.concepts.length === 0 && _.isArray(data.concepts)) {
           this[`${saveTo}Rows`] = observable([]);
           this.searchReady = true;
         }
@@ -1207,7 +1210,7 @@ class Drugs {
       fail: (alerts) => {
         this.searchReady = true;
         // console.log('fail', alerts);
-        this.stores.actions.makeAlerts(data);
+        this.stores.actions.makeAlerts(alerts);
       },
       always: (data) => {
         // this.stores.actions.makeAlerts(data)
@@ -1260,7 +1263,7 @@ class Drugs {
       // this.deletedRows.push(drug);
       this.unselectedRows.push(drug);
     }
-    if (drug.group && drug.group != 0) {
+    if (drug.group && drug.group !== 0) {
       this.stores.actions.makeLiquids = true;
       this.removeLiquids([drug.group]);
     }
@@ -1284,8 +1287,6 @@ class Drugs {
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
     data.active_language = this.stores.actions.active_language;
-
-    const saveTo = "parser";
 
     this.stores.actions.loading = true;
     return POST({
@@ -1426,14 +1427,13 @@ class Drugs {
   * @param drugKey - идентификатор драга в листе назначений
   */
   async choseNewDrugs(drugKey) {
-    let concepts = [];
     let del = this.stores.drugs.drug.get(drugKey);
     this.unselectDrug(del);
     let length = this.stores.actions.checkedFg.length;
     await this.stores.actions.checkedFg.forEach(async (key, i) => {
       await this.selectFromSearch(this.drugsForFG[key]);
       // console.log({ i: i + 1, length });
-      if (i + 1 == length) {
+      if (i + 1 === length) {
         // console.log("HERE");
         setTimeout(() => {
           this.stores.warnings.check();
@@ -1470,7 +1470,7 @@ class Drugs {
       success: async (data) => {
         if (data.factions) {
           data.factions.forEach((fd, i) => {
-            let { id, name, fgroups, drugs } = fd;
+            let { id, name, fgroups } = fd;
             this.fds.push({ id, name });
             fgroups.forEach((fg, i) => {
               this.fgs.push({
@@ -1512,7 +1512,7 @@ class Drugs {
       success: async (data) => {
         if (data.concepts) {
           this.fdForSearch[concept.key] = data.concepts;
-          if (data.concepts.length == 1) {
+          if (data.concepts.length === 1) {
             this.stores.router.push(`/fgreplace/chosedv/${concept.key}`);
             this.drugsByFD(concept.key);
           }

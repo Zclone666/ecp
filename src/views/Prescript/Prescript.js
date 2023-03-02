@@ -1,13 +1,7 @@
-import React, { Component, createRef } from "react";
+import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
-
 import Search from "../../components/Search";
-
-import Drugs from "../../components/Drugs";
 
 import PatientPassport from "../Patient/PatientPassport";
 import { withTranslation } from "react-i18next";
@@ -17,15 +11,10 @@ import _ from "lodash";
 import {
   // Sidebar,
   Menu,
-  Tab,
-  Statistic,
   Input,
   Modal,
   Segment,
   Form,
-  Dropdown,
-  Header,
-  Label,
   // Message,
   // List,
   // Feed,
@@ -74,7 +63,7 @@ const Prescript = inject(
         });
       };
       save = async () => {
-        let code = await this.props.recipes.saveList();
+        await this.props.recipes.saveList();
         // console.log({res});
         // if( !code ) return
         // this.setState({ code })
@@ -88,7 +77,7 @@ const Prescript = inject(
       };
       savePatient = async () => {
         let res = await this.props.patients.save();
-      
+
         if (res) {
           this.setOpen(false);
           this.handleChange(null, { name: "patient", value: res.key });
@@ -105,12 +94,12 @@ const Prescript = inject(
 
       handleChange = async (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         let { checkData } = this.props.actions;
         if (name === "patient") {
           // console.log({ value });
-          let patient = this.props.patients.current;
           let curr = await this.props.patients.patient.get(value);
           if (curr?.id) await this.props.patients.request(curr.id);
           // if ((!curr || !curr.email) && curr.id) curr = await this.props.patients.request(curr.id);
@@ -198,8 +187,7 @@ const Prescript = inject(
         });
       }
       componentDidUpdate(prevProps, prevState) {
-        let { search_clinic } = this.state;
-        let { clinic_id, clinic_name } = this.props.actions.drugStructure;
+        let { clinic_id } = this.props.actions.drugStructure;
         // console.log({
         //   clinic_id: this.props.actions.drugStructure.clinic_id,
         //   clinic_id2: prevProps.actions.drugStructure.clinic_id,
@@ -216,7 +204,7 @@ const Prescript = inject(
             arr.push({
               id: item.id,
               key: i,
-              title: "",         
+              title: "",
               description: item.name,
             });
           }
@@ -228,15 +216,14 @@ const Prescript = inject(
         let { open, search_clinic, search_patient } = this.state;
         let {
           actions: {
-            drugStructure: { doctor_name: doctor, clinic_id: clinic },
+            drugStructure: { doctor_name: doctor },
             isPrescriptFilled,
             doctor: doc,
-            checkData,
           },
           patients: { current: patient },
-          recipes: { code },
-          tools: { searchReady, searchClinicRows },
+          tools: { searchReady },
         } = this.props;
+
         const { t } = this.props.actions;
 
         doctor = doctor || doc.name;
@@ -279,8 +266,8 @@ const Prescript = inject(
                           leading: true,
                         })}
                         results={this.patientsListSearch}
-                        value={search_patient || patient?.fio}
-                        resultClassName="result-wrapper"
+                        value={search_patient || patient?.fio || ""}
+                        resultclassname="result-wrapper"
                       />
                       {/* {patient && patient.fio && <Label>{patient.fio}</Label>} */}
                     </Form.Field>
@@ -315,7 +302,7 @@ const Prescript = inject(
                     <label>{t("mail_patient")}</label>
                     <Input
                       name="email"
-                      value={patient.email}
+                      value={patient.email || ""}
                       onChange={this.handleChange}
                       placeholder="some@email.ru"
                     />
@@ -332,8 +319,8 @@ const Prescript = inject(
                       onResultSelect={this.handleResultSelect}
                       onSearchChange={this.handleSearchChange}
                       results={this.listSearch}
-                      value={search_clinic}
-                      resultClassName="result-wrapper"
+                      value={search_clinic || ""}
+                      resultclassname="result-wrapper"
                     />
                   </Form.Field>
                 </Form>

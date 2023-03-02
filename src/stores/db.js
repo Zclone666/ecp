@@ -1,11 +1,6 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
-import moment from "moment";
+import { observable, autorun, makeObservable } from "mobx";
 
-import _ from "lodash";
 // import { colors } from '../components/Charts/colorPallette'
-
-const colorPallette = ["#007b2b", "#b0d512", "#03529b", "#fff42b", "#ffca2f", "#fc7301", "#f42a03"];
 
 class DB {
   ready = false;
@@ -21,7 +16,7 @@ class DB {
     this.stores = stores;
     this.router = stores.router;
 
-    autorun(() => {});
+    autorun(() => { });
   }
 
   /**

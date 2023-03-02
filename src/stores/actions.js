@@ -1,5 +1,5 @@
 import { observable, action, autorun, makeObservable } from "mobx";
-import { GET, POST, PUT, PROJECT_TITLE, CREATE_API_URL } from "../lib/connect";
+import { GET, POST, PROJECT_TITLE, CREATE_API_URL } from "../lib/connect";
 import _ from "lodash";
 import moment from "moment";
 import { LOGIN, SERVER } from "../constants";
@@ -13,7 +13,7 @@ export const RESET_PASS_KEY = "9152ea8756f8f2b3";
 export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
 export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
-const privateKeyOnly = LOGIN == "privateKeyOnly";
+const privateKeyOnly = LOGIN === "privateKeyOnly";
 
 const createCsServerUrl = (url) => {
   if (
@@ -418,8 +418,8 @@ class Actions {
       (w < 480 && v === "portrait") || (w < 1024 && v === "landscape")
         ? "mobile"
         : (w < 1280 && v === "portrait") || (w < 1280 && v === "landscape")
-        ? "tablet"
-        : "pc";
+          ? "tablet"
+          : "pc";
     this.mobilewarning = d === "mobile" || d === "tablet";
     this.view = v;
     this.device = d;
@@ -440,7 +440,7 @@ class Actions {
   // создает и возвращает полную структуру пациента с назначениями для отправки
   */
   get structure() {
-    let { patients, drugs } = this.stores;
+    let { patients } = this.stores;
     let structure = _.cloneDeep(this.drugStructure);
     structure.patient = patients.current;
     structure.drugs = Array.from(this.stores.drugs.drug.values());
@@ -624,7 +624,7 @@ class Actions {
       } else {
         if (item.from <= value && value < item.to) {
           text = item.name;
-        } else if (item.from == 0 && item.to == 0 && value == 0) {
+        } else if (Number(item.from) === 0 && Number(item.to) === 0 && Number(value) === 0) {
           text = item.name;
         }
       }
@@ -664,26 +664,27 @@ class Actions {
       await localStorage.setItem("lang", "ru");
     }
     this.stores.tools.getAllService();
-    await this.stores.tools.waitForTech(() => {});
+    await this.stores.tools.waitForTech(() => { });
 
     // this.getObject("buttonTexts");
     // this.getObject("elements");
     // this.getObject("UIText");
     // this.getObject("recipeData");
-
     this.loading = true;
     //------------PRIVATE KEY-------
     if (privateKeyOnly && localStorage.getItem("privateKey")) {
       await this.fakePrivateKeylogin(localStorage.getItem("privateKey"));
       return;
     }
+    
     //------------MIS---------------
     if (this.stores.router.values.miskey) {
       const misKey = this.stores.router.values.miskey;
       //----- getting query parameters ------------
       const queryParams = new URLSearchParams(window.location.search);
-      const SETTING_bottomview_disabled = queryParams.get("SETTING_bottomview") == 0;
-      const SETTING_topview_disabled = queryParams.get("SETTING_topview") == 0;
+
+      const SETTING_bottomview_disabled = String(queryParams.get("SETTING_bottomview")) === "0";
+      const SETTING_topview_disabled = String(queryParams.get("SETTING_topview")) === "0";
       // console.log({
       //   SETTING_bottomview_disabled,
       //   SETTING_topview_disabled,
@@ -702,13 +703,15 @@ class Actions {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.alert.code == "200" && data.alert.level == "success") {
+          if (Number(data.alert.code) === 200 && data.alert.level === "success") {
             this.fakeMisLogin(data);
             return true;
           } else {
             this.makeAlerts({ data: { alerts: data.alert } });
           }
         });
+        this.stores.tools.getFunctional();
+        await this.stores.tools.waitForFunctional(() => { });
       if (misAuthSuccess) return;
     }
 
@@ -716,13 +719,13 @@ class Actions {
     this.authkey = (await localStorage.getItem("authkey")) || "";
     // return;
     if (this.stores.router.values.protocol) {
-      if (this.stores.router.match.name == "protocol") {
+      if (this.stores.router.match.name === "protocol") {
         await this.stores.warnings.protocol(this.stores.router.values.protocol);
         this.login();
         this.loading = false;
         return;
       }
-      if (this.stores.router.match.name == "resultchecking") {
+      if (this.stores.router.match.name === "resultchecking") {
         await this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
         this.resultChecking = true;
         this.misLinkLogin = true;
@@ -743,7 +746,7 @@ class Actions {
       this.stores.router.push("/login");
       return;
     }
-    if (!this.authkey || this.authkey == null || this.authkey == "null") {
+    if (!this.authkey || this.authkey == null || this.authkey === "null") {
       this.loading = false;
       this.stores.router.push("/login");
       return;
@@ -758,7 +761,9 @@ class Actions {
       success: async (data) => {
         //console.log('logged', data);
         this.loginForm.privateKey = this.privateKey = (await localStorage.getItem("privateKey")) || "";
-        this.login();
+        await this.login();
+        this.stores.tools.getFunctional();
+        await this.stores.tools.waitForFunctional(() => { });
         // this.authorized = true
         // this.loading = false
 
@@ -802,7 +807,7 @@ class Actions {
         //----------------------------
         // console.log('SUCCESS', data);
         // if( data && data.level == 'success' ){
-        let { doc, id, lpu, patients, names } = data;
+        let { doc, lpu, patients, names } = data;
         this.stores.patients.makeList({ patients, names });
 
         lpu &&
@@ -812,7 +817,7 @@ class Actions {
 
         if (lpu) this.default_clinic_id = lpu[0];
 
-        if (lpu && lpu.length == 1) {
+        if (lpu && lpu.length === 1) {
           this.drugStructure.clinic_id = (lpu && lpu[0]) || null;
           this.drugStructure.clinic_name = (lpu && lpu[0] && names[lpu[0]]) || null;
           this.clinic = {
@@ -904,13 +909,18 @@ class Actions {
         //   this.loading = false
         //   this.stores.db.getFilters()
         // }
+
+        // if (this.authkey) {
+        //   this.stores.tools.getFunctional();
+        //   await this.stores.tools.waitForFunctional(() => { });
+        // }
       },
       fail: (alerts) => {
         // if (!alerts) return;
         // console.log("FAIL", alerts);
         if (!alerts.forEach) return;
         alerts.forEach((alert) => {
-          if (alert.code != 200) {
+          if (Number(alert.code) !== 200) {
             setTimeout(() => {
               this.logout();
             }, 3000);
@@ -1099,7 +1109,7 @@ class Actions {
   */
   async fakePrivateKeylogin(privateKey) {
     this.loginForm.key = AUTH_SERVICE_KEY;
-    if (privateKey == undefined) privateKey = this.loginForm.privateKey;
+    if (privateKey === undefined) privateKey = this.loginForm.privateKey;
     if (privateKey && !this.loginForm.privateKey) this.loginForm.privateKey = privateKey;
     let data = {
       application: 108,
@@ -1221,7 +1231,7 @@ class Actions {
       data: dataSend,
       success: async (data) => {
         // console.log(data);
-        if (data && data.alerts && data.alerts[0].code == "200") {
+        if (data && data.alerts && Number(data.alerts[0].code) === 200) {
           this.loginForm.email = _.cloneDeep(this.signinForm.email);
           this.signinForm.isEmailReg = false;
           this.signinForm.showUserAlreadyExistsDialog = true;
@@ -1244,7 +1254,7 @@ class Actions {
         // console.log('FAIL', alerts);
       },
       always: (data) => {
-        if (data && data.alerts && data.alerts[0].code == "200") {
+        if (data && data.alerts && Number(data.alerts[0].code) === 200) {
           this.makeAlerts({
             alerts: [
               {
@@ -1375,7 +1385,7 @@ class Actions {
       fail: (alerts) => {
         // console.log({ alerts });
         this.loading = false;
-        if (alerts && alerts[0] && alerts[0].code == "403") return false;
+        if (alerts && alerts[0] && Number(alerts[0].code) === 403) return false;
         return true;
         // console.log('FAIL', alerts);
       },

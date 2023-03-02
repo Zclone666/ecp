@@ -1,9 +1,6 @@
 import React, { Component, createRef } from "react";
 import { observer, inject } from "mobx-react";
 
-import RouterLink from "../../router/a";
-
-import Spinner from "../../components/Spinner";
 import BirthDate from "../../components/BirthDate";
 import Search from "../../components/Search";
 
@@ -14,20 +11,14 @@ import { checkDouble, clearDouble } from "../../lib/helpers";
 import { withTranslation } from "react-i18next";
 
 import {
-  Sidebar,
-  Menu,
   Icon,
   Divider,
   Segment,
-  Message,
-  List,
-  Feed,
-  Button,
   Responsive,
-  Grid,
+  List,
+  Button,
   Form,
   Input,
-  Checkbox,
   Header,
   Dropdown,
   Modal,
@@ -35,7 +26,7 @@ import {
 
 import _ from "lodash";
 import moment from "moment";
-import { isGrowth, isWeight } from "../../serviceWorker";
+// import { isGrowth, isWeight } from "../../serviceWorker";
 
 const boxDisabled = !window.location.host.includes("socmedica") && !window.location.host.includes(["localhost"]);
 
@@ -44,7 +35,7 @@ const PatientForm = inject(
   "diseases",
   "actions",
   "patients",
-  "tools"
+  "tools",
 )(
   observer(
     class PatientForm extends Component {
@@ -72,14 +63,14 @@ const PatientForm = inject(
       componentDidMount() {
         if (!boxDisabled) {
           const fileSelector = document.getElementById("genpassport-upload");
-          fileSelector.addEventListener("change", this.handleFileUpload);
+          fileSelector && fileSelector.addEventListener("change", this.handleFileUpload);
         }
       }
 
       componentWillUnmount() {
         if (!boxDisabled) {
           const fileSelector = document.getElementById("genpassport-upload");
-          fileSelector.removeEventListener("change", this.handleFileUpload);
+          fileSelector && fileSelector.removeEventListener("change", this.handleFileUpload);
         }
       }
 
@@ -92,39 +83,50 @@ const PatientForm = inject(
 
       handleChange = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
-        const { editForm } = this.props;
-        editForm();
 
-        let errorValue = false;
-        if (name == "weight") {
-          errorValue = isWeight(value);
+        const { editForm } = this.props;
+
+        if (name === "weight") {
+          value = value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
+          // errorValue = isWeight(value);
+          if (value > 500) {
+            return;
+          }
         }
-        if (name == "growth") {
-          errorValue = isGrowth(value);
+
+        // let errorValue = false;
+
+        if (name === "growth") {
+          value = value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');
+          if (value > 275) {
+            return;
+          }
         }
+
+        editForm();
         const { birthdate } = this.props.patients.current;
-        // console.log(errorValue);
         let veryOld = this.veryOld(birthdate);
 
         if (name === "weight" || name === "growth") {
           value = clearDouble(value);
-          if (!errorValue) {
-            if (!checkDouble(value)) {
-              this.props.patients.current[name] = value;
-            } else {
-              this.props.patients.current[name] = parseFloat(value);
-            }
+          // if (!errorValue) {
+          if (!checkDouble(value)) {
+            this.props.patients.current[name] = value;
+          } else {
+            this.props.patients.current[name] = parseFloat(value);
           }
+          // }
 
           this.props.patients.current.masIndex =
             this.props.patients.current.weight && this.props.patients.current.growth
               ? parseFloat(
-                  (this.props.patients.current.weight / Math.pow(this.props.patients.current.growth / 100, 2)).toFixed(
-                    2
-                  )
+                (this.props.patients.current.weight / Math.pow(this.props.patients.current.growth / 100, 2)).toFixed(
+                  2
                 )
+              )
               : 0;
           this.props.patients.current.squareIndex = parseFloat(
             (
@@ -152,7 +154,8 @@ const PatientForm = inject(
       };
       handleChangeToggle = (e, { name, value }) => {
         if (!name && !value) {
-          let { name, value } = e.target;
+          name = e.target.name;
+          value = e.target.value;
         }
         const { editForm } = this.props;
         editForm();
@@ -273,6 +276,48 @@ const PatientForm = inject(
         }
       };
 
+      handleConfirmSearch = (e) => {
+        const { editForm } = this.props;
+        let { showPatientPassport, search_patient } = this.state;
+        let name = search_patient;
+        let lastname = "";
+        let firstname = "";
+        let patronymic = "";
+
+        if (!showPatientPassport && !this.props.patients.current.id) {
+          // FIO PARSING
+
+          const patronymicTest = /^.+(ич|вна|чна)$/i;
+          // name = " Иван  Васильевич Петров-Водкин";
+          name = name.trim();
+          name = name.replace(/\s+/g, ' ');
+
+          const nameArray = name.split(" ");
+
+          if (nameArray.length === 3) {
+            if (patronymicTest.test(nameArray[1])) {
+              lastname = nameArray[2];
+              firstname = nameArray[0];
+              patronymic = nameArray[1];
+            } else {
+              lastname = nameArray[0];
+              firstname = nameArray[1];
+              patronymic = nameArray[2];
+            }
+          }
+
+          // <== FIO PARSING
+
+          this.props.actions.patientPassport["lastname"] = lastname;
+          this.props.actions.patientPassport["firstname"] = firstname;
+          this.props.actions.patientPassport["patronymic"] = patronymic;
+        }
+
+        editForm && editForm();
+        this.setState({ showPatientPassport: !showPatientPassport });
+
+      };
+
       resultRenderer = ({ name, level, tn, type }) => {
         return (
           <div>
@@ -282,6 +327,18 @@ const PatientForm = inject(
           </div>
         );
       };
+
+      handleClickDisabledFields = () => {
+        this.props.actions.makeAlerts({
+          alerts: [
+            {
+              message: this.props.t("editing_disabled"),
+              level: "warning",
+            },
+          ],
+        });
+      };
+
       get disease() {
         const { disease } = this.props.patients.current;
         // console.log(this.props.patients.current);
@@ -303,21 +360,14 @@ const PatientForm = inject(
         const { t } = this.props.actions;
         const {
           id,
-          key,
           email,
-          name,
           fio,
-          snils,
-          miscode,
-          misid,
           birthdate,
           sex,
           growth,
           weight,
           masIndex,
           squareIndex,
-          disease,
-          co_disease,
           allergy,
           labparams,
           pregnancy,
@@ -330,6 +380,12 @@ const PatientForm = inject(
           genpassport_exist,
         } = this.props.patients.current;
 
+        let { tools } = this.props;
+        const canAutomaticLoadingGenPassport = tools.hasFunctional("AutomaticLoadingGenPassport");
+        const canManuallyAddGenMutations = tools.hasFunctional("ManuallyAddGenMutations");
+        const canPatientSearch = tools.hasFunctional("PatientSearch");
+        const canAddAndEditPatient = tools.hasFunctional("AddAndEditPatient");
+
         let { diseaseRows, allergyRows } = this.props.diseases;
         let {
           search_disease,
@@ -339,9 +395,8 @@ const PatientForm = inject(
           showPatientPassport,
           showProtocol,
         } = this.state;
-        let searchReady = true,
-          searchRows = [],
-          searchQuery = "";
+
+        let searchReady = true;
 
         let isWoman = sex === "female";
         let isPregant = !!pregnancy;
@@ -350,9 +405,18 @@ const PatientForm = inject(
 
         return (
           <Segment basic>
+            {!canAddAndEditPatient && <div style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              opacity: "0.4",
+              backgroundColor: "#FFF",
+              zIndex: "1",
+            }}
+              onClick={this.handleClickDisabledFields}></div>}
             <Form>
               <Form.Group>
-                <Form.Field width={7}>
+                {canPatientSearch && <Form.Field width={7}>
                   <Search
                     fluid
                     size="big"
@@ -366,10 +430,10 @@ const PatientForm = inject(
                     })}
                     results={this.listSearch}
                     value={search_patient}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
-                </Form.Field>
-                <Form.Field width={3}>
+                </Form.Field>}
+                <Form.Field width={canPatientSearch ? 3 : 10}>
                   <Header as="h2" content={fio} subheader={email} />
                 </Form.Field>
                 {/* {this.props.patients.current.id && (
@@ -379,18 +443,20 @@ const PatientForm = inject(
                     )}
                   </Form.Field>
                 )} */}
-                <Form.Field width={3}>
-                  <Button onClick={() => this.setState({ showPatientPassport: !showPatientPassport })}>
-                    {showPatientPassport
-                      ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
-                      : id
-                      ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
-                      : t("patinet_card_passport_label")}
-                  </Button>
-                </Form.Field>
-                <Form.Field width={2}>
-                  <Button onClick={() => this.clearPatient()}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
-                </Form.Field>
+                {canAddAndEditPatient && <>
+                  <Form.Field width={3}>
+                    <Button onClick={this.handleConfirmSearch}>
+                      {showPatientPassport
+                        ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
+                        : id
+                          ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
+                          : t("patinet_card_passport_label")}
+                    </Button>
+                  </Form.Field>
+                  <Form.Field width={2}>
+                    <Button onClick={() => this.clearPatient()}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
+                  </Form.Field>
+                </>}
               </Form.Group>
               <Divider horizontal fitted />
 
@@ -420,7 +486,7 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="growth"
-                    type="number"
+                    // type="number"
                     // error={growth < 8}
                     value={growth || ""}
                     label={{ basic: true, content: t("sm") }}
@@ -434,7 +500,7 @@ const PatientForm = inject(
                   <Input
                     size="big"
                     name="weight"
-                    type="number"
+                    // type="number"
                     // error={weight < 3}
                     value={weight || ""}
                     label={{ basic: true, content: t("kg") }}
@@ -486,7 +552,7 @@ const PatientForm = inject(
                     results={diseaseRows}
                     value={search_disease}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -494,9 +560,10 @@ const PatientForm = inject(
                 {this.disease.map((item, i) => {
                   return (
                     <List.Item key={"disease" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button size="tiny" icon="delete" onClick={() => this.handleResultUnselect("disease", item)} />
                       </List.Content>
+                      }
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>{item.name}</List.Header>
@@ -521,7 +588,7 @@ const PatientForm = inject(
                     results={diseaseRows}
                     value={search_co_disease}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -529,13 +596,13 @@ const PatientForm = inject(
                 {this.co_disease.map((item, i) => {
                   return (
                     <List.Item key={"co_disease" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button
                           size="tiny"
                           icon="delete"
                           onClick={() => this.handleResultUnselect("co_disease", item)}
                         />
-                      </List.Content>
+                      </List.Content>}
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>{item.name}</List.Header>
@@ -544,7 +611,7 @@ const PatientForm = inject(
                   );
                 })}
               </List>
-              {!misDisabled && (
+              {canManuallyAddGenMutations && (
                 <Form.Group style={{ alignItems: "flex-end" }} widths={1}>
                   <Form.Field width={4}>
                     <label>{t("gene_mutation")}</label>
@@ -606,7 +673,7 @@ const PatientForm = inject(
                   </Form.Field>
                 </Form.Group>
               )}
-              {!boxDisabled && (
+              {canAutomaticLoadingGenPassport && !boxDisabled && (
                 <Form.Group widths={1}>
                   <Form.Field width={16}>
                     <label>{t("genetic_passport")}</label>
@@ -631,9 +698,9 @@ const PatientForm = inject(
                   mutations.map((item, i) => {
                     return (
                       <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                        <List.Content floated="right">
+                        {canAddAndEditPatient && <List.Content floated="right">
                           <Button size="tiny" icon="delete" onClick={() => this.handleRemoveMutation(item, i)} />
-                        </List.Content>
+                        </List.Content>}
                         <List.Icon name="dna" size="big" verticalAlign="middle" />
                         <List.Content>
                           <List.Header>
@@ -660,7 +727,7 @@ const PatientForm = inject(
                     results={allergyRows}
                     value={search_allergy}
                     resultRenderer={this.resultRenderer}
-                    resultClassName="result-wrapper"
+                    resultclassname="result-wrapper"
                   />
                 </Form.Field>
               </Form.Group>
@@ -668,9 +735,9 @@ const PatientForm = inject(
                 {allergy.map((item, i) => {
                   return (
                     <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                      <List.Content floated="right">
+                      {canAddAndEditPatient && <List.Content floated="right">
                         <Button size="tiny" icon="delete" onClick={() => this.handleResultUnselect("allergy", item)} />
-                      </List.Content>
+                      </List.Content>}
                       <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                       <List.Content>
                         <List.Header>
@@ -719,9 +786,9 @@ const PatientForm = inject(
                     labparams.map((item, i) => {
                       return (
                         <List.Item key={"allergy" + i} style={{ padding: "0.5em", backgroundColor: "#f6f6f0" }}>
-                          <List.Content floated="right">
+                          {canAddAndEditPatient && <List.Content floated="right">
                             <Button size="tiny" icon="delete" onClick={() => this.handleRemoveLabData(item, i)} />
-                          </List.Content>
+                          </List.Content>}
                           <List.Icon name="heartbeat" size="big" verticalAlign="middle" />
                           <List.Content>
                             <List.Header>{item}</List.Header>
@@ -754,7 +821,7 @@ const PatientForm = inject(
                         {t("trimester")}
                       </Button>
                       <Button
-                        primary={trimester == 1}
+                        primary={Number(trimester) === 1}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -763,7 +830,7 @@ const PatientForm = inject(
                         1
                       </Button>
                       <Button
-                        primary={trimester == 2}
+                        primary={Number(trimester) === 2}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -772,7 +839,7 @@ const PatientForm = inject(
                         2
                       </Button>
                       <Button
-                        primary={trimester == 3}
+                        primary={Number(trimester) === 3}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -877,7 +944,7 @@ const PatientForm = inject(
                         {t("trimester")}
                       </Button>
                       <Button
-                        primary={trimester == 1}
+                        primary={Number(trimester) === 1}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -886,7 +953,7 @@ const PatientForm = inject(
                         1
                       </Button>
                       <Button
-                        primary={trimester == 2}
+                        primary={Number(trimester) === 2}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"
@@ -895,7 +962,7 @@ const PatientForm = inject(
                         2
                       </Button>
                       <Button
-                        primary={trimester == 3}
+                        primary={Number(trimester) === 3}
                         disabled={!isPregant}
                         onClick={this.handleChange}
                         name="trimester"

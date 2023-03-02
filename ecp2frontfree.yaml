@@ -21,6 +21,8 @@ spec:
       - name: ecp-front-free
         image: 10.254.0.11:5000/ecp2front
         imagePullPolicy: Always
+      nodeSelector:
+        kubernetes.io/tag: prod
 
 ---
 

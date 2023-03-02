@@ -1,6 +1,5 @@
-import { observable, action, autorun, computed, makeObservable } from "mobx";
-import { GET, POST, PUT } from "../lib/connect";
-import moment from "moment";
+import { observable, autorun, makeObservable } from "mobx";
+import { POST } from "../lib/connect";
 
 import _ from "lodash";
 
@@ -31,7 +30,7 @@ class DrugInfo {
 
     this.info = observable.map({}, "analog");
 
-    autorun(() => {});
+    autorun(() => { });
   }
 
   /**

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import { withTranslation } from "react-i18next";
 import RouterLink from '../../router/a';
 
@@ -10,7 +10,7 @@ import RouterLink from '../../router/a';
 const Confirm = inject('router', 'actions')(observer(class Confirm extends Component {
   constructor(props) {
     super(props);
-    this.state = { filled: null}
+    this.state = { filled: null }
   }
   handleConfirm = (e) => {
     e.preventDefault()
@@ -20,18 +20,18 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
     let { name, value } = e.target;
     let { confirmForm } = this.props.actions
     this.props.actions.confirmForm[name] = value;
-    this.setState({ filled: ( confirmForm.email.length > 5 && confirmForm.code.length > 5 ) })
+    this.setState({ filled: (confirmForm.email.length > 5 && confirmForm.code.length > 5) })
   }
-  componentDidMount(){
+  componentDidMount() {
     let { code, email, service } = this.props.router.values
-    this.handleChange({ target: { name: 'code', value: code || '' }})
+    this.handleChange({ target: { name: 'code', value: code || '' } })
     // this.handleChange({ target: { name: 'service', value: service || '' }})
-    this.handleChange({ target: { name: 'email', value: email || '' }})
+    this.handleChange({ target: { name: 'email', value: email || '' } })
     this.props.actions.confirmForm.service = service
   }
 
   render() {
-    let { projectTitle, confirmForm: { code, email, service }, t } = this.props.actions
+    let { projectTitle, confirmForm: { code, email }, t } = this.props.actions
     return (
 
       <div className='login-form height100perc'>
@@ -73,7 +73,7 @@ const Confirm = inject('router', 'actions')(observer(class Confirm extends Compo
                     onChange={this.handleChange}
                   />
                   <Button
-                    disabled = {!this.state.filled}
+                    disabled={!this.state.filled}
                     fluid size='huge' color='grey'
                     onClick={this.handleConfirm}
                   >

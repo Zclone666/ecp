@@ -89,7 +89,11 @@ export default class Router {
     let { match, values, route } = matchedRoute;
     // console.log({ match });
 
-    if (this.match && match.section == this.match.section && match.section !== "auth") {
+    /**
+     * @desc match.section и this.match.section во всех проверенных случаях либо пустые либо оба равны main
+     * @==
+     */
+    if (this.match && match.section === this.match.section && match.section !== "auth") {
       Object.assign(this, { values, route, location });
       this.match.name = match.name;
       //this.match.disabled = match.disabled;
