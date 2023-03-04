@@ -316,7 +316,7 @@ const RecipeDrug = inject(
         // if(dosage.pack.pack) descArr.push(dosage.pack.pack)
         // let recipeCount = 0;
         let checked = drugKeysForPrescription.includes(key);
-        let countFilled = recipeCount !== "0" && recipeCount !== "";
+        let countFilled = (recipeCount !== "0" && recipeCount !== "") || this.props.recipes.formType === "list";
         return (
           <List.Item>
             <List.Content floated="left">
@@ -360,7 +360,7 @@ const RecipeDrug = inject(
                   Rp:
                   <span className="underlined">{mnnname}</span> {rules.dosage}
                 </List.Header>
-                <List.Description>
+                {this.props.recipes.formType !== "list" && <List.Description>
                   D.t.d: №
                   <input
                     type="text"
@@ -371,7 +371,7 @@ const RecipeDrug = inject(
                     className="recipeCount"
                   />{" "}
                   {!countFilled && <span style={{ color: "red" }}> {t("fill_numero")}</span>}
-                </List.Description>
+                </List.Description>}
                 <List.Description>
                   S.: {rules.rules} {!edit && specials && `(${specials})`}
                 </List.Description>
