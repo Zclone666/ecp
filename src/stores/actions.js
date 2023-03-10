@@ -18,10 +18,10 @@ const privateKeyOnly = LOGIN === "privateKeyOnly";
 const createCsServerUrl = (url) => {
   if (
     // window.location.host.includes("localhost") ||
-    window.location.host.includes("localhost:9031")
+    window.location.host.includes("localhost:9031") || window.location.host.includes("30080")
     // || window.location.host.includes("socmedica.dev")
   ) {
-    return "http://"+window.location.hostname+":44380" + url;
+    return "http://"+window.location.hostname+":30904" + url;
   }
   if (window.location.host.includes("localhost:9031")) {
     return "http://"+window.location.hostname+":44380" + url;
@@ -1112,7 +1112,7 @@ class Actions {
     if (privateKey === undefined) privateKey = this.loginForm.privateKey;
     if (privateKey && !this.loginForm.privateKey) this.loginForm.privateKey = privateKey;
     let data = {
-      application: 108,
+      application: "108",
       key: privateKey,
     };
     await fetch(createCsServerUrl(`/api/umkb/checkRights`), {
