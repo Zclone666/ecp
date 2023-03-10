@@ -23,7 +23,7 @@ export const API_SERVER = (() => {
     window.location.host.includes("30080")
     // || window.location.host.includes("socmedica.dev")
   ) {
-    return "http://" + window.location.hostname + "30904";
+    return "http://" + window.location.hostname + ":30904";
   }
   //------------------------------------
   return !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
