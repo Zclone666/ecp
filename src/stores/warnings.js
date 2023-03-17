@@ -597,22 +597,38 @@ class Warnings {
   //     },
   //   });
   // }
-  async checkMisWarnings(protocol) {
+  async checkMisWarnings({ key, authkey, protocol }) {
     // console.log("HERE ", protocol);
     if (!protocol || protocol === "" || typeof protocol == "undefined") return;
     if (!this.stores.router) {
       return;
     }
-    // console.log('HERE', protocol);
-    this.stores.actions.loading = true;
+
     let { active_language } = this.stores.actions;
+    this.stores.actions.loading = true;
     this.stores.router.push("/");
-    return POST({
-      path: "mis/ResultChecking",
-      data: {
-        key: protocol,
+
+    let path = "mis/ResultChecking";
+    let data = {
+      key: protocol,
+      active_language,
+    };
+
+    if (key && authkey) {
+      path = "Statistics/GetProtocol";
+      data = {
+        key,
+        authkey,
+        protocolId: protocol,
         active_language,
-      },
+      };
+    }
+
+
+    // console.log('HERE', protocol);
+    return POST({
+      path,
+      data,
       success: async (data) => {
         if (!data.drugs) {
           this.stores.actions.loading = false;
@@ -776,7 +792,7 @@ class Warnings {
 
         this.stores.tools.getFunctional();
         await this.stores.tools.waitForFunctional(() => { });
-        
+
         // setTimeout(() => {
 
         this.stores.actions.loading = false;
