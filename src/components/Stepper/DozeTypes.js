@@ -22,8 +22,8 @@ const DozeTypes = inject(
           arr: [],
           counter: 0,
           moreflag: false,
-          c: 0,
-          cc: 0,
+          // c: 0,
+          // cc: 0,
         };
       }
       setDosage = (data) => {
@@ -61,7 +61,9 @@ const DozeTypes = inject(
           drugs: { current },
           actions: { t },
         } = this.props;
-        let { counter, c, cc } = this.state;
+        // let c = 0;
+        // let cc = 0;
+        let { counter } = this.state;
         let { from, to } = { from: counter * 50, to: (counter + 1) * 50 };
         let moreflag = false;
         // let { dosage } = this;
@@ -75,142 +77,157 @@ const DozeTypes = inject(
         if (!drugDosage) return [];
         let { form, names, nameshort } = drugDosage;
 
-        // let c = 0;
-        // let cc = 0;
+        // console.log("stepsData", stepsData);
+        // console.log("current", current);
+        // console.log("counter", counter);
+        // console.log("c", c);
+        // console.log("cc", cc);
+        // console.log("from", from);
+        // console.log("to", to);
         // console.log({ c, cc });
         let arr = [];
         let noData = false;
+
         form[stepsData.form] &&
           form[stepsData.form].dosage.forEach((item, i) => {
-            if (c + cc >= from && c + cc < to) {
-              // console.log("dosage");
-              let itemDosage = null;
-              if (_.isArray(item.dosage) && item.dosage.length > 0) itemDosage = item.dosage;
-              if (_.isObject(item.dosage) && !_.isArray(item.dosage)) itemDosage = [item.dosage];
-              if (!itemDosage) {
-                if (
-                  _.findIndex(arr, (itm) => itm.dosage && itm.dosage.small === this.props.actions.t("no_data")) === -1
-                ) {
-                  noData = true;
-                  arr.push({
-                    dosage: {
-                      small: this.props.actions.t("no_data"),
-                      full: this.props.actions.t("dosage_not_specified"),
-                      id: 248,
-                    },
-                    pack: {
-                      small: "",
-                      full: "",
-                      id: item.pack && item.pack[0] && item.pack[0].dosage ? item.pack[0].dosage.id_1 : null,
-                    },
-                    type: "simple",
-                    value: [0],
-                    obj: {
-                      dosages: null,
-                      pack: null,
-                    },
-                  });
-                }
-              } else {
-                let currPack = {
-                  dosage: { small: "", full: "", id: itemDosage[0].id_1 },
-                  pack: { small: "", full: "", id: item?.pack[0]?.dosage ? item.pack[0].dosage.id_1 : null },
+            // if (c + cc >= from && c + cc < to) {
+            // console.log("dosage");
+            let itemDosage = null;
+            if (_.isArray(item.dosage) && item.dosage.length > 0) itemDosage = item.dosage;
+            if (_.isObject(item.dosage) && !_.isArray(item.dosage)) itemDosage = [item.dosage];
+            if (!itemDosage) {
+              if (
+                _.findIndex(arr, (itm) => itm.dosage && itm.dosage.small === this.props.actions.t("no_data")) === -1
+              ) {
+                noData = true;
+                arr.push({
+                  dosage: {
+                    small: this.props.actions.t("no_data"),
+                    full: this.props.actions.t("dosage_not_specified"),
+                    id: 248,
+                  },
+                  pack: {
+                    small: "",
+                    full: "",
+                    id: item.pack && item.pack[0] && item.pack[0].dosage ? item.pack[0].dosage.id_1 : null,
+                  },
                   type: "simple",
                   value: [0],
-                  flag: false,
-                };
-                if (form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0) {
-                  item.pack.forEach((pack, x) => {
-                    if (c + cc >= from && c + cc < to) {
-                      // console.log("pack");
-                      if (!pack.dosage) pack.dosage = {};
-                      currPack = {
-                        dosage: { small: "", full: "", id: itemDosage[0].id_1 },
-                        pack: { small: "", full: "", id: pack.dosage.id_1 },
-                        type: "simple",
-                        value: [0],
-                        flag: !!(itemDosage[0] && itemDosage[0].id_2),
-                        obj: {
-                          dosages: itemDosage,
-                          pack: pack,
-                        },
-                      };
-                      if (_.isArray(itemDosage) && itemDosage.length > 1) {
-                        currPack.dosage.full +=
-                          _.map(itemDosage, "value_1").join(" + ") + " " + names[itemDosage[0].id_1];
-                        currPack.dosage.small +=
-                          _.map(itemDosage, "value_1").join(" + ") +
-                          " " +
-                          (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1]);
-                        currPack.type = "multi";
-                        currPack.value = Array.from(_.map(itemDosage, "value_1"));
-                      } else if (_.isArray(itemDosage) && itemDosage.length === 1) {
-                        let val = itemDosage[0].value_2
-                          ? itemDosage[0].value_1 / itemDosage[0].value_2
-                          : itemDosage[0].value_1;
-                        currPack.dosage.full += val + " " + names[itemDosage[0].id_1];
-                        currPack.dosage.small +=
-                          val + " " + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1]);
-                        currPack.value = [val];
-                      }
-                      currPack.pack.full +=
-                        (names[pack.id] || "") +
-                        ((pack.dosage &&
-                          ", " +
-                          (pack.dosage.value_1 || "") +
-                          " " +
-                          (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
-                          "");
-                      currPack.pack.small +=
-                        (nameshort[pack.id] || names[pack.id] || "") +
-                        ((pack.dosage &&
-                          ", " +
-                          (pack.dosage.value_1 || "") +
-                          " " +
-                          (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
-                          "");
-
-                      arr.push({ ...currPack });
-                      cc++;
-                    }
-                  });
-                } else {
-                  if (_.isArray(itemDosage) && itemDosage.length > 1) {
-                    currPack.dosage.full += _.map(itemDosage, "value_1").join(" + ") + " " + names[itemDosage[0].id_1];
-                    currPack.dosage.small +=
-                      _.map(itemDosage, "value_1").join(" + ") +
-                      " " +
-                      (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1]);
-                    currPack.type = "multi";
-                    currPack.value = Array.from(_.map(itemDosage, "value_1"));
-                  } else if (_.isArray(itemDosage) && itemDosage.length === 1) {
-                    let val = itemDosage[0].value_2
-                      ? itemDosage[0].value_1 / itemDosage[0].value_2
-                      : itemDosage[0].value_1;
-                    currPack.dosage.full += val + " " + names[itemDosage[0].id_1];
-                    currPack.dosage.small += val + " " + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1]);
-                    currPack.value = [val];
-                  }
-                  currPack.flag = !!(itemDosage[0] && itemDosage[0].id_2);
-                  currPack.obj = {
-                    dosages: itemDosage,
-                    pack: null, //item.pack[0]
-                  };
-                  arr.push({ ...currPack });
-                }
+                  obj: {
+                    dosages: null,
+                    pack: null,
+                  },
+                });
               }
-              c++;
-            } else if (c + cc > to && !moreflag) {
+            } else {
+              let currPack = {
+                dosage: { small: "", full: "", id: itemDosage[0].id_1 },
+                pack: { small: "", full: "", id: item?.pack[0]?.dosage ? item.pack[0].dosage.id_1 : null },
+                type: "simple",
+                value: [0],
+                flag: false,
+              };
+              if (form[stepsData.form].solute && _.isArray(item.pack) && item.pack.length > 0) {
+                console.log(item.pack);
+                item.pack.forEach((pack, x) => {
+                  // if (c + cc >= from && c + cc < to) {
+                  if (x >= from && x < to) {
+                    // console.log("pack");
+                    if (!pack.dosage) pack.dosage = {};
+                    currPack = {
+                      dosage: { small: "", full: "", id: itemDosage[0].id_1 },
+                      pack: { small: "", full: "", id: pack.dosage.id_1 },
+                      type: "simple",
+                      value: [0],
+                      flag: !!(itemDosage[0] && itemDosage[0].id_2),
+                      obj: {
+                        dosages: itemDosage,
+                        pack: pack,
+                      },
+                    };
+                    if (_.isArray(itemDosage) && itemDosage.length > 1) {
+                      currPack.dosage.full +=
+                        _.map(itemDosage, "value_1").join(" + ") + " " + names[itemDosage[0].id_1];
+                      currPack.dosage.small +=
+                        _.map(itemDosage, "value_1").join(" + ") +
+                        " " +
+                        (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1]);
+                      currPack.type = "multi";
+                      currPack.value = Array.from(_.map(itemDosage, "value_1"));
+                    } else if (_.isArray(itemDosage) && itemDosage.length === 1) {
+                      let val = itemDosage[0].value_2
+                        ? itemDosage[0].value_1 / itemDosage[0].value_2
+                        : itemDosage[0].value_1;
+                      currPack.dosage.full += val + " " + names[itemDosage[0].id_1];
+                      currPack.dosage.small +=
+                        val + " " + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1]);
+                      currPack.value = [val];
+                    }
+                    currPack.pack.full +=
+                      (names[pack.id] || "") +
+                      ((pack.dosage &&
+                        ", " +
+                        (pack.dosage.value_1 || "") +
+                        " " +
+                        (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
+                        "");
+                    currPack.pack.small +=
+                      (nameshort[pack.id] || names[pack.id] || "") +
+                      ((pack.dosage &&
+                        ", " +
+                        (pack.dosage.value_1 || "") +
+                        " " +
+                        (nameshort[pack.dosage.id_1] || names[pack.dosage.id_1] || "")) ||
+                        "");
+
+                    arr.push({ ...currPack });
+                    // cc++;
+                  }
+                });
+              } else {
+                if (_.isArray(itemDosage) && itemDosage.length > 1) {
+                  currPack.dosage.full += _.map(itemDosage, "value_1").join(" + ") + " " + names[itemDosage[0].id_1];
+                  currPack.dosage.small +=
+                    _.map(itemDosage, "value_1").join(" + ") +
+                    " " +
+                    (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1]);
+                  currPack.type = "multi";
+                  currPack.value = Array.from(_.map(itemDosage, "value_1"));
+                } else if (_.isArray(itemDosage) && itemDosage.length === 1) {
+                  let val = itemDosage[0].value_2
+                    ? itemDosage[0].value_1 / itemDosage[0].value_2
+                    : itemDosage[0].value_1;
+                  currPack.dosage.full += val + " " + names[itemDosage[0].id_1];
+                  currPack.dosage.small += val + " " + (nameshort[itemDosage[0].id_1] || names[itemDosage[0].id_1]);
+                  currPack.value = [val];
+                }
+                currPack.flag = !!(itemDosage[0] && itemDosage[0].id_2);
+                currPack.obj = {
+                  dosages: itemDosage,
+                  pack: null, //item.pack[0]
+                };
+                arr.push({ ...currPack });
+              }
+            }
+            // c++;
+            // } else if (c + cc > to && !moreflag) {
+
+            if (to < item.pack.length) {
               moreflag = true;
             }
+            // }
           });
+
+        this.setState({ moreflag });
+
         if (noData && arr.length > 1) {
           _.remove(arr, function (itm) {
             return itm.dosage && itm.dosage.small === t("no_data");
           });
         }
         // console.log({ c, cc });
-        this.setState({ moreflag, c, cc });
+        // this.setState({ moreflag, c, cc });
+        // this.setState({ moreflag });
         return arr;
       }
 
