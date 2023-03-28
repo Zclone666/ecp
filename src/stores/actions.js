@@ -428,8 +428,10 @@ class Actions {
   }
 
   makeAlerts(data) {
-    if (data.alerts && data.alerts.length > 0) {
-      data.alerts.forEach((item, i) => {
+    let alerts = Array.isArray(data) ? data : (data.alerts || []);
+
+    if (alerts.length > 0) {
+      alerts.forEach((item, i) => {
         let key = Math.floor(Math.random() * 10000);
         this.alerts[key] = item;
       });
