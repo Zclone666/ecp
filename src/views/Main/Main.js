@@ -95,11 +95,8 @@ const Main = inject(
       handleResultSelect = async (e, { result }) => {
         this.setState({ searchQuery: "" });
         if (!["FG", "ATX", "MKB10", "Nozology"].includes(result.type)) {
-
-
           this.props.drugs.selectFromSearch(result);
           // this.props.drugs.selectFromSearch(result, false, false);
-
 
           const input = document.querySelector(".results.transition.result-wrapper");
           input.classList.remove("visible");
