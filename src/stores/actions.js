@@ -732,7 +732,7 @@ class Actions {
         await this.stores.warnings.checkMisWarnings({ protocol: this.stores.router.values.protocol });
         this.resultChecking = true;
         this.misLinkLogin = true;
-        this.login();
+        // this.login();
         this.loading = false;
         return;
       }
