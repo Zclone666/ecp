@@ -732,6 +732,7 @@ class Actions {
         await this.stores.warnings.checkMisWarnings({ protocol: this.stores.router.values.protocol });
         this.resultChecking = true;
         this.misLinkLogin = true;
+        console.log("NO LOGIN");
         // this.login();
         this.loading = false;
         return;
