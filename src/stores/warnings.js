@@ -803,7 +803,7 @@ class Warnings {
         this.stores.actions.drugStructure.doctor_id = data.doctor_id;
         this.stores.actions.drugStructure.doctor_name = data.doctor_name;
 
-
+        console.log("data.doctor_name", data.doctor_name);
 
         // setTimeout(() => {
 
