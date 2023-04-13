@@ -164,7 +164,6 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
       // return true
     })
     .catch((error) => {
-      console.log(error);
       let alerts = [];
       let title = "Server Error";
       let message = error.message || "NETWORK_ERROR";
@@ -173,7 +172,7 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
         let data = error.response.data;
         let errorObj = {};
 
-        if (data.alert && data.alert.message) {
+        if (data.alert && (data.alert.message || data.alert.title)) {
           errorObj = data.alert;
           title = errorObj.title;
           message = errorObj.message;
@@ -187,6 +186,7 @@ const FETCH = ({ data, success, fail, always, method, path, headers, options }) 
       }
 
       alerts = [{ message, level: "error", title }];
+      always && always(alerts);
       return fail && fail(alerts);
     });
 };

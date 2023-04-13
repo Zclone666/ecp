@@ -95,11 +95,8 @@ const Main = inject(
       handleResultSelect = async (e, { result }) => {
         this.setState({ searchQuery: "" });
         if (!["FG", "ATX", "MKB10", "Nozology"].includes(result.type)) {
-
-
           this.props.drugs.selectFromSearch(result);
           // this.props.drugs.selectFromSearch(result, false, false);
-
 
           const input = document.querySelector(".results.transition.result-wrapper");
           input.classList.remove("visible");
@@ -186,12 +183,26 @@ const Main = inject(
       resultRenderer = ({ name, level, tn, type }) => {
         const icon = ["FG", "ATX", "MKB10", "Nozology"].includes(type) ? "folder open" : "pills";
 
+        const subtitleRender = (type) => {
+          const subtitles = {
+            FG: "Фармакологическая группа",
+            ATX: "ATX",
+          }
+
+          if (Object.keys(subtitles).includes(type)) {
+            return <div className="search-result-subtitle">{subtitles[type]}</div>;
+          } else {
+            return "";
+          }
+        }
+
         return (
           <div>
             <Icon name={icon} />
             {/* {name} */}
             <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
             {type === "TN" && <sup>TM</sup>}
+            {subtitleRender(type)}
           </div>
         );
       };
