@@ -428,8 +428,10 @@ class Actions {
   }
 
   makeAlerts(data) {
-    if (data.alerts && data.alerts.length > 0) {
-      data.alerts.forEach((item, i) => {
+    let alerts = Array.isArray(data) ? data : (data.alerts || []);
+
+    if (alerts.length > 0) {
+      alerts.forEach((item, i) => {
         let key = Math.floor(Math.random() * 10000);
         this.alerts[key] = item;
       });
@@ -676,7 +678,7 @@ class Actions {
       await this.fakePrivateKeylogin(localStorage.getItem("privateKey"));
       return;
     }
-    
+
     //------------MIS---------------
     if (this.stores.router.values.miskey) {
       const misKey = this.stores.router.values.miskey;
@@ -710,8 +712,8 @@ class Actions {
             this.makeAlerts({ data: { alerts: data.alert } });
           }
         });
-        this.stores.tools.getFunctional();
-        await this.stores.tools.waitForFunctional(() => { });
+      this.stores.tools.getFunctional();
+      await this.stores.tools.waitForFunctional(() => { });
       if (misAuthSuccess) return;
     }
 
@@ -726,10 +728,21 @@ class Actions {
         return;
       }
       if (this.stores.router.match.name === "resultchecking") {
-        await this.stores.warnings.checkMisWarnings(this.stores.router.values.protocol);
+        console.log("resultchecking");
+        await this.stores.warnings.checkMisWarnings({ protocol: this.stores.router.values.protocol });
         this.resultChecking = true;
         this.misLinkLogin = true;
-        this.login();
+        // this.login();
+        this.loading = false;
+        return;
+      }
+      if (this.stores.router.match.name === "statisticsResultchecking") {
+        console.log("statisticsResultchecking");
+
+        await this.stores.warnings.checkMisWarnings({ key: this.stores.router.values.key, authkey: this.stores.router.values.authkey, protocol: this.stores.router.values.protocol });
+        this.resultChecking = true;
+        // this.misLinkLogin = true;
+        // this.login();
         this.loading = false;
         return;
       }

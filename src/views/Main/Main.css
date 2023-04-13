@@ -8,3 +8,9 @@
     opacity: 0;
   }
 }
+
+.search-result-subtitle {
+  font-size: 12px;
+  margin-left: 23px;
+  color: gray;
+}
