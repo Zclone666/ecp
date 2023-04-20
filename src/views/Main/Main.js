@@ -226,6 +226,7 @@ const Main = inject(
       saveList = () => {
         let { isPrescriptFilled } = this.props.actions;
         if (isPrescriptFilled) {
+          this.props.drugs.clearDeleted();
           this.props.recipes.saveList();
           this.setOpen(false, "openCautions");
         } else {

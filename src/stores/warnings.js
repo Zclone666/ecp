@@ -793,6 +793,18 @@ class Warnings {
         this.stores.tools.getFunctional();
         await this.stores.tools.waitForFunctional(() => { });
 
+
+        // Эти данные брались из запроса authCheck, но при ResultCheck, запроса на authCheck больше нет.
+        this.stores.actions.drugStructure.clinic_code = data.clinic_code;
+        this.stores.actions.drugStructure.clinic_id = data.clinic_id;
+        this.stores.actions.drugStructure.clinic_name = data.clinic_name;
+
+        this.stores.actions.drugStructure.doctor_code = data.doctor_code;
+        this.stores.actions.drugStructure.doctor_id = data.doctor_id;
+        this.stores.actions.drugStructure.doctor_name = data.doctor_name;
+
+        console.log("data.doctor_name", data.doctor_name);
+
         // setTimeout(() => {
 
         this.stores.actions.loading = false;
