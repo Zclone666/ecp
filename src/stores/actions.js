@@ -1126,7 +1126,7 @@ class Actions {
     if (privateKey === undefined) privateKey = this.loginForm.privateKey;
     if (privateKey && !this.loginForm.privateKey) this.loginForm.privateKey = privateKey;
     let data = {
-      application: 108,
+      application: "108",
       key: privateKey,
     };
     await fetch(createCsServerUrl(`/api/umkb/checkRights`), {
