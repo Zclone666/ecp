@@ -676,6 +676,8 @@ class Actions {
     //------------PRIVATE KEY-------
     if (privateKeyOnly && localStorage.getItem("privateKey")) {
       await this.fakePrivateKeylogin(localStorage.getItem("privateKey"));
+      this.stores.tools.getFunctional();
+      await this.stores.tools.waitForFunctional(() => { });
       return;
     }
 
