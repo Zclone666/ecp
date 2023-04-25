@@ -676,8 +676,6 @@ class Actions {
     //------------PRIVATE KEY-------
     if (privateKeyOnly && localStorage.getItem("privateKey")) {
       await this.fakePrivateKeylogin(localStorage.getItem("privateKey"));
-      this.stores.tools.getFunctional();
-      await this.stores.tools.waitForFunctional(() => { });
       return;
     }
 
@@ -778,8 +776,8 @@ class Actions {
         //console.log('logged', data);
         this.loginForm.privateKey = this.privateKey = (await localStorage.getItem("privateKey")) || "";
         await this.login();
-        this.stores.tools.getFunctional();
-        await this.stores.tools.waitForFunctional(() => { });
+        // this.stores.tools.getFunctional();
+        // await this.stores.tools.waitForFunctional(() => { });
         // this.authorized = true
         // this.loading = false
 
@@ -1131,6 +1129,7 @@ class Actions {
       application: "108",
       key: privateKey,
     };
+
     await fetch(createCsServerUrl(`/api/umkb/checkRights`), {
       method: "POST",
       headers: {
@@ -1140,9 +1139,14 @@ class Actions {
     })
       .then((res) => res.json())
       .then((data) => {
+
         if ((data.level = "success")) {
           this.privateKey = this.loginForm.privateKey;
           localStorage.setItem("privateKey", privateKey);
+
+          this.stores.tools.getFunctional();
+          this.stores.tools.waitForFunctional(() => { });
+
           // this.stores.router.push('/')
           // this.authorized = true
           this.loading = false;
@@ -1418,6 +1422,17 @@ class Actions {
   */
   async logout() {
     let authkey = await localStorage.getItem("authkey");
+
+
+    // Если нет authkey, значит пользователь авторизирован по key и нет смысла запускать апи authexit
+    if (!authkey || authkey === "null") {
+      await localStorage.setItem("privateKey", "");
+      this.stores.router.push("/login");
+      window.location.reload(false);
+
+      return;
+    }
+
     return GET({
       path: createCsServerUrl(`/api/user/authexit`),
       data: {
