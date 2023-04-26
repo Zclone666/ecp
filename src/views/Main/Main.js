@@ -255,7 +255,7 @@ const Main = inject(
         const canAppointmentTherapy = tools.hasFunctional("AppointmentTherapy");
         const canExtractDocuments = tools.hasFunctional("ExtractDocuments");
         const canAddAndEditPatient = tools.hasFunctional("AddAndEditPatient");
-        const canViewingPatientCard = tools.hasFunctional("ViewingPatientCard");
+        const canViewPatientCard = tools.hasFunctional("ViewPatientCard");
 
         let {
           height,
@@ -374,7 +374,7 @@ const Main = inject(
                   />
                 )}
 
-                {canViewingPatientCard && <Menu.Menu position="right">
+                {canViewPatientCard && <Menu.Menu position="right">
                   <Responsive as={RouterLink} to="/patient/info" fireOnMount minWidth={misDisabled ? "1" : "481"}>
                     <Menu.Item>
                       <Icon name={"bed"} className={patientId ? "" : " glowing"} />

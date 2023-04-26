@@ -228,10 +228,11 @@ const PatientForm = inject(
         this.forceUpdate();
       };
 
-      clearPatient = () => {
+      clearPatient = (clearPassportData) => {
         if (this.props.patients?.current?.id) this.setState({ showPatientPassport: true });
-        this.props.patients.unsetCurrent();
-        this.props.actions.resetAll();
+
+        const resetType = clearPassportData ? undefined : "patient_passportless";
+        this.props.actions.resetAll(resetType);
       };
 
       handlePatientResultSelect = async (e, { name, result }) => {
@@ -385,6 +386,7 @@ const PatientForm = inject(
         const canManuallyAddGenMutations = tools.hasFunctional("ManuallyAddGenMutations");
         const canPatientSearch = tools.hasFunctional("PatientSearch");
         const canAddAndEditPatient = tools.hasFunctional("AddAndEditPatient");
+        const canEditPassportData = tools.hasFunctional("EditPassportData");
 
         let { diseaseRows, allergyRows } = this.props.diseases;
         let {
@@ -445,16 +447,16 @@ const PatientForm = inject(
                 )} */}
                 {canAddAndEditPatient && <>
                   <Form.Field width={3}>
-                    <Button onClick={this.handleConfirmSearch}>
+                    {canEditPassportData && <Button onClick={this.handleConfirmSearch}>
                       {showPatientPassport
                         ? t("patinet_card_collapse_passport") //"Свернуть паспортные данные"
                         : id
                           ? t("patinet_card_passport_edit") // "Редактировать паспортные данные"
                           : t("patinet_card_passport_label")}
-                    </Button>
+                    </Button>}
                   </Form.Field>
                   <Form.Field width={2}>
-                    <Button onClick={() => this.clearPatient()}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
+                    <Button onClick={() => this.clearPatient(canEditPassportData)}>{id ? t("new_patient") : t("main_drugs_reset")}</Button>
                   </Form.Field>
                 </>}
               </Form.Group>
