@@ -226,6 +226,7 @@ const Prescript = inject(
 
         const { t } = this.props.actions;
 
+        const canAppointmentTherapy = this.props.tools.hasFunctional("AppointmentTherapy");
         doctor = doctor || doc.name;
 
         // let noEmail = !(this.props.patients.current.email && this.props.patients.current.email.length > 0)
@@ -238,9 +239,9 @@ const Prescript = inject(
               <Menu.Item color="red" onClick={this.back}>
                 {t("back")}
               </Menu.Item>
-              <Menu.Item disabled={!isPrescriptFilled} onClick={this.save}>
+              {canAppointmentTherapy && <Menu.Item disabled={!isPrescriptFilled} onClick={this.save}>
                 {t("main_drugs_prescribe")}
-              </Menu.Item>
+              </Menu.Item>}
             </Menu>
 
             <div className="scrollwrapper">
