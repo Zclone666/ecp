@@ -350,8 +350,8 @@ class Tools {
     }
     // console.log(this);
 
-    // Если не из миса, то разрешены все функции
-    if (!this.stores.actions.misLinkLogin) {
+    // Если не из миса и не интеграционная версия (вход по ключу), то разрешены все функции
+    if (!this.stores.actions.misLinkLogin && !this.stores.actions.privateKey) {
       return true;
     }
     return this.functional.includes(functionalCode);
