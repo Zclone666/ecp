@@ -455,6 +455,7 @@ class Actions {
   /**
   // сбрасывает введенные/загруженные данные в зависимости от выбранного параметра
   * @param flag == patient - сбрасывает введенного пациента и его лист назначений
+                == patient_passportless - тоже, что patient, но не затрагивает паспортные данные
                 == list - сбрасывает лист назначений
                 == all - сбрасывает все данные
   */
@@ -498,6 +499,17 @@ class Actions {
           misid: null,
           fio: null,
         });
+        this.stores.clinrecs.resetClinrecs();
+        this.stores.db.clearData(true, true);
+        break;
+      case "patient_passportless":
+        this.stores.patients.unsetCurrent(false);
+        structure.clinic_id = this.clinic.id;
+        structure.clinic_name = this.clinic.name;
+        structure.doctor_id = this.doctor.id;
+        structure.doctor_name = this.doctor.name;
+
+        _.assignIn(this.drugStructure, structure);
         this.stores.clinrecs.resetClinrecs();
         this.stores.db.clearData(true, true);
         break;
