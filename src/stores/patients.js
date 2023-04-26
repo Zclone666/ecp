@@ -207,8 +207,10 @@ class Patients {
   /**
   // метод очищает объект текущего пациента
   */
-  unsetCurrent = () => {
-    this.stores.actions.resetPatientPassport();
+  unsetCurrent = (clearPassport = true) => {
+    if (clearPassport) {
+      this.stores.actions.resetPatientPassport();
+    }
     _.assignIn(this.current, PatientScheme);
   };
 
@@ -507,7 +509,7 @@ class Patients {
         // console.log("drugs with helpers: ", drugs);
         console.log("patient 3");
 
-        
+
         // let namesToStore = {};
 
         drugs.forEach(async (drug, i) => {
@@ -543,9 +545,9 @@ class Patients {
 
         return data.patient || {};
       },
-      fail: (alerts) => { 
+      fail: (alerts) => {
         console.log(alerts);
-        this.stores.actions.makeAlerts({alerts});
+        this.stores.actions.makeAlerts({ alerts });
         this.stores.actions.loading = false;
       },
       always: (data) => {
