@@ -455,6 +455,7 @@ class Actions {
   /**
   // сбрасывает введенные/загруженные данные в зависимости от выбранного параметра
   * @param flag == patient - сбрасывает введенного пациента и его лист назначений
+                == patient_passportless - тоже, что patient, но не затрагивает паспортные данные
                 == list - сбрасывает лист назначений
                 == all - сбрасывает все данные
   */
@@ -498,6 +499,17 @@ class Actions {
           misid: null,
           fio: null,
         });
+        this.stores.clinrecs.resetClinrecs();
+        this.stores.db.clearData(true, true);
+        break;
+      case "patient_passportless":
+        this.stores.patients.unsetCurrent(false);
+        structure.clinic_id = this.clinic.id;
+        structure.clinic_name = this.clinic.name;
+        structure.doctor_id = this.doctor.id;
+        structure.doctor_name = this.doctor.name;
+
+        _.assignIn(this.drugStructure, structure);
         this.stores.clinrecs.resetClinrecs();
         this.stores.db.clearData(true, true);
         break;
@@ -676,8 +688,6 @@ class Actions {
     //------------PRIVATE KEY-------
     if (privateKeyOnly && localStorage.getItem("privateKey")) {
       await this.fakePrivateKeylogin(localStorage.getItem("privateKey"));
-      this.stores.tools.getFunctional();
-      await this.stores.tools.waitForFunctional(() => { });
       return;
     }
 
@@ -778,8 +788,8 @@ class Actions {
         //console.log('logged', data);
         this.loginForm.privateKey = this.privateKey = (await localStorage.getItem("privateKey")) || "";
         await this.login();
-        this.stores.tools.getFunctional();
-        await this.stores.tools.waitForFunctional(() => { });
+        // this.stores.tools.getFunctional();
+        // await this.stores.tools.waitForFunctional(() => { });
         // this.authorized = true
         // this.loading = false
 
@@ -1131,6 +1141,7 @@ class Actions {
       application: "108",
       key: privateKey,
     };
+
     await fetch(createCsServerUrl(`/api/umkb/checkRights`), {
       method: "POST",
       headers: {
@@ -1140,9 +1151,14 @@ class Actions {
     })
       .then((res) => res.json())
       .then((data) => {
+
         if ((data.level = "success")) {
           this.privateKey = this.loginForm.privateKey;
           localStorage.setItem("privateKey", privateKey);
+
+          this.stores.tools.getFunctional();
+          this.stores.tools.waitForFunctional(() => { });
+
           // this.stores.router.push('/')
           // this.authorized = true
           this.loading = false;
@@ -1418,6 +1434,17 @@ class Actions {
   */
   async logout() {
     let authkey = await localStorage.getItem("authkey");
+
+
+    // Если нет authkey, значит пользователь авторизирован по key и нет смысла запускать апи authexit
+    if (!authkey || authkey === "null") {
+      await localStorage.setItem("privateKey", "");
+      this.stores.router.push("/login");
+      window.location.reload(false);
+
+      return;
+    }
+
     return GET({
       path: createCsServerUrl(`/api/user/authexit`),
       data: {
