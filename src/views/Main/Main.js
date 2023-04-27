@@ -503,7 +503,7 @@ const Main = inject(
                       {t("main_drugs_check")}
                     </Menu.Item>
 
-                    {listChanged && editedDrugs ? (
+                    {listChanged && editedDrugs && canAppointmentTherapy ? (
                       cautionsTitle ? (
                         <Modal
                           onClose={() => this.setOpen(false, "openCautions")}
