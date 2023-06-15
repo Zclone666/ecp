@@ -635,6 +635,10 @@ class Warnings {
           return;
         }
 
+        data.authkey = authkey;
+        data.key = key || protocol;
+
+        // Старая логика. На всякий случай оставляем. Если ключи пришли в ответе, заменяем на них.
         if (data.authkey) this.stores.actions.authkey = data.authkey;
         if (data.key) this.stores.actions.privateKey = data.key;
 
@@ -643,8 +647,6 @@ class Warnings {
           await localStorage.setItem("lang", data.lang);
           this.stores.tools.getAllService();
         }
-
-        console.log(this.stores.actions.privateKey);
 
         if (data.misurl) this.stores.actions.misurl = data.misurl;
         if (data && data.liquids && _.isArray(data.liquids)) {
