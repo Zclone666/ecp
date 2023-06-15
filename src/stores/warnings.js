@@ -624,8 +624,6 @@ class Warnings {
       };
     }
 
-
-    // console.log('HERE', protocol);
     return POST({
       path,
       data,
@@ -634,11 +632,13 @@ class Warnings {
           this.stores.actions.loading = false;
           return;
         }
+        if (key && authkey) {
+          data.authkey = authkey;
+        } else {
+          data.key = protocol;
+        }
 
-        data.authkey = authkey;
-        data.key = key || protocol;
-
-        // Старая логика. На всякий случай оставляем. Если ключи пришли в ответе, заменяем на них.
+        // Старая логика. Если ключи пришли в ответе, заменяем на них.
         if (data.authkey) this.stores.actions.authkey = data.authkey;
         if (data.key) this.stores.actions.privateKey = data.key;
 
