@@ -632,13 +632,12 @@ class Warnings {
           this.stores.actions.loading = false;
           return;
         }
+
+        // Если запрос был в GetProtocol, то authkey используем тот же
         if (key && authkey) {
           data.authkey = authkey;
-        } else {
-          data.key = protocol;
         }
 
-        // Старая логика. Если ключи пришли в ответе, заменяем на них.
         if (data.authkey) this.stores.actions.authkey = data.authkey;
         if (data.key) this.stores.actions.privateKey = data.key;
 
