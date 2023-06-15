@@ -567,6 +567,8 @@ class Recipes {
         //   level: "success",
         //   sticky: false
         // }]})
+        this.stores.drugs.deletedRows = [];
+        this.stores.drugs.deletedLiquids = [];
         this.stores.actions.loading = false;
         this.stores.router.push("/");
         // setTimeout(() => {
