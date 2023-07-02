@@ -690,6 +690,10 @@ const Main = inject(
               <Icon name='user' />
               Поделиться
             </Menu.Item>*/}
+                  <Menu.Item as={RouterLink} to="/about">
+                    <Icon name="info" />
+                    {t("main_menu_about")}
+                  </Menu.Item>
                   <Menu.Item onClick={this.logout}>
                     <Icon name="sign-out" />
                     {t("main_menu_exit")}

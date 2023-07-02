@@ -8,6 +8,7 @@ import NewPass from "../views/NewPass";
 import ResetPass from "../views/ResetPass";
 import Manual from "../views/Manual";
 import LicenseAgreement from "../views/LicenseAgreement";
+import About from "../views/About";
 
 export default {
   "/": { section: "main", name: "main", render: <Main /> },
@@ -69,5 +70,6 @@ export default {
   "/mispatient/:miskey/disabled": { section: "main", name: "mis", disabled: true, render: <Main /> },
 
   "/license-agreement": { section: "info", name: "license", render: <LicenseAgreement /> },
+  "/about": { section: "info", name: "about", render: <About /> },
   "/manual": { section: "info", name: "manual", render: <Manual /> },
 };
