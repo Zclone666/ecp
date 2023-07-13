@@ -34,6 +34,7 @@ const Clinrecs = inject(
     class Clinrecs extends Component {
       constructor(props) {
         super(props);
+
         this.state = {
           open: false,
 
@@ -66,6 +67,7 @@ const Clinrecs = inject(
           // clinrecs: { checker },
           actions: { clinrecCheckerStep },
         } = this.props;
+
         let step = clinrecCheckerStep > 1 ? parseInt(clinrecCheckerStep) - 1 : 1;
         this.setState({ hasBackward: step > 1 }, () => {
           // this.props.router.push('/clinrec/checker/'+step)
@@ -106,12 +108,15 @@ const Clinrecs = inject(
         let {
           // router: { values },
           clinrecs: { checker },
-          actions: { clinrecCheckerStep },
+          actions: { clinrecCheckerStep, fromGPT },
         } = this.props;
         const { t } = this.props.actions;
         let { hasForward, hasBackward } = this.state;
         let currPage = checker[_.keys(checker)[clinrecCheckerStep - 1]] || {};
         let haveResult = clinrecCheckerStep > _.keys(checker).length - 1;
+
+        hasForward = fromGPT ? false : hasForward;
+
         return (
           <>
             <Menu className="bottom fixed menu three item huge main">

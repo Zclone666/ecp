@@ -160,6 +160,8 @@ const resources = {
       no_information: "Нет информации",
       free_information: "Сводная информация",
       clinical_recommendations_for_diagnosis: "Клинические рекомендации по диагнозу",
+      clinical_recommendations_GPT: "Клинические рекомендации ВОЗ",
+      clinical_recommendations_MRF: "Клинреки Минздрава России",
       clinical_recommendations: "Клинические рекомендации",
       remove_from_list: "Убрать из списка",
       solution: "Раствор",

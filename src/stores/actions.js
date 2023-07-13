@@ -133,6 +133,7 @@ class Actions {
 
   clinrecCheckerData = {};
   clinrecCheckerStep = 1;
+  fromGPT = false;
 
   stepsData = {
     key: null,
@@ -358,6 +359,7 @@ class Actions {
       newPassForm: observable,
       clinrecCheckerData: observable,
       clinrecCheckerStep: observable,
+      fromGPT: observable,
       stepsData: observable,
       patientForm: observable,
       patientPassport: observable,
