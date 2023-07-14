@@ -474,14 +474,14 @@ const Main = inject(
                     <Modal.Actions>
                       <Button content={t("clear_all")} onClick={() => this.handleResetAll("all")} negative />
                       <Button
-                        content={t("sheet_appointments")}
+                        content={t("clear_sheet_appointments")}
                         labelPosition="right"
                         icon="list"
                         onClick={() => this.handleResetAll("list")}
                         color="black"
                       />
                       <Button
-                        content={t("patient_data")}
+                        content={t("clear_patient_data")}
                         labelPosition="right"
                         icon="user"
                         onClick={() => this.handleResetAll("patient")}

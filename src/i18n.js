@@ -213,6 +213,8 @@ const resources = {
 
       can_cleaned: "Можно очистить:",
       clear_all: "Очистить все",
+      clear_sheet_appointments: "Очистить сведение о фармакотерапии",
+      clear_patient_data: "Очистить сведение о пациенте",
       clear: "Очистить",
       choose_clinic: "Выберите клинику",
       patient_data: "Данные пациента",

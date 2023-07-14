@@ -502,7 +502,7 @@ class Actions {
           fio: null,
         });
         this.stores.clinrecs.resetClinrecs();
-        this.stores.db.clearData(true, true);
+        this.stores.db.clearData(false, true);
         break;
       case "patient_passportless":
         this.stores.patients.unsetCurrent(false);
