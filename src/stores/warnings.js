@@ -624,8 +624,6 @@ class Warnings {
       };
     }
 
-
-    // console.log('HERE', protocol);
     return POST({
       path,
       data,
@@ -633,6 +631,11 @@ class Warnings {
         if (!data.drugs) {
           this.stores.actions.loading = false;
           return;
+        }
+
+        // Если запрос был в GetProtocol, то authkey используем тот же
+        if (key && authkey) {
+          data.authkey = authkey;
         }
 
         if (data.authkey) this.stores.actions.authkey = data.authkey;
@@ -643,8 +646,6 @@ class Warnings {
           await localStorage.setItem("lang", data.lang);
           this.stores.tools.getAllService();
         }
-
-        console.log(this.stores.actions.privateKey);
 
         if (data.misurl) this.stores.actions.misurl = data.misurl;
         if (data && data.liquids && _.isArray(data.liquids)) {

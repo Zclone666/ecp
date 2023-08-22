@@ -10,6 +10,7 @@ const resources = {
       // "Welcome to React": "добро пожаловать в экф",
       patient_patients: "Пациенты",
       main_menu_exit: "Выход",
+      main_menu_about: "О программе",
       patient_notSelected: "Пациент не выбран",
       main_search_tip: "Внесите лекарственные препараты с помощью строки поиска наверху или",
       main_parser_tip: "напишите их свободным текстом",

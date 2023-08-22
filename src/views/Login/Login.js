@@ -16,6 +16,8 @@ import RouterLink from "../../router/a";
 import { withTranslation } from "react-i18next";
 import { LOGIN } from "../../constants";
 
+import About from "../About";
+
 
 /**
  * @desc filled и filledCode скорее всего не нужны, везде идёт только присвоение, но нет использований
@@ -35,6 +37,7 @@ const Login = inject(
           showCode: false,
           privateKeyOnly: LOGIN === "privateKeyOnly",
           showPassword: false,
+          showAbout: false,
         };
         const autofill = localStorage.getItem("autofill");
         // console.log({ autofill });
@@ -95,18 +98,33 @@ const Login = inject(
         this.props.actions.loginForm[name] = value;
         this.checkFilled();
       };
+
+      handleShowAbout = (e) => {
+        this.setState({ showAbout: true });
+      };
+
+      handleCloseAbout = (e) => {
+        this.setState({ showAbout: false });
+      };
+
       handleChecked = (e, { name, checked }) => {
         this.props.actions.loginForm[name] = checked;
         this.checkFilled();
       };
       render() {
-        let { showCode, showPassword } = this.state;
+        let { showCode, showPassword, showAbout } = this.state;
         let {
           loginForm: { remember, email, password },
           projectTitle,
           t,
           active_language,
         } = this.props.actions;
+
+
+        if (showAbout) {
+          return <About onExit={this.handleCloseAbout} />;
+        }
+
         return (
           <div className="login-form height100perc">
             <div style={{ position: "absolute", right: 0, top: 0, padding: "15px" }}>
@@ -216,7 +234,8 @@ const Login = inject(
                     <Message className="squared">
                       {t("forgot_your_password")}? <RouterLink to="/resetpass">{t("restore")}</RouterLink>. <br />
                       <RouterLink to="/signup">{t("registration")}</RouterLink> {t("in_system")} <br />
-                      <RouterLink to="/confirm">{t("confirm")}</RouterLink> E-mail
+                      <RouterLink to="/confirm">{t("confirm")}</RouterLink> E-mail <br />
+                      <span style={{ color: "#1e70bf", textDecoration: "none", cursor: "pointer" }} onClick={this.handleShowAbout}>{t("main_menu_about")}</span>
                     </Message>
                   )}
                 </Segment>
