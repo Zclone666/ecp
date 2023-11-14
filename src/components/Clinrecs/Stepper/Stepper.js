@@ -82,7 +82,7 @@ const Stepper = inject(
           // eslint-disable-next-line no-unused-vars
           router: { values }, // Не трогать. Без получения values перестанут работать клинреки
           clinrecs: { checker },
-          actions: { clinrecCheckerStep }, // , clinrecCheckerData
+          actions: { clinrecCheckerStep, fromGPT }, // , clinrecCheckerData
           patients: {
             current: { disease },
           },
@@ -101,10 +101,12 @@ const Stepper = inject(
           initialSlide: clinrecCheckerStep - 1,
         };
 
-        const headerMessage =
+        let headerMessage =
           disease.length === 1
             ? `${t("clinical_recommendations_for_diagnosis")} "${disease[0].name}"`
             : t("clinical_recommendations");
+
+        headerMessage = fromGPT ? `${t("clinical_recommendations_GPT")}` : headerMessage;
         // console.log({checker, clinrecCheckerStep});
         return (
           <>

@@ -1,5 +1,5 @@
 import { observable, autorun, makeObservable } from "mobx";
-import { POST } from "../lib/connect";
+import { POST, GET } from "../lib/connect";
 import moment from "moment";
 
 import _ from "lodash";
@@ -236,6 +236,213 @@ class Clinrecs {
       success: async (data) => {
         // console.log(data);
         if (data.result) this.clinicalGuidelinesExist = data.result;
+
+
+        // GPT задел на будущее, запрашивать GPT если не нашлось клинреков
+        // if (!data.result || !data.result[0] || !data.result[0].exist) {
+        //   console.log("NOOOOOOOOOOOOOOOOOOOOO");
+        // }
+      },
+      fail: (alerts) => { },
+      always: (data) => {
+        this.stores.actions.fromGPT = false;
+        this.stores.actions.loading = false;
+        this.stores.actions.makeAlerts(data);
+      },
+    });
+  }
+
+
+  /**
+   * 
+   * GPT
+   * Скорее всего тут много лишнего т.к. функция дублирована
+  // метод получения чекера для клинреков или самого клинрека
+  * @param flag - если true - получаем результат, иначе - чекер
+  */
+  async getClinicalGuidelinesExistGPT(flag = true) {
+    this.stores.actions.loading = true;
+    let { active_language } = this.stores.actions;
+    this.stores.db.clearData(false, true);
+    let data = _.cloneDeep(this.stores.actions.drugStructure);
+
+    data.patient = _.cloneDeep(this.stores.patients.current);
+
+    let drugsFull = Array.from(this.stores.drugs.drug.values());
+    let liquidsFull = Array.from(this.stores.drugs.liquid.values());
+    drugsFull.forEach((drugFull, i) => {
+      let { helpers, ...drug } = drugFull;
+      data.drugs.push(drug);
+    });
+    liquidsFull.forEach((liquidFull, i) => {
+      let { helpers, ...liquid } = liquidFull;
+      data.liquids.push(liquid);
+    });
+
+    data.checker = _.cloneDeep(this.stores.actions.clinrecCheckerData);
+    data.active_language = active_language;
+    data.return_subjects = false;
+    data.authkey = this.stores.actions.authkey;
+    data.key = this.stores.actions.privateKey;
+
+    data.clinicalGuidelines = this.clinrecSelect;
+
+    // data.patient.disease = this.diseaseSelect;
+
+    // return GET({
+    return POST({
+      path: "AI/CG",
+      // path: "http://localhost:3000/gpt.json",
+      data,
+      success: async (dataDrugs) => {
+
+        console.log("dataDrugs", dataDrugs);
+
+        // ZYn16kDc+3XqmsIRLMv4vA==
+        // lgha3jyKJoC67ErfgECUsQ==
+        // SpR/sNW8S6V1eEY6OyrhIw==
+        // let data = { ...originalData };
+
+        let data = {};
+
+        data.alert = dataDrugs.alert;
+        data.ClinRec = {
+          "drugList": {
+            // ...data.ClinRec["JjYpQWCM60iG55pD4gPvWg=="],
+            cource: true,
+            parents: "cat1",
+            childs: [],
+            name: "",
+            type: "Regimen",
+          },
+          "cat1": {
+            // ...data.ClinRec["ZYn16kDc+3XqmsIRLMv4vA=="],
+            parents: "3",
+            childs: ["drugList"],
+            name: "",
+            type: "GroupSeq", // OR
+          },
+          "cat2": {
+            // ...data.ClinRec["lgha3jyKJoC67ErfgECUsQ=="],
+            parents: "cat3",
+            childs: ["cat1"],
+            name: "",
+            type: "Regimen",
+          },
+          "cat3": {
+            // ...data.ClinRec["SpR/sNW8S6V1eEY6OyrhIw=="],
+            parents: null,
+            childs: ["cat2"],
+            name: "",
+            type: "Nozology",
+          }
+        };
+
+
+        data.Cources = { "drugList": dataDrugs.responsedrugs };
+
+        // console.log("data.ClinRec", data.ClinRec);
+        // console.log("data.Cources", data.Cources);
+
+        this.names = _.assignIn(this.names, data.names);
+        //has pharm therapy
+        if (data.Cources && _.keys(data.Cources).length > 0) this.hasTherapy = true;
+        _.keys(data.ClinRec).forEach((id, i) => {
+          if (data.ClinRec[id].type === "Drug") {
+            this.hasTherapy = true;
+          }
+        });
+
+        if (flag) {
+          this.clinrec = _.assignIn(this.clinrec, data.ClinRec);
+          this.cources = _.assignIn(this.cources, data.Cources);
+          this.shortnames = _.assignIn(this.shortnames, data.shortnames);
+          this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
+          this.stores.actions.fromGPT = true;
+
+          // console.log(JSON.parse(JSON.stringify(this.clinrec)));
+          // console.log(JSON.parse(JSON.stringify(this.cources)));
+          // console.log(JSON.parse(JSON.stringify(this.shortnames)));
+          // console.log(JSON.parse(JSON.stringify(this.stores.actions.clinrecCheckerData)));
+
+
+        } else {
+          let pages = {};
+          let pageOfGroup = {};
+          if (data && data.checker) {
+            let { shortnames } = this.stores.tools;
+            let keys = _.keys(data.checker);
+            this.stores.actions.clinrecCheckerData = _.assignIn(this.stores.actions.clinrecCheckerData, data.checker);
+
+            // min page of group
+            keys.forEach((id, i) => {
+              let question = data.checker[id];
+              if (question.parent) {
+                pageOfGroup[question.parent] =
+                  question.page < pageOfGroup[question.parent] ? question.page : pageOfGroup[question.parent];
+              }
+            });
+            keys.forEach((id, i) => {
+              let question = data.checker[id];
+              //has pharm therapy
+
+              this.stores.actions.clinrecCheckerData[id].value =
+                question.type === "Binary" ? question.value || 0 : question.value;
+
+              if (question.parent) {
+                question.page = pageOfGroup[question.parent];
+              }
+
+              if (pages[question.page]) {
+                // console.log(question.unitid, shortnames[question.unitid]);
+                pages[question.page].arr.push({
+                  id,
+                  name: data.names[id],
+                  parent: question.parent,
+                  type: question.type,
+                  sort: question.sort,
+                  helper: question.helper || null,
+                  unit: question.unitid
+                    ? shortnames[question.unitid] ||
+                    data.shortnames[question.unitid] ||
+                    data.names[question.unitid] ||
+                    null
+                    : null,
+                  unitid: question.unitid,
+                  value: question.value,
+                });
+              } else {
+                pages[question.page] = {
+                  name: data.names[question.page],
+                  isReady: true,
+                  arr: [
+                    {
+                      id,
+                      name: data.names[id],
+                      parent: question.parent,
+                      type: question.type,
+                      sort: question.sort,
+                      unit: question.unitid
+                        ? shortnames[question.unitid] ||
+                        data.shortnames[question.unitid] ||
+                        data.names[question.unitid] ||
+                        null
+                        : null,
+                      unitid: question.unitid,
+                      value: question.value,
+                    },
+                  ],
+                };
+              }
+            });
+          }
+          this.checker = _.assignIn(this.checker, pages);
+
+
+        }
+        // console.log('DATA', data);
+
+        this.stores.actions.loading = false;
       },
       fail: (alerts) => { },
       always: (data) => {
@@ -244,6 +451,11 @@ class Clinrecs {
       },
     });
   }
+
+
+
+
+
 
   /**
   // рекурсивный метод получения плоского массива айди родительских элементов дерева клинрека до самого верхнего родителя
