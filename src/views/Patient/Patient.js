@@ -12,6 +12,9 @@ import PatientsList from "./PatientsList";
 import {
   Menu,
   Popup,
+  Modal,
+  Button,
+  // Message,
 } from "semantic-ui-react";
 import { withTranslation } from "react-i18next";
 
@@ -29,6 +32,7 @@ const Patient = inject(
         super(props);
         this.state = {
           open: false,
+          openModal: false,
 
           step: null,
 
@@ -57,6 +61,11 @@ const Patient = inject(
       goTo = (x) => {
         this.sliderRef.current.slickGoTo(x);
         this.setState({ step: x });
+      };
+
+      setOpen = (open) => {
+
+        this.setState({ openModal: open });
       };
 
       savePatient = async () => {
@@ -171,16 +180,43 @@ const Patient = inject(
         // "/crstartpage/default"
       };
 
+      getClinrecExistGPT = () => {
+        this.props.clinrecs.resetClinrecs();
+        setTimeout(() => {
+          this.props.clinrecs.getClinicalGuidelinesExistGPT();
+          this.props.router.push("/clinrec/checker/result");
+        }, 50);
+
+        // "/crstartpage/default"
+      };
+      handleClickClinrec = () => {
+        let { tools } = this.props;
+
+        const canSelectTherapyToClinicalRecommendations = tools.hasFunctional("SelectTherapyToClinicalRecommendations");
+        const canSelectTherapyToClinicalRecommendationsByAI = tools.hasFunctional("SelectTherapyToClinicalRecommendationsByAI");
+
+        if (canSelectTherapyToClinicalRecommendations && !canSelectTherapyToClinicalRecommendationsByAI) {
+          this.getClinrecExist();
+        } else if (!canSelectTherapyToClinicalRecommendations && canSelectTherapyToClinicalRecommendationsByAI) {
+          this.getClinrecExistGPT();
+
+        } else {
+          this.setOpen(true);
+        }
+
+      };
+
       render() {
         let { misLinkLogin: misDisabled, t } = this.props.actions;
         // const { t } = this.props.actions;
         let shownPage = (this.props.router.values && this.props.router.values.page) || "none";
-        let { step, edit } = this.state;
+        let { step, edit, openModal } = this.state;
         const { disease, co_disease } = this.props.patients.current;
         const { firstname, lastname } = this.props.actions.patientPassport;
-        
+
         let { tools } = this.props;
         const canSelectTherapyToClinicalRecommendations = tools.hasFunctional("SelectTherapyToClinicalRecommendations");
+        const canSelectTherapyToClinicalRecommendationsByAI = tools.hasFunctional("SelectTherapyToClinicalRecommendationsByAI");
 
         switch (shownPage) {
           case "list":
@@ -209,6 +245,22 @@ const Patient = inject(
         };
         let isDisease = disease.length > 0 || co_disease.length > 0;
         // console.log(disease, "diseasedisease");
+
+
+
+        // Clinrecs Button Text
+        let clinrecsText = "";
+
+        if (canSelectTherapyToClinicalRecommendations && !canSelectTherapyToClinicalRecommendationsByAI) {
+          clinrecsText = t("clinical_recommendations_MRF");
+        } else if (!canSelectTherapyToClinicalRecommendations && canSelectTherapyToClinicalRecommendationsByAI) {
+          clinrecsText = t("clinical_recommendations_GPT");
+
+        } else {
+          clinrecsText = t("clinical_recommendations_short");
+        }
+
+
         return (
           <div className="h100">
             {step === 0 && (
@@ -226,16 +278,51 @@ const Patient = inject(
                 <Menu.Item color="red" onClick={() => this.saveForm(false)}>
                   {t("back")}
                 </Menu.Item>
+                {/* GPT BUTTON */}
                 {/* apply this.back */}
                 {/* <Menu.Item onClick={() => this.saveForm(false)}>{t("pharmacotherapy_patient")}</Menu.Item> */}
                 {/* isDisease && */}
                 {/* || !firstname || !lastname */}
-                <Menu.Item disabled={(misDisabled || !isDisease) || !canSelectTherapyToClinicalRecommendations} onClick={this.getClinrecExist}>
+                <Menu.Item disabled={(misDisabled || !isDisease) || (canSelectTherapyToClinicalRecommendations === false && canSelectTherapyToClinicalRecommendationsByAI === false)} onClick={this.handleClickClinrec}>
                   {/* <div className={this.props.clinrecs.collectorAvailable ? "alertBlinker" : ""}> */}
-                  {t("clinical_recommendations_short")}
+                  {clinrecsText}
                   {/* </div> */}
                 </Menu.Item>
 
+
+                <Modal
+                  onClose={() => this.setOpen(false)}
+                  onOpen={() => this.setOpen(true)}
+                  open={openModal}
+                >
+                  <Modal.Header>{t("clinical_recommendations")}</Modal.Header>
+                  <Modal.Content>
+
+                    {/* <Message negative key={1}>
+                      <Message.Header>554352345</Message.Header>
+                    </Message> */}
+
+                  </Modal.Content>
+                  <Modal.Actions>
+                    <Button color="black" onClick={() => this.setOpen(false)}>
+                      {t("main_parser_cancel")}
+                    </Button>
+                    {canSelectTherapyToClinicalRecommendations && <Button
+                      content={t("clinical_recommendations_MRF")}
+                      labelPosition="right"
+                      icon="checkmark"
+                      onClick={() => this.getClinrecExist()}
+                      positive
+                    />}
+                    {canSelectTherapyToClinicalRecommendationsByAI && <Button
+                      content={t("clinical_recommendations_GPT")}
+                      labelPosition="right"
+                      icon="checkmark"
+                      onClick={() => this.getClinrecExistGPT()}
+                      positive
+                    />}
+                  </Modal.Actions>
+                </Modal>
                 <Popup
                   disabled={!(!firstname || !lastname) || !edit}
                   position="top center"

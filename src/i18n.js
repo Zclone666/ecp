@@ -160,6 +160,8 @@ const resources = {
       no_information: "Нет информации",
       free_information: "Сводная информация",
       clinical_recommendations_for_diagnosis: "Клинические рекомендации по диагнозу",
+      clinical_recommendations_GPT: "Клинические рекомендации ВОЗ",
+      clinical_recommendations_MRF: "Клинреки Минздрава России",
       clinical_recommendations: "Клинические рекомендации",
       remove_from_list: "Убрать из списка",
       solution: "Раствор",
@@ -211,6 +213,8 @@ const resources = {
 
       can_cleaned: "Можно очистить:",
       clear_all: "Очистить все",
+      clear_sheet_appointments: "Очистить сведение о фармакотерапии",
+      clear_patient_data: "Очистить сведение о пациенте",
       clear: "Очистить",
       choose_clinic: "Выберите клинику",
       patient_data: "Данные пациента",

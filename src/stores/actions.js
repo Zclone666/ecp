@@ -133,6 +133,7 @@ class Actions {
 
   clinrecCheckerData = {};
   clinrecCheckerStep = 1;
+  fromGPT = false;
 
   stepsData = {
     key: null,
@@ -358,6 +359,7 @@ class Actions {
       newPassForm: observable,
       clinrecCheckerData: observable,
       clinrecCheckerStep: observable,
+      fromGPT: observable,
       stepsData: observable,
       patientForm: observable,
       patientPassport: observable,
@@ -500,7 +502,7 @@ class Actions {
           fio: null,
         });
         this.stores.clinrecs.resetClinrecs();
-        this.stores.db.clearData(true, true);
+        this.stores.db.clearData(false, true);
         break;
       case "patient_passportless":
         this.stores.patients.unsetCurrent(false);

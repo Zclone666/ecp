@@ -425,7 +425,8 @@ class Tools {
         //   "ExtractPrescriptionEDS", // кнопка Подписать 
         //   "AutomaticLoadingGenPassport", // кнопка загрузка генетического паспорта
         //   "ManuallyAddGenMutations", // поля Мутация гена
-        //   "SelectTherapyToClinicalRecommendations", // кнопка Клинические рекомендации
+        //   "SelectTherapyToClinicalRecommendations", // кнопка Клинические рекомендации Минздрава России
+        //   "SelectTherapyToClinicalRecommendationsByAI", // кнопка Клинические рекомендации ВОЗ
         //   "PatientSearch", // поле поиска пациентов
         //   "LatestSelectedPatients", // блок со списком Последний выбранных пациентов
         //   "AddAndEditPatient", // форма пациента накрывается слоем, для блокировки всех интерактивных элементов
