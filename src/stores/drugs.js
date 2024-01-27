@@ -75,7 +75,7 @@ class Drugs {
   * @param drug - объект драга
   */
   validateDrug(drug) {
-    return {"validateDrug":""};
+    return { "validateDrug": "" };
     // const validationContext = DrugModel.schema.newContext();
     // validationContext.validate(drug);
     // return validationContext.validationErrors();
@@ -85,7 +85,7 @@ class Drugs {
   // метод валидации текущего драга на соответствие модели
   */
   get validateCurrentDrug() {
-    return {"validateCurrentDrug":""};
+    return { "validateCurrentDrug": "" };
     // const validationContext = DrugModel.schema.newContext();
     // validationContext.validate(this.current);
     // return validationContext.validationErrors();
@@ -1450,6 +1450,7 @@ class Drugs {
     let { active_language } = this.stores.actions;
     let concepts = [];
     let concept = this.stores.drugs.drug.get(key);
+
     this.fdForSearch[concept.key].forEach((item, i) => {
       if (item.main) concepts.push({ id: item.id, name: item.name });
     });
@@ -1464,10 +1465,116 @@ class Drugs {
     this.fds = [];
     this.fgs = [];
     this.drugsForFG = {};
+
+
+    // ==>
+    let newMethod = true;
+    let path = "Drugs/DrugsByFD";
+
+    if (newMethod) {
+      let patient = this.stores.patients.current;
+      let drugs = Array.from(this.stores.drugs.drug.values());
+      data.replaceDrug = concept;
+      data.pharmActions = concepts;
+      data.drugs = drugs;
+      data.patient = patient;
+
+      // delete data.drug; 
+
+      path = "Drugs/RecommendationReplace";
+    }
+
+    // shitfix бэк придумал новый формат зачем-то
+    const replaceDrugIdToObject = (recommendations, ids) => {
+
+      let newDrugsArray = [];
+
+      ids.forEach(id => {
+
+        const drugObject = recommendations.find(dv => dv.dvId === id);
+
+        newDrugsArray.push({
+          id: drugObject.dvId,
+          name: drugObject.dvName,
+        });
+
+      });
+
+      return newDrugsArray;
+
+    }
+
+    // shitfix бэк придумал новый формат зачем-то
+    const fixedFactions = (data) => {
+
+      let factions = data.pharmActions.map(faction => {
+
+        let fgroups = [];
+
+        data.pharmGroups.map(fgroup => {
+
+          let drugs = [];
+
+          fgroup.drugs.forEach(drugId => {
+
+
+            // check drug in actions
+            if (faction.drugs.includes(drugId)) {
+
+              let drug = data.recommendations.find(drugObject => drugObject.dvId === drugId);
+
+              drugs.push({
+                ...drug,
+                id: drug.dvId,
+                name: drug.dvName,
+              });
+            }
+
+          });
+
+          if (drugs.length > 0) {
+
+            fgroups.push({
+              ...fgroup,
+              id: fgroup.name,
+              drugs
+            });
+          }
+
+        });
+
+
+
+
+
+
+        let action = {
+          ...faction,
+          fgroups,
+        };
+
+        return action;
+
+      });
+
+      return factions;
+
+    }
+
+
+    //<==
+
     return POST({
-      path: "Drugs/DrugsByFD",
+      path,
       data,
       success: async (data) => {
+        // shifix
+        if (newMethod) {
+          data.factions = fixedFactions(data);
+          console.log(data);
+        }
+
+
         if (data.factions) {
           data.factions.forEach((fd, i) => {
             let { id, name, fgroups } = fd;
