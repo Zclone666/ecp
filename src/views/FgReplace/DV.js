@@ -56,7 +56,7 @@ const DV = inject(
         }
         this.props.actions.selectedConflictFg = null;
         this.props.actions.checkedFg = checked;
-        this.props.warnings.checkFg(checked);
+        // this.props.warnings.checkFg(checked);
       };
 
       componentWillUnmount() {
@@ -78,6 +78,7 @@ const DV = inject(
         const { t } = this.props.actions;
         let { fds } = this.props.drugs;
 
+        console.log(this.fgs);
         return (
           <div className="scrollwrapper">
             <Header as="h3" className="stretched">
@@ -119,8 +120,9 @@ const DV = inject(
                                                 name={"drugForChange"}
                                                 label={item.name}
                                               />
-                                              {openFor === item.id && <Conflicts />}
-                                              {openFor === item.id && <FGconflict />}
+                                              {/* {item.warnings && item.warnings.length && <Conflicts itemWarnings={item.warnings}/>} */}
+                                              <Conflicts itemId={item.id}/>
+                                              {/* {openFor === item.id && <FGconflict />} */}
                                             </List.Item>
                                           );
                                         })}
