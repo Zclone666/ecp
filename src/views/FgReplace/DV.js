@@ -45,7 +45,7 @@ const DV = inject(
           _.pull(checked, id);
           this.setState({ checked, openFor: null });
         } else {
-          drugs.forEach((drug, i) => {
+          Object.values(drugs).forEach((drug, i) => {
             if (checked.includes(drug.id)) {
               _.pull(checked, drug.id);
             }
@@ -78,7 +78,36 @@ const DV = inject(
         const { t } = this.props.actions;
         let { fds } = this.props.drugs;
 
+        console.log(fds);
         console.log(this.fgs);
+
+
+
+        let drugs = {};
+        this.fgs.forEach(fg => {
+
+
+          fg.drugs.forEach(drug => {
+
+            let fixedDrug = {};
+            if (!drugs[drug.id]) {
+
+              fixedDrug = {
+                ...drug,
+                fgText: Object.keys(drug.fg).map(key => drug.fg[key]).join(", ")
+              };
+
+              drugs[drug.id] = fixedDrug;
+            }
+
+          });
+
+
+
+        });
+
+        console.log(drugs);
+
         return (
           <div className="scrollwrapper">
             <Header as="h3" className="stretched">
@@ -97,41 +126,37 @@ const DV = inject(
                       {activeIndex === fd.id && (
                         <Accordion.Content active={activeIndex === fd.id}>
                           <Accordion.Accordion>
-                            {this.fgs.map((fg, i) => {
-                              return (
-                                <>
-                                  <Accordion.Title
-                                    active={activeSubIndex === fg.id}
-                                    index={fg.id}
-                                    onClick={this.handleSubClick}
-                                  >
-                                    <Icon name="dropdown" />
-                                    {fg.name}
-                                  </Accordion.Title>
-                                  {activeSubIndex === fg.id && (
-                                    <Accordion.Content active={activeSubIndex === fg.id}>
-                                      <List divided className="dozelist big">
-                                        {fg.drugs.map((item) => {
-                                          return (
-                                            <List.Item key={"fd" + item.id} style={{ position: "relative" }}>
-                                              <Checkbox
-                                                checked={checked.includes(item.id)}
-                                                onChange={() => this.handleDrugClick(item.id, fg.drugs)}
-                                                name={"drugForChange"}
-                                                label={item.name}
-                                              />
-                                              {/* {item.warnings && item.warnings.length && <Conflicts itemWarnings={item.warnings}/>} */}
-                                              <Conflicts itemId={item.id}/>
-                                              {/* {openFor === item.id && <FGconflict />} */}
-                                            </List.Item>
-                                          );
-                                        })}
-                                      </List>
-                                    </Accordion.Content>
-                                  )}
-                                </>
-                              );
-                            })}
+                            <List divided className="dozelist big">
+                              {Object.values(drugs).map((drug, i) => {
+                                return (
+                                  <>
+                                    {
+
+                                      <List.Item key={"fd" + drug.id} style={{ padding: "5px 10px" }}>
+                                        <div className={"dvConflictBlock"}>
+                                          <Checkbox
+                                            checked={checked.includes(drug.id)}
+                                            onChange={() => this.handleDrugClick(drug.id, drugs)}
+                                            name={"drugForChange"}
+                                            label={drug.name}
+                                          />
+                                          {/* {item.warnings && item.warnings.length && <Conflicts itemWarnings={item.warnings}/>} */}
+
+
+                                          <List.Description className={"dvConflictDesc"}>
+                                            {drug.fgText}
+                                          </List.Description>
+                                        </div>
+                                        <Conflicts itemId={drug.id} />
+                                        {/* {openFor === item.id && <FGconflict />} */}
+
+
+                                      </List.Item>
+                                    }
+                                  </>
+                                );
+                              })}
+                            </List>
                           </Accordion.Accordion>
                         </Accordion.Content>
                       )}
