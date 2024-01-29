@@ -195,18 +195,20 @@ const Conflicts = inject(
 
         let mutationArray2 = warningsArr.map(warning => {
 
+          let { color, group } = this.getGroup(warning.danger);
+
           return {
             type: warning.type,
             typeOld: warning.type,
-            valuecolor: this.getGroup(warning.danger),
+            valuecolor: color,
             values: [{
-              group: 5,
+              group: group,
               hint: null, // warning.type + "" + warning.danger
               hintarr: null,
               key: warning.type,
               type: warning.type,
               value: warning.danger,
-              valuecolor: this.getGroup(warning.danger),
+              valuecolor: color,
             }],
 
           };
@@ -280,23 +282,23 @@ const Conflicts = inject(
                           </>
                         }
                         trigger={ */}
-                          <Icon.Group
-                            onClick={() => {
-                              this.selectConflict(item.values[0].key);
-                              this.setState({ activeIndex: null });
-                            }}
-                            size="big"
-                            className={noSelections || selectedWarnings[item.values[0].key] ? "selected" : "gray"}
-                          >
-                            {item.type === "age" ? (
-                              <Icon as="img" src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`} />
-                            ) : (
-                              <Icon as="img" src={`/warnicons/${icon}.svg`} />
-                            )}
-                            <Icon size="big" name="circle outline" style={{ color }} />
-                            {item.type === "age" && age && <div className="agecontainer">{age || "!"}</div>}
-                          </Icon.Group>
-                        {/* }
+                      <Icon.Group
+                        onClick={() => {
+                          this.selectConflict(item.values[0].key);
+                          this.setState({ activeIndex: null });
+                        }}
+                        size="big"
+                        className={noSelections || selectedWarnings[item.values[0].key] ? "selected" : "gray"}
+                      >
+                        {item.type === "age" ? (
+                          <Icon as="img" src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`} />
+                        ) : (
+                          <Icon as="img" src={`/warnicons/${icon}.svg`} />
+                        )}
+                        <Icon size="big" name="circle outline" style={{ color }} />
+                        {item.type === "age" && age && <div className="agecontainer">{age || "!"}</div>}
+                      </Icon.Group>
+                      {/* }
                       /> */}
                     </Grid.Column>
                   );
@@ -314,35 +316,35 @@ const Conflicts = inject(
                         //     </>
                         //   }
                         //   trigger={
-                            <div className="warnstack" onClick={() => this.handleClick(i)}>
-                              {item.values.map((element) => {
-                                return (
-                                  <Grid.Column
-                                    key={"warn" + i}
-                                    className="conflict"
-                                    style={{ paddingTop: 0, paddingRight: 0 }}
-                                  >
-                                    <Icon.Group
-                                      size="big"
-                                      className={noSelections || selectedWarnings[element.key] ? "selected" : "gray"}
-                                    >
-                                      {element.type === "age" ? (
-                                        <Icon
-                                          as="img"
-                                          src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`}
-                                        />
-                                      ) : (
-                                        <Icon as="img" src={`/warnicons/${icon}.svg`} />
-                                      )}
-                                      <Icon size="big" name="circle outline" style={{ color }} />
-                                      {element.type === "age" && age && (
-                                        <div className="agecontainer">{age || "!"}</div>
-                                      )}
-                                    </Icon.Group>
-                                  </Grid.Column>
-                                );
-                              })}
-                            </div>
+                        <div className="warnstack" onClick={() => this.handleClick(i)}>
+                          {item.values.map((element) => {
+                            return (
+                              <Grid.Column
+                                key={"warn" + i}
+                                className="conflict"
+                                style={{ paddingTop: 0, paddingRight: 0 }}
+                              >
+                                <Icon.Group
+                                  size="big"
+                                  className={noSelections || selectedWarnings[element.key] ? "selected" : "gray"}
+                                >
+                                  {element.type === "age" ? (
+                                    <Icon
+                                      as="img"
+                                      src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`}
+                                    />
+                                  ) : (
+                                    <Icon as="img" src={`/warnicons/${icon}.svg`} />
+                                  )}
+                                  <Icon size="big" name="circle outline" style={{ color }} />
+                                  {element.type === "age" && age && (
+                                    <div className="agecontainer">{age || "!"}</div>
+                                  )}
+                                </Icon.Group>
+                              </Grid.Column>
+                            );
+                          })}
+                        </div>
                         //   }
                         // />
                       ) : (
@@ -372,25 +374,25 @@ const Conflicts = inject(
                                     </>
                                   }
                                   trigger={ */}
-                                    <Icon.Group
-                                      onClick={() => this.selectConflict(element.key)}
-                                      size="big"
-                                      className={noSelections || selectedWarnings[element.key] ? "selected" : "gray"}
-                                    >
-                                      {element.type === "age" ? (
-                                        <Icon
-                                          as="img"
-                                          src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`}
-                                        />
-                                      ) : (
-                                        <Icon as="img" src={`/warnicons/${icon}.svg`} />
-                                      )}
-                                      <Icon size="big" name="circle outline" style={{ color }} />
-                                      {element.type === "age" && age && (
-                                        <div className="agecontainer">{age || "!"}</div>
-                                      )}
-                                    </Icon.Group>
-                                  {/* }
+                                <Icon.Group
+                                  onClick={() => this.selectConflict(element.key)}
+                                  size="big"
+                                  className={noSelections || selectedWarnings[element.key] ? "selected" : "gray"}
+                                >
+                                  {element.type === "age" ? (
+                                    <Icon
+                                      as="img"
+                                      src={`/warnicons/${ageIconName ? ageIconName : "no" + icon}.svg`}
+                                    />
+                                  ) : (
+                                    <Icon as="img" src={`/warnicons/${icon}.svg`} />
+                                  )}
+                                  <Icon size="big" name="circle outline" style={{ color }} />
+                                  {element.type === "age" && age && (
+                                    <div className="agecontainer">{age || "!"}</div>
+                                  )}
+                                </Icon.Group>
+                                {/* }
                                 /> */}
                               </Grid.Column>
                             );
