@@ -227,23 +227,41 @@ class Dosages {
       data,
       success: async (data) => {
         //console.log('DATA', data);
-        let { drug, form, methodform, names, nameshort, units } = data;
+        let { drug, form, methodform, names, nameshort, units, classifiers } = data;
 
         if (drug == null) this.stores.actions.makeAlerts(data);
 
         names = { ...additionalNames, ...names };
 
         let solute = false;
+        let registers = [];
 
         await _.forEach(form, (item) => {
+          console.log(item);
           if (item.solute) {
             solute = true;
           }
+
+
+          if (item.registers) {
+            registers = item.registers.map(registerId => {
+
+              return {
+                id: registerId,
+                name: names[registerId],
+                nameshort: nameshort[registerId],
+                classifiers: classifiers[registerId],
+              }
+            });
+          }
+
+
         });
 
         let drugObj = (await this.stores.drugs.drug.get(drug.key)) || {};
-        // console.log({ drugObj });
+        console.log({ drugObj });
         drugObj.solute = solute;
+        drugObj.registers = registers;
         this.stores.drugs.drug.set(drug.key, drugObj);
 
         await this.stores.tools.setNames(names, nameshort);
@@ -251,6 +269,7 @@ class Dosages {
 
         this.current = _.extend(current, { solute, drug, form, methodform, names, nameshort, units });
 
+        console.log(this.current);
         await this.dosage.set(drug.id, this.current);
         if (units && units.length > 0) await this.stores.tools.getUnitsPharm(units);
 
