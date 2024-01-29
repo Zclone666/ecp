@@ -1508,19 +1508,14 @@ class Drugs {
     const fixedFactions = (data) => {
 
       let factions = data.pharmActions.map(faction => {
-
         let fgroups = [];
 
-        data.pharmGroups.map(fgroup => {
-
+        data.pharmGroups.forEach(fgroup => {
           let drugs = [];
 
           fgroup.drugs.forEach(drugId => {
-
-
             // check drug in actions
             if (faction.drugs.includes(drugId)) {
-
               let drug = data.recommendations.find(drugObject => drugObject.dvId === drugId);
 
               drugs.push({
@@ -1533,7 +1528,6 @@ class Drugs {
           });
 
           if (drugs.length > 0) {
-
             fgroups.push({
               ...fgroup,
               id: fgroup.name,
@@ -1542,9 +1536,6 @@ class Drugs {
           }
 
         });
-
-
-
 
 
 
