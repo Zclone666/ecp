@@ -10,31 +10,51 @@ import _ from "lodash";
 import moment from "moment";
 
 
-const RegisterIcons = ({ drugId, registers = [] }) => {
+const RegisterIcons = ({ drug, registers = [], dosage = {}, drugDosages = {} }) => {
 
+  console.log(drug);
+  console.log(dosage);
+  console.log(dosage.form);
+  console.log(drugDosages);
 
+  let hasForm = !!dosage.form;
+  let names = drugDosages.names || {};
 
   return <Icon.Group
     size="big"
-    className={"gray registerIconsContainer"}
+    className={`gray registerIconsContainer ${hasForm ? "registerIconsHasForm" : ""}`}
   >
     {registers.map(register => {
       let { id, name, nameshort, classifiers: { icon, lf } } = register;
-      // return <Icon as="img" src={`/registerIcons/${icon}.svg`} />;
-    })}
-    <Popup
-      content={
-        <>
-          {"name"}
-        </>
+
+
+      if (!hasForm || (hasForm && lf.includes(dosage.form))) {
+
+        console.log(lf);
+
+        let formNamesArray = lf.map(lf_id => names[lf_id]);
+        // let formNames = formNamesArray.length ? formNamesArray.join(", ") : "";
+        return <Popup
+          content={
+            <div style={{ fontSize: "10px", opacity: "1 !important" }}>
+              {nameshort}
+              <List bulleted>
+                {formNamesArray.map(item => {
+                  return <List.Item key={"hint-" + item + "-"}>{item}</List.Item>;
+                }
+                )}
+              </List>
+            </div>
+          }
+          trigger={
+            <Icon as="img" src={`/registerIcons/${icon}.svg`} />}
+        />;
+      } else {
+        return "";
       }
-      trigger={
-        <Icon as="img" src={`/registerIcons/1.svg`} />}
-    />
-    <Icon as="img" src={`/registerIcons/3.svg`} />
-    <Icon as="img" src={`/registerIcons/2.svg`} />
-    <Icon as="img" src={`/registerIcons/4.svg`} />
-    <Icon as="img" src={`/registerIcons/5.svg`} />
+    })}
+
+
   </Icon.Group>
   // return <div>{drugId}-[{registers.join(",")}]</div>;
 }
@@ -391,13 +411,14 @@ const Drug = inject(
                   {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
                   {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""} */}
                     </Feed.Date>
+                    <RegisterIcons drug={drug} registers={registers} dosage={dosage} drugDosages={drugDosages} />
                   </Feed.Summary>
                   <Feed.Meta className={!dosReady ? "gradient" : ""}>
                     {dosageMethod}
                     {!rules.empty && dosageMethod ? ", " : ""}
                     {rules.text}
                   </Feed.Meta>
-                  {/* <RegisterIcons drugId={drug.id} registers={registers} /> */}
+
                 </Feed.Content>
               </Feed.Event>
             </Responsive>
