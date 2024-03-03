@@ -7,7 +7,7 @@ metadata:
     project: ecp
   namespace: dockers
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
       k8s-app: ecp-front
