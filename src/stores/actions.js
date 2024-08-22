@@ -8,10 +8,10 @@ import { StructureScheme, ProfileScheme } from "../schemes";
 
 import i18n from "../i18n";
 
-export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
-export const RESET_PASS_KEY = "9152ea8756f8f2b3";
-export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
-export const CHECK_REG_KEY = "340f725c9ccb9779";
+//export const AUTH_SERVICE_KEY = "7e649ecb733d2af1";
+//export const RESET_PASS_KEY = "9152ea8756f8f2b3";
+//export const REQUEST_PASS_KEY = "c47ee7e666d6be7e";
+//export const CHECK_REG_KEY = "340f725c9ccb9779";
 //export const AUTH_REG_KEY = "c47ee7e666d6be7e";
 const privateKeyOnly = LOGIN === "privateKeyOnly";
 
@@ -27,7 +27,7 @@ const createCsServerUrl = (url) => {
     return "http://84.23.32.38:9000" + url;
   }
   //--------------------
-  return SERVER === "dev" ? "https://csdev.socmedica.com" + url : "https://cs.socmedica.com" + url;
+  return SERVER === "dev" ? "https://service.socmedica.dev:9004" + url : "https://service.socmedica.com:9004" + url;
 };
 // !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
 //   ? "http://" + window.location.hostname + ":9999" + url
@@ -781,10 +781,10 @@ class Actions {
     }
     //// FIXME: for safari fucking shit
     return GET({
-      path: createCsServerUrl(`/api/user/authCheck`), //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
+      path: createCsServerUrl(`/auth/AuthCheck`), //'https://dev.socmedica.com/2/api/stats/CheckAuthTrue', //
       data: {
         authkey: this.authkey,
-        key: AUTH_SERVICE_KEY,
+        //key: AUTH_SERVICE_KEY,
       },
       success: async (data) => {
         //console.log('logged', data);
@@ -1021,11 +1021,11 @@ class Actions {
   // метод получения ключа (authkey)
   */
   async fakelogin() {
-    this.loginForm.key = AUTH_SERVICE_KEY;
+    //this.loginForm.key = AUTH_SERVICE_KEY;
     let { privateKey, remember, ...data } = this.loginForm;
     // data.active_language = active_language
     return await POST({
-      path: createCsServerUrl(`/api/user/authorization`),
+      path: createCsServerUrl(`/Auth/Authorization`),
       data,
       success: async (data) => {
         // console.log('SUCCESS', data);
@@ -1083,7 +1083,7 @@ class Actions {
   * @param data - данные, полученные методом autologin
   */
   async fakeMisLogin(data) {
-    this.loginForm.key = AUTH_SERVICE_KEY;
+    //this.loginForm.key = AUTH_SERVICE_KEY;
     this.loginForm.privateKey = data.args.key;
     const args = data.args;
     // this.stores.router.push("/");
@@ -1136,7 +1136,7 @@ class Actions {
   * @param privateKey - персональный ключ пользователя
   */
   async fakePrivateKeylogin(privateKey) {
-    this.loginForm.key = AUTH_SERVICE_KEY;
+    //this.loginForm.key = AUTH_SERVICE_KEY;
     if (privateKey === undefined) privateKey = this.loginForm.privateKey;
     if (privateKey && !this.loginForm.privateKey) this.loginForm.privateKey = privateKey;
     let data = {
@@ -1144,7 +1144,7 @@ class Actions {
       key: privateKey,
     };
 
-    await fetch(createCsServerUrl(`/api/umkb/checkRights`), {
+    await fetch(createCsServerUrl(`/Auth/CheckRights`), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1227,10 +1227,10 @@ class Actions {
   // метод регистрации пользователя
   */
   async signin() {
-    this.signinForm.key = AUTH_SERVICE_KEY;
+    //this.signinForm.key = AUTH_SERVICE_KEY;
 
     return POST({
-      path: createCsServerUrl(`/api/registration/send`),
+      path: createCsServerUrl(`/Auth/Registration`),
       data: this.signinForm,
       success: async (data) => {
         // console.log('SUCCESS', data);
@@ -1257,11 +1257,11 @@ class Actions {
   async checkUserUmkb() {
     // this.signinForm.key = AUTH_SERVICE_KEY;
     let dataSend = {
-      key: CHECK_REG_KEY,
+      //key: CHECK_REG_KEY,
       email: this.signinForm.email,
     };
     return POST({
-      path: createCsServerUrl(`/api/user/getUserInfoByEmail`),
+      path: createCsServerUrl(`/Auth/GetUserInfoByEmail`),
       data: dataSend,
       success: async (data) => {
         // console.log(data);
@@ -1321,9 +1321,9 @@ class Actions {
   // метод подтверждения email
   */
   async confirm() {
-    this.confirmForm.key = AUTH_SERVICE_KEY;
+    //this.confirmForm.key = AUTH_SERVICE_KEY;
     return POST({
-      path: createCsServerUrl(`/api/registration/confirmemail`),
+      path: createCsServerUrl(`/Auth/ConfirmEMail`),
       data: this.confirmForm,
       success: async (data) => {
         // console.log("SUCCESS", data);
@@ -1348,9 +1348,9 @@ class Actions {
   // метод запроса письма для подтвержления email
   */
   async getConfirm() {
-    this.getConfirmForm.key = AUTH_SERVICE_KEY;
+    //this.getConfirmForm.key = AUTH_SERVICE_KEY;
     return POST({
-      path: createCsServerUrl(`/api/registration/getconfirmemail`),
+      path: createCsServerUrl(`/Auth/GetConfirmEMail`),
       data: this.getConfirmForm,
       success: async (data) => {
         this.stores.router.push("/confirm");
@@ -1374,9 +1374,9 @@ class Actions {
   // метод запроса письма для сброса пароля
   */
   async resetPass() {
-    this.resetPassForm.key = REQUEST_PASS_KEY;
+    //this.resetPassForm.key = REQUEST_PASS_KEY;
     return POST({
-      path: createCsServerUrl(`/api/user/recovery`),
+      path: createCsServerUrl(`/Auth/Recovery`),
       data: this.resetPassForm,
       success: async (data) => {
         // console.log({ data });
@@ -1403,9 +1403,9 @@ class Actions {
   // метод задания нового пароля
   */
   async newPass() {
-    this.newPassForm.key = RESET_PASS_KEY;
+    //this.newPassForm.key = RESET_PASS_KEY;
     return POST({
-      path: createCsServerUrl(`/api/user/resetPassword`),
+      path: createCsServerUrl(`/Auth/ResetPassword`),
       data: this.newPassForm,
       success: async (data) => {
         // console.log("SUCCESS", data);
@@ -1448,7 +1448,7 @@ class Actions {
     }
 
     return GET({
-      path: createCsServerUrl(`/api/user/authexit`),
+      path: createCsServerUrl(`/Auth/AuthExit`),
       data: {
         authkey,
       },
