@@ -1,5 +1,5 @@
 import { observable, autorun, makeObservable } from "mobx";
-import { POST, GET } from "../lib/connect";
+import { POST } from "../lib/connect";
 import moment from "moment";
 
 import _ from "lodash";

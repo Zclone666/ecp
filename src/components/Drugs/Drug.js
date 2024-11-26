@@ -9,6 +9,57 @@ import _ from "lodash";
 
 import moment from "moment";
 
+
+const RegisterIcons = ({ drug, registers = [], dosage = {}, drugDosages = {} }) => {
+
+  console.log(drug);
+  console.log(dosage);
+  console.log(dosage.form);
+  console.log(drugDosages);
+
+  let hasForm = !!dosage.form;
+  let names = drugDosages.names || {};
+
+  return <Icon.Group
+    size="big"
+    className={`gray registerIconsContainer ${hasForm ? "registerIconsHasForm" : ""}`}
+  >
+    {registers.map(register => {
+      let { id, name, nameshort, classifiers: { icon, lf } } = register;
+
+
+      if (!hasForm || (hasForm && lf.includes(dosage.form))) {
+
+        console.log(lf);
+
+        let formNamesArray = lf.map(lf_id => names[lf_id]);
+        // let formNames = formNamesArray.length ? formNamesArray.join(", ") : "";
+        return <Popup
+          content={
+            <div style={{ fontSize: "10px", opacity: "1 !important" }}>
+              {nameshort}
+              <List bulleted>
+                {formNamesArray.map(item => {
+                  return <List.Item key={"hint-" + item + "-"}>{item}</List.Item>;
+                }
+                )}
+              </List>
+            </div>
+          }
+          trigger={
+            <Icon as="img" src={`/registerIcons/${icon}.svg`} />}
+        />;
+      } else {
+        return "";
+      }
+    })}
+
+
+  </Icon.Group>
+  // return <div>{drugId}-[{registers.join(",")}]</div>;
+}
+
+
 const Drug = inject(
   "db",
   "actions",
@@ -148,19 +199,22 @@ const Drug = inject(
           tools,
         } = this.props;
 
-        
+        console.log(this.props);
+        console.log(this.props.drug);
+
+
         const canFindAddDeleteDrugs = tools.hasFunctional("FindAddDeleteDrugs");
         const canSelectAnalogDrugs = tools.hasFunctional("SelectAnalogDrugs");
         const canSelectDosageMethodUsingDrugs = tools.hasFunctional("SelectDosageMethodUsingDrugs");
         const canInstructionMedicalUseDrugs = tools.hasFunctional("InstructionMedicalUseDrugs");
         const canSelectReplacementDrug = tools.hasFunctional("SelectReplacementDrug");
 
-        canDrag = canFindAddDeleteDrugs === false ? false : canDrag; 
+        canDrag = canFindAddDeleteDrugs === false ? false : canDrag;
 
         const { t } = this.props.actions;
         // console.log({ drugs: Array.from(this.props.drugs.drug.values()) });
         let drug = this.props.drugs.drug.get(ldrug.key) || {};
-        //console.log(drug);
+        console.log(drug);
 
         // const drugWarnings = _.orderBy(
         //   Array.from(warning.values()),
@@ -170,7 +224,7 @@ const Drug = inject(
         // const arrowColor = drugWarnings?.length > 0 ? drugWarnings[0].color : false;
         // console.log({ arrowColor, warnings: Array.from(warning.values()), drugWarnings });
         // console.log({ drug });
-        let { name, type, dosage, helpers, specials, date } = drug;
+        let { name, type, dosage, helpers, specials, date, registers } = drug;
         const dateOfPrescription = date ? moment(date, "x").format("DD.MM.YYYY") : "";
         let drugDosages = dose.get(drug.id) || {};
         let hasWarnings = warning.size > 0;
@@ -340,10 +394,10 @@ const Drug = inject(
               <Feed.Event>
                 <Feed.Content>
                   <Feed.Summary>
-                    {canInstructionMedicalUseDrugs ? 
-                    <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className="underlined">
-                      <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
-                    </RouterLink> : <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />}
+                    {canInstructionMedicalUseDrugs ?
+                      <RouterLink to={`/druginfo/${drug.key}`} onClick={this.getInfo} className="underlined">
+                        <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />
+                      </RouterLink> : <div dangerouslySetInnerHTML={{ __html: name }} style={{ display: "inline" }} />}
                     {type === "TN" && (
                       <span>
                         <sup>TM</sup>
@@ -352,17 +406,19 @@ const Drug = inject(
                     {specials && <Popup content={specials} trigger={<Icon name="file alternate" />} />}
                     <Feed.Date className={!dosReady ? "gradient" : ""}>
                       {dosageForm}
-                     {helpersDosage && `${dosageForm && ", "}`}<div dangerouslySetInnerHTML={{ __html: helpersDosage }} style={{ display: "inline" }} />
+                      {helpersDosage && `${dosageForm && ", "}`}<div dangerouslySetInnerHTML={{ __html: helpersDosage }} style={{ display: "inline" }} />
                       {/* {dosage.form && (nameshort[dosage.form] || names[dosage.form])}{" "}
                   {helpers.dosage && (helpers.dosage.small || helpers.dosage.full) && ", "}
                   {(helpers.dosage && (helpers.dosage.small || helpers.dosage.full)) || ""} */}
                     </Feed.Date>
+                    <RegisterIcons drug={drug} registers={registers} dosage={dosage} drugDosages={drugDosages} />
                   </Feed.Summary>
                   <Feed.Meta className={!dosReady ? "gradient" : ""}>
                     {dosageMethod}
                     {!rules.empty && dosageMethod ? ", " : ""}
                     {rules.text}
                   </Feed.Meta>
+
                 </Feed.Content>
               </Feed.Event>
             </Responsive>
