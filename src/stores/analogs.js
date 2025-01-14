@@ -52,6 +52,12 @@ class Analogs {
     };
     data.authkey = this.stores.actions.authkey;
     data.key = this.stores.actions.privateKey;
+
+    if (data.drug.registers?.length) {
+      let registers = data.drug.registers.map(item => item.id);
+      data.drug.registers = registers;
+    }
+
     return POST({
       path: `drugs/Analog`,
       data,
