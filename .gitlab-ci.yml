@@ -6,9 +6,10 @@ variables:
     PORT: 9009
     PORT_FREE: 9031
     PORT_FREE_NEWEMC: 9071
+    TAG: "srv-ekf.kgmu.ru"
 
 
 include: 
   - project: 'root/template-gitlab'
     ref: master
-    file: '/service-frontend-free-gitlab-ci.yml'
+    file: '/box-build.yml'
