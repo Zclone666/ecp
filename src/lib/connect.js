@@ -27,7 +27,7 @@ export const API_SERVER = (() => {
   }
   //------------------------------------
   return !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
-    ? "http://" + window.location.hostname + ":9004"
+    ? "https://" + "ecp-back.polyclinika.ru"
     : SERVER === "prod" || window.location.host.includes("socmedica.com")
       ? "https://service.socmedica.com:9004"
       : "https://service.socmedica.dev:9004";
