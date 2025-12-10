@@ -24,10 +24,10 @@ const createCsServerUrl = (url) => {
     return "http://"+window.location.hostname+":30904" + url;
   }
   if (window.location.host.includes("localhost:9031")) {
-    return "http://"+window.location.hostname+":44380" + url;
+    return "https://"+"ecp-back.polyclinika.ru" + url;
   }
   //--------------------
-  return SERVER == "dev" ? "http://"+window.location.hostname+":44380" + url : "http://"+window.location.hostname+":44380" + url;
+  return SERVER == "dev" ? "https://"+"ecp-back.polyclinika.ru" + url : "https://"+"ecp-back.polyclinika.ru" + url;
 };
 // !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
 //   ? "http://" + window.location.hostname + ":9999" + url
