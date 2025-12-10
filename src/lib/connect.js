@@ -9,28 +9,8 @@ import { SERVER } from "../constants";
 export const PROJECT_TITLE = "ЭКФ";
 export const PRE_PATH = "";
 export const PRODUCTION = false;
-export const API_SERVER = (() => {
-  if (window.location.host.includes("localhost:30931")) {
-    return "http://localhost:30904";
-  } else if (
-    // window.location.host.includes("localhost") ||
-    window.location.host.includes("localhost:9031")
-    // || window.location.host.includes("socmedica.dev")
-  ) {
-    return "http://localhost:9004";
-  }else if (
-    // window.location.host.includes("localhost") ||
-    window.location.host.includes("30080")
-    // || window.location.host.includes("socmedica.dev")
-  ) {
-    return "http://" + window.location.hostname + ":30904";
-  }
-  //------------------------------------
-  return !window.location.href.includes(["socmedica"]) && !window.location.href.includes(["localhost"])
-    ? "https://" + "ecp-back.polyclinika.ru"
-    : SERVER === "prod" || window.location.host.includes("socmedica.com")
-      ? "https://service.socmedica.com:9004"
-      : "https://service.socmedica.dev:9004";
+export const API_SERVER = (() => {  
+    return "https://ecp-back.polyclinika.ru/";
 })();
 // (window.location.host.includes("http://84.23.32.38:9031") ? "http://84.23.32.38:9004" : false) ||
 // (window.location.host.includes("localhost") || window.location.host.includes("socmedica.dev")
