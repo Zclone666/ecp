@@ -24,7 +24,7 @@ export const API_SERVER = (() => {
     ? "http://" + window.location.hostname + ":9004"
     : SERVER === "prod" || window.location.host.includes("socmedica.com")
       ? "https://service.socmedica.com:9004"
-      : "https://service.socmedica.dev:9004";
+      : "https://service.socmedica.com:9004";
 })();
 // (window.location.host.includes("http://84.23.32.38:9031") ? "http://84.23.32.38:9004" : false) ||
 // (window.location.host.includes("localhost") || window.location.host.includes("socmedica.dev")

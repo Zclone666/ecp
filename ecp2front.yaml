@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecp-front
+  labels:
+    k8s-app: ecp-front
+    project: ecp
+  namespace: dockers
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      k8s-app: ecp-front
+  template:
+    metadata:
+      name: ecp-front
+      labels:
+        k8s-app: ecp-front
+    spec:
+      containers:
+      - name: ecp-front
+        image: 10.254.0.11:5000/ecp2front:prod
+        imagePullPolicy: Always
+      nodeSelector:
+        kubernetes.io/subtag: prod
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ecp-front-svc
+  namespace: dockers
+  labels:
+    k8s-app: ecp-front-svc
+    project: ecp
+spec:
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30909
+  selector:
+    k8s-app: ecp-front
