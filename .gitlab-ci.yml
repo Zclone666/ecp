@@ -6,7 +6,7 @@ variables:
     PORT: 9009
     PORT_FREE: 9031
     PORT_FREE_NEWEMC: 9071
-    TAG: "bryansk"
+    TAG: "adyg"
 
 include: 
   - project: 'root/template-gitlab'
